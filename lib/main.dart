@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         designSize: const Size(414, 896),
         minTextAdapt: true,
         builder: () => MaterialApp(
-              title: 'Grip',
+              title: 'Greep',
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
                 primarySwatch: Colors.grey,

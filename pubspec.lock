@@ -350,7 +350,7 @@ packages:
     source: hosted
     version: "0.18.3"
   flutter_launcher_icons:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: flutter_launcher_icons
       url: "https://pub.dartlang.org"
@@ -389,6 +389,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_native_splash:
+    dependency: "direct main"
+    description:
+      name: flutter_native_splash
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.6"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -589,7 +596,7 @@ packages:
     source: hosted
     version: "2.2.1"
   hive_generator:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: hive_generator
       url: "https://pub.dartlang.org"
@@ -693,6 +700,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.4.0"
+  lint:
+    dependency: transitive
+    description:
+      name: lint
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.8.2"
   lints:
     dependency: transitive
     description:
