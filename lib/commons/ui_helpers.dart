@@ -22,7 +22,7 @@ const Widget kVerticalSpaceLarge = SizedBox(height: kDefaultSpacing * 2.0);
 
 
 var kDefaultTextStyle =
-    GoogleFonts.sourceSansPro(fontSize: 16.18, color: kBlackColor,);
+    GoogleFonts.poppins(fontSize: 15.18, color: kBlackColor,);
 
 var kBoldTextStyle = kDefaultTextStyle.copyWith(
   fontWeight: FontWeight.bold,
@@ -33,13 +33,13 @@ var kErrorColorTextStyle = kDefaultTextStyle.copyWith(color: kErrorColor);
 var kTitleTextStyle = kDefaultTextStyle.copyWith(
   fontWeight: FontWeight.bold,
   color: kBlackColor,
-  fontSize: 17,
+  fontSize: 16,
 );
 
 var kHeadingTextStyle = kDefaultTextStyle.copyWith(
   fontWeight: FontWeight.bold,
   color: kBlackColor,
-  fontSize: 20,
+  fontSize: 19,
 );
 
 var kWhiteTextStyle = kDefaultTextStyle.copyWith(color: kWhiteColor);
