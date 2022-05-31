@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:grip/screens/manager_section/widgets/record_card.dart';
+import 'package:grip/presentation/manager_section/widgets/record_card.dart';
+import 'package:grip/utils/constants/app_colors.dart';
+import 'package:grip/utils/constants/app_styles.dart';
 
-import '../../../../utils/constants/app_colors.dart';
-import '../../../../utils/constants/app_styles.dart';
 
 class ViewAllRecords extends StatelessWidget {
   const ViewAllRecords({Key? key}) : super(key: key);

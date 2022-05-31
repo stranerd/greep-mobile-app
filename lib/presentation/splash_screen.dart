@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:grip/screens/driver_section/nav_pages/nav_bar/nav_bar_view.dart';
-import 'package:grip/screens/manager_section/nav_pages/nav_bar/nav_bar_view.dart';
+import 'package:grip/presentation/driver_section/nav_pages/nav_bar/nav_bar_view.dart';
+import 'package:grip/presentation/manager_section/nav_pages/nav_bar/nav_bar_view.dart';
 import 'package:grip/utils/constants/app_colors.dart';
 import 'package:grip/utils/constants/app_styles.dart';
 

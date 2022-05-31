@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grip/screens/manager_section/records/view_records.dart';
+import 'package:grip/presentation/manager_section/records/view_records.dart';
 
 import '../../utils/constants/app_styles.dart';
 import 'customer/customer_page.dart';
