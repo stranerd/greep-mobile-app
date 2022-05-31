@@ -1,0 +1,58 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'colors.dart';
+
+const kDefaultSpacing = 16.18;
+
+// horizontal spacing
+const Widget kHorizontalSpaceTiny = SizedBox(width: kDefaultSpacing * 0.333);
+const Widget kHorizontalSpaceSmall = SizedBox(width: kDefaultSpacing * 0.5);
+const Widget kHorizontalSpaceRegular = SizedBox(width: kDefaultSpacing);
+const Widget kHorizontalSpaceMedium = SizedBox(width: kDefaultSpacing * 1.5);
+const Widget kHorizontalSpaceLarge = SizedBox(width: kDefaultSpacing * 2.0);
+
+// vertical spacing
+const Widget kVerticalSpaceTiny = SizedBox(height: kDefaultSpacing * 0.333);
+const Widget kVerticalSpaceSmall = SizedBox(height: kDefaultSpacing * 0.5);
+const Widget kVerticalSpaceRegular = SizedBox(height: kDefaultSpacing);
+const Widget kVerticalSpaceMedium = SizedBox(height: kDefaultSpacing * 1.5);
+const Widget kVerticalSpaceLarge = SizedBox(height: kDefaultSpacing * 2.0);
+
+
+
+var kDefaultTextStyle =
+    GoogleFonts.sourceSansPro(fontSize: 16.18, color: kBlackColor,);
+
+var kBoldTextStyle = kDefaultTextStyle.copyWith(
+  fontWeight: FontWeight.bold,
+);
+
+var kErrorColorTextStyle = kDefaultTextStyle.copyWith(color: kErrorColor);
+
+var kTitleTextStyle = kDefaultTextStyle.copyWith(
+  fontWeight: FontWeight.bold,
+  color: kBlackColor,
+  fontSize: 17,
+);
+
+var kHeadingTextStyle = kDefaultTextStyle.copyWith(
+  fontWeight: FontWeight.bold,
+  color: kBlackColor,
+  fontSize: 20,
+);
+
+var kWhiteTextStyle = kDefaultTextStyle.copyWith(color: kWhiteColor);
+
+var kSubtitleTextStyle = kDefaultTextStyle.copyWith(
+  color: kBlackLightColor,
+);
+
+var kPrimaryTextStyle = kDefaultTextStyle.copyWith(
+  color: kPrimaryColor,
+);
+
+var kSubtitleTextStyle2 = kDefaultTextStyle.copyWith(
+  color: kBlackColor3,
+  fontSize: 15
+);
