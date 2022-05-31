@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/themes.dart';
-import 'package:grip/presentation/auth/signup/signup.dart';
+import 'package:grip/presentation/auth/home/auth_home.dart';
 import 'package:grip/presentation/splash_screen.dart';
 
 void main() {
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               theme: theme,
               color: kPrimaryColor,
-              home: const SignUpScreen(),
+              home: const AuthHomeScreen(),
             ));
   }
 }
