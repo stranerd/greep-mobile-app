@@ -6,11 +6,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
+import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/commons/themes.dart';
 import 'package:grip/ioc.dart';
 import 'package:grip/presentation/auth/home/auth_home.dart';
+import 'package:grip/presentation/splash/splash.dart';
 import 'package:grip/presentation/splash_screen.dart';
 
 void main() {
@@ -26,9 +28,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) =>GetIt.I<AuthenticationCubit>(),
+        BlocProvider.value(
+          value: GetIt.I<AuthenticationCubit>(),
         ),
+        BlocProvider.value(
+          value: GetIt.I<UserCubit>(),
+        ),
+
       ],
       child: ScreenUtilInit(
           designSize: const Size(414, 896),
@@ -38,7 +44,7 @@ class MyApp extends StatelessWidget {
                 debugShowCheckedModeBanner: false,
                 theme: theme,
                 color: kPrimaryColor,
-                home: const AuthHomeScreen(),
+                home:  SplashScreen(),
                 scaffoldMessengerKey: ScaffoldMessengerService.scaffoldMessengerKey,
 
               )),

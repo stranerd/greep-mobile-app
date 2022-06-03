@@ -11,6 +11,7 @@ import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/presentation/auth/forgot_password/forgot_password.dart';
 import 'package:grip/presentation/driver_section/home_page.dart';
+import 'package:grip/presentation/splash/authentication_splash.dart';
 import 'package:grip/presentation/widgets/input_text_field.dart';
 import 'package:grip/presentation/widgets/social_signin_widget.dart';
 import 'package:grip/presentation/widgets/submit_button.dart';
@@ -64,7 +65,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
     return BlocConsumer<AuthenticationCubit, AuthenticationState>(
       listener: (context, state) {
         if (state is AuthenticationStateAuthenticated) {
-          Get.offAll(() => const DriverHomePage());
+          Get.offAll(() => const AuthenticationSplashScreen());
         }
         if (state is AuthenticationStateError) {
           error = state.errorMessage;

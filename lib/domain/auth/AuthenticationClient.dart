@@ -23,15 +23,17 @@ class AuthenticationClient {
             {"id": response.data["user"]["id"], "token": response.data["accessToken"],});
 
     } on DioError catch (e) {
+      print(e.type);
       if (e.type == DioErrorType.connectTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
-      if (e.error == DioErrorType.response) {
+      if (e.type == DioErrorType.response) {
+        print(e.response!.data);
         return ResponseEntity.Error(
-            e.response!.data["message"] ?? "Incorrect Credentials");
+            e.response!.data[0]["message"] ?? "Incorrect Credentials");
       }
 
       return ResponseEntity.Error("Incorrect credentials");

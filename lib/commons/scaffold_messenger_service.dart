@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
 
@@ -10,7 +11,7 @@ mixin ScaffoldMessengerService<K extends StatefulWidget> on State<K> {
       scaffoldMessengerKey.currentState!
         ..clearSnackBars()
         ..showSnackBar(SnackBar(
-          width: 250,
+          width: Get.width * 0.85,
           backgroundColor: Colors.grey.shade100,
           shape: const BeveledRectangleBorder(),
           padding: const EdgeInsets.all(kDefaultSpacing * 0.75),

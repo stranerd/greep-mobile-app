@@ -19,7 +19,7 @@ class AuthenticationService {
       LoginRequest request,) async {
     var response = await authenticationClient.login(request,);
     if (!response.isError) {
-      // setToken(response.data);
+      setToken(response.data);
     }
 
     return response;

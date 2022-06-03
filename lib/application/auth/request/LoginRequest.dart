@@ -10,7 +10,7 @@ class LoginRequest {
 
   Map<String, dynamic> toLogin() {
     return {
-      "loginId": email,
+      "email": email,
       "password": password,
     };
   }
@@ -18,7 +18,7 @@ class LoginRequest {
   Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast
     return {
-      'loginId': email,
+      'email': email,
       "password": password,
     } as Map<String, dynamic>;
   }
