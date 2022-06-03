@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
 import '../../../../../utils/constants/app_styles.dart';
 import '../widgets/account_item_card.dart';
@@ -15,7 +16,9 @@ class ProfileView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: (){
+            Get.back();
+          },
           icon: const Icon(
             Icons.arrow_back_ios,
             size: 16,

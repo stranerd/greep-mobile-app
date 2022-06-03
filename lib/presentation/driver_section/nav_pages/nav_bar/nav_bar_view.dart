@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grip/commons/colors.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../../utils/constants/app_colors.dart';
@@ -10,48 +11,42 @@ import '../../transaction/view_transactions.dart';
 import '../settings/home_page.dart';
 import 'nav_bar_viewmodel.dart';
 
-///Home view is the holder for all the views
-///!Do not edit this directly, edit pages instead
-///
-class NavBarView extends StatelessWidget {
+class NavBarView extends StatefulWidget {
   const NavBarView({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return ViewModelBuilder<NavBarViewModel>.reactive(
-      //this parameter allows us to reuse the view model to persist the state
-      disposeViewModel: false,
-      //initialise the view model only once
-      initialiseSpecialViewModelsOnce: true,
-      viewModelBuilder: () => NavBarViewModel(),
-      onModelReady: (vModel) {
-        // vModel.bottomNavList = getBottomIcons();
-      },
-      builder: (context, vModel, child) {
-        return Scaffold(
-          //passing in the current index from the view model
-          // so it can return the right screen
+  State<NavBarView> createState() => _NavBarViewState();
+}
 
-          body: getViewForIndex(vModel.currentIndex),
-          bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: AppColors.white,
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: AppColors.black,
-            unselectedItemColor: AppColors.black,
-            selectedFontSize: 14,
-            unselectedFontSize: 14,
-            selectedLabelStyle: AppTextStyles.blackSize12,
-            unselectedLabelStyle: AppTextStyles.blackSize12,
-            currentIndex: vModel.currentIndex,
-            onTap: vModel.setIndex,
-            items: getBottomIcons(context),
-          ),
-        );
-      },
+class _NavBarViewState extends State<NavBarView> {
+  int _currNavIndex = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currNavIndex,
+        onTap: setCurrNav,
+        type: BottomNavigationBarType.fixed,
+        selectedFontSize: 11,
+        unselectedFontSize: 11,
+        items: getBottomIcons(),
+        selectedItemColor: kPrimaryColor,
+        selectedIconTheme: const IconThemeData(color: kPrimaryColor),
+      ),
+      body: SafeArea(
+        child: IndexedStack(children: _children, index: _currNavIndex,)),
+
     );
   }
 
-  List<BottomNavigationBarItem> getBottomIcons(context) {
+  final List<Widget> _children = const [
+  DriverHomePage(),
+  CustomerView(),
+  TransactionView(),
+  SettingsHome(),
+  ];
+
+  List<BottomNavigationBarItem> getBottomIcons() {
     List<SvgData> icons = [
       SvgAssets.home,
       SvgAssets.people,
@@ -91,20 +86,12 @@ class NavBarView extends StatelessWidget {
     return bottomNavList;
   }
 
-  ///Get all the pages and match them to the bottom nav icon
-  ///that is clicked this would change the view to the current
-  Widget getViewForIndex(int index) {
-    switch (index) {
-      case 0:
-        return const DriverHomePage();
-      case 1:
-        return const CustomerView();
-      case 2:
-        return const TransactionView();
-      case 3:
-        return const SettingsHome();
-      default:
-        return const DriverHomePage();
-    }
+
+  void setCurrNav(int index) {
+    setState(() {
+      _currNavIndex = index;
+    });
+
   }
+
 }
