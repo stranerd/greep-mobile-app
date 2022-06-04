@@ -17,7 +17,6 @@ class TransactionData {
       this.parentId});
 
   factory TransactionData.fromServer(dynamic json) {
-    print(json);
     return TransactionData(
       transactionType: getTransactionType(json["type"]),
       name: json["name"],
@@ -64,8 +63,13 @@ class TransactionData {
         return TransactionType.trip;
     }
   }
-  
-  
+
+
+  @override
+  String toString() {
+    return 'TransactionData{transactionType: $transactionType, name: $name, paymentType: $paymentType, customerName: $customerName, debt: $debt, paidAmount: $paidAmount, parentId: $parentId}';
+  }
+
   Map<String, dynamic> toMap(){
     Map<String, dynamic> map = {
       "type": transactionType.name

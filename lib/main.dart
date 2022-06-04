@@ -1,19 +1,17 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
+import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/commons/themes.dart';
 import 'package:grip/ioc.dart';
-import 'package:grip/presentation/auth/home/auth_home.dart';
 import 'package:grip/presentation/splash/splash.dart';
-import 'package:grip/presentation/splash_screen.dart';
 
 void main() {
   var ioc = IoC();
@@ -37,19 +35,20 @@ class MyApp extends StatelessWidget {
         BlocProvider.value(
           value: GetIt.I<UserTransactionsCubit>(),
         ),
-
+        BlocProvider.value(
+          value: GetIt.I<TransactionSummaryCubit>(),
+        ),
       ],
       child: ScreenUtilInit(
           designSize: const Size(414, 896),
           minTextAdapt: true,
-          builder: () =>
-              GetMaterialApp(
+          builder: () => GetMaterialApp(
                 debugShowCheckedModeBanner: false,
                 theme: theme,
                 color: kPrimaryColor,
-                home:  const SplashScreen(),
-                scaffoldMessengerKey: ScaffoldMessengerService.scaffoldMessengerKey,
-
+                home: const SplashScreen(),
+                scaffoldMessengerKey:
+                    ScaffoldMessengerService.scaffoldMessengerKey,
               )),
     );
   }

@@ -25,7 +25,6 @@ class Transaction extends Equatable {
   });
 
   factory Transaction.fromServer(dynamic data) {
-    print(data);
     return Transaction(
       driverId: data["driverId"],
       id: data["id"],
@@ -37,6 +36,12 @@ class Transaction extends Equatable {
       timeUpdated: DateTime.fromMillisecondsSinceEpoch(data["updatedAt"]),
       data: TransactionData.fromServer(data["data"]),
     );
+  }
+
+
+  @override
+  String toString() {
+    return 'Transaction{driverId: $driverId, id: $id, managerId: $managerId, amount: $amount, description: $description, timeAdded: $timeAdded, timeCreated: $timeCreated, timeUpdated: $timeUpdated, data: $data}';
   }
 
   @override

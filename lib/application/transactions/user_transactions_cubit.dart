@@ -59,7 +59,6 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
         requestId,
       );
 
-      print(response);
       return _checkResponse(response, requestId, loadMore);
     }
   }

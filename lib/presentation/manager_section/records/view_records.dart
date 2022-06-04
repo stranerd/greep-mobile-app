@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:grip/presentation/manager_section/widgets/record_card.dart';
 import 'package:grip/utils/constants/app_colors.dart';
 import 'package:grip/utils/constants/app_styles.dart';
@@ -17,7 +18,9 @@ class ViewAllRecords extends StatelessWidget {
           elevation: 0.0,
           backgroundColor: Colors.white,
           leading: IconButton(
-              onPressed: () {},
+              onPressed: (){
+                Get.back();
+              },
               icon: const Icon(Icons.arrow_back_ios, size: 16)),
         ),
         body: SingleChildScrollView(
