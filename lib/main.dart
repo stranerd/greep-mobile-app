@@ -1,11 +1,11 @@
 import 'package:device_preview/device_preview.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
+import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/scaffold_messenger_service.dart';
@@ -34,6 +34,9 @@ class MyApp extends StatelessWidget {
         BlocProvider.value(
           value: GetIt.I<UserCubit>(),
         ),
+        BlocProvider.value(
+          value: GetIt.I<UserTransactionsCubit>(),
+        ),
 
       ],
       child: ScreenUtilInit(
@@ -44,7 +47,7 @@ class MyApp extends StatelessWidget {
                 debugShowCheckedModeBanner: false,
                 theme: theme,
                 color: kPrimaryColor,
-                home:  SplashScreen(),
+                home:  const SplashScreen(),
                 scaffoldMessengerKey: ScaffoldMessengerService.scaffoldMessengerKey,
 
               )),

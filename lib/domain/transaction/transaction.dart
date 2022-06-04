@@ -4,7 +4,7 @@ import 'package:grip/domain/transaction/TransactionData.dart';
 class Transaction extends Equatable {
   final String driverId;
   final String id;
-  final String? managerId;
+  final String managerId;
   final num amount;
   final String description;
   final DateTime timeAdded;
@@ -25,12 +25,12 @@ class Transaction extends Equatable {
   });
 
   factory Transaction.fromServer(dynamic data) {
-    
+    print(data);
     return Transaction(
       driverId: data["driverId"],
       id: data["id"],
       managerId: data["managerId"],
-      amount: num.parse(data["amount"]),
+      amount: data["amount"],
       description: data["description"],
       timeAdded: DateTime.fromMillisecondsSinceEpoch(data["recordedAt"]),
       timeCreated: DateTime.fromMillisecondsSinceEpoch(data["createdAt"]),

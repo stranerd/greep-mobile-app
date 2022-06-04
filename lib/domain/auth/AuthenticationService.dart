@@ -93,6 +93,14 @@ class AuthenticationService {
     return response;
   }
 
+  Future<ResponseEntity> refreshToken()async{
+    var response = await authenticationClient.refreshToken();
+    if (!response.isError){
+      setToken(response.data);
+    }
+    return response;
+  }
+
   void setToken(dynamic data) async {
     AuthStore().setToken(data);
   }

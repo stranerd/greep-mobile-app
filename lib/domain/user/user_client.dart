@@ -9,15 +9,12 @@ class UserClient {
   final Dio dio = dioClient();
 
   Future<ResponseEntity<User>> fetchUser(String userId) async {
-    print("fetching user $userId");
     Response response;
     try {
       response = await dio.get("users/users/$userId");
-      print("response from user fetch ${response.data}");
       return ResponseEntity.Data(
           User.fromServer(response.data));
     } on DioError catch (e) {
-      print("DioError: ${e.error} and ${e.response}");
 
       if (e.type == DioErrorType.connectTimeout) {
         return ResponseEntity.Timeout();

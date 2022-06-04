@@ -17,6 +17,7 @@ class TransactionData {
       this.parentId});
 
   factory TransactionData.fromServer(dynamic json) {
+    print(json);
     return TransactionData(
       transactionType: getTransactionType(json["type"]),
       name: json["name"],
