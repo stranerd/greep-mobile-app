@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/AuthenticationState.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
@@ -48,6 +49,15 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
       return [];
     }
     return _customerTransactions[userId]!.toList();
+  }
+
+  Transaction? getByParentBalance(String userId, String parentId){
+    if (_customerTransactions[userId]==null || _customerTransactions[userId]!.isEmpty){
+      return null;
+    }
+    List<Transaction> transactions = _customerTransactions[userId]!;
+    Transaction? transaction = transactions.firstWhereOrNull((element) => element.id == parentId);
+    return transaction;
   }
 
   @override

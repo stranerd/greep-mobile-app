@@ -19,13 +19,19 @@ const Widget kVerticalSpaceRegular = SizedBox(height: kDefaultSpacing);
 const Widget kVerticalSpaceMedium = SizedBox(height: kDefaultSpacing * 1.5);
 const Widget kVerticalSpaceLarge = SizedBox(height: kDefaultSpacing * 2.0);
 
-
-
-var kDefaultTextStyle =
-    GoogleFonts.poppins(fontSize: 15.18, color: kBlackColor,);
+var kDefaultTextStyle = GoogleFonts.poppins(
+  fontSize: 15.18,
+  color: kBlackColor,
+);
 
 var kBoldTextStyle = kDefaultTextStyle.copyWith(
   fontWeight: FontWeight.bold,
+);
+
+var kBoldTextStyle2 = const TextStyle(
+  fontFamily: "Poppins-Bold",
+  fontSize: 15.18,
+  color: kBlackColor,
 );
 
 var kErrorColorTextStyle = kDefaultTextStyle.copyWith(color: kErrorColor);
@@ -52,7 +58,5 @@ var kPrimaryTextStyle = kDefaultTextStyle.copyWith(
   color: kPrimaryColor,
 );
 
-var kSubtitleTextStyle2 = kDefaultTextStyle.copyWith(
-  color: kBlackColor3,
-  fontSize: 15
-);
+var kSubtitleTextStyle2 =
+    kDefaultTextStyle.copyWith(color: kBlackColor3, fontSize: 15);

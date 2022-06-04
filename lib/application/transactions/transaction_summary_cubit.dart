@@ -38,38 +38,47 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
 
     _transactions.forEach((key, value) {
       // calculate today
-      _today[key] = _calculate( value, today, now);
+      _today[key] = calculate(key, today, now);
+
       // calculate yesterday
-      _yesterday[key] = _calculate( value, yesterday, now);
+      _yesterday[key] = calculate(key, yesterday, today);
     });
   }
 
-  TransactionSummary _calculate(List<Transaction> transactions,
-      DateTime from, DateTime to) {
-    print("calculate transaction no ${transactions.length} $from $to");
+  TransactionSummary calculate(String userId, DateTime from, DateTime to) {
+    if (_transactions[userId] == null || _transactions[userId]!.isEmpty) {
+      return TransactionSummary.Zero();
+    }
+    List<Transaction> transactions = _transactions[userId]!;
+
 
     late TransactionSummary transactionSummary;
 
     var filteredTrans = transactions.where((element) {
-      print(element.timeCreated);
-      return from.isBefore(element.timeCreated) && to.isAfter(element.timeCreated);
+      return from.isBefore(element.timeCreated) &&
+          to.isAfter(element.timeCreated);
     }).toList();
 
-    print(filteredTrans);
-    num amount = filteredTrans.isNotEmpty ? filteredTrans
-        .map((e) => e.amount)
-        .reduce((value, element) => value + element): 0;
-    num trips = filteredTrans.isNotEmpty ?  filteredTrans
-        .map((e) => e.data)
-        .where((element) => element.transactionType == TransactionType.trip)
-        .length: 0;
-    num expenses = filteredTrans.isNotEmpty ?  filteredTrans
-        .map((e) => e.data)
-        .where((element) => element.transactionType == TransactionType.expense)
-        .length : 0;
+    num amount = filteredTrans.isNotEmpty
+        ? filteredTrans
+            .map((e) => e.amount)
+            .reduce((value, element) => value + element)
+        : 0;
+    num trips = filteredTrans.isNotEmpty
+        ? filteredTrans
+            .map((e) => e.data)
+            .where((element) => element.transactionType == TransactionType.trip)
+            .length
+        : 0;
+    num expenses = filteredTrans.isNotEmpty
+        ? filteredTrans
+            .map((e) => e.data)
+            .where(
+                (element) => element.transactionType == TransactionType.expense)
+            .length
+        : 0;
     transactionSummary =
         TransactionSummary(amount: amount, trips: trips, expenses: expenses);
-    print("transaction summary $transactionSummary");
     return transactionSummary;
   }
 

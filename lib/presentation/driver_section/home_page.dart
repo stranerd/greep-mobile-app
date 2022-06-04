@@ -9,7 +9,12 @@ import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/application/user/user_state.dart';
 import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/domain/transaction/transaction.dart';
+import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
+import 'package:grip/presentation/driver_section/widgets/transaction_interval_summary.dart';
+import 'package:grip/presentation/widgets/customer_transaction_list.dart';
 import 'package:intl/intl.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../utils/constants/app_colors.dart';
 import '../../utils/constants/app_styles.dart';
@@ -30,10 +35,22 @@ class DriverHomePage extends StatefulWidget {
 }
 
 class _DriverHomePageState extends State<DriverHomePage> {
+  late RefreshController _refreshController;
+  late UserTransactionsCubit _userTransactionsCubit;
+
+  @override
+  void initState() {
+    _refreshController = RefreshController();
+    _userTransactionsCubit = GetIt.I<UserTransactionsCubit>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UserCubit, UserState>(
       builder: (context, userState) {
+        var userId = GetIt.I<UserCubit>().userId!;
+
         return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
@@ -45,292 +62,208 @@ class _DriverHomePageState extends State<DriverHomePage> {
               centerTitle: true,
               elevation: 0.0,
             ),
-            body: BlocBuilder<TransactionSummaryCubit, TransactionSummaryState>(
-              builder: (context, summaryState) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(kDefaultSpacing * 0.5, 0.0, kDefaultSpacing * 0.5, 0.0),
-                  child: SafeArea(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ListTile(
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                            title: Text(
-                              DateFormat(
-                                      "${DateFormat.ABBR_WEEKDAY}, ${DateFormat.ABBR_MONTH} ${DateFormat.DAY}")
-                                  .format(DateTime.now()),
-                              style: AppTextStyles.blackSize12,
-                            ),
-                            subtitle: Text(
-                                "Hi ${userState is UserStateFetched ? userState.user.firstName : "!"}",
-                                style: AppTextStyles.blackSizeBold16),
-                            trailing: CircleAvatar(
-                              backgroundImage: CachedNetworkImageProvider(
-                                  userState is UserStateFetched
-                                      ? userState.user.photoUrl
-                                      : ""),
-                              child: Text(""),
-                            ),
-                          ),
-                          const SizedBox(height: 17.0),
-                          Text("Add a record",
-                              style: AppTextStyles.blackSizeBold12),
-                          const SizedBox(height: 8.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  Get.to(() => const RecordTrip());
-                                },
-                                child: AddRecord(
-                                  color: AppColors.black,
-                                  icon: "assets/icons/local_taxi.svg",
-                                  title: "Trip",
-                                  textStyle: AppTextStyles.blackSize14,
-                                ),
+            body: BlocConsumer<UserTransactionsCubit, UserTransactionsState>(
+              listener: (c,s){
+                if (s is UserTransactionsStateError || s is UserTransactionsStateFetched){
+                  _refreshController.refreshCompleted();
+                }
+              },
+              builder: (context, state) {
+                return BlocBuilder<TransactionSummaryCubit,
+                    TransactionSummaryState>(
+                  builder: (context, summaryState) {
+                    return SafeArea(
+                      child: SmartRefresher(
+                        controller: _refreshController,
+                        onRefresh: onRefresh,
+                        child: ListView(
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.symmetric(horizontal: kDefaultSpacing * 0.5),
+                          physics: const ScrollPhysics(),
+                          children: [
+                            ListTile(
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              title: Text(
+                                DateFormat(
+                                        "${DateFormat.ABBR_WEEKDAY}, ${DateFormat.ABBR_MONTH} ${DateFormat.DAY}")
+                                    .format(DateTime.now()),
+                                style: AppTextStyles.blackSize12,
                               ),
-                              InkWell(
-                                onTap: () {
-                                  Get.to(() => const RecordExpense());
-                                },
-                                child: AddRecord(
-                                  color: AppColors.red,
-                                  icon: "assets/icons/handyman.svg",
-                                  title: "Expenses",
-                                  textStyle: AppTextStyles.redSize14,
-                                ),
+                              subtitle: Text(
+                                  "Hi ${userState is UserStateFetched ? userState.user.firstName : "!"}",
+                                  style: AppTextStyles.blackSizeBold16),
+                              trailing: CircleAvatar(
+                                backgroundImage: CachedNetworkImageProvider(
+                                    userState is UserStateFetched
+                                        ? userState.user.photoUrl
+                                        : ""),
+                                child: const Text(""),
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 16.0),
-
-                          ListTile(
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                            title: Text("Today",
-                                style: AppTextStyles.blackSizeBold12),
-                            trailing: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ViewAllRecords()),
-                                );
-                              },
-                              child: Text("view all",
-                                  style: AppTextStyles.blackSize12),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 8.0,
-                          ),
-                          Builder(
-                            builder: (context) {
-                              TransactionSummary transactionSummary = GetIt.I<TransactionSummaryCubit>().todaySummary(GetIt.I<UserCubit>().userId!);
-                              return LayoutBuilder(
-                                builder: (context, constraints) {
-                                  return Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      RecordCard(
-                                        width: constraints.maxWidth * 0.31,
-                                        title: "N${transactionSummary.amount}",
-                                        subtitle: "Income",
-                                        subtitleStyle: AppTextStyles.blackSize12,
-                                        titleStyle: AppTextStyles.greenSize16,
-                                      ),
-
-                                      RecordCard(
-                                        title: "${transactionSummary.trips}",
-                                        subtitle: "Trips",
-                                        subtitleStyle: AppTextStyles.blackSize12,
-                                        titleStyle: AppTextStyles.blackSize16,
-                                      ),
-
-                                      RecordCard(
-                                        title: "${transactionSummary.expenses}",
-                                        subtitle: "Expenses",
-                                        subtitleStyle: AppTextStyles.blackSize12,
-                                        titleStyle: AppTextStyles.blackSize16,
-                                      ),
-                                    ],
-                                  );
-                                }
-                              );
-                            }
-                          ),
-                          const SizedBox(
-                            height: 16.0,
-                          ),
-                          ListTile(
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                            title: Text("Yesterday",
-                                style: AppTextStyles.blackSizeBold12),
-                            trailing: Text("view all",
-                                style: AppTextStyles.blackSize12),
-                          ),
-                          const SizedBox(
-                            height: 8.0,
-                          ),
-                          Builder(
-                            builder: (context) {
-                              TransactionSummary transactionSummary = GetIt.I<TransactionSummaryCubit>().yesterdaySummary(GetIt.I<UserCubit>().userId!);
-
+                            kVerticalSpaceRegular,
+                            Text("Add a record",
+                                style:
+                                    kBoldTextStyle2.copyWith(fontSize: 13)),
+                            kVerticalSpaceSmall,
+                            LayoutBuilder(builder: (context, constraints) {
                               return Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  RecordCard(
-                                    title: "N${transactionSummary.amount}",
-                                    subtitle: "Income",
-                                    subtitleStyle: AppTextStyles.blackSize12,
-                                    titleStyle: AppTextStyles.greenSize16,
+                                  InkWell(
+                                    onTap: () {
+                                      Get.to(() => const RecordTrip());
+                                    },
+                                    child: AddRecord(
+                                      width: constraints.maxWidth * 0.47,
+                                      color: AppColors.black,
+                                      icon: "assets/icons/local_taxi.svg",
+                                      title: "Trip",
+                                      textStyle: AppTextStyles.blackSize14,
+                                    ),
                                   ),
-                                  const SizedBox(
-                                    width: 8.0,
-                                  ),
-                                  RecordCard(
-                                    title: "${transactionSummary.trips}",
-                                    subtitle: "Trips",
-                                    subtitleStyle: AppTextStyles.blackSize12,
-                                    titleStyle: AppTextStyles.blackSize16,
-                                  ),
-                                  const SizedBox(
-                                    width: 8.0,
-                                  ),
-                                  RecordCard(
-                                    title: "${transactionSummary.expenses}",
-                                    subtitle: "Expenses",
-                                    subtitleStyle: AppTextStyles.blackSize12,
-                                    titleStyle: AppTextStyles.blackSize16,
+                                  InkWell(
+                                    onTap: () {
+                                      Get.to(() => const RecordExpense());
+                                    },
+                                    child: AddRecord(
+                                      width: constraints.maxWidth * 0.47,
+                                      color: AppColors.red,
+                                      icon: "assets/icons/handyman.svg",
+                                      title: "Expenses",
+                                      textStyle: AppTextStyles.redSize14,
+                                    ),
                                   ),
                                 ],
                               );
-                            }
-                          ),
-                          const SizedBox(
-                            height: 16.0,
-                          ),
-                          ListTile(
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                            title: Text("Customers",
-                                style: AppTextStyles.blackSizeBold12),
-                            trailing: InkWell(
+                            }),
+                            kVerticalSpaceRegular,
+                            ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              title: Text("Today",
+                                  style: AppTextStyles.blackSizeBold12),
+                              trailing: InkWell(
                                 onTap: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            const CustomerView()),
+                                            const ViewAllRecords()),
                                   );
                                 },
                                 child: Text("view all",
-                                    style: AppTextStyles.blackSize12)),
-                          ),
-                          const SizedBox(
-                            height: 8.0,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomerRecordCard(
-                                title: "\$8",
-                                subtitle: "To pay",
-                                subtextTitle: "Kemi",
-                                subtextTitleStyle: AppTextStyles.blackSize12,
-                                subtitleStyle: AppTextStyles.blackSize12,
-                                titleStyle: AppTextStyles.greenSize16,
+                                    style: AppTextStyles.blackSize12),
                               ),
-                              const SizedBox(
-                                width: 8.0,
-                              ),
-                              CustomerRecordCard(
-                                title: "\$0",
-                                subtitle: "Balanced",
-                                subtextTitle: "Dammy",
-                                subtextTitleStyle: AppTextStyles.blackSize12,
-                                subtitleStyle: AppTextStyles.blackSize12,
-                                titleStyle: AppTextStyles.blackSize16,
-                              ),
-                              const SizedBox(
-                                width: 8.0,
-                              ),
-                              CustomerRecordCard(
-                                title: "\$6",
-                                subtitle: "To collect",
-                                subtextTitle: "Klintin",
-                                subtextTitleStyle: AppTextStyles.blackSize12,
-                                subtitleStyle: AppTextStyles.blackSize12,
-                                titleStyle: AppTextStyles.blueSize16,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 16.0,
-                          ),
-                          ListTile(
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                            title: Text("Transaction history",
-                                style: AppTextStyles.blackSizeBold12),
-                            trailing: Text("view all",
-                                style: AppTextStyles.blackSize12),
-                          ),
-                          const SizedBox(
-                            height: 8.0,
-                          ),
-                          Column(
-                            children: [
-                              TransactionListCard(
-                                title: "Kemi",
-                                subtitle: "Mar 19 . 10:54 AM",
-                                trailing: "+20\$",
-                                titleStyle: AppTextStyles.blackSize14,
-                                subtitleStyle: AppTextStyles.blackSize12,
-                                trailingStyle: AppTextStyles.greenSize14,
-                              ),
-                              const SizedBox(height: 16.0),
-                              TransactionListCard(
-                                title: "Fuel",
-                                subtitle: "Mar 18 . 6:24 PM",
-                                trailing: "-17\$",
-                                titleStyle: AppTextStyles.blackSize14,
-                                subtitleStyle: AppTextStyles.blackSize12,
-                                trailingStyle: AppTextStyles.redSize14,
-                              ),
-                              const SizedBox(height: 16.0),
-                              TransactionListCard(
-                                title: "Kemi",
-                                subtitle: "Mar 19 . 10:54 AM",
-                                trailing: "+20\$",
-                                titleStyle: AppTextStyles.blackSize14,
-                                subtitleStyle: AppTextStyles.blackSize12,
-                                trailingStyle: AppTextStyles.greenSize14,
-                              ),
-                              const SizedBox(height: 16.0),
-                              TransactionListCard(
-                                title: "Fuel",
-                                subtitle: "Mar 18 . 6:24 PM",
-                                trailing: "-17\$",
-                                titleStyle: AppTextStyles.blackSize14,
-                                subtitleStyle: AppTextStyles.blackSize12,
-                                trailingStyle: AppTextStyles.redSize14,
-                              ),
-                            ],
-                          ),
-                        ],
+                            ),
+                            kVerticalSpaceSmall,
+                            TransactionIntervalSummaryWidget(
+                                userId: userId,
+                                to: DateTime.now(),
+                                from: DateTime(
+                                    DateTime.now().year,
+                                    DateTime.now().month,
+                                    DateTime.now().day)),
+                            kVerticalSpaceRegular,
+                            ListTile(
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              title: Text("Yesterday",
+                                  style: AppTextStyles.blackSizeBold12),
+                              trailing: Text("view all",
+                                  style: AppTextStyles.blackSize12),
+                            ),
+                            kVerticalSpaceSmall,
+                            TransactionIntervalSummaryWidget(
+                                userId: userId,
+                                to: DateTime(
+                                    DateTime.now().year,
+                                    DateTime.now().month,
+                                    DateTime.now().day),
+                                from: DateTime(
+                                    DateTime.now()
+                                        .subtract(const Duration(days: 1))
+                                        .year,
+                                    DateTime.now()
+                                        .subtract(const Duration(days: 1))
+                                        .month,
+                                    DateTime.now()
+                                        .subtract(const Duration(days: 1))
+                                        .day)),
+                            kVerticalSpaceRegular,
+                            ListTile(
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              title: Text("Customers",
+                                  style: AppTextStyles.blackSizeBold12),
+                              trailing: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const CustomerView()),
+                                    );
+                                  },
+                                  child: Text("view all",
+                                      style: AppTextStyles.blackSize12)),
+                            ),
+
+                            kVerticalSpaceSmall,
+                            CustomerTransactionListWidget(userId: userId,),
+                            kVerticalSpaceRegular,
+                            ListTile(
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              title: Text("Transaction history",
+                                  style: AppTextStyles.blackSizeBold12),
+                              trailing: Text("view all",
+                                  style: AppTextStyles.blackSize12),
+                            ),
+                            kVerticalSpaceSmall,
+                            Builder(builder: (context) {
+                              List<Transaction> transactions =
+                                  GetIt.I<UserTransactionsCubit>()
+                                      .getLastUserTransactions(userId);
+                              if (transactions.isEmpty) {
+                                return const EmptyResultWidget(
+                                    text: "No recent transactions");
+                              }
+                              return ListView.builder(
+                                itemCount: transactions.length,
+                                physics:
+                                    const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                padding: EdgeInsets.zero,
+                                itemBuilder: (c, i) {
+                                  return TransactionListCard(
+                                    title: "Kemi",
+                                    subtitle: "Mar 19 . 10:54 AM",
+                                    trailing: "+20\$",
+                                    transaction: transactions[i],
+                                    titleStyle: AppTextStyles.blackSize14,
+                                    subtitleStyle:
+                                        AppTextStyles.blackSize12,
+                                    trailingStyle:
+                                        AppTextStyles.greenSize14,
+                                  );
+                                },
+                              );
+                            }),
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 );
               },
             ));
       },
     );
+  }
+
+  void onRefresh() {
+    _userTransactionsCubit.fetchUserTransactions(
+        requestId: GetIt.I<UserCubit>().userId!, fullRefresh: true);
   }
 }

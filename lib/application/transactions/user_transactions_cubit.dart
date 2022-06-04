@@ -105,4 +105,13 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
     transactions.clear();
     emit(UserTransactionsInitial());
   }
+
+  List<Transaction> getLastUserTransactions(String userId) {
+    if (transactions[userId] == null || transactions[userId]!.isEmpty){
+      return const [];
+    }
+    List<Transaction> userTransactions = transactions[userId]!.toList();
+    userTransactions.sort((a, b) => a.timeCreated.compareTo(b.timeCreated));
+    return userTransactions.take(10).toList();
+  }
 }

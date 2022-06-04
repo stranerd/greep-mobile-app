@@ -25,7 +25,7 @@ class RecordCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(kDefaultSpacing * 0.75),
       height: 80,
-      width: width ?? Get.width * 0.3,
+      width: width ?? Get.width * 0.31,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8.0),

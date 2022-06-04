@@ -16,6 +16,6 @@ requestInterceptors(
   var token = await pref.getAuthToken();
   print("${useRefreshToken ? "": "not"} using refresh token");
   options.contentType = "application/json";
-  options.headers.putIfAbsent("Access-Token", () => "${!useRefreshToken ? token["token"] ??"": token["refreshToken"] ?? ""}");
+  options.headers.putIfAbsent("Access-Token", () => "${token["token"] ??""}");
   handler.next(options);
 }
