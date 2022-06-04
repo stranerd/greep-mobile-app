@@ -131,34 +131,35 @@ class _DriverHomePageState extends State<DriverHomePage> {
                           Builder(
                             builder: (context) {
                               TransactionSummary transactionSummary = GetIt.I<TransactionSummaryCubit>().todaySummary(GetIt.I<UserCubit>().userId!);
-                              return Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  RecordCard(
-                                    title: "N${transactionSummary.amount}",
-                                    subtitle: "Income",
-                                    subtitleStyle: AppTextStyles.blackSize12,
-                                    titleStyle: AppTextStyles.greenSize16,
-                                  ),
-                                  const SizedBox(
-                                    width: 8.0,
-                                  ),
-                                  RecordCard(
-                                    title: "${transactionSummary.trips}",
-                                    subtitle: "Trips",
-                                    subtitleStyle: AppTextStyles.blackSize12,
-                                    titleStyle: AppTextStyles.blackSize16,
-                                  ),
-                                  const SizedBox(
-                                    width: 8.0,
-                                  ),
-                                  RecordCard(
-                                    title: "${transactionSummary.expenses}",
-                                    subtitle: "Expenses",
-                                    subtitleStyle: AppTextStyles.blackSize12,
-                                    titleStyle: AppTextStyles.blackSize16,
-                                  ),
-                                ],
+                              return LayoutBuilder(
+                                builder: (context, constraints) {
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      RecordCard(
+                                        width: constraints.maxWidth * 0.31,
+                                        title: "N${transactionSummary.amount}",
+                                        subtitle: "Income",
+                                        subtitleStyle: AppTextStyles.blackSize12,
+                                        titleStyle: AppTextStyles.greenSize16,
+                                      ),
+
+                                      RecordCard(
+                                        title: "${transactionSummary.trips}",
+                                        subtitle: "Trips",
+                                        subtitleStyle: AppTextStyles.blackSize12,
+                                        titleStyle: AppTextStyles.blackSize16,
+                                      ),
+
+                                      RecordCard(
+                                        title: "${transactionSummary.expenses}",
+                                        subtitle: "Expenses",
+                                        subtitleStyle: AppTextStyles.blackSize12,
+                                        titleStyle: AppTextStyles.blackSize16,
+                                      ),
+                                    ],
+                                  );
+                                }
                               );
                             }
                           ),

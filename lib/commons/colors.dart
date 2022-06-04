@@ -11,5 +11,6 @@ const kGreyTextColor = Color.fromRGBO(65, 63, 63, 0.73);
 const kBorderColor = Color(0xffF3F6F8);
 var kGreyColorLight = Colors.grey.shade200;
 const kBlackColor2 = Color(0xff1F1F1F);
-const kGreyColor = Color(0xff323232);
+const kGreyColor = Color(0xffF3F6F8);
+const kGreyColor2 = Color(0xffDDE2E0);
 const kBlackColor3 = Colors.black45;
