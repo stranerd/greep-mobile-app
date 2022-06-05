@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/transactions/transaction_summary.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
+import 'package:grip/commons/money.dart';
 import 'package:grip/presentation/driver_section/widgets/record_card.dart';
 import 'package:grip/utils/constants/app_styles.dart';
 
@@ -25,19 +26,19 @@ class TransactionIntervalSummaryWidget extends StatelessWidget {
         children: [
           RecordCard(
             width: constraints.maxWidth * 0.31,
-            title: "N${transactionSummary.amount}",
+            title: "N${transactionSummary.amount.toMoney}",
             subtitle: "Income",
             subtitleStyle: AppTextStyles.blackSize12,
             titleStyle: AppTextStyles.greenSize16,
           ),
           RecordCard(
-            title: "${transactionSummary.trips}",
+            title: "N${transactionSummary.trips.toMoney}",
             subtitle: "Trips",
             subtitleStyle: AppTextStyles.blackSize12,
             titleStyle: AppTextStyles.blackSize16,
           ),
           RecordCard(
-            title: "${transactionSummary.expenses}",
+            title: "N${transactionSummary.expenses.toMoney}",
             subtitle: "Expenses",
             subtitleStyle: AppTextStyles.blackSize12,
             titleStyle: AppTextStyles.blackSize16,

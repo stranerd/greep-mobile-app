@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
+import 'package:grip/application/transactions/customer_statistics_cubit.dart';
+import 'package:grip/application/user/user_cubit.dart';
+import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/domain/transaction/transaction.dart';
+import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
 
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_styles.dart';
@@ -81,52 +88,46 @@ class _CustomerViewState extends State<CustomerView> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16.0),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CustomerDetails(),
-                      ),
+                kVerticalSpaceMedium,
+                Builder(builder: (c) {
+                  String userId = GetIt.I<UserCubit>().userId!;
+                  List<Transaction> transactions =
+                      GetIt.I<CustomerStatisticsCubit>()
+                          .getDebtTransactions(userId);
+                  print(transactions.length);
+                  if (transactions.isEmpty) {
+                    return SizedBox(
+                      height: Get.height * 0.7,
+                      child: const EmptyResultWidget(
+                          text: "No Customer transactions"),
                     );
-                  },
-                  child: CustomerCardView(
-                      title: "Kemi",
-                      subtitle: "8\$",
-                      titleStyle: AppTextStyles.blackSize16,
-                      subtitleStyle: AppTextStyles.redSize16),
-                ),
-                const SizedBox(height: 8.0),
-                CustomerCardView(
-                    title: "Dammy",
-                    subtitle: "0\$",
-                    titleStyle: AppTextStyles.blackSize16,
-                    subtitleStyle: AppTextStyles.blackSize16),
-                const SizedBox(height: 8.0),
-                CustomerCardView(
-                    title: "Klintin",
-                    subtitle: "6\$",
-                    titleStyle: AppTextStyles.blackSize16,
-                    subtitleStyle: AppTextStyles.blueSize16),
-                const SizedBox(height: 8.0),
-                CustomerCardView(
-                    title: "Jesse",
-                    subtitle: "8\$",
-                    titleStyle: AppTextStyles.blackSize16,
-                    subtitleStyle: AppTextStyles.redSize16),
-                const SizedBox(height: 8.0),
-                CustomerCardView(
-                    title: "Winona",
-                    subtitle: "0\$",
-                    titleStyle: AppTextStyles.blackSize16,
-                    subtitleStyle: AppTextStyles.blackSize16),
-                const SizedBox(height: 8.0),
-                CustomerCardView(
-                    title: "Alphonso",
-                    subtitle: "6\$",
-                    titleStyle: AppTextStyles.blackSize16,
-                    subtitleStyle: AppTextStyles.blueSize16),
+                  }
+
+                  return ListView.separated(
+                      separatorBuilder: (c, i) => kVerticalSpaceSmall,
+                      shrinkWrap: true,
+                      physics: const ScrollPhysics(),
+                      itemCount: transactions.length,
+                      itemBuilder: (c, i) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const CustomerDetails(),
+                              ),
+                            );
+                          },
+                          child: CustomerCardView(
+                              title: "Kemi",
+                              transaction: transactions[i],
+                              userId: userId,
+                              subtitle: "8\$",
+                              titleStyle: AppTextStyles.blackSize16,
+                              subtitleStyle: AppTextStyles.redSize16),
+                        );
+                      });
+                }),
               ],
             ),
           ),
