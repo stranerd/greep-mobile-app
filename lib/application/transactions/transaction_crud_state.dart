@@ -6,6 +6,7 @@ abstract class TransactionCrudState {}
 class TransactionCrudInitial extends TransactionCrudState {
 }
 
+class TransactionCrudStateLoading extends TransactionCrudState {}
 class TransactionCrudStateSuccess extends TransactionCrudState {}
 
 class TransactionCrudStateFailure extends TransactionCrudState {
