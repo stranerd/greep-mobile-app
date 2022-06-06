@@ -33,6 +33,8 @@ class TransactionIntervalSummaryWidget extends StatelessWidget {
           ),
           RecordCard(
             title: transactionSummary.trips.toMoney,
+            width: constraints.maxWidth * 0.31,
+
             subtitle: "Trips",
             subtitleStyle: AppTextStyles.blackSize12,
             titleStyle: AppTextStyles.blackSize16,
@@ -40,6 +42,8 @@ class TransactionIntervalSummaryWidget extends StatelessWidget {
           RecordCard(
             title: transactionSummary.expenses.toMoney,
             subtitle: "Expenses",
+            width: constraints.maxWidth * 0.31,
+
             subtitleStyle: AppTextStyles.blackSize12,
             titleStyle: AppTextStyles.blackSize16,
           ),

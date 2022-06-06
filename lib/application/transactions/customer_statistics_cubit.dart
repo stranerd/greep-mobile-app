@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/AuthenticationState.dart';
+import 'package:grip/application/transactions/response/customer_summary.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
@@ -38,26 +39,55 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
   }
 
   void _calculateStatistics() {
-    _customerTransactions = _transactions.map((key, value) => MapEntry(
-        key,
-        value.where((element) =>
-            element.data.transactionType == TransactionType.trip || element.data.transactionType == TransactionType.balance).toList()));
+    _customerTransactions = _transactions.map((key, value) =>
+        MapEntry(
+            key,
+            value.where((element) =>
+            element.data.transactionType == TransactionType.trip ||
+                element.data.transactionType == TransactionType.balance)
+                .toList()));
   }
 
   List<Transaction> getDebtTransactions(String userId) {
-    if (_customerTransactions[userId]==null || _customerTransactions[userId]!.isEmpty){
+    if (_customerTransactions[userId] == null ||
+        _customerTransactions[userId]!.isEmpty) {
       return [];
     }
     return _customerTransactions[userId]!.toList();
   }
 
-  Transaction? getByParentBalance(String userId, String parentId){
-    if (_customerTransactions[userId]==null || _customerTransactions[userId]!.isEmpty){
+  Transaction? getByParentBalance(String userId, String parentId) {
+    if (_customerTransactions[userId] == null ||
+        _customerTransactions[userId]!.isEmpty) {
       return null;
     }
     List<Transaction> transactions = _customerTransactions[userId]!;
-    Transaction? transaction = transactions.firstWhereOrNull((element) => element.id == parentId);
+    Transaction? transaction = transactions.firstWhereOrNull((
+        element) => element.id == parentId);
     return transaction;
+  }
+
+  CustomerSummary getCustomerSummary(String name, String userId) {
+    if (_customerTransactions[userId] == null ||
+        _customerTransactions[userId]!.isEmpty) {
+      return CustomerSummary.Zero(name);
+    }
+    List<Transaction> _transactions = _customerTransactions[userId]!;
+    List<Transaction> _custTransactions = _transactions.where((e) =>
+    e.data.transactionType == TransactionType.trip &&
+        e.data.customerName!.toLowerCase() == name.toLowerCase()).toList();
+
+    return CustomerSummary(name: name,
+        totalPaid: _custTransactions.map((e) => e.amount).reduce((value,
+            element) => value + value),
+        toCollect: _custTransactions.map((e) => e.data.debt).reduce((value,
+            element) {
+          value = value ?? 0;
+          element = element ?? 0;
+          return element + value;
+        })!,
+        transactions: _custTransactions,
+        toPay: 0);
   }
 
   @override

@@ -114,7 +114,10 @@ class _CustomerViewState extends State<CustomerView> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const CustomerDetails(),
+                                builder: (context) => CustomerDetails(
+                                  name: transactions[i].data.customerName!,
+                                  userId: userId,
+                                ),
                               ),
                             );
                           },
