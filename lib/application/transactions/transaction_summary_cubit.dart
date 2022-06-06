@@ -82,7 +82,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
             .length
         : 0;
     transactionSummary =
-        TransactionSummary(amount: amount, trips: trips, expenses: expenses);
+        TransactionSummary(amount: amount, trips: trips, expenses: expenses, transactions: filteredTrans);
     return transactionSummary;
   }
 
@@ -134,6 +134,15 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     }
 
     return map;
+  }
+
+  List<Transaction> filterTransactions(String userId, DateTime from, DateTime to) {
+    if (_transactions[userId] == null || _transactions[userId]!.isEmpty) {
+      return [];
+    }
+
+    return calculate(userId, from, to).transactions;
+
   }
 
   @override

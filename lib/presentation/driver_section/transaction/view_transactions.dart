@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/transactions/response/transaction_summary.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
@@ -27,6 +30,9 @@ class TransactionView extends StatefulWidget {
 
 class _TransactionViewState extends State<TransactionView> {
   Map<DateTime, TransactionSummary> transactions = {};
+
+  DateTime? from;
+  DateTime? to;
 
   @override
   void initState() {
@@ -188,17 +194,24 @@ class _TransactionViewState extends State<TransactionView> {
                         Row(
                           children: [
                             Flexible(
-                              child: Container(
-                                width: 150.w,
-                                padding:
-                                    const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: AppColors.lightGray,
-                                ),
-                                child: Text(
-                                  "Select Date",
-                                  style: AppTextStyles.blackSize14,
+                              child: GestureDetector(
+                                onTap: () => _pickDate(true),
+                                child: Container(
+                                  width: 150.w,
+                                  padding:
+                                      const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: AppColors.lightGray,
+                                  ),
+                                  child: Text(
+                                    from == null
+                                        ? "Select Date..."
+                                        : DateFormat(
+                                        "${DateFormat.DAY}/${DateFormat.MONTH}/${DateFormat.YEAR} ")
+                                        .format(from!),
+                                    style: AppTextStyles.blackSize14,
+                                  ),
                                 ),
                               ),
                             ),
@@ -206,17 +219,24 @@ class _TransactionViewState extends State<TransactionView> {
                               width: 16.0,
                             ),
                             Flexible(
-                              child: Container(
-                                width: 150.w,
-                                padding:
-                                    const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: AppColors.lightGray,
-                                ),
-                                child: Text(
-                                  "Select Date",
-                                  style: AppTextStyles.blackSize14,
+                              child: GestureDetector(
+                                onTap: () => _pickDate(false),
+                                child: Container(
+                                  width: 150.w,
+                                  padding:
+                                      const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: AppColors.lightGray,
+                                  ),
+                                  child: Text(
+                                    to == null
+                                        ? "Select Date..."
+                                        : DateFormat(
+                                        "${DateFormat.DAY}/${DateFormat.MONTH}/${DateFormat.YEAR} ")
+                                        .format(to!),
+                                    style: AppTextStyles.blackSize14,
+                                  ),
                                 ),
                               ),
                             ),
@@ -227,12 +247,9 @@ class _TransactionViewState extends State<TransactionView> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const Range(),
-                              ),
-                            );
+                            if (from!=null && to !=null){
+                              Get.to(() => Range(userId: GetIt.I<UserCubit>().userId!,from: from!,to: to!,));
+                            }
                           },
                           child: Container(
                             width: double.infinity,
@@ -258,5 +275,28 @@ class _TransactionViewState extends State<TransactionView> {
         ),
       ),
     );
+  }
+
+  void _pickDate(bool isFrom) {
+    showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime.now().subtract(const Duration(days: 365 * 10)),
+        lastDate: DateTime.now().add(const Duration(days: 365 * 2))).then((value) {
+      if (value !=null){
+        if (isFrom){
+          from = value;
+        }
+        else {
+          to = value;
+        }
+        setState(() {
+
+        });
+      }
+          }
+    );
+
+
   }
 }

@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
+import 'package:grip/application/transactions/transaction_summary_cubit.dart';
+import 'package:grip/domain/transaction/transaction.dart';
+import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
+import 'package:intl/intl.dart';
 
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_styles.dart';
@@ -9,8 +15,33 @@ import 'to_pay_screen.dart';
 import 'trip.dart';
 import 'view_expense.dart';
 
-class Range extends StatelessWidget {
-  const Range({Key? key}) : super(key: key);
+class Range extends StatefulWidget {
+  final String userId;
+  final DateTime from;
+  final DateTime to;
+
+  const Range(
+      {Key? key, required this.userId, required this.to, required this.from})
+      : super(key: key);
+
+  @override
+  State<Range> createState() => _RangeState();
+}
+
+class _RangeState extends State<Range> {
+  List<Transaction> transactions = [];
+
+  @override
+  void initState() {
+    transactions = GetIt.I<TransactionSummaryCubit>().filterTransactions(
+      widget.userId,
+      widget.from,
+      widget.to,
+    );
+
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,316 +65,61 @@ class Range extends StatelessWidget {
         centerTitle: true,
         elevation: 0.0,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("14 Mar 2022 - 2 Apr 2022 ",
-                  style: AppTextStyles.blackSizeBold12),
-              const SizedBox(
-                height: 8.0,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const TripScreen(),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+                "${DateFormat("${DateFormat.DAY} ${DateFormat.ABBR_MONTH} ${DateFormat.YEAR}").format(widget.from)} - ${DateFormat("${DateFormat.DAY} ${DateFormat.ABBR_MONTH} ${DateFormat.YEAR}").format(widget.to)} ",
+                style: AppTextStyles.blackSizeBold12),
+            const SizedBox(
+              height: 8.0,
+            ),
+            if (transactions.isEmpty)SizedBox(
+                height: Get.height * 0.7,
+                child: const EmptyResultWidget(text: "No transactions found")),
+           if (transactions.isNotEmpty) Expanded(child:
+            ListView(
+              shrinkWrap: true,
+              physics: const ScrollPhysics(),
+              children: transactions.map((e) {
+                return  GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TripScreen(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.white,
+                      border: Border.all(
+                          width: 1,
+                          color: const Color.fromRGBO(221, 226, 224, 1)),
                     ),
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.white,
-                    border: Border.all(
-                        width: 1,
-                        color: const Color.fromRGBO(221, 226, 224, 1)),
-                  ),
-                  child: TransactionCard(
-                    title: "Kemi",
-                    subtitle: "Mar 19 . 10:54 AM",
-                    trailing: "+20\$",
-                    subTrailing: "Trip",
-                    subTrailingStyle: AppTextStyles.blackSize12,
-                    titleStyle: AppTextStyles.blackSize14,
-                    subtitleStyle: AppTextStyles.blackSize12,
-                    trailingStyle: AppTextStyles.greenSize14,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ViewExpense(),
+                    child: TransactionCard(
+                      title: "Kemi",
+                      subtitle: "Mar 19 . 10:54 AM",
+                      transaction: e,
+                      trailing: "+20\$",
+                      subTrailing: "Trip",
+                      subTrailingStyle: AppTextStyles.blackSize12,
+                      titleStyle: AppTextStyles.blackSize14,
+                      subtitleStyle: AppTextStyles.blackSize12,
+                      trailingStyle: AppTextStyles.greenSize14,
                     ),
-                  );
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.white,
-                    border: Border.all(
-                        width: 1,
-                        color: const Color.fromRGBO(221, 226, 224, 1)),
                   ),
-                  child: TransactionCard(
-                    title: "Fuel",
-                    subtitle: "Mar 19 . 10:54 AM",
-                    trailing: "-17\$",
-                    subTrailing: "Expense",
-                    subTrailingStyle: AppTextStyles.blackSize12,
-                    titleStyle: AppTextStyles.blackSize14,
-                    subtitleStyle: AppTextStyles.blackSize12,
-                    trailingStyle: AppTextStyles.redSize14,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.white,
-                  border: Border.all(
-                      width: 1, color: const Color.fromRGBO(221, 226, 224, 1)),
-                ),
-                child: TransactionCard(
-                  title: "Bola",
-                  subtitle: "Mar 19 . 10:54 AM",
-                  trailing: "+20\$",
-                  subTrailing: "Trip",
-                  subTrailingStyle: AppTextStyles.blackSize12,
-                  titleStyle: AppTextStyles.blackSize14,
-                  subtitleStyle: AppTextStyles.blackSize12,
-                  trailingStyle: AppTextStyles.greenSize14,
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const BalanceScreen(),
-                    ),
-                  );
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.white,
-                    border: Border.all(
-                        width: 1,
-                        color: const Color.fromRGBO(221, 226, 224, 1)),
-                  ),
-                  child: TransactionCard(
-                    title: "KIlntin",
-                    subtitle: "Mar 19 . 10:54 AM",
-                    trailing: "8\$",
-                    subTrailing: "Balance",
-                    subTrailingStyle: AppTextStyles.blackSize12,
-                    titleStyle: AppTextStyles.blackSize14,
-                    subtitleStyle: AppTextStyles.blackSize12,
-                    trailingStyle: AppTextStyles.blackSize14,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ToPayScreen(),
-                    ),
-                  );
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.white,
-                    border: Border.all(
-                        width: 1,
-                        color: const Color.fromRGBO(221, 226, 224, 1)),
-                  ),
-                  child: TransactionCard(
-                    title: "Dammy",
-                    subtitle: "Mar 19 . 10:54 AM",
-                    trailing: "7\$",
-                    subTrailing: "To pay",
-                    subTrailingStyle: AppTextStyles.blackSize12,
-                    titleStyle: AppTextStyles.blackSize14,
-                    subtitleStyle: AppTextStyles.blackSize12,
-                    trailingStyle: AppTextStyles.redSize14,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ToCollectScreen(),
-                    ),
-                  );
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.white,
-                    border: Border.all(
-                        width: 1,
-                        color: const Color.fromRGBO(221, 226, 224, 1)),
-                  ),
-                  child: TransactionCard(
-                    title: "Felicia",
-                    subtitle: "Mar 19 . 10:54 AM",
-                    trailing: "8\$",
-                    subTrailing: "To collect",
-                    subTrailingStyle: AppTextStyles.blackSize12,
-                    titleStyle: AppTextStyles.blackSize14,
-                    subtitleStyle: AppTextStyles.blackSize12,
-                    trailingStyle: AppTextStyles.blueSize14,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.white,
-                  border: Border.all(
-                      width: 1, color: const Color.fromRGBO(221, 226, 224, 1)),
-                ),
-                child: TransactionCard(
-                  title: "Bola",
-                  subtitle: "Mar 19 . 10:54 AM",
-                  trailing: "+20\$",
-                  subTrailing: "Trip",
-                  subTrailingStyle: AppTextStyles.blackSize12,
-                  titleStyle: AppTextStyles.blackSize14,
-                  subtitleStyle: AppTextStyles.blackSize12,
-                  trailingStyle: AppTextStyles.greenSize14,
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const BalanceScreen(),
-                    ),
-                  );
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.white,
-                    border: Border.all(
-                        width: 1,
-                        color: const Color.fromRGBO(221, 226, 224, 1)),
-                  ),
-                  child: TransactionCard(
-                    title: "KIlntin",
-                    subtitle: "Mar 19 . 10:54 AM",
-                    trailing: "8\$",
-                    subTrailing: "Balance",
-                    subTrailingStyle: AppTextStyles.blackSize12,
-                    titleStyle: AppTextStyles.blackSize14,
-                    subtitleStyle: AppTextStyles.blackSize12,
-                    trailingStyle: AppTextStyles.blackSize14,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ToPayScreen(),
-                    ),
-                  );
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.white,
-                    border: Border.all(
-                        width: 1,
-                        color: const Color.fromRGBO(221, 226, 224, 1)),
-                  ),
-                  child: TransactionCard(
-                    title: "Dammy",
-                    subtitle: "Mar 19 . 10:54 AM",
-                    trailing: "7\$",
-                    subTrailing: "To pay",
-                    subTrailingStyle: AppTextStyles.blackSize12,
-                    titleStyle: AppTextStyles.blackSize14,
-                    subtitleStyle: AppTextStyles.blackSize12,
-                    trailingStyle: AppTextStyles.redSize14,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ToCollectScreen(),
-                    ),
-                  );
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.white,
-                    border: Border.all(
-                        width: 1,
-                        color: const Color.fromRGBO(221, 226, 224, 1)),
-                  ),
-                  child: TransactionCard(
-                    title: "Felicia",
-                    subtitle: "Mar 19 . 10:54 AM",
-                    trailing: "8\$",
-                    subTrailing: "To collect",
-                    subTrailingStyle: AppTextStyles.blackSize12,
-                    titleStyle: AppTextStyles.blackSize14,
-                    subtitleStyle: AppTextStyles.blackSize12,
-                    trailingStyle: AppTextStyles.blueSize14,
-                  ),
-                ),
-              ),
-            ],
-          ),
+                );
+              }).toList(),
+            )),
+
+          ],
         ),
       ),
     );
