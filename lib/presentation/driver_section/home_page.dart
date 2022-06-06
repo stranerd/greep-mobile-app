@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
-import 'package:grip/application/transactions/transaction_summary.dart';
+import 'package:grip/application/transactions/response/transaction_summary.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
@@ -68,10 +68,12 @@ class _DriverHomePageState extends State<DriverHomePage> {
                   _refreshController.refreshCompleted();
                 }
               },
-              builder: (context, state) {
+              builder: (context, transState) {
+                print(transState);
                 return BlocBuilder<TransactionSummaryCubit,
                     TransactionSummaryState>(
                   builder: (context, summaryState) {
+                    print(summaryState);
                     return SafeArea(
                       child: SmartRefresher(
                         controller: _refreshController,
@@ -229,6 +231,9 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                 return const EmptyResultWidget(
                                     text: "No recent transactions");
                               }
+                              print(transactions.first);
+                              transactions.reversed;
+                              print(transactions.first);
                               return ListView.builder(
                                 itemCount: transactions.length,
                                 physics:

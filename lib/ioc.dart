@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
+import 'package:grip/application/transactions/transaction_crud_cubit.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
@@ -18,6 +19,7 @@ class IoC {
   late UserCubit _userCubit;
   late UserTransactionsCubit _userTransactionsCubit;
   late TransactionService _transactionService;
+  late TransactionCrudCubit _transactionCrudCubit;
   var getIt = GetIt.instance;
 
   IoC() {
@@ -41,5 +43,7 @@ class IoC {
     getIt.registerSingleton(CustomerStatisticsCubit(
         transactionsCubit: _userTransactionsCubit,
         authenticationCubit: _authenticationCubit));
+    getIt.registerFactory(() => TransactionCrudCubit(transactionService: _transactionService,)
+    );
   }
 }

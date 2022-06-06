@@ -19,7 +19,7 @@ class AddExpenseRequest {
       "description": description,
       "recordedAt": dateRecorded.millisecondsSinceEpoch,
       "data": {
-        "type": "trip",
+        "type": "expense",
         "name": name,
       }
     };

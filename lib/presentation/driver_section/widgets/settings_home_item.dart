@@ -10,6 +10,7 @@ class SettingsHomeItem extends StatelessWidget {
   final String title;
   final String icon;
 
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,4 +34,5 @@ class SettingsHomeItem extends StatelessWidget {
       ),
     );
   }
+
 }

@@ -8,13 +8,21 @@ class LoginTextField extends StatefulWidget {
   final bool isPassword;
   final Function(String) validator;
   final Function(String) onChanged;
+  final bool withTitle;
+  final int? minLines;
+  final TextInputType? inputType;
+  final TextEditingController? customController;
 
   const LoginTextField(
-      {Key? key,
-      required this.title,
+      {Key? key, this.title = "",
       required this.validator,
-        required this.onChanged,
-      required this.isPassword,})
+        this.isPassword = false,
+        this.withTitle = true,
+        this.inputType,
+        this.minLines,
+        this.customController,
+        required this.onChanged
+        ,})
       : super(key: key);
 
   @override
@@ -43,15 +51,24 @@ class _LoginTextFieldState extends State<LoginTextField> {
   Widget build(BuildContext context) {
     return Container(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(widget.title,style: kDefaultTextStyle,),
-          kVerticalSpaceTiny,
+          if (widget.withTitle)Column(
+            children: [
+              Text(widget.title,style: kDefaultTextStyle,),
+              kVerticalSpaceTiny,
+            ],
+          ),
           TextFormField(
             onChanged: widget.onChanged,
-            controller: editingController,
+            minLines: widget.minLines ?? 1,
+            maxLines: widget.minLines ?? 1,
+            keyboardType: widget.inputType,
+            controller: widget.customController ?? editingController,
             cursorColor: kPrimaryColor,
-            style: Theme.of(context).textTheme.bodyText1,
+            // style: Theme.of(context).textTheme.bodyText1,
             obscureText: widget.isPassword && isObscure,
             decoration: InputDecoration(
                 suffixIcon: widget.isPassword
