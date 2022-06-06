@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:grip/application/transactions/transaction_summary.dart';
+import 'package:grip/application/transactions/transaction_crud_cubit.dart';
+import 'package:grip/application/transactions/response/transaction_summary.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
@@ -42,7 +43,9 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
 
       // calculate yesterday
       _yesterday[key] = calculate(key, yesterday, today);
+
     });
+    emit(TransactionSummaryStateDone());
   }
 
   TransactionSummary calculate(String userId, DateTime from, DateTime to) {

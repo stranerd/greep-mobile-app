@@ -5,4 +5,4 @@ abstract class TransactionSummaryState {}
 
 class TransactionSummaryInitial extends TransactionSummaryState {}
 
-class TransactionSummaryStateFetched  extends TransactionSummaryState {}
+class TransactionSummaryStateDone  extends TransactionSummaryState {}
