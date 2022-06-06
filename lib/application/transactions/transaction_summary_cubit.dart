@@ -12,10 +12,13 @@ part 'transaction_summary_state.dart';
 
 class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
   final UserTransactionsCubit userTransactionsCubit;
+
   late StreamSubscription _streamSubscription;
+
   Map<String, List<Transaction>> _transactions = {};
 
   final Map<String, TransactionSummary> _today = {};
+
   final Map<String, TransactionSummary> _yesterday = {};
 
   TransactionSummaryCubit({required this.userTransactionsCubit})
@@ -43,7 +46,6 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
 
       // calculate yesterday
       _yesterday[key] = calculate(key, yesterday, today);
-
     });
     emit(TransactionSummaryStateDone());
   }
@@ -53,7 +55,6 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
       return TransactionSummary.Zero();
     }
     List<Transaction> transactions = _transactions[userId]!;
-
 
     late TransactionSummary transactionSummary;
 
@@ -99,6 +100,40 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
       return TransactionSummary.Zero();
     }
     return _yesterday[userId]!;
+  }
+
+  Map<DateTime, TransactionSummary> getRecentTransactions(String userId) {
+    if (_transactions[userId] == null || _transactions[userId]!.isEmpty) {
+      return {DateTime.now(): TransactionSummary.Zero()};
+    }
+    Map<DateTime, TransactionSummary> map = {};
+    for (var element in _transactions[userId]!) {
+      map.putIfAbsent(DateTime(element.timeAdded.year, element.timeAdded.month),
+          () {
+        List<Transaction> trans = _transactions[userId]!
+            .where((e) =>
+                e.timeAdded.year == element.timeAdded.year &&
+                element.timeAdded.month == e.timeAdded.month)
+            .toList();
+        return TransactionSummary(
+            amount: trans
+                .map((e) => e.amount)
+                .reduce((value, element) => element + value),
+            trips: trans
+                .map((e) => e.data)
+                .where((element) =>
+                    element.transactionType == TransactionType.trip)
+                .length,
+            expenses: trans
+                .map((e) => e.data)
+                .where((element) =>
+                    element.transactionType == TransactionType.expense)
+                .length,
+            transactions: trans);
+      });
+    }
+
+    return map;
   }
 
   @override

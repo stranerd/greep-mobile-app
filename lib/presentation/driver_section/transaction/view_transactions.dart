@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
+import 'package:grip/application/transactions/response/transaction_summary.dart';
+import 'package:grip/application/transactions/transaction_summary_cubit.dart';
+import 'package:grip/application/user/user_cubit.dart';
+import 'package:grip/commons/money.dart';
+import 'package:grip/commons/ui_helpers.dart';
+import 'package:intl/intl.dart';
 
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_styles.dart';
@@ -11,8 +18,22 @@ import 'trip.dart';
 import 'view_expense.dart';
 import 'view_range_transactions.dart';
 
-class TransactionView extends StatelessWidget {
+class TransactionView extends StatefulWidget {
   const TransactionView({Key? key}) : super(key: key);
+
+  @override
+  State<TransactionView> createState() => _TransactionViewState();
+}
+
+class _TransactionViewState extends State<TransactionView> {
+  Map<DateTime, TransactionSummary> transactions = {};
+
+  @override
+  void initState() {
+    transactions = GetIt.I<TransactionSummaryCubit>()
+        .getRecentTransactions(GetIt.I<UserCubit>().userId!);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,281 +50,123 @@ class TransactionView extends StatelessWidget {
             style: AppTextStyles.blackSizeBold14,
           ),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(width: 1, color: AppColors.black)),
-                  child: TabBar(
-                    indicator: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.black,
-                    ),
-                    labelColor: Colors.white,
-                    labelStyle: AppTextStyles.whiteSize12,
-                    unselectedLabelColor: Colors.black,
-                    unselectedLabelStyle: AppTextStyles.blackSize12,
-                    tabs: const [
-                      Tab(
-                        text: 'Recent',
-                      ),
-                      Tab(
-                        text: 'Range',
-                      ),
-                    ],
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(width: 1, color: AppColors.black)),
+                child: TabBar(
+                  indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.black,
                   ),
+                  labelColor: Colors.white,
+                  labelStyle: AppTextStyles.whiteSize12,
+                  unselectedLabelColor: Colors.black,
+                  unselectedLabelStyle: AppTextStyles.blackSize12,
+                  tabs: const [
+                    Tab(
+                      text: 'Recent',
+                    ),
+                    Tab(
+                      text: 'Range',
+                    ),
+                  ],
                 ),
               ),
-              Container(
+            ),
+            Expanded(
+              child: Container(
                 padding: const EdgeInsets.fromLTRB(16, 32, 16, 20),
-                height: MediaQuery.of(context).size.height -
-                    MediaQuery.of(context).padding.top -
-                    MediaQuery.of(context).padding.bottom -
-                    AppBar().preferredSize.height -
-                    MediaQuery.of(context).padding.top,
                 child: TabBarView(
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Expanded(
+                        child: ListView(
+                      shrinkWrap: true,
+                      physics: const BouncingScrollPhysics(),
+                      children: transactions.values.map((e) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Apr 2022",
-                              style: AppTextStyles.blackSizeBold12,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  DateFormat(
+                                          "${DateFormat.ABBR_MONTH} ${DateFormat.YEAR}")
+                                      .format(e.transactions.isEmpty
+                                          ? DateTime.now()
+                                          : e.transactions.first.timeAdded),
+                                  style: AppTextStyles.blackSizeBold12,
+                                ),
+                                Text(
+                                  "Income: N${e.amount.toMoney}",
+                                  style: AppTextStyles.blackSize10,
+                                ),
+                                Text(
+                                  "Trips: ${e.trips}",
+                                  style: AppTextStyles.blackSize10,
+                                ),
+                                Text(
+                                  "Expenses: ${e.expenses}",
+                                  style: AppTextStyles.blackSize10,
+                                ),
+                              ],
                             ),
-                            Text(
-                              "Income: \$164",
-                              style: AppTextStyles.blackSize10,
+                            const SizedBox(height: 10.0),
+                            ListView(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              children: e.transactions.map((e) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const TripScreen(),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        16, 16, 16, 16),
+                                    margin: const EdgeInsets.only(
+                                      bottom: kDefaultSpacing * 0.5
+                                    ),
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: Colors.white,
+                                      border: Border.all(
+                                          width: 1,
+                                          color: const Color.fromRGBO(
+                                              221, 226, 224, 1)),
+                                    ),
+                                    child: TransactionCard(
+                                      transaction: e,
+                                      title: "Kemi",
+                                      subtitle: "Mar 19 . 10:54 AM",
+                                      trailing: "+20\$",
+                                      subTrailing: "Trip",
+                                      subTrailingStyle:
+                                          AppTextStyles.blackSize12,
+                                      titleStyle: AppTextStyles.blackSize14,
+                                      subtitleStyle: AppTextStyles.blackSize12,
+                                      trailingStyle: AppTextStyles.greenSize14,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
                             ),
-                            Text(
-                              "Trips: 64",
-                              style: AppTextStyles.blackSize10,
-                            ),
-                            Text(
-                              "Expenses: 43",
-                              style: AppTextStyles.blackSize10,
-                            ),
+                            kVerticalSpaceRegular
                           ],
-                        ),
-                        const SizedBox(height: 10.0),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const TripScreen(),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.white,
-                              border: Border.all(
-                                  width: 1,
-                                  color:
-                                      const Color.fromRGBO(221, 226, 224, 1)),
-                            ),
-                            child: TransactionCard(
-                              title: "Kemi",
-                              subtitle: "Mar 19 . 10:54 AM",
-                              trailing: "+20\$",
-                              subTrailing: "Trip",
-                              subTrailingStyle: AppTextStyles.blackSize12,
-                              titleStyle: AppTextStyles.blackSize14,
-                              subtitleStyle: AppTextStyles.blackSize12,
-                              trailingStyle: AppTextStyles.greenSize14,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8.0),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ViewExpense(),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.white,
-                              border: Border.all(
-                                  width: 1,
-                                  color:
-                                      const Color.fromRGBO(221, 226, 224, 1)),
-                            ),
-                            child: TransactionCard(
-                              title: "Fuel",
-                              subtitle: "Mar 19 . 10:54 AM",
-                              trailing: "-17\$",
-                              subTrailing: "Expense",
-                              subTrailingStyle: AppTextStyles.blackSize12,
-                              titleStyle: AppTextStyles.blackSize14,
-                              subtitleStyle: AppTextStyles.blackSize12,
-                              trailingStyle: AppTextStyles.redSize14,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 32.0,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Mar 2022",
-                              style: AppTextStyles.blackSizeBold12,
-                            ),
-                            Text(
-                              "Income: \$164",
-                              style: AppTextStyles.blackSize10,
-                            ),
-                            Text(
-                              "Trips: 64",
-                              style: AppTextStyles.blackSize10,
-                            ),
-                            Text(
-                              "Expenses: 43",
-                              style: AppTextStyles.blackSize10,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10.0),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Colors.white,
-                            border: Border.all(
-                                width: 1,
-                                color: const Color.fromRGBO(221, 226, 224, 1)),
-                          ),
-                          child: TransactionCard(
-                            title: "Bola",
-                            subtitle: "Mar 19 . 10:54 AM",
-                            trailing: "+20\$",
-                            subTrailing: "Trip",
-                            subTrailingStyle: AppTextStyles.blackSize12,
-                            titleStyle: AppTextStyles.blackSize14,
-                            subtitleStyle: AppTextStyles.blackSize12,
-                            trailingStyle: AppTextStyles.greenSize14,
-                          ),
-                        ),
-                        const SizedBox(height: 8.0),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const BalanceScreen(),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.white,
-                              border: Border.all(
-                                  width: 1,
-                                  color:
-                                      const Color.fromRGBO(221, 226, 224, 1)),
-                            ),
-                            child: TransactionCard(
-                              title: "KIlntin",
-                              subtitle: "Mar 19 . 10:54 AM",
-                              trailing: "8\$",
-                              subTrailing: "Balance",
-                              subTrailingStyle: AppTextStyles.blackSize12,
-                              titleStyle: AppTextStyles.blackSize14,
-                              subtitleStyle: AppTextStyles.blackSize12,
-                              trailingStyle: AppTextStyles.blackSize14,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8.0),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ToPayScreen(),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.white,
-                              border: Border.all(
-                                  width: 1,
-                                  color:
-                                      const Color.fromRGBO(221, 226, 224, 1)),
-                            ),
-                            child: TransactionCard(
-                              title: "Dammy",
-                              subtitle: "Mar 19 . 10:54 AM",
-                              trailing: "7\$",
-                              subTrailing: "To pay",
-                              subTrailingStyle: AppTextStyles.blackSize12,
-                              titleStyle: AppTextStyles.blackSize14,
-                              subtitleStyle: AppTextStyles.blackSize12,
-                              trailingStyle: AppTextStyles.redSize14,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8.0),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ToCollectScreen(),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.white,
-                              border: Border.all(
-                                  width: 1,
-                                  color:
-                                      const Color.fromRGBO(221, 226, 224, 1)),
-                            ),
-                            child: TransactionCard(
-                              title: "Felicia",
-                              subtitle: "Mar 19 . 10:54 AM",
-                              trailing: "8\$",
-                              subTrailing: "To collect",
-                              subTrailingStyle: AppTextStyles.blackSize12,
-                              titleStyle: AppTextStyles.blackSize14,
-                              subtitleStyle: AppTextStyles.blackSize12,
-                              trailingStyle: AppTextStyles.blueSize14,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                        );
+                      }).toList(),
+                    )),
                     Column(
                       children: [
                         Row(
@@ -390,8 +253,8 @@ class TransactionView extends StatelessWidget {
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

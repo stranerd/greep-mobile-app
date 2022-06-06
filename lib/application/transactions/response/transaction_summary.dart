@@ -1,9 +1,12 @@
+import 'package:grip/domain/transaction/transaction.dart';
+
 class TransactionSummary {
    num amount;
    num trips;
    num expenses;
+   List<Transaction> transactions;
 
-  TransactionSummary({required this.amount, required this.trips, required this.expenses});
+  TransactionSummary({required this.amount, required this.trips, this.transactions = const [], required this.expenses});
 
 
   factory TransactionSummary.Zero() {

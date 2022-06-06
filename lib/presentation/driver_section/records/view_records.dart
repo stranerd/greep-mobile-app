@@ -1,12 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
+import 'package:grip/application/transactions/response/transaction_summary.dart';
+import 'package:grip/application/transactions/transaction_summary_cubit.dart';
+import 'package:grip/application/user/user_cubit.dart';
 
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_styles.dart';
 import '../widgets/record_card.dart';
 
-class ViewAllRecords extends StatelessWidget {
+class ViewAllRecords extends StatefulWidget {
   const ViewAllRecords({Key? key}) : super(key: key);
+
+  @override
+  State<ViewAllRecords> createState() => _ViewAllRecordsState();
+}
+
+class _ViewAllRecordsState extends State<ViewAllRecords> {
+  Map<DateTime, TransactionSummary> transactions = {};
+
+  @override
+  void initState() {
+    transactions = GetIt.I<TransactionSummaryCubit>()
+        .getRecentTransactions(GetIt.I<UserCubit>().userId!);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +38,6 @@ class ViewAllRecords extends StatelessWidget {
           leading: IconButton(
               onPressed: () {
                 Get.back();
-
               },
               icon: const Icon(Icons.arrow_back_ios, size: 16)),
         ),

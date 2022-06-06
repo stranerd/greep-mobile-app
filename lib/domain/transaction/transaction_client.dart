@@ -23,7 +23,7 @@ class TransactionClient {
       response.data["results"].forEach((e) {
         transactions.add(Transaction.fromServer(e));
       });
-      return ResponseEntity.Data(transactions);
+      return ResponseEntity.Data(transactions.reversed.toList());
     } on DioError catch (e) {
       if (e.type == DioErrorType.connectTimeout) {
         return ResponseEntity.Timeout();
