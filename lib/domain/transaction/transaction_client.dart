@@ -19,11 +19,14 @@ class TransactionClient {
     Response response;
     try {
       response = await dio.get("users/transactions");
+
       List<Transaction> transactions = [];
       response.data["results"].forEach((e) {
         transactions.add(Transaction.fromServer(e));
       });
-      return ResponseEntity.Data(transactions.reversed.toList());
+
+      transactions.sort((e,b) => b.timeAdded.compareTo(e.timeAdded));
+      return ResponseEntity.Data(transactions);
     } on DioError catch (e) {
       if (e.type == DioErrorType.connectTimeout) {
         return ResponseEntity.Timeout();

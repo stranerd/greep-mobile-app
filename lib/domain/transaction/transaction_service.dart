@@ -11,7 +11,10 @@ class TransactionService {
   TransactionService(this.transactionClient);
 
   Future<ResponseEntity<List<Transaction>>> getUserTransactions(String userId) async {
-    return await transactionClient.getUserTransactions(userId);
+    var responseEntity = await transactionClient.getUserTransactions(userId);
+    if (responseEntity.isError)
+      return responseEntity;
+    return responseEntity;
   }
 
   Future<ResponseEntity<Transaction>> addTrip(AddTripRequest request) async {

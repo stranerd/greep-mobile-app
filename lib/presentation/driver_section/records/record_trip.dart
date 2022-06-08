@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/transactions/transaction_crud_cubit.dart';
+import 'package:grip/commons/Utils/input_validator.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/commons/ui_helpers.dart';
@@ -25,7 +26,7 @@ class RecordTrip extends StatefulWidget {
   State<RecordTrip> createState() => _RecordTripState();
 }
 
-class _RecordTripState extends State<RecordTrip> with ScaffoldMessengerService{
+class _RecordTripState extends State<RecordTrip> with ScaffoldMessengerService, InputValidator{
    String _customerName = "";
    String _price = "";
    String _paid = "";
@@ -104,7 +105,7 @@ value: _transactionCrudCubit,
                     kVerticalSpaceSmall,
                     LoginTextField(
                       customController: _nameController,
-                      validator: (_) {},
+                      validator: emptyFieldValidator,
                       onChanged: (String v) {
                         setState(() {
                           _customerName = v;
@@ -241,8 +242,8 @@ value: _transactionCrudCubit,
                               kVerticalSpaceSmall,
                               LoginTextField(
                                 customController: _priceController,
-
-                                validator: (_){}, onChanged: (String value){
+                                validator: emptyFieldValidator,
+                                onChanged: (String value){
                                 _price = value;
                                 setState(() {
 
@@ -264,7 +265,8 @@ value: _transactionCrudCubit,
                               LoginTextField(
                                 customController: _paidController,
 
-                                validator: (_){}, onChanged: (String value){
+                                validator: emptyFieldValidator,
+                                onChanged: (String value){
                                 num paid = num.tryParse(value) ?? 0;
                                 num price = num.tryParse(_price) ?? 0;
                                 if ( paid > price) {
@@ -359,7 +361,7 @@ value: _transactionCrudCubit,
                     ),
                     SubmitButton(
                         isLoading: s is TransactionCrudStateLoading,
-                        enabled: s is! TransactionCrudStateLoading,
+                        enabled: recordDate !=null && _customerName.isNotEmpty && _price.isNotEmpty && _paid.isNotEmpty && s is! TransactionCrudStateLoading,
                         text: "Submit", onSubmit: _recordTrip)
                   ],
                 ),

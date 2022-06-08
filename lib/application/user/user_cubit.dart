@@ -27,7 +27,7 @@ class UserCubit extends Cubit<UserState> {
   Future<User?> fetchUser() async {
     emit(UserStateLoading());
 
-    var response = await userService.fetchUser(userId!);
+    var response = await userService.fetchUser();
     if (response.isError) {
       emit(UserStateError(response.errorMessage,
           isConnectionTimeout: response.isConnectionTimeout,

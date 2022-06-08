@@ -13,10 +13,16 @@ import 'package:meta/meta.dart';
 part 'customer_statistics_state.dart';
 
 class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
+
   final UserTransactionsCubit transactionsCubit;
+
+
   final AuthenticationCubit authenticationCubit;
+
   late StreamSubscription _streamSubscription;
+
   late StreamSubscription _authSubscription;
+
   Map<String, List<Transaction>> _transactions = {};
 
   Map<String, List<Transaction>> _customerTransactions = {};

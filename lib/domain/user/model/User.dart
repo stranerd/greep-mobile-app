@@ -28,6 +28,19 @@ class User {
     return user;
   }
 
+  factory User.fromServerAuth(dynamic data) {
+    var user = User(
+        id: data["id"],
+        email: data["email"],
+        fullName: data["allNames"]["full"],
+        firstName: data["name"]["first"] ?? "",
+        lastName: data["name"]["last"] ?? "",
+        isManager: false,
+        photoUrl: data["photo"]["link"]);
+    return user;
+  }
+
+
   Map<String, dynamic> toMap() {
     return {
       'id': this.id,

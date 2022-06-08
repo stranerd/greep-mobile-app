@@ -59,8 +59,8 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     late TransactionSummary transactionSummary;
 
     var filteredTrans = transactions.where((element) {
-      return from.isBefore(element.timeCreated) &&
-          to.isAfter(element.timeCreated);
+      return from.isBefore(element.timeAdded) &&
+          to.isAfter(element.timeAdded);
     }).toList();
 
     num amount = filteredTrans.isNotEmpty

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../../../utils/constants/app_colors.dart';
 import '../../../../../utils/constants/app_styles.dart';
@@ -16,7 +17,7 @@ class CommissionHome extends StatelessWidget {
           backgroundColor: Colors.white,
           leading: IconButton(
               onPressed: () {
-
+                Get.back();
               },
               icon: const Icon(Icons.arrow_back_ios, size: 16)),
           title: Text(

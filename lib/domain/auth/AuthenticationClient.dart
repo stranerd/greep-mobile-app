@@ -23,7 +23,7 @@ class AuthenticationClient {
 
         return ResponseEntity.Data(
             {"id": response.data["user"]["id"], "token": response.data["accessToken"],
-              "refreshToken": response.data["refreshToken"]
+              "refreshToken": response.data["refreshToken"], "password": request.password, "email": request.email
 
             });
 

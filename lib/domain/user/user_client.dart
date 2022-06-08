@@ -8,12 +8,12 @@ import 'package:grip/domain/user/model/User.dart';
 class UserClient {
   final Dio dio = dioClient();
 
-  Future<ResponseEntity<User>> fetchUser(String userId) async {
+  Future<ResponseEntity<User>> fetchUser() async {
     Response response;
     try {
-      response = await dio.get("users/users/$userId");
+      response = await dio.get("auth/user");
       return ResponseEntity.Data(
-          User.fromServer(response.data));
+          User.fromServerAuth(response.data));
     } on DioError catch (e) {
 
       if (e.type == DioErrorType.connectTimeout) {

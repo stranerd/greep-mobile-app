@@ -93,8 +93,10 @@ class AuthenticationService {
     return response;
   }
 
-  Future<ResponseEntity> refreshToken()async{
-    var response = await authenticationClient.refreshToken();
+  Future<ResponseEntity> refreshToken() async {
+    var pref = AuthStore();
+    var token = await pref.getAuthToken();
+    var response = await login(LoginRequest(password: token["password"], email: token["email"]));
     if (!response.isError){
       setToken(response.data);
     }
