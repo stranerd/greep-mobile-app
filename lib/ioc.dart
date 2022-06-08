@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
+import 'package:grip/application/auth/SignupCubit.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/application/transactions/transaction_crud_cubit.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
@@ -20,6 +21,7 @@ class IoC {
   late UserTransactionsCubit _userTransactionsCubit;
   late TransactionService _transactionService;
   late TransactionCrudCubit _transactionCrudCubit;
+  late SignupCubit _signupCubit;
   var getIt = GetIt.instance;
 
   IoC() {
@@ -33,11 +35,17 @@ class IoC {
     _userTransactionsCubit = UserTransactionsCubit(
         transactionService: _transactionService,
         authenticationCubit: _authenticationCubit);
+    _signupCubit = SignupCubit(authenticationCubit: _authenticationCubit, authenticationService: _authenticationService,);
 
     getIt.registerLazySingleton(() => _authenticationCubit);
     getIt.registerSingleton(_authenticationService);
+
     getIt.registerSingleton(_userCubit);
+
     getIt.registerSingleton(_userTransactionsCubit);
+
+    getIt.registerSingleton(_signupCubit);
+
     getIt.registerSingleton(
         TransactionSummaryCubit(userTransactionsCubit: _userTransactionsCubit));
     getIt.registerSingleton(CustomerStatisticsCubit(

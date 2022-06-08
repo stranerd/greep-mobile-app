@@ -101,6 +101,10 @@ class AuthenticationService {
     return response;
   }
 
+  Future<ResponseEntity> testSignup(LoginRequest request) async {
+    return await authenticationClient.testSignup(request);
+  }
+
   void setToken(dynamic data) async {
     AuthStore().setToken(data);
   }

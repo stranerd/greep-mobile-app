@@ -86,12 +86,58 @@ class AuthenticationClient {
     }
   }
 
+  Future<ResponseEntity> testSignup(LoginRequest request)async{
+    final Dio dio = Dio();
+    Response response;
+    try {
+      response = await dio.post(
+        "${baseApi}auth/emails/signup",
+        data: request.toJson(),
+      );
+
+      return ResponseEntity.Data(response.data);
+
+    } on DioError catch (e) {
+      if (e.type == DioErrorType.connectTimeout) {
+        print("connectionTimeout");
+        return ResponseEntity.Timeout();
+      }
+      if (e.error is SocketException) {
+        return ResponseEntity.Socket();
+      }
+      if (e.type == DioErrorType.response) {
+        Map<String,dynamic> fieldErrors = {};
+        e.response!.data.forEach((e) {
+          if (e["field"] == "email"){
+            fieldErrors.putIfAbsent("email", () => e["message"]);
+          }
+
+          if (e["field"] == "password"){
+            fieldErrors.putIfAbsent("password", () => e["message"]);
+
+          }
+        });
+        return ResponseEntity.Error("Invalid fields",fieldErrors = fieldErrors);
+      }
+
+      return ResponseEntity.Error("An error occurred ");
+    } catch (e) {
+      print("Exception $e");
+      return ResponseEntity.Error(
+          "An error occurred signing you up in. Try again");
+    }
+  }
+
   Future<ResponseEntity<Map<String,dynamic>>> refreshToken() async{
     final Dio dio = dioClient(useRefreshToken: true);
     Response response;
     try {
-      response = await dio.post(
-        "auth/token",
+      response = await dio.post("auth/token",
+      options: Options(
+        headers: {
+
+        }
+      )
       );
 
       return ResponseEntity.Data(

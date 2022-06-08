@@ -35,7 +35,9 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
   // Check if authentication is still valid on previous app usage
   Future<bool> checkAuth() async {
+    print("checking auth");
     Map<String, dynamic> token = await authStore.getAuthToken();
+    print(token);
     if (token.isNotEmpty) {
       userId = token["id"]!;
       emit(AuthenticationStateAuthenticated(
