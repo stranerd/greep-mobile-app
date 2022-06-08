@@ -6,6 +6,7 @@ import 'package:grip/commons/money.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
+import 'package:grip/utils/constants/app_colors.dart';
 
 class CustomerCardView extends StatelessWidget {
   const CustomerCardView(
@@ -39,7 +40,7 @@ class CustomerCardView extends StatelessWidget {
       subTextStyle =
       type == TransactionType.trip && data.debt! > 0 ? kDefaultTextStyle
           .copyWith(
-          color: kGreenColor,
+          color: AppColors.blue,
           fontSize: 12
       ) :
       type == TransactionType.balance ? kDefaultTextStyle.copyWith(
@@ -85,7 +86,7 @@ class CustomerCardView extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              "${subText}",
+              subText,
               style: subTextStyle,
             ),
           ],

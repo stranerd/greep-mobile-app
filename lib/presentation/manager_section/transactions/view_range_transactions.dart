@@ -109,25 +109,15 @@ class Range extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8.0),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.white,
-                  border: Border.all(
-                      width: 1, color: const Color.fromRGBO(221, 226, 224, 1)),
-                ),
-                child: TransactionCard(
-                  title: "Bola",
-                  subtitle: "Mar 19 . 10:54 AM",
-                  trailing: "+20\$",
-                  subTrailing: "Trip",
-                  subTrailingStyle: AppTextStyles.blackSize12,
-                  titleStyle: AppTextStyles.blackSize14,
-                  subtitleStyle: AppTextStyles.blackSize12,
-                  trailingStyle: AppTextStyles.greenSize14,
-                ),
+              TransactionCard(
+                title: "Bola",
+                subtitle: "Mar 19 . 10:54 AM",
+                trailing: "+20\$",
+                subTrailing: "Trip",
+                subTrailingStyle: AppTextStyles.blackSize12,
+                titleStyle: AppTextStyles.blackSize14,
+                subtitleStyle: AppTextStyles.blackSize12,
+                trailingStyle: AppTextStyles.greenSize14,
               ),
               const SizedBox(height: 8.0),
               GestureDetector(

@@ -93,27 +93,16 @@ class _RangeState extends State<Range> {
                       ),
                     );
                   },
-                  child: Container(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.white,
-                      border: Border.all(
-                          width: 1,
-                          color: const Color.fromRGBO(221, 226, 224, 1)),
-                    ),
-                    child: TransactionCard(
-                      title: "Kemi",
-                      subtitle: "Mar 19 . 10:54 AM",
-                      transaction: e,
-                      trailing: "+20\$",
-                      subTrailing: "Trip",
-                      subTrailingStyle: AppTextStyles.blackSize12,
-                      titleStyle: AppTextStyles.blackSize14,
-                      subtitleStyle: AppTextStyles.blackSize12,
-                      trailingStyle: AppTextStyles.greenSize14,
-                    ),
+                  child: TransactionCard(
+                    title: "Kemi",
+                    subtitle: "Mar 19 . 10:54 AM",
+                    transaction: e,
+                    trailing: "+20\$",
+                    subTrailing: "Trip",
+                    subTrailingStyle: AppTextStyles.blackSize12,
+                    titleStyle: AppTextStyles.blackSize14,
+                    subtitleStyle: AppTextStyles.blackSize12,
+                    trailingStyle: AppTextStyles.greenSize14,
                   ),
                 );
               }).toList(),

@@ -17,6 +17,7 @@ class TransactionCard extends StatelessWidget {
       required this.subtitleStyle,
       required this.trailingStyle,
         this.transaction,
+        this.shouldTap = true,
       required this.subTrailing,
       required this.subTrailingStyle})
       : super(key: key);
@@ -30,6 +31,8 @@ class TransactionCard extends StatelessWidget {
   final TextStyle subtitleStyle;
   final TextStyle trailingStyle;
   final TextStyle subTrailingStyle;
+  final bool shouldTap;
+
 
   @override
   Widget build(BuildContext context) {
@@ -60,11 +63,24 @@ class TransactionCard extends StatelessWidget {
       subTrailText = transaction!.data.transactionType.name;
     }
     return GestureDetector(
-      onTap: transaction == null ? null : (){
+      onTap: transaction == null ? null : !shouldTap ? null : (){
         Get.to(() => TransactionDetails(transaction: transaction!,));
       },
       child: Container(
-        decoration: BoxDecoration(),
+        padding: const EdgeInsets.fromLTRB(
+            16, 16, 16, 16),
+        margin: const EdgeInsets.only(
+            bottom: kDefaultSpacing * 0.5
+        ),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.white,
+          border: Border.all(
+              width: 1,
+              color: const Color.fromRGBO(
+                  221, 226, 224, 1)),
+        ),
         child: Row(
           children: [
             Column(
