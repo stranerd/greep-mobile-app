@@ -6,6 +6,8 @@ class SignupStateLoading extends SignupState {}
 
 class SignupStateSuccess extends SignupState {}
 
+class SignupStateReady extends SignupState {}
+
 class SignupStateError extends SignupState {
   final String? errorMessage;
   bool isConnectionTimeout;

@@ -12,18 +12,22 @@ class LoginTextField extends StatefulWidget {
   final int? minLines;
   final TextInputType? inputType;
   final TextEditingController? customController;
+  final bool withBorder;
+  final bool enabled;
 
-  const LoginTextField(
-      {Key? key, this.title = "",
-      required this.validator,
-        this.isPassword = false,
-        this.withTitle = true,
-        this.inputType,
-        this.minLines,
-        this.customController,
-        required this.onChanged
-        ,})
-      : super(key: key);
+  const LoginTextField({
+    Key? key,
+    this.title = "",
+    required this.validator,
+    this.isPassword = false,
+    this.withTitle = true,
+    this.inputType,
+    this.minLines,
+    this.enabled = true,
+    this.withBorder = false,
+    this.customController,
+    required this.onChanged,
+  }) : super(key: key);
 
   @override
   State<LoginTextField> createState() => _LoginTextFieldState();
@@ -32,7 +36,6 @@ class LoginTextField extends StatefulWidget {
 class _LoginTextFieldState extends State<LoginTextField> {
   late TextEditingController editingController;
   bool isObscure = true;
-
 
   @override
   void initState() {
@@ -55,12 +58,16 @@ class _LoginTextFieldState extends State<LoginTextField> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget.withTitle)Column(
-            children: [
-              Text(widget.title,style: kDefaultTextStyle,),
-              kVerticalSpaceTiny,
-            ],
-          ),
+          if (widget.withTitle)
+            Column(
+              children: [
+                Text(
+                  widget.title,
+                  style: kDefaultTextStyle,
+                ),
+                kVerticalSpaceTiny,
+              ],
+            ),
           TextFormField(
             onChanged: widget.onChanged,
             minLines: widget.minLines ?? 1,
@@ -68,26 +75,44 @@ class _LoginTextFieldState extends State<LoginTextField> {
             keyboardType: widget.inputType,
             controller: widget.customController ?? editingController,
             cursorColor: kPrimaryColor,
+            enabled: widget.enabled,
             // style: Theme.of(context).textTheme.bodyText1,
             obscureText: widget.isPassword && isObscure,
             decoration: InputDecoration(
                 suffixIcon: widget.isPassword
                     ? IconButton(
                         icon: Icon(
-                          isObscure ? Icons.visibility : Icons.visibility_off,
-                          color: kBlackColor
-                        ),
+                            isObscure ? Icons.visibility : Icons.visibility_off,
+                            color: kBlackColor),
                         onPressed: toggleObscurity,
                       )
                     : null,
-                filled: true,
+                filled: widget.withBorder ? false : true,
                 fillColor: kBorderColor,
-                focusedBorder: InputBorder.none,
-                border: InputBorder.none,
-                enabledBorder: InputBorder.none,
+                focusedBorder: !widget.withBorder
+                    ? InputBorder.none
+                    : OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(kDefaultSpacing * 0.75),
+                        borderSide:
+                             const BorderSide(color: kGreyColor2, width: 1),
+                      ),
+                border: !widget.withBorder
+                    ? InputBorder.none
+                    : OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(kDefaultSpacing* 0.75),
+                        borderSide:
+                             const BorderSide(color: kGreyColor2, width: 1),
+                      ),
+                enabledBorder: !widget.withBorder
+                    ? InputBorder.none
+                    : OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(kDefaultSpacing* 0.75),
+                        borderSide:
+                             const BorderSide(color: kGreyColor2, width: 1),
+                      ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide(color: kErrorColor,width: 0.5),
+                  borderSide: const BorderSide(color: kErrorColor, width: 0.5),
                 )),
             validator: (val) => widget.validator(val!),
           )
@@ -96,10 +121,9 @@ class _LoginTextFieldState extends State<LoginTextField> {
     );
   }
 
-  void toggleObscurity(){
+  void toggleObscurity() {
     setState(() {
       isObscure = !isObscure;
     });
   }
-
 }

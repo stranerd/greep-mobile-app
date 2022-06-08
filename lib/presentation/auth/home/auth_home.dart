@@ -4,12 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/AuthenticationState.dart';
+import 'package:grip/application/auth/SignupCubit.dart';
+import 'package:grip/application/auth/SignupState.dart';
 import 'package:grip/application/auth/request/LoginRequest.dart';
 import 'package:grip/commons/Utils/input_validator.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/presentation/auth/forgot_password/forgot_password.dart';
+import 'package:grip/presentation/auth_finish_signup.dart';
 import 'package:grip/presentation/driver_section/home_page.dart';
 import 'package:grip/presentation/splash/authentication_splash.dart';
 import 'package:grip/presentation/widgets/input_text_field.dart';
@@ -29,7 +32,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
   String password = "";
   String confirmPassword = "";
   final formKey = GlobalKey<FormState>();
-
+  Map<String,dynamic> fieldErrors = {};
 
   bool isSignin = true;
 
@@ -53,10 +56,23 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
     super.dispose();
   }
 
-  void _login(){
-    if (formKey.currentState!.validate()){
+  void _login() {
+    fieldErrors = {};
+    setState(() {
+    });
+    if (formKey.currentState!.validate()) {
       BlocProvider.of<AuthenticationCubit>(context)
           .login(LoginRequest(email: email.trim(), password: password));
+    }
+  }
+
+  void _signup() {
+    fieldErrors = {};
+    setState(() {
+    });
+    if (formKey.currentState!.validate()) {
+      BlocProvider.of<SignupCubit>(context)
+          .testSignup(LoginRequest(email: email.trim(), password: password));
     }
   }
 
@@ -113,7 +129,12 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
                           kVerticalSpaceRegular,
                           LoginTextField(
                             title: "Password",
-                            validator: emptyFieldValidator,
+                            validator: (String s){
+                              if (s.length < 8){
+                                return "Password must contain atleast 8 characters";
+                              }
+                              return null;
+                            },
                             isPassword: true,
                             onChanged: (String value) {
                               setState(() {
@@ -125,7 +146,18 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
                           if (!isSignin)
                             LoginTextField(
                               title: "Confirm password",
-                              validator: emptyFieldValidator,
+                              validator: (String s) {
+                                if (!isSignin) {
+                                  if (s.length < 8){
+                                    return "Password must contain at least 8 characters";
+                                  }
+                                  if (s != password) {
+                                    return "Passwords do not match";
+                                  }
+                                  return null;
+                                }
+                                return null;
+                              },
                               isPassword: true,
                               onChanged: (String value) {
                                 setState(() {
@@ -135,17 +167,67 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
                             ),
                         ],
                       ),
+                      if (fieldErrors.isNotEmpty)
+                        Column(
+                          children: [
+                            kVerticalSpaceRegular,
+                            Container(
+                              padding: const EdgeInsets.all(kDefaultSpacing * 0.5),
+                              decoration: BoxDecoration(
+                                color: kErrorColor.withOpacity(0.1),
+                                border: Border.all(color: kErrorColor)
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: fieldErrors.keys.map((e) {
+                                  return Wrap(
+                                    children: [
+                                      Text("* $e: ${fieldErrors[e]}"
+
+                                        ,style: kErrorColorTextStyle,)
+                                    ],
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ],
+                        ),
                       kVerticalSpaceRegular,
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SubmitButton(
-                            isLoading: state is AuthenticationStateLoading,
-                              enabled: state is! AuthenticationStateLoading,
-                              text: !isSignin ? "Create Account" : "Login",
-                              onSubmit:(){
-                                if (isSignin) {_login();}
-                              }),
+                          isSignin
+                              ? SubmitButton(
+                                  isLoading:
+                                      state is AuthenticationStateLoading,
+                                  enabled: state is! AuthenticationStateLoading,
+                                  text:  "Login",
+                                  onSubmit: _login, )
+                              : BlocConsumer<SignupCubit, SignupState>(
+                                  listener: (context, state) {
+                                    if (state is SignupStateReady){
+                                      Get.to(() =>  AuthFinishSignup(email: email,password: password,));
+
+                                    }
+                                    if (state is SignupStateError){
+                                      setState(() {
+                                        fieldErrors = state.fieldErrors;
+                                      });
+                                      error = state.errorMessage?? "Sign up failed";
+                                    }
+
+                                  },
+                                  builder: (context, state) {
+                                    return SubmitButton(
+                                        isLoading:
+                                            state is SignupStateLoading,
+                                        enabled: state
+                                            is! SignupStateLoading,
+                                        text: "Create Account",
+                                        onSubmit: _signup
+                                        );
+                                  },
+                                ),
                           kVerticalSpaceRegular,
                           Align(
                             alignment: Alignment.centerLeft,

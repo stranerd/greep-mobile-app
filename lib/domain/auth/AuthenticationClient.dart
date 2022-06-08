@@ -5,6 +5,7 @@ import 'package:grip/application/auth/request/LoginRequest.dart';
 import 'package:grip/application/auth/request/SignupRequest.dart';
 import 'package:grip/application/dio_config.dart';
 import 'package:grip/application/response.dart';
+import 'package:http/http.dart' as http;
 import 'package:grip/domain/api.dart';
 
 
@@ -49,41 +50,67 @@ class AuthenticationClient {
   }
 
   Future<ResponseEntity<Map<String, dynamic>>> signup(
-      SignUpRequest request) async {
-    final Dio dio = Dio();
-    Response response;
+      SignUpRequest signUpRequest) async {
+    var postUri = Uri.parse("${baseApi}auth/emails/signup");
+    var request = http.MultipartRequest("POST", postUri);
+    request.fields['firstName'] = signUpRequest.firstName;
+    request.fields['email'] = signUpRequest.email;
+    request.fields['password'] = "Alexdvdv";
+
     try {
-      response = await dio.post(
-        "${baseApi}auth/emails/signup",
-        data: request.toJson(),
-      );
-
-        return ResponseEntity.Data(
-            {"id": response.data["user"]["id"], "token": response.data["accessToken"],
-              "refreshToken": response.data["refreshToken"]
-
-            });
-
-    } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
-        print("connectionTimeout");
-        return ResponseEntity.Timeout();
-      }
-      if (e.error is SocketException) {
-        return ResponseEntity.Socket();
-      }
-      if (e.type == DioErrorType.response) {
-
-        return ResponseEntity.Error(
-            e.response!.data["message"] ?? "An error occurred in sign up");
-      }
-
-      return ResponseEntity.Error("An error occurred ");
-    } catch (e) {
-      print("Exception $e");
-      return ResponseEntity.Error(
-          "An error occurred signing you up in. Try again");
+      request.files.add(http.MultipartFile.fromBytes(
+        'photo', await File.fromUri(Uri.file(signUpRequest.path)).readAsBytes(),));
     }
+    catch (e){
+      print("exception $e");
+    }
+    var response = await request.send();
+    final responseData = await response.stream.toBytes();
+    final responseString = String.fromCharCodes(responseData);
+    print(responseString);
+    print(response.statusCode);
+    print(response.stream.first);
+    return ResponseEntity.Error("errors");
+
+    // final Dio dio = Dio();
+    // print(request.toString());
+    // Response response;
+    // try {
+    //   response = await dio.post(
+    //     "${baseApi}auth/emails/signup",
+    //     data: request.toFormData(),
+    //     options: Options(
+    //       contentType: "multipart/form-data",
+    //     ),
+    //   );
+    //
+    //     return ResponseEntity.Data(
+    //         {"id": response.data["user"]["id"], "token": response.data["accessToken"],
+    //           "refreshToken": response.data["refreshToken"]
+    //
+    //         });
+    //
+    // } on DioError catch (e) {
+    //   if (e.type == DioErrorType.connectTimeout) {
+    //     print("connectionTimeout");
+    //     return ResponseEntity.Timeout();
+    //   }
+    //   if (e.error is SocketException) {
+    //     return ResponseEntity.Socket();
+    //   }
+    //   if (e.type == DioErrorType.response) {
+    //     print(e.response!.data);
+    //
+    //     return ResponseEntity.Error(
+    //         e.response!.data["message"] ?? "An error occurred in sign up");
+    //   }
+    //
+    //   return ResponseEntity.Error("An error occurred ");
+    // } catch (e) {
+    //   print("Exception $e");
+    //   return ResponseEntity.Error(
+    //       "An error occurred signing you up in. Try again");
+    // }
   }
 
   Future<ResponseEntity> testSignup(LoginRequest request)async{

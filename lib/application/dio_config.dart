@@ -14,8 +14,10 @@ requestInterceptors(
   print(options.path);
   var pref = AuthStore();
   var token = await pref.getAuthToken();
-  print("${useRefreshToken ? "": "not"} using refresh token");
+    print("${useRefreshToken ? "": "not"} using refresh token ${token["token"]}");
   options.contentType = "application/json";
-  options.headers.putIfAbsent("Access-Token", () => "${token["token"] ??""}");
+  options.headers["Access-Token"] = "${token["token"]??""}";
+  options.headers["Accept"] = "*/*";
+  print(options.headers);
   handler.next(options);
 }

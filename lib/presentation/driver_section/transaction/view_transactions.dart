@@ -89,90 +89,89 @@ class _TransactionViewState extends State<TransactionView> {
                 padding: const EdgeInsets.fromLTRB(16, 32, 16, 20),
                 child: TabBarView(
                   children: [
-                    Expanded(
-                        child: ListView(
+                    ListView(
                       shrinkWrap: true,
                       physics: const BouncingScrollPhysics(),
                       children: transactions.values.map((e) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  DateFormat(
-                                          "${DateFormat.ABBR_MONTH} ${DateFormat.YEAR}")
-                                      .format(e.transactions.isEmpty
-                                          ? DateTime.now()
-                                          : e.transactions.first.timeAdded),
-                                  style: AppTextStyles.blackSizeBold12,
-                                ),
-                                Text(
-                                  "Income: N${e.amount.toMoney}",
-                                  style: AppTextStyles.blackSize10,
-                                ),
-                                Text(
-                                  "Trips: ${e.trips}",
-                                  style: AppTextStyles.blackSize10,
-                                ),
-                                Text(
-                                  "Expenses: ${e.expenses}",
-                                  style: AppTextStyles.blackSize10,
-                                ),
-                              ],
+                            Text(
+                              DateFormat(
+                                      "${DateFormat.ABBR_MONTH} ${DateFormat.YEAR}")
+                                  .format(e.transactions.isEmpty
+                                      ? DateTime.now()
+                                      : e.transactions.first.timeAdded),
+                              style: AppTextStyles.blackSizeBold12,
                             ),
-                            const SizedBox(height: 10.0),
-                            ListView(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              children: e.transactions.map((e) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const TripScreen(),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        16, 16, 16, 16),
-                                    margin: const EdgeInsets.only(
-                                      bottom: kDefaultSpacing * 0.5
-                                    ),
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: Colors.white,
-                                      border: Border.all(
-                                          width: 1,
-                                          color: const Color.fromRGBO(
-                                              221, 226, 224, 1)),
-                                    ),
-                                    child: TransactionCard(
-                                      transaction: e,
-                                      title: "Kemi",
-                                      subtitle: "Mar 19 . 10:54 AM",
-                                      trailing: "+20\$",
-                                      subTrailing: "Trip",
-                                      subTrailingStyle:
-                                          AppTextStyles.blackSize12,
-                                      titleStyle: AppTextStyles.blackSize14,
-                                      subtitleStyle: AppTextStyles.blackSize12,
-                                      trailingStyle: AppTextStyles.greenSize14,
-                                    ),
+                            Text(
+                              "Income: N${e.amount.toMoney}",
+                              style: AppTextStyles.blackSize10,
+                            ),
+                            Text(
+                              "Trips: ${e.trips}",
+                              style: AppTextStyles.blackSize10,
+                            ),
+                            Text(
+                              "Expenses: ${e.expenses}",
+                              style: AppTextStyles.blackSize10,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10.0),
+                        ListView(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: e.transactions.map((e) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const TripScreen(),
                                   ),
                                 );
-                              }).toList(),
-                            ),
-                            kVerticalSpaceRegular
-                          ],
-                        );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.fromLTRB(
+                                    16, 16, 16, 16),
+                                margin: const EdgeInsets.only(
+                                  bottom: kDefaultSpacing * 0.5
+                                ),
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.white,
+                                  border: Border.all(
+                                      width: 1,
+                                      color: const Color.fromRGBO(
+                                          221, 226, 224, 1)),
+                                ),
+                                child: TransactionCard(
+                                  transaction: e,
+                                  title: "Kemi",
+                                  subtitle: "Mar 19 . 10:54 AM",
+                                  trailing: "+20\$",
+                                  subTrailing: "Trip",
+                                  subTrailingStyle:
+                                      AppTextStyles.blackSize12,
+                                  titleStyle: AppTextStyles.blackSize14,
+                                  subtitleStyle: AppTextStyles.blackSize12,
+                                  trailingStyle: AppTextStyles.greenSize14,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        kVerticalSpaceRegular
+                      ],
+                    );
                       }).toList(),
-                    )),
+                    ),
                     Column(
                       children: [
                         Row(

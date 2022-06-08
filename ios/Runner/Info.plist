@@ -26,6 +26,12 @@
 		<true/>
 		<key>UILaunchStoryboardName</key>
 		<string>LaunchScreen</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+        <string>Storage permission required to pick image</string>
+        <key>NSCameraUsageDescription</key>
+        <string>Storage permission required to pick image</string>
+        <key>NSMicrophoneUsageDescription</key>
+        <string>Storage permission required to pick image</string>
 		<key>UIMainStoryboardFile</key>
 		<string>Main</string>
 		<key>UISupportedInterfaceOrientations</key>

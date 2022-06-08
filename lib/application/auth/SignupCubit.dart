@@ -40,8 +40,12 @@ class SignupCubit extends Cubit<SignupState> {
     emit(SignupStateLoading());
     var response = await authenticationService.testSignup(request);
     if (response.isError){
+      if (response.fieldErrors.isNotEmpty){
       emit(SignupStateError(response.errorMessage,fieldErrors: response.fieldErrors,isConnectionTimeout: response.isConnectionTimeout,
-      isSocket: response.isSocket));
+      isSocket: response.isSocket));}
+      else {
+        emit(SignupStateReady());
+      }
     }
   }
 

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
+import 'package:grip/application/auth/SignupCubit.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
@@ -31,6 +32,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider.value(
           value: GetIt.I<UserCubit>(),
+        ),
+        BlocProvider.value(
+          value: GetIt.I<SignupCubit>(),
         ),
         BlocProvider.value(
           value: GetIt.I<UserTransactionsCubit>(),
