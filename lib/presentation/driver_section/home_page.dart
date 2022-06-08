@@ -13,6 +13,7 @@ import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
 import 'package:grip/presentation/driver_section/widgets/transaction_interval_summary.dart';
 import 'package:grip/presentation/widgets/customer_transaction_list.dart';
+import 'package:grip/presentation/widgets/splash_tap.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -113,7 +114,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  InkWell(
+                                  SplashTap(
                                     onTap: () {
                                       Get.to(() => const RecordTrip());
                                     },
@@ -125,7 +126,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                       textStyle: AppTextStyles.blackSize14,
                                     ),
                                   ),
-                                  InkWell(
+                                  SplashTap(
                                     onTap: () {
                                       Get.to(() => const RecordExpense());
                                     },

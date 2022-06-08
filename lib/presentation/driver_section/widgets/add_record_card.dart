@@ -26,7 +26,6 @@ class AddRecord extends StatelessWidget {
       width: width ?? Get.width * 0.45,
       padding: const EdgeInsets.all(kDefaultSpacing),
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(
           color: color,
