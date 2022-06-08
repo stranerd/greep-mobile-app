@@ -45,6 +45,7 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
   }
 
   void _calculateStatistics() {
+    emit(CustomerStatisticsStateLoading());
     _customerTransactions = _transactions.map((key, value) =>
         MapEntry(
             key,
@@ -52,6 +53,8 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
             element.data.transactionType == TransactionType.trip ||
                 element.data.transactionType == TransactionType.balance)
                 .toList()));
+    emit(CustomerStatisticsStateDone());
+
   }
 
   List<Transaction> getDebtTransactions(String userId) {

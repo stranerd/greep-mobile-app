@@ -12,7 +12,7 @@ import '../widgets/transactions_card.dart';
 import 'balance.dart';
 import 'to_collect_screen.dart';
 import 'to_pay_screen.dart';
-import 'trip.dart';
+import 'transaction_details.dart';
 import 'view_expense.dart';
 
 class Range extends StatefulWidget {
@@ -89,7 +89,7 @@ class _RangeState extends State<Range> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const TripScreen(),
+                        builder: (context) =>  TransactionDetails(transaction: e,),
                       ),
                     );
                   },

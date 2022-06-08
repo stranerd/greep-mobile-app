@@ -4,5 +4,6 @@ part of 'transaction_summary_cubit.dart';
 abstract class TransactionSummaryState {}
 
 class TransactionSummaryInitial extends TransactionSummaryState {}
+class TransactionSummaryStateLoading  extends TransactionSummaryState {}
 
 class TransactionSummaryStateDone  extends TransactionSummaryState {}

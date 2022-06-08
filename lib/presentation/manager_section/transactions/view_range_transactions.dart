@@ -5,7 +5,7 @@ import '../../../utils/constants/app_styles.dart';
 import '../../driver_section/transaction/balance.dart';
 import '../../driver_section/transaction/to_collect_screen.dart';
 import '../../driver_section/transaction/to_pay_screen.dart';
-import '../../driver_section/transaction/trip.dart';
+import '../../driver_section/transaction/transaction_details.dart';
 import '../../driver_section/transaction/view_expense.dart';
 import '../../driver_section/widgets/transactions_card.dart';
 
@@ -47,12 +47,12 @@ class Range extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const TripScreen(),
-                    ),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const TransactionDetails(),
+                  //   ),
+                  // );
                 },
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),

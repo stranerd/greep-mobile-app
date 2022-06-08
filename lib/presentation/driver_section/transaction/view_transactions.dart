@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
@@ -17,7 +18,7 @@ import '../widgets/transactions_card.dart';
 import 'balance.dart';
 import 'to_collect_screen.dart';
 import 'to_pay_screen.dart';
-import 'trip.dart';
+import 'transaction_details.dart';
 import 'view_expense.dart';
 import 'view_range_transactions.dart';
 
@@ -43,7 +44,16 @@ class _TransactionViewState extends State<TransactionView> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
+    return BlocListener<TransactionSummaryCubit, TransactionSummaryState>(
+  listener: (context, state) {
+    if (state is TransactionSummaryStateDone){
+      setState(() {
+        transactions = GetIt.I<TransactionSummaryCubit>()
+            .getRecentTransactions(GetIt.I<UserCubit>().userId!);
+      });
+    }
+  },
+  child: DefaultTabController(
       length: 2,
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -126,43 +136,32 @@ class _TransactionViewState extends State<TransactionView> {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           children: e.transactions.map((e) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const TripScreen(),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.fromLTRB(
-                                    16, 16, 16, 16),
-                                margin: const EdgeInsets.only(
-                                  bottom: kDefaultSpacing * 0.5
-                                ),
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.white,
-                                  border: Border.all(
-                                      width: 1,
-                                      color: const Color.fromRGBO(
-                                          221, 226, 224, 1)),
-                                ),
-                                child: TransactionCard(
-                                  transaction: e,
-                                  title: "Kemi",
-                                  subtitle: "Mar 19 . 10:54 AM",
-                                  trailing: "+20\$",
-                                  subTrailing: "Trip",
-                                  subTrailingStyle:
-                                      AppTextStyles.blackSize12,
-                                  titleStyle: AppTextStyles.blackSize14,
-                                  subtitleStyle: AppTextStyles.blackSize12,
-                                  trailingStyle: AppTextStyles.greenSize14,
-                                ),
+                            return Container(
+                              padding: const EdgeInsets.fromLTRB(
+                                  16, 16, 16, 16),
+                              margin: const EdgeInsets.only(
+                                bottom: kDefaultSpacing * 0.5
+                              ),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.white,
+                                border: Border.all(
+                                    width: 1,
+                                    color: const Color.fromRGBO(
+                                        221, 226, 224, 1)),
+                              ),
+                              child: TransactionCard(
+                                transaction: e,
+                                title: "Kemi",
+                                subtitle: "Mar 19 . 10:54 AM",
+                                trailing: "+20\$",
+                                subTrailing: "Trip",
+                                subTrailingStyle:
+                                    AppTextStyles.blackSize12,
+                                titleStyle: AppTextStyles.blackSize14,
+                                subtitleStyle: AppTextStyles.blackSize12,
+                                trailingStyle: AppTextStyles.greenSize14,
                               ),
                             );
                           }).toList(),
@@ -273,7 +272,8 @@ class _TransactionViewState extends State<TransactionView> {
           ],
         ),
       ),
-    );
+    ),
+);
   }
 
   void _pickDate(bool isFrom) {

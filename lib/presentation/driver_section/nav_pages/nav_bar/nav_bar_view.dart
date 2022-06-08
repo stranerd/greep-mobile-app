@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grip/application/transactions/customer_statistics_cubit.dart';
+import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:stacked/stacked.dart';
 
@@ -20,30 +23,50 @@ class NavBarView extends StatefulWidget {
 
 class _NavBarViewState extends State<NavBarView> {
   int _currNavIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currNavIndex,
-        onTap: setCurrNav,
-        type: BottomNavigationBarType.fixed,
-        selectedFontSize: 11,
-        unselectedFontSize: 11,
-        items: getBottomIcons(),
-        selectedItemColor: kPrimaryColor,
-        selectedIconTheme: const IconThemeData(color: kPrimaryColor),
-      ),
-      body: SafeArea(
-        child: IndexedStack(children: _children, index: _currNavIndex,)),
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<TransactionSummaryCubit, TransactionSummaryState>(
+          listener: (context, state) {
+            if (state is TransactionSummaryStateDone) {
+              print("Setting summary state");
+              setState(() {
 
+              });
+            }
+          },
+        ),
+        BlocListener<CustomerStatisticsCubit, CustomerStatisticsState>(
+          listener: (context, state) {
+
+          },
+        ),
+      ],
+      child: Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currNavIndex,
+          onTap: setCurrNav,
+          type: BottomNavigationBarType.fixed,
+          selectedFontSize: 11,
+          unselectedFontSize: 11,
+          items: getBottomIcons(),
+          selectedItemColor: kPrimaryColor,
+          selectedIconTheme: const IconThemeData(color: kPrimaryColor),
+        ),
+        body: SafeArea(
+            child: IndexedStack(children: _children, index: _currNavIndex,)),
+
+      ),
     );
   }
 
   final List<Widget> _children = const [
-  DriverHomePage(),
-  CustomerView(),
-  TransactionView(),
-  SettingsHome(),
+    DriverHomePage(),
+    CustomerView(),
+    TransactionView(),
+    SettingsHome(),
   ];
 
   List<BottomNavigationBarItem> getBottomIcons() {
@@ -91,7 +114,6 @@ class _NavBarViewState extends State<NavBarView> {
     setState(() {
       _currNavIndex = index;
     });
-
   }
 
 }

@@ -33,6 +33,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
   }
 
   void _calculateStatistics() {
+    emit(TransactionSummaryStateLoading());
     print("calculating statistics");
     DateTime now = DateTime.now();
     DateTime today = DateTime(now.year, now.month, now.day);

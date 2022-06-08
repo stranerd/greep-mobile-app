@@ -8,7 +8,6 @@ class UserService {
 
   Future<ResponseEntity> fetchUser() async {
     var response = await _client.fetchUser();
-    print("fetched user data ${response}");
     if (!response.isError) {}
     return response;
   }

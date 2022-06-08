@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
+import 'package:grip/presentation/driver_section/transaction/transaction_details.dart';
 import 'package:intl/intl.dart';
 
 class TransactionCard extends StatelessWidget {
@@ -57,42 +59,50 @@ class TransactionCard extends StatelessWidget {
 
       subTrailText = transaction!.data.transactionType.name;
     }
-    return Row(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      onTap: transaction == null ? null : (){
+        Get.to(() => TransactionDetails(transaction: transaction!,));
+      },
+      child: Container(
+        decoration: BoxDecoration(),
+        child: Row(
           children: [
-            Text(text, style: kDefaultTextStyle.copyWith(
-              fontSize: 15
-            )),
-            const SizedBox(
-              height: 4,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(text, style: kDefaultTextStyle.copyWith(
+                  fontSize: 15
+                )),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  subText,
+                  style: subStyle,
+                ),
+              ],
             ),
-            Text(
-              subText,
-              style: subStyle,
+            const Spacer(),
+            Column(
+              children: [
+                Text(
+                  trailText,
+                  style: trailStyle,
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  subTrailText,
+                  style: kDefaultTextStyle.copyWith(
+                    fontSize: 14
+                  ),
+                ),
+              ],
             ),
           ],
         ),
-        const Spacer(),
-        Column(
-          children: [
-            Text(
-              trailText,
-              style: trailStyle,
-            ),
-            const SizedBox(
-              height: 4,
-            ),
-            Text(
-              subTrailText,
-              style: kDefaultTextStyle.copyWith(
-                fontSize: 14
-              ),
-            ),
-          ],
-        ),
-      ],
+      ),
     );
   }
 }

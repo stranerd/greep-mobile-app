@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
@@ -22,7 +23,16 @@ class CustomerView extends StatefulWidget {
 class _CustomerViewState extends State<CustomerView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<CustomerStatisticsCubit, CustomerStatisticsState>(
+  listener: (context, state) {
+    if (state is CustomerStatisticsStateDone) {
+      print("Setting summary state");
+      setState(() {
+
+      });
+    }
+  },
+  child: Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -98,7 +108,7 @@ class _CustomerViewState extends State<CustomerView> {
                     return SizedBox(
                       height: Get.height * 0.7,
                       child: const EmptyResultWidget(
-                          text: "No Customer transactions"),
+                          text: "No customer transactions"),
                     );
                   }
 
@@ -135,6 +145,7 @@ class _CustomerViewState extends State<CustomerView> {
           ),
         ),
       ),
-    );
+    ),
+);
   }
 }

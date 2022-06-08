@@ -5,4 +5,6 @@ abstract class CustomerStatisticsState {}
 
 class CustomerStatisticsInitial extends CustomerStatisticsState {}
 
-class CustomerStatisticsStateFetched extends CustomerStatisticsState {}
+class CustomerStatisticsStateDone extends CustomerStatisticsState {}
+
+class CustomerStatisticsStateLoading extends CustomerStatisticsState {}

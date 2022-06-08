@@ -45,7 +45,7 @@ class CustomerRecordCard extends StatelessWidget {
       text = transaction!.amount.toString();
 
       subText = type == TransactionType.trip && data.debt! > 0 ? "to pay" :
-      type == TransactionType.balance ? "balanced" : "to pay";
+      type == TransactionType.balance ? "balanced" : "balanced";
 
       textStyle =
       type == TransactionType.trip && data.debt! > 0 ? kDefaultTextStyle
