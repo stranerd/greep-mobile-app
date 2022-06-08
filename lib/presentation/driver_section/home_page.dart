@@ -65,15 +65,15 @@ class _DriverHomePageState extends State<DriverHomePage> {
             body: BlocConsumer<UserTransactionsCubit, UserTransactionsState>(
               listener: (c,s){
                 if (s is UserTransactionsStateError || s is UserTransactionsStateFetched){
+                  setState(() {});
                   _refreshController.refreshCompleted();
                 }
+
               },
               builder: (context, transState) {
-                print(transState);
                 return BlocBuilder<TransactionSummaryCubit,
                     TransactionSummaryState>(
                   builder: (context, summaryState) {
-                    print(summaryState);
                     return SafeArea(
                       child: SmartRefresher(
                         controller: _refreshController,
@@ -231,9 +231,6 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                 return const EmptyResultWidget(
                                     text: "No recent transactions");
                               }
-                              print(transactions.first);
-                              transactions.reversed;
-                              print(transactions.first);
                               return ListView.builder(
                                 itemCount: transactions.length,
                                 physics:

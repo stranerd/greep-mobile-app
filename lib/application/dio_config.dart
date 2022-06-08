@@ -13,7 +13,6 @@ requestInterceptors(
   print("$baseApi${options.path}");
   var pref = AuthStore();
   var token = await pref.getAuthToken();
-  print(token);
   options.contentType = "application/json";
   options.headers["Access-Token"] = "${token["token"]??""}";
   options.headers["Accept"] = "*/*";

@@ -94,7 +94,6 @@ class _CustomerViewState extends State<CustomerView> {
                   List<Transaction> transactions =
                       GetIt.I<CustomerStatisticsCubit>()
                           .getDebtTransactions(userId);
-                  print(transactions.length);
                   if (transactions.isEmpty) {
                     return SizedBox(
                       height: Get.height * 0.7,

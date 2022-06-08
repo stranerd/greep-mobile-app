@@ -80,8 +80,7 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
 
       if (!loadMore) {
         hasLoaded = true;
-
-        transactions.putIfAbsent(requestId, () => Set.of(newServices));
+        transactions[requestId] = Set.of(newServices);
         var stateFetched = UserTransactionsStateFetched(transactions: newServices.toList());
         emit(stateFetched);
         return stateFetched;

@@ -12,7 +12,6 @@ import 'package:grip/domain/api.dart';
 class AuthenticationClient {
   Future<ResponseEntity<Map<String, dynamic>>> login(
       LoginRequest request,) async {
-    print(request);
     final Dio dio = Dio();
     Response response;
     try {

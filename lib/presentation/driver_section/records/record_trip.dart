@@ -217,9 +217,7 @@ value: _transactionCrudCubit,
                           child: Container(
                             height: 50,
                             padding: const EdgeInsets.all(kDefaultSpacing * 0.3),
-                            decoration: BoxDecoration(
-
-                            ),
+                            decoration: const BoxDecoration(),
                             child: Text(
                               "+",
                               style: kBoldTextStyle.copyWith(fontSize: 20),
