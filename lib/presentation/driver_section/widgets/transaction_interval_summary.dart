@@ -4,6 +4,7 @@ import 'package:grip/application/transactions/response/transaction_summary.dart'
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/commons/money.dart';
 import 'package:grip/presentation/driver_section/widgets/record_card.dart';
+import 'package:grip/presentation/widgets/transaction_summary_builder.dart';
 import 'package:grip/utils/constants/app_styles.dart';
 
 class TransactionIntervalSummaryWidget extends StatelessWidget {
@@ -20,35 +21,6 @@ class TransactionIntervalSummaryWidget extends StatelessWidget {
     var transactionSummaryCubit = GetIt.I<TransactionSummaryCubit>();
     TransactionSummary transactionSummary = transactionSummaryCubit.calculate(
         userId, DateTime(from.year, from.month, from.day), to);
-    return LayoutBuilder(builder: (context, constraints) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          RecordCard(
-            width: constraints.maxWidth * 0.31,
-            title: "N${transactionSummary.amount.toMoney}",
-            subtitle: "Income",
-            subtitleStyle: AppTextStyles.blackSize12,
-            titleStyle: AppTextStyles.greenSize16,
-          ),
-          RecordCard(
-            title: transactionSummary.trips.toMoney,
-            width: constraints.maxWidth * 0.31,
-            transactions: transactionSummary.transactions,
-            subtitle: "Trips",
-            subtitleStyle: AppTextStyles.blackSize12,
-            titleStyle: AppTextStyles.blackSize16,
-          ),
-          RecordCard(
-            title: transactionSummary.expenses.toMoney,
-            subtitle: "Expenses",
-            width: constraints.maxWidth * 0.31,
-            transactions: transactionSummary.transactions,
-            subtitleStyle: AppTextStyles.blackSize12,
-            titleStyle: AppTextStyles.blackSize16,
-          ),
-        ],
-      );
-    });
+    return TransactionSummaryBuilder(transactionSummary: transactionSummary);
   }
 }

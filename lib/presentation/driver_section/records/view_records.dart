@@ -4,6 +4,11 @@ import 'package:get_it/get_it.dart';
 import 'package:grip/application/transactions/response/transaction_summary.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
+import 'package:grip/commons/Utils/utils.dart';
+import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
+import 'package:grip/presentation/widgets/transaction_summary_builder.dart';
+import 'package:intl/intl.dart';
 
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_styles.dart';
@@ -22,7 +27,7 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
   @override
   void initState() {
     transactions = GetIt.I<TransactionSummaryCubit>()
-        .getRecentTransactions(GetIt.I<UserCubit>().userId!);
+        .getDailyTransactions(GetIt.I<UserCubit>().userId!);
     super.initState();
   }
 
@@ -41,178 +46,82 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
               },
               icon: const Icon(Icons.arrow_back_ios, size: 16)),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(width: 1, color: AppColors.black)),
-                  child: TabBar(
-                    indicator: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.black,
-                    ),
-                    labelColor: Colors.white,
-                    labelStyle: AppTextStyles.whiteSize12,
-                    unselectedLabelColor: Colors.black,
-                    unselectedLabelStyle: AppTextStyles.blackSize12,
-                    tabs: const [
-                      Tab(
-                        text: 'Recent',
-                      ),
-                      Tab(
-                        text: 'All time',
-                      ),
-                    ],
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(width: 1, color: AppColors.black)),
+                child: TabBar(
+                  indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.black,
                   ),
+                  labelColor: Colors.white,
+                  labelStyle: AppTextStyles.whiteSize12,
+                  unselectedLabelColor: Colors.black,
+                  unselectedLabelStyle: AppTextStyles.blackSize12,
+                  tabs: const [
+                    Tab(
+                      text: 'Recent',
+                    ),
+                    Tab(
+                      text: 'All time',
+                    ),
+                  ],
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(16, 32, 16, 20),
-                height: MediaQuery.of(context).size.height -
-                    MediaQuery.of(context).padding.top -
-                    MediaQuery.of(context).padding.bottom -
-                    AppBar().preferredSize.height -
-                    MediaQuery.of(context).padding.top,
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(kDefaultSpacing),
                 child: TabBarView(
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Today", style: AppTextStyles.blackSizeBold12),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            RecordCard(
-                              title: "\$164",
-                              subtitle: "Income",
-                              subtitleStyle: AppTextStyles.blackSize12,
-                              titleStyle: AppTextStyles.greenSize16,
-                            ),
-                            const SizedBox(
-                              width: 8.0,
-                            ),
-                            RecordCard(
-                              title: "07",
-                              subtitle: "Trips",
-                              subtitleStyle: AppTextStyles.blackSize12,
-                              titleStyle: AppTextStyles.blackSize16,
-                            ),
-                            const SizedBox(
-                              width: 8.0,
-                            ),
-                            RecordCard(
-                              title: "01",
-                              subtitle: "Expenses",
-                              subtitleStyle: AppTextStyles.blackSize12,
-                              titleStyle: AppTextStyles.blackSize16,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Text("Yesterday", style: AppTextStyles.blackSizeBold12),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            RecordCard(
-                              title: "\$164",
-                              subtitle: "Income",
-                              subtitleStyle: AppTextStyles.blackSize12,
-                              titleStyle: AppTextStyles.greenSize16,
-                            ),
-                            const SizedBox(
-                              width: 8.0,
-                            ),
-                            RecordCard(
-                              title: "07",
-                              subtitle: "Trips",
-                              subtitleStyle: AppTextStyles.blackSize12,
-                              titleStyle: AppTextStyles.blackSize16,
-                            ),
-                            const SizedBox(
-                              width: 8.0,
-                            ),
-                            RecordCard(
-                              title: "01",
-                              subtitle: "Expenses",
-                              subtitleStyle: AppTextStyles.blackSize12,
-                              titleStyle: AppTextStyles.blackSize16,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Text("Sat, 2 Apr 2022",
-                            style: AppTextStyles.blackSizeBold12),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            RecordCard(
-                              title: "\$164",
-                              subtitle: "Income",
-                              subtitleStyle: AppTextStyles.blackSize12,
-                              titleStyle: AppTextStyles.greenSize16,
-                            ),
-                            const SizedBox(
-                              width: 8.0,
-                            ),
-                            RecordCard(
-                              title: "07",
-                              subtitle: "Trips",
-                              subtitleStyle: AppTextStyles.blackSize12,
-                              titleStyle: AppTextStyles.blackSize16,
-                            ),
-                            const SizedBox(
-                              width: 8.0,
-                            ),
-                            RecordCard(
-                              title: "01",
-                              subtitle: "Expenses",
-                              subtitleStyle: AppTextStyles.blackSize12,
-                              titleStyle: AppTextStyles.blackSize16,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Text("Fri, 1 Apr 2022",
-                            style: AppTextStyles.blackSizeBold12),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            RecordCard(
-                              title: "\$164",
-                              subtitle: "Income",
-                              subtitleStyle: AppTextStyles.blackSize12,
-                              titleStyle: AppTextStyles.greenSize16,
-                            ),
-                            const SizedBox(
-                              width: 8.0,
-                            ),
-                            RecordCard(
-                              title: "07",
-                              subtitle: "Trips",
-                              subtitleStyle: AppTextStyles.blackSize12,
-                              titleStyle: AppTextStyles.blackSize16,
-                            ),
-                            const SizedBox(
-                              width: 8.0,
-                            ),
-                            RecordCard(
-                              title: "01",
-                              subtitle: "Expenses",
-                              subtitleStyle: AppTextStyles.blackSize12,
-                              titleStyle: AppTextStyles.blackSize16,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                    Builder(builder: (context) {
+                      if (transactions.isEmpty) {
+                        return const EmptyResultWidget(
+                          text: 'You have no transactions',
+                        );
+                      } else if (transactions.length == 1 &&
+                          transactions[transactions.keys.first]!
+                              .transactions
+                              .isEmpty) {
+                        return const EmptyResultWidget(
+                          text: 'You have no transactions',
+                        );
+                      } else {
+                        return ListView.separated(
+                          shrinkWrap: true,
+                            physics: const ScrollPhysics(),
+                            itemBuilder: (c,i){
+                              DateTime date = transactions.keys.toList()[i];
+                              String day = "";
+                              if (areDatesEqual(DateTime.now(),date)){
+                                day = "Today";
+                              }
+                              else if (areDatesEqual(DateTime.now().subtract(const Duration(days: 1)),date)){
+                                day = "Yesterday";
+                              }
+                              else {
+                                day = DateFormat("${DateFormat.ABBR_WEEKDAY}, ${DateFormat.DAY} ${DateFormat.MONTH} ${DateFormat.YEAR}").format(date);
+                              }
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(day, style: kBoldTextStyle.copyWith(
+                                    fontSize: 14
+                                  ),),
+                                  kVerticalSpaceSmall,
+                                  TransactionSummaryBuilder(transactionSummary: transactions[date]!)
+                                ],
+                              );
+                            },
+                            separatorBuilder: (_,__)=>kVerticalSpaceSmall,
+                            itemCount: transactions.length);
+                      }
+                    }),
                     Column(
                       children: [
                         Container(
@@ -293,8 +202,8 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

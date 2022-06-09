@@ -174,6 +174,7 @@ notifyListeners();
     String data = prefs.getString(name)!;
     return data;
   }
+
 }
 
 extension CapExtension on String {
@@ -193,3 +194,9 @@ String formatDecimal(double number) =>
 
 String currencySymbol(String currencyCode) =>
     NumberFormat().simpleCurrencySymbol(currencyCode);
+
+bool areDatesEqual(DateTime a, DateTime b){
+  return (a.year == b.year &&
+      a.month == b.month && a.day == b.day
+  );
+}

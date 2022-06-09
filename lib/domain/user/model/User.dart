@@ -42,7 +42,6 @@ class User extends Equatable{
     return user;
   }
 
-
   Map<String, dynamic> toMap() {
     return {
       'id': this.id,

@@ -37,7 +37,7 @@ class DriversCubit extends Cubit<DriversState> {
     var response = await userService.fetchUserDrivers(_currentUser!.id);
     print(response);
     if (response.isError || response.data!.isEmpty) {
-      emit(DriversStateManager([_currentUser!],selectedUser: _currentUser!));
+      emit(DriversStateDriver(_currentUser!));
       _selectedUser = _currentUser!;
       return;
     }

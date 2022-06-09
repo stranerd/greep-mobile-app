@@ -39,7 +39,7 @@ class _TransactionViewState extends State<TransactionView> {
   @override
   void initState() {
     transactions = GetIt.I<TransactionSummaryCubit>()
-        .getRecentTransactions(GetIt.I<UserCubit>().userId!);
+        .getMonthlyTransactions(GetIt.I<UserCubit>().userId!);
     super.initState();
   }
 
@@ -50,7 +50,7 @@ class _TransactionViewState extends State<TransactionView> {
     if (state is TransactionSummaryStateDone){
       setState(() {
         transactions = GetIt.I<TransactionSummaryCubit>()
-            .getRecentTransactions(GetIt.I<UserCubit>().userId!);
+            .getMonthlyTransactions(GetIt.I<UserCubit>().userId!);
       });
     }
   },

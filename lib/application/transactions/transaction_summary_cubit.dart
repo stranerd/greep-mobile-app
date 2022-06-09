@@ -103,7 +103,41 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     return _yesterday[userId]!;
   }
 
-  Map<DateTime, TransactionSummary> getRecentTransactions(String userId) {
+  Map<DateTime, TransactionSummary> getDailyTransactions(String userId){
+    if (_transactions[userId] == null || _transactions[userId]!.isEmpty) {
+      return {DateTime.now(): TransactionSummary.Zero()};
+    }
+    Map<DateTime, TransactionSummary> map = {};
+    for (var element in _transactions[userId]!) {
+      map.putIfAbsent(DateTime(element.timeAdded.year, element.timeAdded.month, element.timeAdded.day),
+              () {
+            List<Transaction> trans = _transactions[userId]!
+                .where((e) =>
+            e.timeAdded.year == element.timeAdded.year &&
+                element.timeAdded.month == e.timeAdded.month && element.timeAdded.day == e.timeAdded.day)
+                .toList();
+            return TransactionSummary(
+                amount: trans
+                    .map((e) => e.amount)
+                    .reduce((value, element) => element + value),
+                trips: trans
+                    .map((e) => e.data)
+                    .where((element) =>
+                element.transactionType == TransactionType.trip)
+                    .length,
+                expenses: trans
+                    .map((e) => e.data)
+                    .where((element) =>
+                element.transactionType == TransactionType.expense)
+                    .length,
+                transactions: trans);
+          });
+    }
+
+    return map;
+  }
+
+  Map<DateTime, TransactionSummary> getMonthlyTransactions(String userId) {
     if (_transactions[userId] == null || _transactions[userId]!.isEmpty) {
       return {DateTime.now(): TransactionSummary.Zero()};
     }

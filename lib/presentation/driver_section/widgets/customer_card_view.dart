@@ -81,7 +81,7 @@ class CustomerCardView extends StatelessWidget {
     },
     child:  Container(
       width: double.infinity,
-      height: 40.0,
+      height: 50.0,
       decoration: BoxDecoration(
         border: Border.all(
           color: const Color.fromRGBO(221, 226, 224, 1),

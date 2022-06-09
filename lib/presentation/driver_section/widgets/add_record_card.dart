@@ -36,7 +36,7 @@ class AddRecord extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SvgPicture.asset(icon, width: 20, height: 20),
+          SvgPicture.asset(icon, width: 25, height: 25),
           kHorizontalSpaceRegular,
           Text(
             title,
