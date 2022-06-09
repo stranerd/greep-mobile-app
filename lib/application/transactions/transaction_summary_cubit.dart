@@ -103,6 +103,30 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     return _yesterday[userId]!;
   }
 
+  TransactionSummary totalSummary(String userId){
+    if (_transactions[userId] == null || _transactions[userId]!.isEmpty) {
+      return TransactionSummary.Zero();
+    }
+    List<Transaction> trans = _transactions[userId]!;
+
+    return TransactionSummary(
+        amount: trans
+            .map((e) => e.amount)
+            .reduce((value, element) => element + value),
+        trips: trans
+            .map((e) => e.data)
+            .where((element) =>
+        element.transactionType == TransactionType.trip)
+            .length,
+        expenses: trans
+            .map((e) => e.data)
+            .where((element) =>
+        element.transactionType == TransactionType.expense)
+            .length,
+        transactions: trans);
+
+  }
+
   Map<DateTime, TransactionSummary> getDailyTransactions(String userId){
     if (_transactions[userId] == null || _transactions[userId]!.isEmpty) {
       return {DateTime.now(): TransactionSummary.Zero()};

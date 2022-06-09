@@ -48,7 +48,7 @@ class TransactionListCard extends StatelessWidget {
 
       subText = DateFormat(
               "${DateFormat.ABBR_MONTH} ${DateFormat.DAY} . hh:${DateFormat.MINUTE} a")
-          .format(transaction!.timeCreated);
+          .format(transaction!.timeAdded);
 
       trailText =
           "${type == TransactionType.trip ? "+" : "-"}${transaction!.amount}";

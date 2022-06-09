@@ -110,7 +110,7 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
       return const [];
     }
     List<Transaction> userTransactions = transactions[userId]!.toList();
-    userTransactions.sort((a, b) => a.timeAdded.compareTo(b.timeAdded));
+    userTransactions.sort((a, b) => b.timeAdded.compareTo(a.timeAdded));
     return userTransactions.take(5).toList();
   }
 }

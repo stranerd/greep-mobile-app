@@ -5,6 +5,8 @@ import 'package:grip/application/transactions/response/transaction_summary.dart'
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/Utils/utils.dart';
+import 'package:grip/commons/colors.dart';
+import 'package:grip/commons/money.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
 import 'package:grip/presentation/widgets/transaction_summary_builder.dart';
@@ -24,10 +26,15 @@ class ViewAllRecords extends StatefulWidget {
 class _ViewAllRecordsState extends State<ViewAllRecords> {
   Map<DateTime, TransactionSummary> transactions = {};
 
+  TransactionSummary totalIncome = TransactionSummary.Zero();
+
   @override
   void initState() {
     transactions = GetIt.I<TransactionSummaryCubit>()
         .getDailyTransactions(GetIt.I<UserCubit>().userId!);
+
+    totalIncome = GetIt.I<TransactionSummaryCubit>()
+        .totalSummary(GetIt.I<UserCubit>().userId!);
     super.initState();
   }
 
@@ -93,109 +100,70 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                         );
                       } else {
                         return ListView.separated(
-                          shrinkWrap: true,
+                            shrinkWrap: true,
                             physics: const ScrollPhysics(),
-                            itemBuilder: (c,i){
+                            itemBuilder: (c, i) {
                               DateTime date = transactions.keys.toList()[i];
                               String day = "";
-                              if (areDatesEqual(DateTime.now(),date)){
+                              if (areDatesEqual(DateTime.now(), date)) {
                                 day = "Today";
-                              }
-                              else if (areDatesEqual(DateTime.now().subtract(const Duration(days: 1)),date)){
+                              } else if (areDatesEqual(
+                                  DateTime.now()
+                                      .subtract(const Duration(days: 1)),
+                                  date)) {
                                 day = "Yesterday";
-                              }
-                              else {
-                                day = DateFormat("${DateFormat.ABBR_WEEKDAY}, ${DateFormat.DAY} ${DateFormat.MONTH} ${DateFormat.YEAR}").format(date);
+                              } else {
+                                day = DateFormat(
+                                        "${DateFormat.ABBR_WEEKDAY}, ${DateFormat.DAY} ${DateFormat.MONTH} ${DateFormat.YEAR}")
+                                    .format(date);
                               }
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(day, style: kBoldTextStyle.copyWith(
-                                    fontSize: 14
-                                  ),),
+                                  Text(
+                                    day,
+                                    style:
+                                        kBoldTextStyle2.copyWith(fontSize: 13),
+                                  ),
                                   kVerticalSpaceSmall,
-                                  TransactionSummaryBuilder(transactionSummary: transactions[date]!)
+                                  TransactionSummaryBuilder(
+                                      transactionSummary: transactions[date]!)
                                 ],
                               );
                             },
-                            separatorBuilder: (_,__)=>kVerticalSpaceSmall,
+                            separatorBuilder: (_, __) => kVerticalSpaceRegular,
                             itemCount: transactions.length);
                       }
                     }),
                     Column(
                       children: [
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              width: 1.0,
-                              color: AppColors.lightGray,
-                            ),
+                        RecordCard(
+                          title: "N${totalIncome.amount.toMoney}",
+                          subtitle: "Total Income",
+                          width: Get.width * 0.9,
+                          titleStyle: kDefaultTextStyle.copyWith(
+                            color: kGreenColor
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("\$126580",
-                                  style: AppTextStyles.greenSize16),
-                              const SizedBox(
-                                height: 4.0,
-                              ),
-                              Text("Total Income",
-                                  style: AppTextStyles.blackSize12),
-                            ],
-                          ),
+                          subtitleStyle: TextStyle(),
+                          transactions: totalIncome.transactions,
                         ),
-                        const SizedBox(
-                          height: 16.0,
+                        kVerticalSpaceSmall,
+                        RecordCard(
+                          title: totalIncome.trips.toString(),
+                          subtitle: "Total Trips",
+                          width: Get.width * 0.9,
+                          titleStyle: TextStyle(),
+                          subtitleStyle: TextStyle(),
+                          transactions: totalIncome.transactions,
                         ),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              width: 1.0,
-                              color: AppColors.lightGray,
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("9842", style: AppTextStyles.blackSize16),
-                              const SizedBox(
-                                height: 4.0,
-                              ),
-                              Text("Total Trips",
-                                  style: AppTextStyles.blackSize12),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 16.0,
-                        ),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              width: 1.0,
-                              color: AppColors.lightGray,
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("942", style: AppTextStyles.blackSize16),
-                              const SizedBox(
-                                height: 4.0,
-                              ),
-                              Text("Total Expenses",
-                                  style: AppTextStyles.blackSize12),
-                            ],
-                          ),
+                        kVerticalSpaceSmall,
+                        RecordCard(
+                          title: totalIncome.expenses.toString(),
+                          subtitle: "Total Expenses",
+                          width: Get.width * 0.9,
+                          titleStyle: TextStyle(),
+                          subtitleStyle: TextStyle(),
+                          transactions: totalIncome.transactions,
                         ),
                       ],
                     ),

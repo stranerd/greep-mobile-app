@@ -10,6 +10,7 @@ import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/application/user/user_state.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/transaction/transaction.dart';
+import 'package:grip/presentation/driver_section/transaction/view_transactions.dart';
 import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
 import 'package:grip/presentation/driver_section/widgets/transaction_interval_summary.dart';
 import 'package:grip/presentation/widgets/customer_transaction_list.dart';
@@ -148,14 +149,9 @@ class _DriverHomePageState extends State<DriverHomePage> {
                               contentPadding: EdgeInsets.zero,
                               title: Text("Today",
                                   style: AppTextStyles.blackSizeBold12),
-                              trailing: InkWell(
+                              trailing: SplashTap(
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const ViewAllRecords()),
-                                  );
+                                  Get.to(() => ViewAllRecords());
                                 },
                                 child: Text("view all",
                                     style: AppTextStyles.blackSize12),
@@ -175,8 +171,13 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                   const EdgeInsets.fromLTRB(0, 0, 0, 0),
                               title: Text("Yesterday",
                                   style: AppTextStyles.blackSizeBold12),
-                              trailing: Text("view all",
-                                  style: AppTextStyles.blackSize12),
+                              trailing:SplashTap(
+                                onTap: () {
+                                  Get.to(() => ViewAllRecords());
+                                },
+                                child: Text("view all",
+                                    style: AppTextStyles.blackSize12),
+                              ),
                             ),
                             kVerticalSpaceSmall,
                             TransactionIntervalSummaryWidget(
@@ -222,8 +223,13 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                   const EdgeInsets.fromLTRB(0, 0, 0, 0),
                               title: Text("Transaction history",
                                   style: AppTextStyles.blackSizeBold12),
-                              trailing: Text("view all",
-                                  style: AppTextStyles.blackSize12),
+                              trailing: SplashTap(
+                                onTap: (){
+                                  Get.to(() => TransactionView());
+                                },
+                                child: Text("view all",
+                                    style: AppTextStyles.blackSize12),
+                              ),
                             ),
                             kVerticalSpaceSmall,
                             Builder(builder: (context) {
