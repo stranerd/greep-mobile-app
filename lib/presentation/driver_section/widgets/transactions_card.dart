@@ -5,6 +5,7 @@ import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/transaction/transaction_details.dart';
+import 'package:grip/presentation/widgets/splash_tap.dart';
 import 'package:intl/intl.dart';
 
 class TransactionCard extends StatelessWidget {
@@ -62,7 +63,7 @@ class TransactionCard extends StatelessWidget {
 
       subTrailText = transaction!.data.transactionType.name;
     }
-    return GestureDetector(
+    return SplashTap(
       onTap: transaction == null ? null : !shouldTap ? null : (){
         Get.to(() => TransactionDetails(transaction: transaction!,));
       },
@@ -75,7 +76,6 @@ class TransactionCard extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: Colors.white,
           border: Border.all(
               width: 1,
               color: const Color.fromRGBO(

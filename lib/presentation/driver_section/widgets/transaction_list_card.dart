@@ -57,6 +57,7 @@ class TransactionListCard extends StatelessWidget {
           : kErrorColorTextStyle.copyWith(fontSize: 12);
     }
     return ListTile(
+
       onTap: transaction == null
           ? null
           : shouldTap ? () => Get.to(() => TransactionDetails(transaction: transaction!)): null,

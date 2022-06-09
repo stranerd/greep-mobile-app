@@ -118,26 +118,13 @@ class _CustomerViewState extends State<CustomerView> {
                       physics: const ScrollPhysics(),
                       itemCount: transactions.length,
                       itemBuilder: (c, i) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CustomerDetails(
-                                  name: transactions[i].data.customerName!,
-                                  userId: userId,
-                                ),
-                              ),
-                            );
-                          },
-                          child: CustomerCardView(
+                        return CustomerCardView(
                               title: "Kemi",
                               transaction: transactions[i],
                               userId: userId,
                               subtitle: "8\$",
                               titleStyle: AppTextStyles.blackSize16,
-                              subtitleStyle: AppTextStyles.redSize16),
-                        );
+                              subtitleStyle: AppTextStyles.redSize16);
                       });
                 }),
               ],

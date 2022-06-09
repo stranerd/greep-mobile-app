@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
+import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/money.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
+import 'package:grip/presentation/driver_section/customer/customer_details.dart';
+import 'package:grip/presentation/widgets/splash_tap.dart';
 import 'package:grip/utils/constants/app_colors.dart';
 
 class CustomerCardView extends StatelessWidget {
@@ -66,7 +70,16 @@ class CustomerCardView extends StatelessWidget {
       }
     }
 
-    return Container(
+    return SplashTap(
+        onTap: () {
+          if (transaction!=null) {
+          Get.to(() => CustomerDetails(
+            name: transaction!.data.customerName!,
+            userId: GetIt.I<UserCubit>().userId!,
+          ),);
+          }
+    },
+    child:  Container(
       width: double.infinity,
       height: 40.0,
       decoration: BoxDecoration(
@@ -92,6 +105,6 @@ class CustomerCardView extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ));
   }
 }

@@ -7,6 +7,7 @@ import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
 import 'package:grip/presentation/driver_section/widgets/transactions_card.dart';
+import 'package:grip/presentation/widgets/splash_tap.dart';
 
 class RecordCard extends StatefulWidget {
   const RecordCard({
@@ -33,14 +34,13 @@ class RecordCard extends StatefulWidget {
 class _RecordCardState extends State<RecordCard> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return SplashTap(
       onTap: _openDialog,
       child: Container(
         padding: const EdgeInsets.all(kDefaultSpacing * 0.75),
         height: 80,
         width: widget.width ?? Get.width * 0.31,
         decoration: BoxDecoration(
-          color: Colors.white,
           borderRadius: BorderRadius.circular(8.0),
           border: Border.all(
             color: kGreyColor2,
