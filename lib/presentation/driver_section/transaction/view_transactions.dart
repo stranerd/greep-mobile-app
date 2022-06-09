@@ -10,6 +10,7 @@ import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/money.dart';
 import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/presentation/widgets/splash_tap.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/constants/app_colors.dart';
@@ -159,67 +160,71 @@ class _TransactionViewState extends State<TransactionView> {
                       children: [
                         Row(
                           children: [
-                            Text(
-                              "From",
-                              style: AppTextStyles.blackSize14,
-                            ),
-                            SizedBox(
-                              width: 130.w,
-                            ),
-                            Text(
-                              "To",
-                              style: AppTextStyles.blackSize14,
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 4.h),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: GestureDetector(
-                                onTap: () => _pickDate(true),
-                                child: Container(
-                                  width: 150.w,
-                                  padding:
-                                      const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.lightGray,
-                                  ),
-                                  child: Text(
-                                    from == null
-                                        ? "Select Date..."
-                                        : DateFormat(
-                                        "${DateFormat.DAY}/${DateFormat.MONTH}/${DateFormat.YEAR} ")
-                                        .format(from!),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "From",
                                     style: AppTextStyles.blackSize14,
                                   ),
-                                ),
+                                  kVerticalSpaceSmall,
+                                  GestureDetector(
+                                    onTap: () => _pickDate(true),
+                                    child: Container(
+                                      width: 150.w,
+                                      padding:
+                                          const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: AppColors.lightGray,
+                                      ),
+                                      child: Text(
+                                        from == null
+                                            ? "Select Date..."
+                                            : DateFormat(
+                                            "${DateFormat.DAY}/${DateFormat.MONTH}/${DateFormat.YEAR} ")
+                                            .format(from!),
+                                        style: AppTextStyles.blackSize14,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                             const SizedBox(
                               width: 16.0,
                             ),
-                            Flexible(
-                              child: GestureDetector(
-                                onTap: () => _pickDate(false),
-                                child: Container(
-                                  width: 150.w,
-                                  padding:
-                                      const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.lightGray,
-                                  ),
-                                  child: Text(
-                                    to == null
-                                        ? "Select Date..."
-                                        : DateFormat(
-                                        "${DateFormat.DAY}/${DateFormat.MONTH}/${DateFormat.YEAR} ")
-                                        .format(to!),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "To",
                                     style: AppTextStyles.blackSize14,
                                   ),
-                                ),
+                                  kVerticalSpaceSmall,
+                                  SplashTap(
+                                    onTap: () => _pickDate(false),
+                                    child: Container(
+                                      width: 150.w,
+                                      padding:
+                                          const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: AppColors.lightGray,
+                                      ),
+                                      child: Text(
+                                        to == null
+                                            ? "Select Date..."
+                                            : DateFormat(
+                                            "${DateFormat.DAY}/${DateFormat.MONTH}/${DateFormat.YEAR} ")
+                                            .format(to!),
+                                        style: AppTextStyles.blackSize14,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -227,7 +232,7 @@ class _TransactionViewState extends State<TransactionView> {
                         const SizedBox(
                           height: 16.0,
                         ),
-                        GestureDetector(
+                        SplashTap(
                           onTap: () {
                             if (from!=null && to !=null){
                               Get.to(() => Range(userId: GetIt.I<UserCubit>().userId!,from: from!,to: to!,));

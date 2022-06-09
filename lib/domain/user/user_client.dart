@@ -62,4 +62,66 @@ class UserClient {
     }
   }
 
+  Future<ResponseEntity<List<User>>> fetchUserDrivers(String userId) async {
+    print("fetching user drivers");
+    Map<String, dynamic> queryParams = {
+      "where[]": {"field":"manager.managerId", "value":userId},
+      "all": "true"
+    };
+    Response response;
+    try {
+      response = await dio.get("users/users",queryParameters: queryParams);
+      List<User> users = [];
+      response.data["results"].forEach((e){
+        users.add(User.fromServer(e));
+      });
+      print(users);
+      return ResponseEntity.Data(users);
+    } on DioError catch (e) {
+
+      if (e.type == DioErrorType.connectTimeout) {
+        return ResponseEntity.Timeout();
+      }
+      if (e.error is SocketException) {
+        return ResponseEntity.Socket();
+      }
+      if (e.type == DioErrorType.response) {
+        try {
+          if (e.response!.data[0]["message"]
+              .toString()
+              .toLowerCase()
+              .contains("access token")) {
+            print("refreshing token");
+            var response =
+            await GetIt.I<AuthenticationService>().refreshToken();
+            if (response.isError) {
+              return ResponseEntity.Error(
+                  "An error occurred, please log in again");
+            } else {
+              return fetchUserDrivers(userId);
+            }
+          }
+        } catch (_) {}
+      }
+      dynamic error = e.response!.data;
+      String message = "";
+      if (error == null) {
+        message = "An error occurred fetching user drivers. Try again";
+      } else {
+        try {
+          message = error["message"];
+        }
+        catch (e) {
+          message = "an error occurred. Try again";
+        }
+      }
+      return ResponseEntity.Error(message);
+    } catch (e) {
+      print("Exception $e");
+      return ResponseEntity.Error(
+          "An error occurred  fetching user drivers. Try again");
+    }
+  }
+
+
 }

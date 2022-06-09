@@ -51,7 +51,7 @@ class TransactionCard extends StatelessWidget {
           ? "balance": type == TransactionType.expense
           ? transaction!.data.name! : title)!;
 
-      subText = DateFormat("${DateFormat.ABBR_MONTH} ${DateFormat.DAY} . hh:${DateFormat.MINUTE} a").format(transaction!.timeCreated);
+      subText = DateFormat("${DateFormat.ABBR_MONTH} ${DateFormat.DAY} . hh:${DateFormat.MINUTE} a").format(transaction!.timeAdded);
 
       trailText = "${type == TransactionType.trip ? "+":"-"}${transaction!.amount}";
       trailStyle = type == TransactionType.trip ? kDefaultTextStyle.copyWith(
