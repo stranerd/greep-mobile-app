@@ -33,28 +33,33 @@ class DriversCubit extends Cubit<DriversState> {
   User get selectedUser => _selectedUser;
 
   void fetchUserDrivers() async {
+    print("fetching drivers for ${_currentUser!.id}");
     var response = await userService.fetchUserDrivers(_currentUser!.id);
+    print(response);
     if (response.isError || response.data!.isEmpty) {
-      emit(DriversStateDriver(_currentUser!));
+      emit(DriversStateManager([_currentUser!],selectedUser: _currentUser!));
       _selectedUser = _currentUser!;
       return;
     }
 
     _selectedUser = _currentUser!;
-    emit(DriversStateManager(response.data!..insert(0, _currentUser!)));
+    emit(DriversStateManager(response.data!..insert(0, _currentUser!),selectedUser: _currentUser!));
     _drivers = response.data!;
   }
 
   void setSelectedUser(User user){
+    if (state is! DriversStateManager) return;
     if (_drivers.contains(user)){
       _selectedUser = user;
+      emit(DriversStateManager(_drivers, selectedUser: _selectedUser));
+
     }
   }
+
 
   @override
   Future<void> close() {
     _streamSubscription.cancel();
-
     return super.close();
   }
 }

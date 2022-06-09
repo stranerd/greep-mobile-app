@@ -7,14 +7,20 @@ abstract class DriversState {
 
 class DriversInitial extends DriversState {}
 
-class DriversStateDriver extends DriversState {
-  final User user;
+class DriversStateFetched extends DriversState {
+  final User selectedUser;
 
-  DriversStateDriver(this.user);
+  DriversStateFetched({required this.selectedUser});
 }
 
-class DriversStateManager extends DriversState {
+class DriversStateDriver extends DriversStateFetched {
+  final User user;
+
+  DriversStateDriver(this.user) : super(selectedUser: user);
+}
+
+class DriversStateManager extends DriversStateFetched {
   final List<User> drivers;
 
-  DriversStateManager(this.drivers);
+  DriversStateManager(this.drivers,{required User selectedUser}): super(selectedUser: selectedUser);
 }

@@ -63,9 +63,8 @@ class UserClient {
   }
 
   Future<ResponseEntity<List<User>>> fetchUserDrivers(String userId) async {
-    print("fetching user drivers");
     Map<String, dynamic> queryParams = {
-      "where[]": {"field":"manager.managerId", "value":userId},
+      "where[]": {"field":"manager.managerId", "value":userId,},
       "all": "true"
     };
     Response response;

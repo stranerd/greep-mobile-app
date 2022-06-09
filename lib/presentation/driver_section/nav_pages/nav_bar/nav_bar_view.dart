@@ -40,7 +40,9 @@ class _NavBarViewState extends State<NavBarView> {
         ),
         BlocListener<CustomerStatisticsCubit, CustomerStatisticsState>(
           listener: (context, state) {
+            setState(() {
 
+            });
           },
         ),
       ],

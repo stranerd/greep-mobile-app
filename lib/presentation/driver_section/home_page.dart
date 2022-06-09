@@ -13,6 +13,7 @@ import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
 import 'package:grip/presentation/driver_section/widgets/transaction_interval_summary.dart';
 import 'package:grip/presentation/widgets/customer_transaction_list.dart';
+import 'package:grip/presentation/widgets/driver_selector_widget.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -84,6 +85,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                           padding: const EdgeInsets.symmetric(horizontal: kDefaultSpacing * 0.5),
                           physics: const ScrollPhysics(),
                           children: [
+                            const DriverSelectorRow(),
                             ListTile(
                               contentPadding:
                                   const EdgeInsets.fromLTRB(0, 0, 0, 0),

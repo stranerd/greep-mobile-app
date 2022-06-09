@@ -13,6 +13,7 @@ class SplashTap extends StatelessWidget {
       splashColor: kPrimaryColor.withOpacity(0.2),
       highlightColor: kPrimaryColor.withOpacity(0.2),
       hoverColor: kPrimaryColor.withOpacity(0.2),
+
       borderRadius: const BorderRadius.all(Radius.circular(kDefaultSpacing * 0.5)),
       overlayColor: MaterialStateProperty.all(kPrimaryColor.withOpacity(0.2)),
       onTap: () {
