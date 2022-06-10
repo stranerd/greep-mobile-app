@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
+/// @author Ibekason Alexander
+
 class SignUpRequest {
   final String password;
   final String firstName;
@@ -10,38 +12,37 @@ class SignUpRequest {
   final String email;
   final MultipartFile photo;
 
-  const SignUpRequest({
-    required this.password,
-    required this.firstName,
-    required this.lastName,
-    required this.path,
-    required this.email,
-    required this.photo
-  });
+  const SignUpRequest(
+      {required this.password,
+      required this.firstName,
+      required this.lastName,
+      required this.path,
+      required this.email,
+      required this.photo});
 
+  Map<String, dynamic> toMap() {
+    print(photo.filename);
+    return {
+      'password': password,
+      // 'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'photo': photo
+    };
+  }
+
+  FormData toFormData() {
+    var formData = FormData.fromMap(toMap());
+    // formData.files.add(MapEntry("photo", photo));
+    return formData;
+  }
 
   @override
   String toString() {
     return 'SignUpRequest{password: $password, firstName: $firstName, lastName: $lastName, email: $email, photo: $photo}';
   }
 
-  FormData toFormData(){
-    var formData = FormData.fromMap(toMap());
-    formData.files.add(MapEntry("photo", photo));
-    print(formData.files);
-    return formData;
-  }
   String toJson() {
     return jsonEncode(toMap());
   }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'password': this.password,
-      // 'firstName': this.firstName,
-      'lastName': this.lastName,
-      'email': this.email,
-    };
-  }
-
 }

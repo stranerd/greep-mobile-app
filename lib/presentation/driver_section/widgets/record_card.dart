@@ -75,6 +75,7 @@ class _RecordCardState extends State<RecordCard> {
             .toList();
       }
     }
+    if (["trip","expense"].any((e) => widget.subtitle.toLowerCase().contains(e))){
 
       showDialog(
           context: context,
@@ -138,5 +139,6 @@ class _RecordCardState extends State<RecordCard> {
             );
           });
 
+  }
   }
 }
