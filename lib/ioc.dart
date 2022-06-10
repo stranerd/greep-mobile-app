@@ -37,6 +37,7 @@ class IoC {
     _transactionService = TransactionService(TransactionClient());
     _userTransactionsCubit = UserTransactionsCubit(
         transactionService: _transactionService,
+        driversCubit: _driversCubit,
         authenticationCubit: _authenticationCubit);
     _signupCubit = SignupCubit(authenticationCubit: _authenticationCubit, authenticationService: _authenticationService,);
 
@@ -52,9 +53,10 @@ class IoC {
 
 
     getIt.registerSingleton(
-        TransactionSummaryCubit(userTransactionsCubit: _userTransactionsCubit));
+        TransactionSummaryCubit(userTransactionsCubit: _userTransactionsCubit,driversCubit: _driversCubit));
     getIt.registerSingleton(CustomerStatisticsCubit(
         transactionsCubit: _userTransactionsCubit,
+        driversCubit: _driversCubit,
         authenticationCubit: _authenticationCubit));
     getIt.registerFactory(() => TransactionCrudCubit(transactionService: _transactionService,)
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/transactions/response/transaction_summary.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
@@ -18,9 +19,21 @@ class TransactionIntervalSummaryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var transactionSummaryCubit = GetIt.I<TransactionSummaryCubit>();
-    TransactionSummary transactionSummary = transactionSummaryCubit.calculate(
-        userId, DateTime(from.year, from.month, from.day), to);
-    return TransactionSummaryBuilder(transactionSummary: transactionSummary);
+
+    return BlocBuilder<TransactionSummaryCubit, TransactionSummaryState>(
+
+      builder: (context, state) {
+        if (state is TransactionSummaryStateDone) {
+          TransactionSummary transactionSummary = GetIt.I<
+              TransactionSummaryCubit>()
+              .calculateInterval(DateTime(from.year, from.month, from.day), to);
+
+
+          return TransactionSummaryBuilder(
+              transactionSummary: transactionSummary);
+        }
+        return Container();
+      },
+    );
   }
 }

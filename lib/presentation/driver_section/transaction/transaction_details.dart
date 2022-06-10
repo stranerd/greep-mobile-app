@@ -25,8 +25,7 @@ class TransactionDetails extends StatelessWidget {
     return Builder(builder: (context) {
       Transaction? parentBalance;
       if (transaction.data.transactionType == TransactionType.balance) {
-        parentBalance = GetIt.I<CustomerStatisticsCubit>().getByParentBalance(
-            GetIt.I<UserCubit>().userId!, transaction.data.parentId!);
+        parentBalance = GetIt.I<CustomerStatisticsCubit>().getByParentBalance(transaction.data.parentId!);
       }
       return Scaffold(
         backgroundColor: Colors.white,

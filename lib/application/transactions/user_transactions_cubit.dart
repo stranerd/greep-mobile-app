@@ -4,19 +4,27 @@ import 'package:bloc/bloc.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/AuthenticationState.dart';
 import 'package:grip/application/response.dart';
+import 'package:grip/application/user/drivers_cubit.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/domain/transaction/transaction_service.dart';
 
 part 'user_transactions_state.dart';
 
 class UserTransactionsCubit extends Cubit<UserTransactionsState> {
-  UserTransactionsCubit({required this.transactionService, required this.authenticationCubit}) : super(UserTransactionsInitial()){
+
+  UserTransactionsCubit({required this.transactionService,required this.driversCubit, required this.authenticationCubit}) : super(UserTransactionsInitial()){
     _streamSubscription = authenticationCubit.stream.listen((event) {
-      if (event is AuthenticationStateAuthenticated){
-        fetchUserTransactions(requestId: event.userId);
-      }
+
       if (event is AuthenticationStateNotAuthenticated){
         destroy();
+      }
+    });
+
+    _driverStream = driversCubit.stream.listen((event) {
+      print("driver event changed for user transactions");
+      if (event is DriversStateFetched){
+        fetchUserTransactions(requestId: event.selectedUser.id);
+        print("fetched transactions on driver state change");
       }
     });
   }
@@ -26,6 +34,9 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
   Map<String, Set<Transaction>> transactions = {};
   late StreamSubscription _streamSubscription;
   final AuthenticationCubit authenticationCubit;
+  final DriversCubit driversCubit;
+  late StreamSubscription _driverStream;
+
 
   Future<UserTransactionsState> fetchUserTransactions(
       {required String requestId,
@@ -96,6 +107,8 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
   @override
   Future<void> close() {
     _streamSubscription.cancel();
+    _driverStream.cancel();
+
     return super.close();
   }
 

@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:grip/application/transactions/transaction_crud_cubit.dart';
 import 'package:grip/application/transactions/response/transaction_summary.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
+import 'package:grip/application/user/drivers_cubit.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:meta/meta.dart';
@@ -17,11 +18,13 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
 
   Map<String, List<Transaction>> _transactions = {};
 
+  final DriversCubit driversCubit;
+
   final Map<String, TransactionSummary> _today = {};
 
   final Map<String, TransactionSummary> _yesterday = {};
 
-  TransactionSummaryCubit({required this.userTransactionsCubit})
+  TransactionSummaryCubit({required this.userTransactionsCubit, required this.driversCubit})
       : super(TransactionSummaryInitial()) {
     _streamSubscription = userTransactionsCubit.stream.listen((event) {
       if (event is UserTransactionsStateFetched) {
@@ -34,7 +37,6 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
 
   void _calculateStatistics() {
     emit(TransactionSummaryStateLoading());
-    print("calculating statistics");
     DateTime now = DateTime.now();
     DateTime today = DateTime(now.year, now.month, now.day);
     Duration day = const Duration(days: 1);
@@ -43,15 +45,15 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
 
     _transactions.forEach((key, value) {
       // calculate today
-      _today[key] = calculate(key, today, now);
+      _today[key] = _calculate(key, today, now);
 
       // calculate yesterday
-      _yesterday[key] = calculate(key, yesterday, today);
+      _yesterday[key] = _calculate(key, yesterday, today);
     });
     emit(TransactionSummaryStateDone());
   }
 
-  TransactionSummary calculate(String userId, DateTime from, DateTime to) {
+  TransactionSummary _calculate(String userId, DateTime from, DateTime to) {
     if (_transactions[userId] == null || _transactions[userId]!.isEmpty) {
       return TransactionSummary.Zero();
     }
@@ -103,7 +105,8 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     return _yesterday[userId]!;
   }
 
-  TransactionSummary totalSummary(String userId){
+  TransactionSummary totalSummary(){
+    String userId = getSelectedUserId();
     if (_transactions[userId] == null || _transactions[userId]!.isEmpty) {
       return TransactionSummary.Zero();
     }
@@ -127,7 +130,12 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
 
   }
 
-  Map<DateTime, TransactionSummary> getDailyTransactions(String userId){
+  TransactionSummary calculateInterval(DateTime from, DateTime to){
+    return _calculate(getSelectedUserId(), from, to);
+  }
+
+  Map<DateTime, TransactionSummary> getDailyTransactions(){
+    String userId = getSelectedUserId();
     if (_transactions[userId] == null || _transactions[userId]!.isEmpty) {
       return {DateTime.now(): TransactionSummary.Zero()};
     }
@@ -161,7 +169,8 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     return map;
   }
 
-  Map<DateTime, TransactionSummary> getMonthlyTransactions(String userId) {
+  Map<DateTime, TransactionSummary> getMonthlyTransactions() {
+    String userId = getSelectedUserId();
     if (_transactions[userId] == null || _transactions[userId]!.isEmpty) {
       return {DateTime.now(): TransactionSummary.Zero()};
     }
@@ -195,14 +204,17 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     return map;
   }
 
-  List<Transaction> filterTransactions(String userId, DateTime from, DateTime to) {
+  List<Transaction> filterTransactions(DateTime from, DateTime to) {
+    String userId = getSelectedUserId();
     if (_transactions[userId] == null || _transactions[userId]!.isEmpty) {
       return [];
     }
 
-    return calculate(userId, from, to).transactions;
+    return _calculate(userId, from, to).transactions;
 
   }
+
+  String getSelectedUserId() => driversCubit.selectedUser.id;
 
   @override
   Future<void> close() {

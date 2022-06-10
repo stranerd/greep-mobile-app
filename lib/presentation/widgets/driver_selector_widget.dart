@@ -66,6 +66,7 @@ class _DriverSelectorRowState extends State<DriverSelectorRow> {
                   onTap: (){
                     setState(() {
                       selectedIndex = i;
+                      _driversCubit.setSelectedUser(user);
                     });
                   },
                   child: DriverItemWidget(name: i==0?"You": user.firstName, isSelected: selectedIndex == i, asset: user.photoUrl));

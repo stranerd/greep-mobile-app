@@ -34,7 +34,6 @@ class _RangeState extends State<Range> {
   @override
   void initState() {
     transactions = GetIt.I<TransactionSummaryCubit>().filterTransactions(
-      widget.userId,
       widget.from,
       widget.to,
     );

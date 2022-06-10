@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/transactions/response/transaction_summary.dart';
@@ -31,15 +32,24 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
   @override
   void initState() {
     transactions = GetIt.I<TransactionSummaryCubit>()
-        .getDailyTransactions(GetIt.I<UserCubit>().userId!);
+        .getDailyTransactions();
 
     totalIncome = GetIt.I<TransactionSummaryCubit>()
-        .totalSummary(GetIt.I<UserCubit>().userId!);
+        .totalSummary();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    return BlocConsumer<TransactionSummaryCubit, TransactionSummaryState>(
+  listener: (context, state) {
+    transactions = GetIt.I<TransactionSummaryCubit>()
+        .getDailyTransactions();
+
+    totalIncome = GetIt.I<TransactionSummaryCubit>()
+        .totalSummary();
+  },
+  builder: (context, state) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -175,5 +185,7 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
         ),
       ),
     );
+  },
+);
   }
 }
