@@ -39,10 +39,11 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
 
 
   Future<UserTransactionsState> fetchUserTransactions(
-      {required String requestId,
+      { String? requestId,
         bool fullRefresh = false,
         bool loadMore = false,
         bool softUpdate = false}) async {
+    requestId = requestId ?? driversCubit.selectedUser.id;
     // when there is no load more request or a full refresh, reset pagination to default pagination
     // and emit a loading state
     if ((!softUpdate || !loadMore) || fullRefresh) {
@@ -118,7 +119,8 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
     emit(UserTransactionsInitial());
   }
 
-  List<Transaction> getLastUserTransactions(String userId) {
+  List<Transaction> getLastUserTransactions() {
+    String userId = driversCubit.selectedUser.id;
     if (transactions[userId] == null || transactions[userId]!.isEmpty){
       return const [];
     }

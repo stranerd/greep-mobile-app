@@ -3,10 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
+import 'package:grip/application/transactions/user_transactions_cubit.dart';
+import 'package:grip/application/user/drivers_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
+import 'package:grip/presentation/widgets/driver_selector_widget.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_styles.dart';
@@ -21,38 +25,82 @@ class CustomerView extends StatefulWidget {
 }
 
 class _CustomerViewState extends State<CustomerView> {
+  late RefreshController refreshController;
+
+
   List<Transaction> transactions = [];
+
+  @override
+  void initState() {
+    refreshController = RefreshController();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocListener<CustomerStatisticsCubit, CustomerStatisticsState>(
-  listener: (context, state) {
-    if (state is CustomerStatisticsStateDone) {
-      print("Setting summary state");
-      setState(() {
-        transactions =
-        GetIt.I<CustomerStatisticsCubit>()
-            .getDebtTransactions();
-      });
-    }
-  },
-  child: Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text(
-          'Customers',
-          style: AppTextStyles.blackSizeBold16,
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<CustomerStatisticsCubit, CustomerStatisticsState>(
+          listener: (context, state) {
+            if (state is CustomerStatisticsStateDone) {
+              print("Setting summary state");
+              setState(() {
+                transactions =
+                    GetIt.I<CustomerStatisticsCubit>()
+                        .getDebtTransactions();
+              });
+            }
+          },
         ),
-        centerTitle: true,
-        elevation: 0.0,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-        child: SafeArea(
-          child: SingleChildScrollView(
+        BlocListener<UserTransactionsCubit, UserTransactionsState>(
+          listener: (context, state) {
+            if (state is UserTransactionsStateFetched) {
+              refreshController.refreshCompleted();
+            }
+          },
+        ),
+      ],
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          toolbarHeight: 30,
+          backgroundColor: Colors.white,
+          title: Text(
+            'Greep',
+            style: AppTextStyles.blackSizeBold16,
+          ),
+          centerTitle: true,
+          elevation: 0.0,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(kDefaultSpacing * 0.5),
+          child: SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                DriverSelectorRow(),
+                kVerticalSpaceSmall,
+                BlocBuilder<DriversCubit, DriversState>(
+                  builder: (context, driverState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        driverState is! DriversStateManager ? Align(
+                          alignment:Alignment.center,
+                          child: Text(
+                            'Customers',
+                            style: AppTextStyles.blackSizeBold16,
+                          ),
+                        ): Text(
+                    driverState.selectedUser == GetIt.I<UserCubit>().user ?'Your customers': "${driverState.selectedUser.firstName} customers",
+                    style: AppTextStyles.blackSizeBold16,
+                    ),
+
+                      ],
+                    );
+                  },
+                ),
+                kVerticalSpaceRegular,
                 Row(
                   children: [
                     Row(
@@ -102,36 +150,48 @@ class _CustomerViewState extends State<CustomerView> {
                   ],
                 ),
                 kVerticalSpaceMedium,
-                Builder(builder: (c) {
-
-                  if (transactions.isEmpty) {
-                    return SizedBox(
-                      height: Get.height * 0.7,
-                      child: const EmptyResultWidget(
-                          text: "No customer transactions"),
-                    );
-                  }
-
-                  return ListView.separated(
-                      separatorBuilder: (c, i) => kVerticalSpaceSmall,
+                Expanded(
+                  child: SmartRefresher(
+                    controller: refreshController,
+                    onRefresh: () {
+                      GetIt.I<UserTransactionsCubit>().fetchUserTransactions();
+                    },
+                    child: ListView(
                       shrinkWrap: true,
                       physics: const ScrollPhysics(),
-                      itemCount: transactions.length,
-                      itemBuilder: (c, i) {
-                        return CustomerCardView(
-                              title: "Kemi",
-                              transaction: transactions[i],
-                              subtitle: "8\$",
-                              titleStyle: AppTextStyles.blackSize16,
-                              subtitleStyle: AppTextStyles.redSize16);
-                      });
-                }),
+                      children: [
+                        Builder(builder: (c) {
+                          if (transactions.isEmpty) {
+                            return SizedBox(
+                              height: Get.height * 0.7,
+                              child: const EmptyResultWidget(
+                                  text: "No customer transactions"),
+                            );
+                          }
+
+                          return ListView.separated(
+                              separatorBuilder: (c, i) => kVerticalSpaceSmall,
+                              shrinkWrap: true,
+                              physics: const ScrollPhysics(),
+                              itemCount: transactions.length,
+                              itemBuilder: (c, i) {
+                                return CustomerCardView(
+                                    title: "Kemi",
+                                    transaction: transactions[i],
+                                    subtitle: "8\$",
+                                    titleStyle: AppTextStyles.blackSize16,
+                                    subtitleStyle: AppTextStyles.redSize16);
+                              });
+                        }),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
         ),
       ),
-    ),
-);
+    );
   }
 }

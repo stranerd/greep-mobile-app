@@ -9,8 +9,7 @@ import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dar
 import 'package:grip/utils/constants/app_styles.dart';
 
 class CustomerTransactionListWidget extends StatelessWidget {
-  final String userId;
-  const CustomerTransactionListWidget({Key? key, required this.userId}) : super(key: key);
+  const CustomerTransactionListWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

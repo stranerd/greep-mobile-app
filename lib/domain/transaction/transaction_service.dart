@@ -34,7 +34,7 @@ class TransactionService {
 
   void sortResults(List<Transaction> list){
     list.sort((a, b) {
-      return a.timeAdded.compareTo(b.timeAdded);
+      return b.timeAdded.compareTo(a.timeAdded);
     });
   }
 }

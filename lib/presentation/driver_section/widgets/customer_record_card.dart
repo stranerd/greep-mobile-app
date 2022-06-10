@@ -7,6 +7,8 @@ import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
+import 'package:grip/presentation/driver_section/transaction/transaction_details.dart';
+import 'package:grip/presentation/widgets/splash_tap.dart';
 
 class CustomerRecordCard extends StatelessWidget {
   const CustomerRecordCard(
@@ -73,30 +75,39 @@ class CustomerRecordCard extends StatelessWidget {
       }
     }
 
-    return Container(
-      width: width ?? Get.width * 0.31,
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(
-          color: const Color.fromRGBO(221, 226, 224, 1),
-          width: 1.0,
+    return SplashTap(
+      onTap: () {
+      if (transaction!=null){
+        Get.to(() {
+        return TransactionDetails(transaction: transaction!);
+      });
+      }
+      },
+      child: Container(
+        width: width ?? Get.width * 0.31,
+        height: 110,
+        padding: EdgeInsets.all(kDefaultSpacing),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.0),
+          border: Border.all(
+            color: const Color.fromRGBO(221, 226, 224, 1),
+            width: 1.0,
+          ),
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(text, style: textStyle),
-          const SizedBox(height: 8.0),
-          Text(subText, style: kSubtitleTextStyle.copyWith(
-            fontSize: 12
-          )),
-          const SizedBox(height: 8.0),
-          Text(subText2, style: kDefaultTextStyle.copyWith(
-            fontSize: 12
-          )),
-        ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(text, style: textStyle),
+            const SizedBox(height: 8.0),
+            Text(subText, style: kSubtitleTextStyle.copyWith(
+              fontSize: 12
+            )),
+            const SizedBox(height: 8.0),
+            Text(subText2,overflow: TextOverflow.ellipsis, style: kDefaultTextStyle.copyWith(
+              fontSize: 12
+            )),
+          ],
+        ),
       ),
     );
   }
