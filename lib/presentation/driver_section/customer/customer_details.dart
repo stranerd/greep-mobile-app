@@ -32,7 +32,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
   @override
   void initState() {
     _transactionCrudCubit = GetIt.I<TransactionCrudCubit>();
-    _customerSummary = GetIt.I<CustomerStatisticsCubit>().getCustomerSummary(widget.name, GetIt.I<UserCubit>().userId!);
+    _customerSummary = GetIt.I<CustomerStatisticsCubit>().getCustomerSummary(widget.name);
     super.initState();
   }
 

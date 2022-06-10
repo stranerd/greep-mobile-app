@@ -13,7 +13,6 @@ class CustomerRecordCard extends StatelessWidget {
       {Key? key,
       required this.title,
       required this.subtitle,
-        this.userId,
       required this.titleStyle,
       required this.subtitleStyle,
       required this.subtextTitle,
@@ -26,7 +25,6 @@ class CustomerRecordCard extends StatelessWidget {
   final String subtitle;
   final Transaction? transaction;
   final TextStyle titleStyle;
-  final String? userId;
   final TextStyle subtitleStyle;
   final String subtextTitle;
   final TextStyle subtextTitleStyle;
@@ -62,8 +60,7 @@ class CustomerRecordCard extends StatelessWidget {
         if (data.parentId == null || data.parentId!.isEmpty) {
           subText2 = "Customer";
         }
-        var transaction = GetIt.I<CustomerStatisticsCubit>().getByParentBalance(
-            userId!, data.parentId!);
+        var transaction = GetIt.I<CustomerStatisticsCubit>().getByParentBalance(data.parentId!);
         if (transaction == null || transaction.data.customerName == null) {
           subText2 = "Customer";
         }

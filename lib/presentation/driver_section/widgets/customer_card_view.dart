@@ -18,13 +18,11 @@ class CustomerCardView extends StatelessWidget {
       required this.title,
       required this.subtitle,
         this.transaction,
-        this.userId,
       required this.titleStyle,
       required this.subtitleStyle})
       : super(key: key);
 
   final String title;
-  final String? userId;
   final String subtitle;
   final Transaction? transaction;
   final TextStyle titleStyle;
@@ -56,8 +54,7 @@ class CustomerCardView extends StatelessWidget {
         if (data.parentId == null || data.parentId!.isEmpty) {
           text = "Customer";
         }
-        var transaction = GetIt.I<CustomerStatisticsCubit>().getByParentBalance(
-            userId!, data.parentId!);
+        var transaction = GetIt.I<CustomerStatisticsCubit>().getByParentBalance(data.parentId!);
         if (transaction == null || transaction.data.customerName == null) {
           text = "Customer";
         }

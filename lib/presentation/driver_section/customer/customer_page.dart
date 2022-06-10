@@ -21,6 +21,7 @@ class CustomerView extends StatefulWidget {
 }
 
 class _CustomerViewState extends State<CustomerView> {
+  List<Transaction> transactions = [];
   @override
   Widget build(BuildContext context) {
     return BlocListener<CustomerStatisticsCubit, CustomerStatisticsState>(
@@ -28,7 +29,9 @@ class _CustomerViewState extends State<CustomerView> {
     if (state is CustomerStatisticsStateDone) {
       print("Setting summary state");
       setState(() {
-
+        transactions =
+        GetIt.I<CustomerStatisticsCubit>()
+            .getDebtTransactions();
       });
     }
   },
@@ -100,10 +103,7 @@ class _CustomerViewState extends State<CustomerView> {
                 ),
                 kVerticalSpaceMedium,
                 Builder(builder: (c) {
-                  String userId = GetIt.I<UserCubit>().userId!;
-                  List<Transaction> transactions =
-                      GetIt.I<CustomerStatisticsCubit>()
-                          .getDebtTransactions(userId);
+
                   if (transactions.isEmpty) {
                     return SizedBox(
                       height: Get.height * 0.7,
@@ -121,7 +121,6 @@ class _CustomerViewState extends State<CustomerView> {
                         return CustomerCardView(
                               title: "Kemi",
                               transaction: transactions[i],
-                              userId: userId,
                               subtitle: "8\$",
                               titleStyle: AppTextStyles.blackSize16,
                               subtitleStyle: AppTextStyles.redSize16);

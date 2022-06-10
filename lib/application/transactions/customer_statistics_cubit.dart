@@ -6,6 +6,7 @@ import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/AuthenticationState.dart';
 import 'package:grip/application/transactions/response/customer_summary.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
+import 'package:grip/application/user/drivers_cubit.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:meta/meta.dart';
@@ -16,10 +17,11 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
 
   final UserTransactionsCubit transactionsCubit;
 
-
   final AuthenticationCubit authenticationCubit;
 
   late StreamSubscription _streamSubscription;
+
+  final DriversCubit driversCubit;
 
   late StreamSubscription _authSubscription;
 
@@ -28,7 +30,7 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
   Map<String, List<Transaction>> _customerTransactions = {};
 
   CustomerStatisticsCubit(
-      {required this.transactionsCubit, required this.authenticationCubit})
+      {required this.transactionsCubit, required this.driversCubit, required this.authenticationCubit})
       : super(CustomerStatisticsInitial()) {
     _authSubscription = authenticationCubit.stream.listen((event) {
       if (event is AuthenticationStateNotAuthenticated) {
@@ -37,6 +39,7 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
     });
     _streamSubscription = transactionsCubit.stream.listen((event) {
       if (event is UserTransactionsStateFetched) {
+        print("calculating statistics based off of transactions fetched");
         _transactions = transactionsCubit.transactions
             .map((key, value) => MapEntry(key, value.toList()));
         _calculateStatistics();
@@ -57,7 +60,8 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
 
   }
 
-  List<Transaction> getDebtTransactions(String userId) {
+  List<Transaction> getDebtTransactions() {
+    String userId = driversCubit.selectedUser.id;
     if (_customerTransactions[userId] == null ||
         _customerTransactions[userId]!.isEmpty) {
       return [];
@@ -65,7 +69,8 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
     return _customerTransactions[userId]!.toList();
   }
 
-  Transaction? getByParentBalance(String userId, String parentId) {
+  Transaction? getByParentBalance(String parentId) {
+    String userId = driversCubit.selectedUser.id;
     if (_customerTransactions[userId] == null ||
         _customerTransactions[userId]!.isEmpty) {
       return null;
@@ -76,7 +81,8 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
     return transaction;
   }
 
-  CustomerSummary getCustomerSummary(String name, String userId) {
+  CustomerSummary getCustomerSummary(String name) {
+    String userId = driversCubit.selectedUser.id;
     if (_customerTransactions[userId] == null ||
         _customerTransactions[userId]!.isEmpty) {
       return CustomerSummary.Zero(name);
