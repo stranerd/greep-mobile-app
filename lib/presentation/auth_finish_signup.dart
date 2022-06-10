@@ -17,7 +17,9 @@ import 'package:grip/presentation/splash/authentication_splash.dart';
 import 'package:grip/presentation/widgets/input_text_field.dart';
 import 'package:grip/presentation/widgets/submit_button.dart';
 import 'package:grip/utils/constants/app_styles.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mime/mime.dart';
 
 class AuthFinishSignup extends StatefulWidget {
   const AuthFinishSignup(
@@ -55,13 +57,13 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
 
   @override
   Widget build(BuildContext context) {
-  return BlocConsumer<SignupCubit, SignupState>(
+    return BlocConsumer<SignupCubit, SignupState>(
       listener: (context, state) {
         if (state is SignupStateError) {
           error = state.errorMessage ?? "Sign up failed";
         }
         if (state is SignupStateSuccess) {
-          Get.to(() => AuthenticationSplashScreen());
+          Get.to(() => const AuthenticationSplashScreen());
         }
       },
       builder: (context, state) {
@@ -74,7 +76,7 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
               style: kBoldTextStyle2,
             ),
             actions: const [
-               CloseButton(),
+              CloseButton(),
             ],
           ),
           body: SafeArea(
@@ -244,13 +246,14 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
                             height: 16.0,
                           ),
                           SubmitButton(
-                              enabled: (selectedImage != null &&
+                              enabled: (
+                                  selectedImage != null &&
                                   validateEmail(_emailController.text) ==
-                                      null &&
-                                  _userName.isNotEmpty &&
-                                  _firstName.isNotEmpty &&
-                                  _lastName.isNotEmpty &&
-                                  _phoneNumber.isNotEmpty),
+                                          null &&
+                                      _userName.isNotEmpty &&
+                                      _firstName.isNotEmpty &&
+                                      _lastName.isNotEmpty &&
+                                      _phoneNumber.isNotEmpty),
                               text: "Save",
                               isLoading: state is SignupStateLoading,
                               onSubmit: _signUp)
@@ -269,17 +272,20 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
 
   void pickImage({required ImageSource source, context}) async {
     final picker = ImagePicker();
-    var image = await picker.pickImage(source: source);
+    var image = await picker.pickImage(source: source,);
     setState(() => selectedImage = image);
   }
 
   void _signUp() async {
+
     if (formKey.currentState!.validate()) {
+      lookupMimeType(selectedImage!.path);
+      var extenstion = selectedImage!.path.split(".").last;
       SignUpRequest request = SignUpRequest(
           email: widget.email.trim(),
           path: selectedImage!.path,
           password: widget.password,
-          photo: dio.MultipartFile.fromFileSync(selectedImage!.path),
+          photo: dio.MultipartFile.fromFileSync(selectedImage!.path,contentType: MediaType('image',extenstion == "jpg"? "jpeg":"png")),
           firstName: _firstName,
           lastName: _lastName);
       _signupCubit.signUp(request);

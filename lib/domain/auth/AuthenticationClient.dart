@@ -49,27 +49,6 @@ class AuthenticationClient {
 
   Future<ResponseEntity<Map<String, dynamic>>> signup(
       SignUpRequest request) async {
-    // var postUri = Uri.parse("${baseApi}auth/emails/signup");
-    // var request = http.MultipartRequest("POST", postUri);
-    // request.fields['firstName'] = signUpRequest.firstName;
-    // request.fields['email'] = signUpRequest.email;
-    // request.fields['password'] = "Alexdvdv";
-    //
-    // try {
-    //   request.files.add(http.MultipartFile.fromBytes(
-    //     'photo', await File.fromUri(Uri.file(signUpRequest.path)).readAsBytes(),));
-    // }
-    // catch (e){
-    //   print("exception $e");
-    // }
-    // var response = await request.send();
-    // final responseData = await response.stream.toBytes();
-    // final responseString = String.fromCharCodes(responseData);
-    // print(responseString);
-    // print(response.statusCode);
-    // print(response.stream.first);
-    // return ResponseEntity.Error("errors");
-
     final Dio dio = Dio();
     print(request.toString());
     Response response;

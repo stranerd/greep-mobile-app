@@ -29,7 +29,6 @@ class TransactionClient {
         transactions.add(Transaction.fromServer(e));
       });
 
-      transactions.sort((e, b) => b.timeAdded.compareTo(e.timeAdded));
       return ResponseEntity.Data(transactions);
     } on DioError catch (e) {
       if (e.type == DioErrorType.connectTimeout) {
