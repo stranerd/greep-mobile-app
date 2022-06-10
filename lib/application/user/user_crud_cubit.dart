@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:grip/application/transactions/request/add_trip_request.dart';
+import 'package:grip/application/user/driver/accept_manager_request.dart';
 import 'package:grip/application/user/driver/add_driver_request.dart';
 import 'package:grip/domain/user/UserService.dart';
 
@@ -10,18 +10,35 @@ class UserCrudCubit extends Cubit<UserCrudState> {
 
   final UserService userService;
 
-  void addDriver({required String driverId, required num commission,}) async {
+  void addDriver({
+    required String driverId,
+    required num commission,
+  }) async {
     emit(UserCrudStateLoading());
-    var response = await userService.addDriver(AddDriverRequest(driverId: driverId, commission: commission));
+    var response = await userService.addDriver(AddDriverRequest(
+        driverId: driverId, commission: commission, add: true));
 
-    if (response.isError){
-      emit(UserCrudStateFailure(errorMessage: response.errorMessage ?? "An error occurred"));
-    }
-
-    else {
-      emit(UserCrudStateSuccess());
+    if (response.isError) {
+      emit(UserCrudStateFailure(
+          errorMessage: response.errorMessage ?? "An error occurred"));
+    } else {
+      emit(UserCrudStateSuccess(isDriverAdd: true));
     }
   }
 
+  void acceptManager({
+    required String managerId,
+    required num commission,
+  }) async {
+    emit(UserCrudStateLoading());
+    var response = await userService.acceptManager(
+        AcceptManagerRequest(managerId: managerId, accept: true));
 
+    if (response.isError) {
+      emit(UserCrudStateFailure(
+          errorMessage: response.errorMessage ?? "An error occurred"));
+    } else {
+      emit(UserCrudStateSuccess(isDriverAdd: true));
+    }
+  }
 }
