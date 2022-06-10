@@ -9,6 +9,7 @@ import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/application/user/drivers_cubit.dart';
+import 'package:grip/application/user/manager_requests_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/scaffold_messenger_service.dart';
@@ -49,6 +50,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider.value(
           value: GetIt.I<CustomerStatisticsCubit>(),
+        ),
+        BlocProvider.value(
+          value: GetIt.I<ManagerRequestsCubit>(),
         ),
       ],
       child: ScreenUtilInit(

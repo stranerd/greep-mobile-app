@@ -11,8 +11,8 @@ class AcceptManagerRequest {
 
   Map<String, dynamic> toServer(){
     return {
-      "driverId": managerId,
-      "add": accept
+      "managerId": managerId,
+      "accept": accept
     };
   }
 

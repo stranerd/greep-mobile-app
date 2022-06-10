@@ -6,6 +6,7 @@ import 'package:grip/application/transactions/transaction_crud_cubit.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/application/user/drivers_cubit.dart';
+import 'package:grip/application/user/manager_requests_cubit.dart';
 import 'package:grip/application/user/user_crud_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/domain/auth/AuthenticationClient.dart';
@@ -25,6 +26,7 @@ class IoC {
   late TransactionCrudCubit _transactionCrudCubit;
   late DriversCubit _driversCubit;
   late SignupCubit _signupCubit;
+  late ManagerRequestsCubit _managerRequestsCubit;
   var getIt = GetIt.instance;
 
   IoC() {
@@ -46,6 +48,11 @@ class IoC {
       authenticationService: _authenticationService,
     );
 
+    _managerRequestsCubit = ManagerRequestsCubit(
+      userCubit: _userCubit,
+      userService: _userService,
+    );
+
     getIt.registerLazySingleton(() => _authenticationCubit);
     getIt.registerSingleton(_authenticationService);
 
@@ -55,6 +62,7 @@ class IoC {
     getIt.registerSingleton(_userTransactionsCubit);
 
     getIt.registerSingleton(_signupCubit);
+    getIt.registerSingleton(_managerRequestsCubit);
 
     getIt.registerSingleton(TransactionSummaryCubit(
         userTransactionsCubit: _userTransactionsCubit,
@@ -66,6 +74,8 @@ class IoC {
     getIt.registerFactory(() => TransactionCrudCubit(
           transactionService: _transactionService,
         ));
+
+
 
     getIt.registerFactory(() => UserCrudCubit(
           userService: _userService,
