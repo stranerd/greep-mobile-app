@@ -13,6 +13,7 @@ class LoginTextField extends StatefulWidget {
   final TextInputType? inputType;
   final TextEditingController? customController;
   final bool withBorder;
+  final String? hintText;
   final bool enabled;
 
   const LoginTextField({
@@ -24,6 +25,7 @@ class LoginTextField extends StatefulWidget {
     this.inputType,
     this.minLines,
     this.enabled = true,
+    this.hintText,
     this.withBorder = false,
     this.customController,
     required this.onChanged,
@@ -89,6 +91,7 @@ class _LoginTextFieldState extends State<LoginTextField> {
                     : null,
                 filled: widget.withBorder ? false : true,
                 fillColor: kBorderColor,
+                hintText: widget.hintText,
                 focusedBorder: !widget.withBorder
                     ? InputBorder.none
                     : OutlineInputBorder(

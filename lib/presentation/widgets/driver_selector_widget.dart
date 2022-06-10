@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/user/drivers_cubit.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/user/model/User.dart';
+import 'package:grip/presentation/driver_section/add_driver_screen.dart';
 import 'package:grip/presentation/splash_screen.dart';
 import 'package:grip/presentation/widgets/driver_item_widget.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
@@ -42,7 +44,9 @@ class _DriverSelectorRowState extends State<DriverSelectorRow> {
             itemBuilder: (c,i){
               if (i == state.drivers.length){
                 return SplashTap(
-                  onTap: (){},
+                  onTap: (){
+                    Get.to(() => const AddDriverScreen());
+                  },
                   child: Column(
                     children: [
                       Container(
