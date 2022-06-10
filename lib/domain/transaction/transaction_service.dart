@@ -10,10 +10,14 @@ class TransactionService {
 
   TransactionService(this.transactionClient);
 
-  Future<ResponseEntity<List<Transaction>>> getUserTransactions(String userId) async {
-    var responseEntity = await transactionClient.getUserTransactions(userId);
-    if (responseEntity.isError)
+  Future<ResponseEntity<List<Transaction>>> getUserTransactions(String driverId) async {
+    var responseEntity = await transactionClient.getUserTransactions(driverId);
+    if (!responseEntity.isError){
+      if (responseEntity.data!=null && responseEntity.data!.isNotEmpty){
+      sortResults(responseEntity.data!);
+      }
       return responseEntity;
+    }
     return responseEntity;
   }
 
@@ -28,4 +32,9 @@ class TransactionService {
     return await transactionClient.addBalance(request);
   }
 
+  void sortResults(List<Transaction> list){
+    list.sort((a, b) {
+      return a.timeAdded.compareTo(b.timeAdded);
+    });
+  }
 }

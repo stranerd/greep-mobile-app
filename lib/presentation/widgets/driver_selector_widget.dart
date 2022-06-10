@@ -26,8 +26,6 @@ class _DriverSelectorRowState extends State<DriverSelectorRow> {
     super.initState();
   }
 
-  int selectedIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DriversCubit, DriversState>(
@@ -65,11 +63,10 @@ class _DriverSelectorRowState extends State<DriverSelectorRow> {
               return SplashTap(
                   onTap: (){
                     setState(() {
-                      selectedIndex = i;
                       _driversCubit.setSelectedUser(user);
                     });
                   },
-                  child: DriverItemWidget(name: i==0?"You": user.firstName, isSelected: selectedIndex == i, asset: user.photoUrl));
+                  child: DriverItemWidget(name: i==0?"You": user.firstName, isSelected: _driversCubit.selectedUser == user, asset: user.photoUrl));
             },
           )
         );

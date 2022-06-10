@@ -14,18 +14,22 @@ class TransactionClient {
   final Dio dio = dioClient();
 
   Future<ResponseEntity<List<Transaction>>> getUserTransactions(
-      String userId) async {
-    print("print losses");
+      String driverId) async {
+    Map<String, dynamic> queryParams = {
+      "limit": 1000,
+      "where[]": {"field":"driverId", "value":driverId,},
+
+    };
     Response response;
     try {
-      response = await dio.get("users/transactions");
+      response = await dio.get("users/transactions",queryParameters: queryParams);
 
       List<Transaction> transactions = [];
       response.data["results"].forEach((e) {
         transactions.add(Transaction.fromServer(e));
       });
 
-      transactions.sort((e,b) => b.timeAdded.compareTo(e.timeAdded));
+      transactions.sort((e, b) => b.timeAdded.compareTo(e.timeAdded));
       return ResponseEntity.Data(transactions);
     } on DioError catch (e) {
       if (e.type == DioErrorType.connectTimeout) {
@@ -48,7 +52,7 @@ class TransactionClient {
               return ResponseEntity.Error(
                   "An error occurred fetching transactions");
             } else {
-              return getUserTransactions(userId);
+              return getUserTransactions(driverId);
             }
           }
         } catch (_) {}
