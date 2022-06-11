@@ -198,7 +198,6 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
                                         });
                                       },
                                       withTitle: false,
-                                      inputType: TextInputType.number,
                                       withBorder: true,
                                     ),
                                   ],

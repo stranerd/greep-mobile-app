@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/AuthenticationState.dart';
 import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/presentation/driver_section/add_driver_screen.dart';
 import 'package:grip/presentation/manager_section/widgets/settings_home_item.dart';
 import 'package:grip/presentation/splash/splash.dart';
 import 'package:grip/utils/constants/app_styles.dart';
@@ -55,6 +56,20 @@ class SettingsHome extends StatelessWidget {
                       title: "Account", icon: "assets/icons/person.svg"),
                 ),
                 const SizedBox(height: 8),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AddDriverScreen(),
+                      ),
+                    );
+                  },
+                  child: const SettingsHomeItem(
+                      title: "Add Driver",
+                      icon: "assets/icons/local_taxi.svg"),
+                ),
+                kVerticalSpaceSmall,
                 GestureDetector(
                   onTap: () {
                     Navigator.push(

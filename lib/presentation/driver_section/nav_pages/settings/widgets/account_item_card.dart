@@ -3,10 +3,15 @@ import 'package:flutter/material.dart';
 import '../../../../../utils/constants/app_styles.dart';
 
 class AccountItemCard extends StatelessWidget {
-  const AccountItemCard({Key? key, required this.title, required this.subtitle})
+  const AccountItemCard(
+      {Key? key,
+      required this.title,
+      required this.subtitle,
+      this.isSelectable = false})
       : super(key: key);
   final String title;
   final String subtitle;
+  final bool isSelectable;
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +36,15 @@ class AccountItemCard extends StatelessWidget {
           const SizedBox(
             height: 4.0,
           ),
-          Text(
-            subtitle,
-            style: AppTextStyles.blackSize16,
-          ),
+          isSelectable
+              ? SelectableText(
+                  subtitle,
+                  style: AppTextStyles.blackSize16,
+                )
+              : Text(
+                  subtitle,
+                  style: AppTextStyles.blackSize16,
+                ),
         ],
       ),
     );

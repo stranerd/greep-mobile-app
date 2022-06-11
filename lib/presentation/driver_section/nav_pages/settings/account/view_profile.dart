@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/user/user_cubit.dart';
+import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/user/model/User.dart';
 
 import '../../../../../utils/constants/app_styles.dart';
@@ -65,6 +66,8 @@ class _ProfileViewState extends State<ProfileView> {
         child: SafeArea(
           child: Column(
             children:  [
+              AccountItemCard(title: "Driver Id", subtitle: user.id, isSelectable: true),
+              kVerticalSpaceSmall,
               AccountItemCard(title: "First name", subtitle: user.firstName),
               SizedBox(height: 8),
               AccountItemCard(title: "Last name", subtitle: user.lastName),

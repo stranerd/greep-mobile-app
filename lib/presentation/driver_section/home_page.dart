@@ -278,6 +278,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                 },
                               );
                             }),
+                            kVerticalSpaceLarge
                           ],
                         ),
                       ),
