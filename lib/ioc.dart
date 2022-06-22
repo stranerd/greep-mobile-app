@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/SignupCubit.dart';
+import 'package:grip/application/driver/manager_drivers_cubit.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/application/transactions/transaction_crud_cubit.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
@@ -27,6 +28,7 @@ class IoC {
   late DriversCubit _driversCubit;
   late SignupCubit _signupCubit;
   late ManagerRequestsCubit _managerRequestsCubit;
+  late ManagerDriversCubit _managerDriversCubit;
   var getIt = GetIt.instance;
 
   IoC() {
@@ -43,6 +45,7 @@ class IoC {
         transactionService: _transactionService,
         driversCubit: _driversCubit,
         authenticationCubit: _authenticationCubit);
+
     _signupCubit = SignupCubit(
       authenticationCubit: _authenticationCubit,
       authenticationService: _authenticationService,
@@ -50,6 +53,11 @@ class IoC {
 
     _managerRequestsCubit = ManagerRequestsCubit(
       userCubit: _userCubit,
+      userService: _userService,
+    );
+
+    _managerDriversCubit = ManagerDriversCubit(
+      driversCubit: _driversCubit,
       userService: _userService,
     );
 
@@ -74,8 +82,6 @@ class IoC {
     getIt.registerFactory(() => TransactionCrudCubit(
           transactionService: _transactionService,
         ));
-
-
 
     getIt.registerFactory(() => UserCrudCubit(
           userService: _userService,
