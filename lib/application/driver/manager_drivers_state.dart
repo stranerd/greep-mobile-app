@@ -16,7 +16,9 @@ class ManagerDriversStateFetched extends ManagerDriversState {
 
 class ManagerDriversStateError extends ManagerDriversState {
   final String errorMessage;
+  bool isConnectionTimeout;
+  bool isSocket;
 
-  ManagerDriversStateError({required this.errorMessage});
+  ManagerDriversStateError({required this.errorMessage, this.isConnectionTimeout = false, this.isSocket = false});
 
 }

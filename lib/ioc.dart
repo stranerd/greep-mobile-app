@@ -71,6 +71,8 @@ class IoC {
 
     getIt.registerSingleton(_signupCubit);
     getIt.registerSingleton(_managerRequestsCubit);
+    getIt.registerSingleton(_managerDriversCubit);
+
 
     getIt.registerSingleton(TransactionSummaryCubit(
         userTransactionsCubit: _userTransactionsCubit,

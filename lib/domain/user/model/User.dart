@@ -8,11 +8,15 @@ class User extends Equatable{
   final String fullName;
   final String photoUrl;
   final bool isManager;
+  final num? commission;
+  final String? managerId;
 
   const User(
       {required this.id,
       required this.email,
       required this.fullName,
+        this.managerId,
+        this.commission,
       required this.firstName,
       required this.isManager,
       required this.lastName,
@@ -26,6 +30,8 @@ class User extends Equatable{
         firstName: data["bio"]["name"]["first"] ?? "",
         lastName: data["bio"]["name"]["last"] ?? "",
         isManager: data["manager"] != null,
+        managerId: data["manager"] != null ? data["manager"]["managerId"]: null,
+        commission: data["manager"] != null ? data["manager"]["commission"]: null,
         photoUrl: data["bio"]["photo"]["link"]);
     return user;
   }

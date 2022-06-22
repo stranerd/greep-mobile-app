@@ -13,12 +13,12 @@ import 'package:grip/domain/user/model/manager_request.dart';
 class UserClient {
   final Dio dio = dioClient();
 
-  Future<ResponseEntity<User>> fetchUser() async {
+  Future<ResponseEntity<User>> fetchUser(String userId) async {
     Response response;
     try {
-      response = await dio.get("auth/user");
+      response = await dio.get("users/users/$userId");
       return ResponseEntity.Data(
-          User.fromServerAuth(response.data));
+          User.fromServer(response.data));
     } on DioError catch (e) {
 
       if (e.type == DioErrorType.connectTimeout) {
@@ -40,7 +40,7 @@ class UserClient {
               return ResponseEntity.Error(
                   "An error occurred, please log in again");
             } else {
-              return fetchUser();
+              return fetchUser(userId);
             }
           }
         } catch (_) {}
