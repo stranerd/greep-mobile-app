@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/AuthenticationState.dart';
 import 'package:grip/application/response.dart';
-import 'package:grip/application/user/drivers_cubit.dart';
+import 'package:grip/application/driver/drivers_cubit.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/domain/transaction/transaction_service.dart';
 

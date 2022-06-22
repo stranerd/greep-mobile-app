@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
-import 'package:grip/application/user/drivers_cubit.dart';
+import 'package:grip/application/driver/drivers_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/transaction/transaction.dart';

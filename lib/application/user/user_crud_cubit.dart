@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:grip/application/user/driver/accept_manager_request.dart';
-import 'package:grip/application/user/driver/add_driver_request.dart';
-import 'package:grip/application/user/drivers_cubit.dart';
+import 'package:grip/application/driver/request/accept_manager_request.dart';
+import 'package:grip/application/driver/request/add_driver_request.dart';
+import 'package:grip/application/driver/drivers_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/domain/user/UserService.dart';
 

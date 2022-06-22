@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
-import 'package:grip/application/user/manager_requests_cubit.dart';
+import 'package:grip/application/driver/manager_requests_cubit.dart';
 import 'package:grip/application/user/user_crud_cubit.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/scaffold_messenger_service.dart';

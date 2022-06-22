@@ -1,6 +1,6 @@
 import 'package:grip/application/response.dart';
-import 'package:grip/application/user/driver/accept_manager_request.dart';
-import 'package:grip/application/user/driver/add_driver_request.dart';
+import 'package:grip/application/driver/request/accept_manager_request.dart';
+import 'package:grip/application/driver/request/add_driver_request.dart';
 import 'package:grip/domain/user/model/User.dart';
 import 'package:grip/domain/user/model/manager_request.dart';
 import 'package:grip/domain/user/user_client.dart';

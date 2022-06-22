@@ -6,7 +6,7 @@ import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/AuthenticationState.dart';
 import 'package:grip/application/transactions/response/customer_summary.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
-import 'package:grip/application/user/drivers_cubit.dart';
+import 'package:grip/application/driver/drivers_cubit.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:meta/meta.dart';
