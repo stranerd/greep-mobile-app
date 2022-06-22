@@ -72,7 +72,6 @@ class CustomerCardView extends StatelessWidget {
           if (transaction!=null) {
           Get.to(() => CustomerDetails(
             name: transaction!.data.customerName!,
-            userId: GetIt.I<UserCubit>().userId!,
           ),);
           }
     },

@@ -24,10 +24,7 @@ class CustomerTransactionListWidget extends StatelessWidget {
         mainAxisAlignment: transactions.length > 1 ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: transactions.map((e) => CustomerRecordCard(
-          title: "\$8",
-          subtitle: "To pay",
           width: transactions.length == 2 ? cs.maxWidth * 0.48 :  cs.maxWidth * 0.31,
-          subtextTitle: "Kemi",
           transaction: e,
           subtextTitleStyle:
           AppTextStyles.blackSize12,

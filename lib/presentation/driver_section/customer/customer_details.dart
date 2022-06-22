@@ -15,8 +15,7 @@ import '../widgets/transaction_list_card.dart';
 
 class CustomerDetails extends StatefulWidget {
   final String name;
-  final String userId;
-  const CustomerDetails({Key? key, required this.name, required this.userId}) : super(key: key);
+  const CustomerDetails({Key? key, required this.name}) : super(key: key);
 
   @override
   State<CustomerDetails> createState() => _CustomerDetailsState();

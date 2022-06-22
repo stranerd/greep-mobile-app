@@ -11,11 +11,13 @@ class Transaction extends Equatable {
   final DateTime timeCreated;
   final DateTime timeUpdated;
   final num debt;
+  final num credit;
   final TransactionData data;
 
   const Transaction({
     required this.driverId,
     required this.id,
+    required this.credit,
     required this.managerId,
     required this.amount,
     required this.debt,
@@ -24,19 +26,28 @@ class Transaction extends Equatable {
     required this.timeCreated,
     required this.timeUpdated,
     required this.data,
+
   });
 
   factory Transaction.fromServer(dynamic data) {
-    print(data);
-    num totalAmount = data["data"]["totalAmount"] == null ? 0 : data["data"]["totalAmount"]??0;
+    num totalAmount = data["data"]["totalAmount"] == null
+        ? 0
+        : data["data"]["totalAmount"] ?? 0;
     num amount = data["amount"];
     num debt = 0;
-    if (totalAmount < amount){
-      debt= amount - totalAmount;
+    num credit = 0;
+    print(amount);
+    print("totalAmount: $totalAmount");
+    if (totalAmount < amount) {
+      debt = amount - totalAmount;
+    }
+    else if (totalAmount > amount){
+      credit = totalAmount - amount;
     }
     return Transaction(
       driverId: data["driverId"],
       id: data["id"],
+      credit: credit,
       managerId: data["managerId"],
       amount: data["amount"],
       description: data["description"],
@@ -47,7 +58,6 @@ class Transaction extends Equatable {
       debt: debt,
     );
   }
-
 
   @override
   String toString() {

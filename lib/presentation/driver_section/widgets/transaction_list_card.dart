@@ -51,7 +51,7 @@ class TransactionListCard extends StatelessWidget {
           .format(transaction!.timeAdded);
 
       trailText =
-          "${type == TransactionType.trip ? "+" : "-"}${transaction!.amount}";
+          "${type == TransactionType.trip ? "+" : "-"}N${transaction!.amount}";
       trailStyle = type == TransactionType.trip
           ? kDefaultTextStyle.copyWith(color: kGreenColor, fontSize: 12)
           : kErrorColorTextStyle.copyWith(fontSize: 12);

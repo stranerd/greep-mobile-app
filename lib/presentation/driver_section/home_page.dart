@@ -232,7 +232,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                   child: Text("view all",
                                       style: AppTextStyles.blackSize12)),
                             ),
-                            CustomerTransactionListWidget(
+                            const CustomerTransactionListWidget(
                             ),
                             kVerticalSpaceRegular,
                             ListTile(

@@ -7,81 +7,81 @@ import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
+import 'package:grip/presentation/driver_section/customer/customer_details.dart';
 import 'package:grip/presentation/driver_section/transaction/transaction_details.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
 
 class CustomerRecordCard extends StatelessWidget {
   const CustomerRecordCard(
       {Key? key,
-      required this.title,
-      required this.subtitle,
       required this.titleStyle,
       required this.subtitleStyle,
-      required this.subtextTitle,
-        this.width,
-        this.transaction,
+      this.width,
+      this.transaction,
       required this.subtextTitleStyle})
       : super(key: key);
 
-  final String title;
-  final String subtitle;
   final Transaction? transaction;
   final TextStyle titleStyle;
   final TextStyle subtitleStyle;
-  final String subtextTitle;
   final TextStyle subtextTitleStyle;
   final double? width;
 
   @override
   Widget build(BuildContext context) {
-    String text = title;
-    String subText = subtitle;
+    String text = "";
+    String subText = "";
     TextStyle textStyle = titleStyle;
-    String subText2 = subtextTitle;
+    String subText2 = "";
 
-    if (transaction!=null) {
+    if (transaction != null) {
       TransactionType type = transaction!.data.transactionType;
       TransactionData data = transaction!.data;
       text = transaction!.amount.toString();
 
-      subText = type == TransactionType.trip && transaction!.debt > 0 ? "to pay" :
-      type == TransactionType.balance ? "balanced" : "balanced";
+      var paymentType = type == TransactionType.trip && transaction!.credit > 0
+          ? "to collect"
+          : transaction!.debt > 0
+              ? "to pay"
+              : type == TransactionType.balance
+                  ? "balanced"
+                  : "balanced";
+      if (paymentType.contains("collect")){
+        text = transaction!.credit.toString();
+      }
+      if (paymentType.contains("pay")){
+        text = transaction!.debt.toString();
+      }
+      subText = paymentType;
 
-      textStyle =
-      type == TransactionType.trip && transaction!.debt > 0 ? kDefaultTextStyle
-          .copyWith(
-          color: kGreenColor,
-          fontSize: 12
-      ) :
-      type == TransactionType.balance ? kDefaultTextStyle.copyWith(
-          fontSize: 12
-      ) : kDefaultTextStyle.copyWith(
-          fontSize: 12
-      );
+      textStyle = type == TransactionType.trip && transaction!.debt > 0
+          ? kDefaultTextStyle.copyWith(color: kGreenColor, fontSize: 12)
+          : type == TransactionType.balance
+              ? kDefaultTextStyle.copyWith(fontSize: 12)
+              : kDefaultTextStyle.copyWith(fontSize: 12);
       if (type == TransactionType.balance) {
         if (data.parentId == null || data.parentId!.isEmpty) {
           subText2 = "Customer";
         }
-        var transaction = GetIt.I<CustomerStatisticsCubit>().getByParentBalance(data.parentId!);
+        var transaction = GetIt.I<CustomerStatisticsCubit>()
+            .getByParentBalance(data.parentId!);
         if (transaction == null || transaction.data.customerName == null) {
           subText2 = "Customer";
-        }
-        else {
+        } else {
           subText2 = transaction.data.customerName!;
         }
-      }
-      else {
+      } else {
         subText2 = data.customerName!;
       }
     }
 
     return SplashTap(
       onTap: () {
-      if (transaction!=null){
-        Get.to(() {
-        return TransactionDetails(transaction: transaction!);
-      });
-      }
+        if (transaction != null) {
+          Get.to(() {
+            return CustomerDetails(name: transaction!.data.customerName!);
+          });
+        }
       },
       child: Container(
         width: width ?? Get.width * 0.31,
@@ -97,15 +97,13 @@ class CustomerRecordCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(text, style: textStyle),
+            Text("N$text", style: textStyle),
             const SizedBox(height: 8.0),
-            Text(subText, style: kSubtitleTextStyle.copyWith(
-              fontSize: 12
-            )),
+            Text(subText, style: kSubtitleTextStyle.copyWith(fontSize: 12)),
             const SizedBox(height: 8.0),
-            Text(subText2,overflow: TextOverflow.ellipsis, style: kDefaultTextStyle.copyWith(
-              fontSize: 12
-            )),
+            Text(subText2,
+                overflow: TextOverflow.ellipsis,
+                style: kDefaultTextStyle.copyWith(fontSize: 12)),
           ],
         ),
       ),

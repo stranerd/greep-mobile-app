@@ -66,7 +66,16 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
         _customerTransactions[userId]!.isEmpty) {
       return [];
     }
-    return _customerTransactions[userId]!.toList();
+    Map<String, Transaction> trans = {};
+
+    for (var element in _customerTransactions[userId]!) {
+      var customerName = element.data.customerName!.toLowerCase().trim();
+      if (trans[customerName] ==null){
+      trans.putIfAbsent(customerName, () => element);
+    }
+    }
+
+    return trans.values.toList();
   }
 
   Transaction? getByParentBalance(String parentId) {
@@ -95,14 +104,19 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
     return CustomerSummary(name: name,
         totalPaid: _custTransactions.map((e) => e.amount).reduce((value,
             element) => value + value),
-        toCollect: _custTransactions.map((e) => e.debt).reduce((value,
+        toPay: _custTransactions.map((e) => e.debt).reduce((value,
             element) {
           value = value;
           element = element;
           return element + value;
         }),
         transactions: _custTransactions,
-        toPay: 0);
+        toCollect: _custTransactions.map((e) => e.credit).reduce((value,
+            element) {
+          value = value;
+          element = element;
+          return element + value;
+        }),);
   }
 
   @override

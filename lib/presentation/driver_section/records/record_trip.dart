@@ -265,13 +265,7 @@ class _RecordTripState extends State<RecordTrip>
                                   customController: _paidController,
                                   validator: emptyFieldValidator,
                                   onChanged: (String value) {
-                                    num paid = num.tryParse(value) ?? 0;
-                                    num price = num.tryParse(_price) ?? 0;
-                                    if (paid > price) {
-                                      _paidController.text = _price;
-                                    } else {
                                       _paid = value;
-                                    }
                                     setState(() {});
                                   },
                                   withTitle: false,
