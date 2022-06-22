@@ -15,7 +15,6 @@ class EditUserRequest {
       required this.photo});
 
   Map<String, dynamic> toMap() {
-
     Map<String,dynamic> map = {
       'firstName': firstName,
       'lastName': lastName,
@@ -27,11 +26,8 @@ class EditUserRequest {
   }
 
   FormData toFormData() {
-    var formData = FormData.fromMap(toMap());
-    // formData.files.add(MapEntry("photo", photo));
-    return formData;
+  return FormData.fromMap(toMap());
   }
-
 
   String toJson() {
     return jsonEncode(toMap());

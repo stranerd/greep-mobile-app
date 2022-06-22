@@ -120,11 +120,20 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
   }
 
   List<Transaction> getLastUserTransactions() {
+   try {
     String userId = driversCubit.selectedUser.id;
+
     if (transactions[userId] == null || transactions[userId]!.isEmpty){
       return const [];
     }
     List<Transaction> userTransactions = transactions[userId]!.toList();
     return userTransactions.take(5).toList();
   }
+  catch (_){
+     return const [];
+  }
+
+
+}
+
 }

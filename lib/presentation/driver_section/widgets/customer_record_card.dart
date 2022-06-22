@@ -44,11 +44,11 @@ class CustomerRecordCard extends StatelessWidget {
       TransactionData data = transaction!.data;
       text = transaction!.amount.toString();
 
-      subText = type == TransactionType.trip && data.debt! > 0 ? "to pay" :
+      subText = type == TransactionType.trip && transaction!.debt > 0 ? "to pay" :
       type == TransactionType.balance ? "balanced" : "balanced";
 
       textStyle =
-      type == TransactionType.trip && data.debt! > 0 ? kDefaultTextStyle
+      type == TransactionType.trip && transaction!.debt > 0 ? kDefaultTextStyle
           .copyWith(
           color: kGreenColor,
           fontSize: 12

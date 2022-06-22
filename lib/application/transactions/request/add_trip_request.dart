@@ -23,7 +23,7 @@ class AddTripRequest {
       "description": description,
       "recordedAt": dateRecorded.millisecondsSinceEpoch,
       "data": {
-        "paidAmount": paidAmount,
+        "totalAmount": paidAmount,
         "paymentType": paymentType,
         "type": "trip",
         "customerName": customerName,

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart' as g;
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
-import 'package:grip/application/user/user_state.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/presentation/driver_section/home_page.dart';
@@ -31,7 +30,7 @@ class _SplashScreenState extends State<AuthenticationSplashScreen>
     return BlocListener<UserCubit, UserState>(
       listener: (context, state) {
         if (state is UserStateFetched) {
-          if (state.user.isManager) {
+          if (state.user.hasManager) {
             g.Get.offAll(() => const NavBarViews(),
                 transition: g.Transition.fadeIn);
           } else {

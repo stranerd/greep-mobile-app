@@ -40,7 +40,7 @@ class CustomerCardView extends StatelessWidget {
       subText = "N${transaction!.amount.toMoney}";
 
       subTextStyle =
-      type == TransactionType.trip && data.debt! > 0 ? kDefaultTextStyle
+      type == TransactionType.trip && transaction!.debt > 0 ? kDefaultTextStyle
           .copyWith(
           color: AppColors.blue,
           fontSize: 12

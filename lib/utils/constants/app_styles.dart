@@ -110,7 +110,6 @@ class AppTextStyles {
   //Bold font
 
   ///Dark Gray
-
   static TextStyle darkGraySizeBold12 =
       _base(_size12, _boldWeight, AppColors.darkGray, 1.5);
 
@@ -121,7 +120,6 @@ class AppTextStyles {
       _base(_size16, _boldWeight, AppColors.darkGray, 1.5);
 
   ///Light Gray
-
   static TextStyle lightGraySizeBold12 =
       _base(_size12, _boldWeight, AppColors.lightGray, 1.5);
 
@@ -132,7 +130,6 @@ class AppTextStyles {
       _base(_size16, _boldWeight, AppColors.lightGray, 1.5);
 
   ///Blue
-
   static TextStyle blueSizeBold12 =
       _base(_size12, _boldWeight, AppColors.blue, 1.5);
 
@@ -143,7 +140,6 @@ class AppTextStyles {
       _base(_size16, _boldWeight, AppColors.blue, 1.5);
 
   ///Green
-
   static TextStyle greenSizeBold12 =
       _base(_size12, _boldWeight, AppColors.green, 1.5);
 
@@ -154,7 +150,6 @@ class AppTextStyles {
       _base(_size16, _boldWeight, AppColors.green, 1.5);
 
   ///Red
-
   static TextStyle redSizeBold12 =
       _base(_size12, _boldWeight, AppColors.red, 1.5);
 
@@ -165,7 +160,6 @@ class AppTextStyles {
       _base(_size16, _boldWeight, AppColors.red, 1.5);
 
   ///Black
-
   static TextStyle blackSizeBold12 =
       _base(_size12, _boldWeight, AppColors.black, 1.5);
 

@@ -8,7 +8,6 @@ import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/application/driver/drivers_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
-import 'package:grip/application/user/user_state.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/transaction/view_transactions.dart';
@@ -17,18 +16,16 @@ import 'package:grip/presentation/driver_section/widgets/transaction_interval_su
 import 'package:grip/presentation/widgets/customer_transaction_list.dart';
 import 'package:grip/presentation/widgets/driver_selector_widget.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
+import 'package:grip/utils/constants/app_colors.dart';
+import 'package:grip/utils/constants/app_styles.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import '../../utils/constants/app_colors.dart';
-import '../../utils/constants/app_styles.dart';
 import 'customer/customer_page.dart';
 import 'records/record_expense.dart';
 import 'records/record_trip.dart';
 import 'records/view_records.dart';
 import 'widgets/add_record_card.dart';
-import 'widgets/customer_record_card.dart';
-import 'widgets/record_card.dart';
 import 'widgets/transaction_list_card.dart';
 
 class DriverHomePage extends StatefulWidget {
@@ -154,8 +151,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                                       () => const RecordExpense());
                                                 },
                                                 child: AddRecord(
-                                                  width:
-                                                      constraints.maxWidth * 0.47,
+                                                  width: constraints.maxWidth * 0.47,
                                                   color: AppColors.red,
                                                   icon: "assets/icons/handyman.svg",
                                                   title: "Expenses",

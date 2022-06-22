@@ -13,11 +13,10 @@ import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/presentation/widgets/form_input_bg_widget.dart';
 import 'package:grip/presentation/widgets/input_text_field.dart';
 import 'package:grip/presentation/widgets/submit_button.dart';
+import 'package:grip/utils/constants/app_colors.dart';
+import 'package:grip/utils/constants/app_styles.dart';
 import 'package:intl/intl.dart';
 
-import '../../../utils/constants/app_colors.dart';
-import '../../../utils/constants/app_styles.dart';
-import '../../../utils/constants/text_field.dart';
 
 class RecordTrip extends StatefulWidget {
   const RecordTrip({Key? key}) : super(key: key);
@@ -26,21 +25,22 @@ class RecordTrip extends StatefulWidget {
   State<RecordTrip> createState() => _RecordTripState();
 }
 
-class _RecordTripState extends State<RecordTrip> with ScaffoldMessengerService, InputValidator{
-   String _customerName = "";
-   String _price = "";
-   String _paid = "";
-   String _paymentType = "cash";
-   String _description = "";
-   late TextEditingController _nameController;
-   late TextEditingController _priceController;
-   late TextEditingController _paidController;
-   
-   late TransactionCrudCubit _transactionCrudCubit;
+class _RecordTripState extends State<RecordTrip>
+    with ScaffoldMessengerService, InputValidator {
+  String _customerName = "";
+  String _price = "";
+  String _paid = "";
+  String _paymentType = "cash";
+  String _description = "";
+  late TextEditingController _nameController;
+  late TextEditingController _priceController;
+  late TextEditingController _paidController;
 
-   DateTime? recordDate;
+  late TransactionCrudCubit _transactionCrudCubit;
+
+  DateTime? recordDate;
   List<String> paymentTypes = [];
-   final formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
   int _destinationCount = 1;
 
@@ -58,325 +58,335 @@ class _RecordTripState extends State<RecordTrip> with ScaffoldMessengerService, 
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-value: _transactionCrudCubit,
-  child: Builder(
-    builder: (context) {
-      return BlocConsumer<TransactionCrudCubit, TransactionCrudState>(
-  listener: (context, state) {
-    if (state is TransactionCrudStateSuccess){
-      success = "Trip recorded successfully";
-      Future.delayed(const Duration(milliseconds: 1500), (){
-        Get.back();
-      });
-    }
-  },
-  builder: (c,s) => Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
+      value: _transactionCrudCubit,
+      child: Builder(builder: (context) {
+        return BlocConsumer<TransactionCrudCubit, TransactionCrudState>(
+          listener: (context, state) {
+            if (state is TransactionCrudStateSuccess) {
+              success = "Trip recorded successfully";
+              Future.delayed(const Duration(milliseconds: 1500), () {
+                Get.back();
+              });
+            }
+
+            if (state is TransactionCrudStateFailure){
+              error = state.errorMessage;
+            }
+          },
+
+          builder: (c, s) => Scaffold(
             backgroundColor: Colors.white,
-            leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  size: 16,
-                ),
-                color: AppColors.black),
-            title: Text(
-              'Record a trip',
-              style: AppTextStyles.blackSizeBold14,
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    size: 16,
+                  ),
+                  color: AppColors.black),
+              title: Text(
+                'Record a trip',
+                style: AppTextStyles.blackSizeBold14,
+              ),
+              centerTitle: false,
+              elevation: 0.0,
             ),
-            centerTitle: false,
-            elevation: 0.0,
-          ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kDefaultSpacing),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Customer Name",
-                      style: AppTextStyles.blackSize14,
-                    ),
-                    kVerticalSpaceSmall,
-                    LoginTextField(
-                      customController: _nameController,
-                      validator: emptyFieldValidator,
-                      onChanged: (String v) {
-                        setState(() {
-                          _customerName = v;
-                        });
-                      },
-                      withTitle: false,
-                    ),
-                    kVerticalSpaceRegular,
-                    Text(
-                      "Date/Time",
-                      style: AppTextStyles.blackSize14,
-                    ),
-                    kVerticalSpaceSmall,
-                    Row(
-                      children: [
-                        Expanded(
-                          child: GestureDetector(
+            body: SingleChildScrollView(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: kDefaultSpacing),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Customer Name",
+                        style: AppTextStyles.blackSize14,
+                      ),
+                      kVerticalSpaceSmall,
+                      LoginTextField(
+                        customController: _nameController,
+                        validator: emptyFieldValidator,
+                        onChanged: (String v) {
+                          setState(() {
+                            _customerName = v;
+                          });
+                        },
+                        withTitle: false,
+                      ),
+                      kVerticalSpaceRegular,
+                      Text(
+                        "Date/Time",
+                        style: AppTextStyles.blackSize14,
+                      ),
+                      kVerticalSpaceSmall,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                _pickDate();
+                              },
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.all(kDefaultSpacing * 0.5),
+                                height: 50,
+                                alignment: Alignment.centerLeft,
+                                decoration: BoxDecoration(
+                                  color: kBorderColor,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Text(
+                                  recordDate == null
+                                      ? "Select Date..."
+                                      : DateFormat(
+                                              "${DateFormat.DAY}/${DateFormat.MONTH}/${DateFormat.YEAR}  hh:${DateFormat.MINUTE} a")
+                                          .format(recordDate!),
+                                  style: kDefaultTextStyle,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 16.0,
+                          ),
+                          GestureDetector(
                             onTap: () {
-                              _pickDate();
+                              setState(() {
+                                recordDate = DateTime.now();
+                              });
                             },
                             child: Container(
-                              padding: const EdgeInsets.all(kDefaultSpacing * 0.5),
-                              height: 50,
-                              alignment: Alignment.centerLeft,
+                              padding:
+                                  const EdgeInsets.fromLTRB(20, 16, 20, 16),
                               decoration: BoxDecoration(
-                                color: kBorderColor,
-                                borderRadius: BorderRadius.circular(5),
+                                borderRadius: BorderRadius.circular(8.0),
+                                color: AppColors.black,
                               ),
                               child: Text(
-                                recordDate == null
-                                    ? "Select Date..."
-                                    : DateFormat(
-                                            "${DateFormat.DAY}/${DateFormat.MONTH}/${DateFormat.YEAR}  hh:${DateFormat.MINUTE} a")
-                                        .format(recordDate!),
-                                style: kDefaultTextStyle,
+                                "Now",
+                                style: AppTextStyles.whiteSize14,
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 16.0,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              recordDate = DateTime.now();
-                            });
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              color: AppColors.black,
-                            ),
-                            child: Text(
-                              "Now",
-                              style: AppTextStyles.whiteSize14,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    Text(
-                      "Destination Count",
-                      style: AppTextStyles.blackSize14,
-                    ),
-                    kVerticalSpaceSmall,
-                    FormInputBgWidget(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            if (_destinationCount > 1) {
-                              _destinationCount--;
-                              setState(() {
-
-                              });
-                            }
-                          },
-                          child: Container(
-                            width: 50,
-                            padding: const EdgeInsets.all(kDefaultSpacing * 0.3),
-                            decoration: const BoxDecoration(
-
-                            ),
-                            child: Text(
-                              "-",
-                              style: kBoldTextStyle.copyWith(fontSize: 20),
-                            ),
-                          ),
-                        ),
-                        Text(
-                          _destinationCount.toString(),
-                          style: kBoldTextStyle.copyWith(fontSize: 20),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            if (_destinationCount < 10) {
-                              _destinationCount++;
-                              setState(() {
-
-                              });
-                            }
-                          },
-                          child: Container(
-                            height: 50,
-                            padding: const EdgeInsets.all(kDefaultSpacing * 0.3),
-                            decoration: const BoxDecoration(),
-                            child: Text(
-                              "+",
-                              style: kBoldTextStyle.copyWith(fontSize: 20),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )),
-                    SizedBox(
-                      height: 16.h,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Price", style: AppTextStyles.blackSize14),
-                              kVerticalSpaceSmall,
-                              LoginTextField(
-                                customController: _priceController,
-                                validator: emptyFieldValidator,
-                                onChanged: (String value){
-                                _price = value;
-                                setState(() {
-
-                                });
-                              },
-                                withTitle: false,
-                                inputType: TextInputType.number,
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      Text(
+                        "Destination Count",
+                        style: AppTextStyles.blackSize14,
+                      ),
+                      kVerticalSpaceSmall,
+                      FormInputBgWidget(
+                          child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              if (_destinationCount > 1) {
+                                _destinationCount--;
+                                setState(() {});
+                              }
+                            },
+                            child: Container(
+                              width: 50,
+                              padding:
+                                  const EdgeInsets.all(kDefaultSpacing * 0.3),
+                              decoration: const BoxDecoration(),
+                              child: Text(
+                                "-",
+                                style: kBoldTextStyle.copyWith(fontSize: 20),
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                        kHorizontalSpaceRegular,
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Paid", style: AppTextStyles.blackSize14),
-                              kVerticalSpaceSmall,
-                              LoginTextField(
-                                customController: _paidController,
-
-                                validator: emptyFieldValidator,
-                                onChanged: (String value){
-                                num paid = num.tryParse(value) ?? 0;
-                                num price = num.tryParse(_price) ?? 0;
-                                if ( paid > price) {
-                                  _paidController.text = _price;
-                                }
-                                else {
-
-                                  _paid = value;
-                                }
-                                setState(() {
-
-                                });
-                              },
-                                withTitle: false,
-                                inputType: TextInputType.number,
+                          Text(
+                            _destinationCount.toString(),
+                            style: kBoldTextStyle.copyWith(fontSize: 20),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              if (_destinationCount < 10) {
+                                _destinationCount++;
+                                setState(() {});
+                              }
+                            },
+                            child: Container(
+                              height: 50,
+                              padding:
+                                  const EdgeInsets.all(kDefaultSpacing * 0.3),
+                              decoration: const BoxDecoration(),
+                              child: Text(
+                                "+",
+                                style: kBoldTextStyle.copyWith(fontSize: 20),
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Discount", style: AppTextStyles.blackSize14),
-                              kVerticalSpaceSmall,
-                              LoginTextField(validator: (_){}, onChanged: (String value){
-
-                              },
-                                withTitle: false,
-                              ),
-                            ],
+                        ],
+                      )),
+                      SizedBox(
+                        height: 16.h,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Price", style: AppTextStyles.blackSize14),
+                                kVerticalSpaceSmall,
+                                LoginTextField(
+                                  customController: _priceController,
+                                  validator: emptyFieldValidator,
+                                  onChanged: (String value) {
+                                    _price = value;
+                                    setState(() {});
+                                  },
+                                  withTitle: false,
+                                  inputType: TextInputType.number,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        kHorizontalSpaceRegular,
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Payment Type", style: AppTextStyles.blackSize14),
-                              kVerticalSpaceSmall,
-                              FormInputBgWidget(
-                                child: DropdownButtonHideUnderline(
-                                    child: DropdownButton<String>(
-                                      isExpanded: true,
-                                  items: paymentTypes.map((e) {
-                                    return DropdownMenuItem<String>(child: Text(e, style: kBoldTextStyle,),value: e,);
-                                  }).toList(),
-                                      value: _paymentType,
-                                      onChanged: (String? value) {
-                                    if (value!=null) {
-                                      setState(() {
-                                        _paymentType = value;
-                                      });
+                          kHorizontalSpaceRegular,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Paid", style: AppTextStyles.blackSize14),
+                                kVerticalSpaceSmall,
+                                LoginTextField(
+                                  customController: _paidController,
+                                  validator: emptyFieldValidator,
+                                  onChanged: (String value) {
+                                    num paid = num.tryParse(value) ?? 0;
+                                    num price = num.tryParse(_price) ?? 0;
+                                    if (paid > price) {
+                                      _paidController.text = _price;
+                                    } else {
+                                      _paid = value;
                                     }
-                                },
-
-                                )),
-                              )
-                            ],
+                                    setState(() {});
+                                  },
+                                  withTitle: false,
+                                  inputType: TextInputType.number,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    Text(
-                      "Trip Description",
-                      style: AppTextStyles.blackSize14,
-                    ),
-                    kVerticalSpaceSmall,
-
-                    LoginTextField(
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Discount",
+                                    style: AppTextStyles.blackSize14),
+                                kVerticalSpaceSmall,
+                                LoginTextField(
+                                  validator: (_) {},
+                                  onChanged: (String value) {},
+                                  withTitle: false,
+                                ),
+                              ],
+                            ),
+                          ),
+                          kHorizontalSpaceRegular,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Payment Type",
+                                    style: AppTextStyles.blackSize14),
+                                kVerticalSpaceSmall,
+                                FormInputBgWidget(
+                                  child: DropdownButtonHideUnderline(
+                                      child: DropdownButton<String>(
+                                    isExpanded: true,
+                                    items: paymentTypes.map((e) {
+                                      return DropdownMenuItem<String>(
+                                        child: Text(
+                                          e,
+                                          style: kBoldTextStyle,
+                                        ),
+                                        value: e,
+                                      );
+                                    }).toList(),
+                                    value: _paymentType,
+                                    onChanged: (String? value) {
+                                      if (value != null) {
+                                        setState(() {
+                                          _paymentType = value;
+                                        });
+                                      }
+                                    },
+                                  )),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      Text(
+                        "Trip Description",
+                        style: AppTextStyles.blackSize14,
+                      ),
+                      kVerticalSpaceSmall,
+                      LoginTextField(
                         minLines: 3,
-                        validator: (_){}, onChanged: (String v){
-                      _description = v;
-                      setState(() {
-
-                      });
-                    },
-                      withTitle: false,
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    SubmitButton(
-                        isLoading: s is TransactionCrudStateLoading,
-                        enabled: recordDate !=null && _customerName.isNotEmpty && _price.isNotEmpty && _paid.isNotEmpty && s is! TransactionCrudStateLoading,
-                        text: "Submit", onSubmit: _recordTrip)
-                  ],
+                        validator: (_) {},
+                        onChanged: (String v) {
+                          _description = v;
+                          setState(() {});
+                        },
+                        withTitle: false,
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      SubmitButton(
+                          isLoading: s is TransactionCrudStateLoading,
+                          enabled: recordDate != null &&
+                              _customerName.isNotEmpty &&
+                              _price.isNotEmpty &&
+                              _paid.isNotEmpty &&
+                              s is! TransactionCrudStateLoading,
+                          text: "Submit",
+                          onSubmit: _recordTrip)
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-);
-    }
-  ),
-);
+        );
+      }),
+    );
   }
 
   void _recordTrip() {
-    if (formKey.currentState!.validate()){
-
-    _transactionCrudCubit.addTrip(customerName: _customerName, paidAmount: num.parse(_paid), amount: num.parse(_price), paymentType: _paymentType, description: _description, dateRecorded: recordDate!);
+    if (formKey.currentState!.validate()) {
+      _transactionCrudCubit.addTrip(
+          customerName: _customerName,
+          paidAmount: num.parse(_paid),
+          amount: num.parse(_price),
+          paymentType: _paymentType,
+          description: _description,
+          dateRecorded: recordDate!);
     }
   }
 

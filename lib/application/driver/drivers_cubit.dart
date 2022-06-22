@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/AuthenticationState.dart';
 import 'package:grip/application/user/user_cubit.dart';
-import 'package:grip/application/user/user_state.dart';
 import 'package:grip/domain/user/UserService.dart';
 import 'package:grip/domain/user/model/User.dart';
 import 'package:meta/meta.dart';

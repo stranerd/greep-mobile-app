@@ -95,12 +95,12 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
     return CustomerSummary(name: name,
         totalPaid: _custTransactions.map((e) => e.amount).reduce((value,
             element) => value + value),
-        toCollect: _custTransactions.map((e) => e.data.debt).reduce((value,
+        toCollect: _custTransactions.map((e) => e.debt).reduce((value,
             element) {
-          value = value ?? 0;
-          element = element ?? 0;
+          value = value;
+          element = element;
           return element + value;
-        })!,
+        }),
         transactions: _custTransactions,
         toPay: 0);
   }

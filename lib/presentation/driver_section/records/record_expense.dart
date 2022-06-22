@@ -106,7 +106,6 @@ class _RecordExpenseState extends State<RecordExpense> with ScaffoldMessengerSer
                               });
                             },
                             withTitle: false,
-                            inputType: TextInputType.number,
                           ),
                           kVerticalSpaceMedium,
                           Text(
@@ -198,7 +197,6 @@ class _RecordExpenseState extends State<RecordExpense> with ScaffoldMessengerSer
                             },
                             minLines: 2,
                             withTitle: false,
-                            inputType: TextInputType.number,
                           ),
                           kVerticalSpaceRegular,
                           SubmitButton(

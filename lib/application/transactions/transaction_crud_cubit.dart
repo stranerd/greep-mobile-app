@@ -20,7 +20,7 @@ class TransactionCrudCubit extends Cubit<TransactionCrudState> {
     var response = await transactionService.addTrip(AddTripRequest(customerName: customerName, description: description, amount: amount, dateRecorded: dateRecorded, paymentType: paymentType, paidAmount: paidAmount));
 
     if (response.isError){
-      emit(TransactionCrudStateFailure(errorMessage: response.errorMessage ?? "An error occured"));
+      emit(TransactionCrudStateFailure(errorMessage: response.errorMessage ?? "An error occurred"));
     }
 
     else {

@@ -23,7 +23,8 @@ class TransactionClient {
     Response response;
     try {
       response = await dio.get("users/transactions",queryParameters: queryParams);
-
+      print("transaction data");
+      print(response.data);
       List<Transaction> transactions = [];
       response.data["results"].forEach((e) {
         transactions.add(Transaction.fromServer(e));
@@ -108,6 +109,7 @@ class TransactionClient {
         } catch (_) {}
       }
       dynamic error = e.response!.data;
+      print(error);
       String message = "";
       if (error == null) {
         message = "An error occurred adding transactions. Try again";

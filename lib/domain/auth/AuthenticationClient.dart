@@ -8,9 +8,10 @@ import 'package:grip/application/response.dart';
 import 'package:http/http.dart' as http;
 import 'package:grip/domain/api.dart';
 
-
 class AuthenticationClient {
-  Future<ResponseEntity<Map<String, dynamic>>> login(LoginRequest request,) async {
+  Future<ResponseEntity<Map<String, dynamic>>> login(
+    LoginRequest request,
+  ) async {
     final Dio dio = Dio();
     Response response;
     try {
@@ -19,12 +20,13 @@ class AuthenticationClient {
         data: request.toJson(),
       );
 
-        return ResponseEntity.Data(
-            {"id": response.data["user"]["id"], "token": response.data["accessToken"],
-              "refreshToken": response.data["refreshToken"], "password": request.password, "email": request.email
-
-            });
-
+      return ResponseEntity.Data({
+        "id": response.data["user"]["id"],
+        "token": response.data["accessToken"],
+        "refreshToken": response.data["refreshToken"],
+        "password": request.password,
+        "email": request.email
+      });
     } on DioError catch (e) {
       print(e.type);
       if (e.type == DioErrorType.connectTimeout) {
@@ -61,12 +63,11 @@ class AuthenticationClient {
         ),
       );
 
-        return ResponseEntity.Data(
-            {"id": response.data["user"]["id"], "token": response.data["accessToken"],
-              "refreshToken": response.data["refreshToken"]
-
-            });
-
+      return ResponseEntity.Data({
+        "id": response.data["user"]["id"],
+        "token": response.data["accessToken"],
+        "refreshToken": response.data["refreshToken"]
+      });
     } on DioError catch (e) {
       if (e.type == DioErrorType.connectTimeout) {
         print("connectionTimeout");
@@ -90,7 +91,7 @@ class AuthenticationClient {
     }
   }
 
-  Future<ResponseEntity> testSignup(LoginRequest request)async{
+  Future<ResponseEntity> testSignup(LoginRequest request) async {
     final Dio dio = Dio();
     Response response;
     try {
@@ -100,7 +101,6 @@ class AuthenticationClient {
       );
 
       return ResponseEntity.Data(response.data);
-
     } on DioError catch (e) {
       if (e.type == DioErrorType.connectTimeout) {
         print("connectionTimeout");
@@ -110,18 +110,18 @@ class AuthenticationClient {
         return ResponseEntity.Socket();
       }
       if (e.type == DioErrorType.response) {
-        Map<String,dynamic> fieldErrors = {};
+        Map<String, dynamic> fieldErrors = {};
         e.response!.data.forEach((e) {
-          if (e["field"] == "email"){
+          if (e["field"] == "email") {
             fieldErrors.putIfAbsent("email", () => e["message"]);
           }
 
-          if (e["field"] == "password"){
+          if (e["field"] == "password") {
             fieldErrors.putIfAbsent("password", () => e["message"]);
-
           }
         });
-        return ResponseEntity.Error("Invalid fields",fieldErrors = fieldErrors);
+        return ResponseEntity.Error(
+            "Invalid fields", fieldErrors = fieldErrors);
       }
 
       return ResponseEntity.Error("An error occurred ");
@@ -132,23 +132,17 @@ class AuthenticationClient {
     }
   }
 
-  Future<ResponseEntity<Map<String,dynamic>>> refreshToken() async{
+  Future<ResponseEntity<Map<String, dynamic>>> refreshToken() async {
     final Dio dio = dioClient(useRefreshToken: true);
     Response response;
     try {
-      response = await dio.post("auth/token",
-      options: Options(
-        headers: {
+      response = await dio.post("auth/token", options: Options(headers: {}));
 
-        }
-      )
-      );
-
-      return ResponseEntity.Data(
-          {"id": response.data["user"]["id"], "token": response.data["accessToken"],
-          "refreshToken": response.data["refreshToken"]
-          });
-
+      return ResponseEntity.Data({
+        "id": response.data["user"]["id"],
+        "token": response.data["accessToken"],
+        "refreshToken": response.data["refreshToken"]
+      });
     } on DioError catch (e) {
       print(e.type);
       if (e.type == DioErrorType.connectTimeout) {
