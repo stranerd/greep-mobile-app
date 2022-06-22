@@ -13,6 +13,7 @@ import 'package:grip/commons/money.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/presentation/widgets/driver_selector_widget.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
+import 'package:grip/presentation/widgets/submit_button.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/constants/app_colors.dart';
@@ -284,31 +285,16 @@ class _TransactionViewState extends State<TransactionView> {
                               const SizedBox(
                                 height: 16.0,
                               ),
-                              SplashTap(
-                                onTap: () {
-                                  if (from != null && to != null) {
-                                    Get.to(() => Range(
-                                          userId: GetIt.I<UserCubit>().userId!,
-                                          from: from!,
-                                          to: to!,
-                                        ));
-                                  }
-                                },
-                                child: Container(
-                                  width: double.infinity,
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 16, 20, 16),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    color: AppColors.black,
-                                  ),
-                                  child: Text(
-                                    "Show Transactions",
-                                    style: AppTextStyles.whiteSize14,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
+
+                              SubmitButton(text: "Show Transactions",
+                                  enabled: from != null && to != null,
+                                  onSubmit: (){
+                                Get.to(() => Range(
+                                  userId: GetIt.I<UserCubit>().userId!,
+                                  from: from!,
+                                  to: to!,
+                                ));
+                              }),
                             ],
                           ),
                         ],

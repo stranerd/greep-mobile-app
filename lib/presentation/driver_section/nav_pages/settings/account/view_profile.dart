@@ -32,84 +32,86 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<UserCubit, UserState>(
-  listener: (context, state) {
-   if (state is UserStateFetched){
-     setState(() {
-       user = state.user;
-     });
-   }
-  },
-  child: Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+      listener: (context, state) {
+        if (state is UserStateFetched) {
+          setState(() {
+            user = state.user;
+          });
+        }
+      },
+      child: Scaffold(
         backgroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            size: 16,
-          ),
-        ),
-        title: Text(
-          "Account",
-          style: AppTextStyles.blackSizeBold14,
-        ),
-        actions: [
-          IconButton(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading: IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const EditProfile(),
-                ),
-              );
+              Get.back();
             },
-            icon: SvgPicture.asset("assets/icons/edit-icon.svg"),
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              size: 16,
+            ),
           ),
-        ],
-        centerTitle: true,
-        elevation: 0.0,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              kVerticalSpaceRegular,
-              CircleAvatar(
-                backgroundImage: CachedNetworkImageProvider(
-                  user.photoUrl
+          title: Text(
+            "Account",
+            style: AppTextStyles.blackSizeBold14,
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const EditProfile(),
+                  ),
+                );
+              },
+              icon: SvgPicture.asset("assets/icons/edit-icon.svg"),
+            ),
+          ],
+          centerTitle: true,
+          elevation: 0.0,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+          child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                kVerticalSpaceRegular,
+                CircleAvatar(
+                  backgroundImage: CachedNetworkImageProvider(user.photoUrl),
+                  radius: 50,
                 ),
-                radius: 50,
-              ),
-              kVerticalSpaceRegular,
-              AccountItemCard(
-                  title: "Driver Id", subtitle: user.id, isSelectable: true),
-              kVerticalSpaceSmall,
-              AccountItemCard(title: "First name", subtitle: user.firstName),
-              SizedBox(height: 8),
-              AccountItemCard(title: "Last name", subtitle: user.lastName),
-              SizedBox(height: 8),
-              AccountItemCard(title: "Email", subtitle: user.email),
-              SizedBox(height: 8),
-              BlocBuilder<DriversCubit, DriversState>(
-                builder: (context, state) {
-                  String driverType = state is DriversStateManager ? "Manager" : GetIt.I<UserCubit>().user.hasManager ? "Supervised" : "Independent";
+                kVerticalSpaceRegular,
+                AccountItemCard(
+                    title: "Driver Id", subtitle: user.id, isSelectable: true),
+                kVerticalSpaceSmall,
+                AccountItemCard(title: "First name", subtitle: user.firstName),
+                SizedBox(height: 8),
+                AccountItemCard(title: "Last name", subtitle: user.lastName),
+                SizedBox(height: 8),
+                AccountItemCard(title: "Email", subtitle: user.email),
+                SizedBox(height: 8),
+                BlocBuilder<DriversCubit, DriversState>(
+                  builder: (context, state) {
+                    String driverType = state is DriversStateManager
+                        ? "Manager"
+                        : GetIt.I<UserCubit>().user.hasManager
+                            ? "Supervised"
+                            : "Independent";
 
-                  return AccountItemCard(
-                      title: "Driver type", subtitle: driverType);
-                },
-              ),
-              SizedBox(height: 8),
-              AccountItemCard(title: "Manager", subtitle: user.fullName),
-            ],
+                    return AccountItemCard(
+                        title: "Driver type", subtitle: driverType);
+                  },
+                ),
+                SizedBox(height: 8),
+                AccountItemCard(title: "Manager", subtitle: user.fullName),
+              ],
+            ),
           ),
         ),
       ),
-    ),
-);
+    );
   }
 }
