@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:grip/application/driver/request/accept_manager_request.dart';
 import 'package:grip/application/driver/request/add_driver_request.dart';
 import 'package:grip/application/driver/drivers_cubit.dart';
+import 'package:grip/application/user/request/EditUserRequest.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/domain/user/UserService.dart';
 
@@ -61,6 +62,19 @@ class UserCrudCubit extends Cubit<UserCrudState> {
           errorMessage: response.errorMessage ?? "An error occurred"));
     } else {
       emit(UserCrudStateSuccess(isManagerReject: true));
+    }
+  }
+
+  void editUser(EditUserRequest request)async {
+    emit(UserCrudStateLoading());
+
+    var response  = await userService.editUser(request);
+    if (response.isError) {
+      emit(UserCrudStateFailure(
+          errorMessage: response.errorMessage ?? "An error occurred"));
+    } else {
+      emit(UserCrudStateSuccess(isEditUser: true));
+      GetIt.I<UserCubit>().fetchUser();
     }
   }
 }

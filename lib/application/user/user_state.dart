@@ -1,5 +1,4 @@
-
-import 'package:grip/domain/user/model/User.dart';
+part of 'user_cubit.dart';
 
 abstract class UserState {}
 

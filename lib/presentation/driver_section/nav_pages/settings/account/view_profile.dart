@@ -1,7 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:grip/application/driver/drivers_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/user/model/User.dart';
@@ -18,7 +21,6 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-
   late User user;
 
   @override
@@ -26,14 +28,23 @@ class _ProfileViewState extends State<ProfileView> {
     user = GetIt.I<UserCubit>().user;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<UserCubit, UserState>(
+  listener: (context, state) {
+   if (state is UserStateFetched){
+     setState(() {
+       user = state.user;
+     });
+   }
+  },
+  child: Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
-          onPressed: (){
+          onPressed: () {
             Get.back();
           },
           icon: const Icon(
@@ -65,23 +76,40 @@ class _ProfileViewState extends State<ProfileView> {
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
         child: SafeArea(
           child: Column(
-            children:  [
-              AccountItemCard(title: "Driver Id", subtitle: user.id, isSelectable: true),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              kVerticalSpaceRegular,
+              CircleAvatar(
+                backgroundImage: CachedNetworkImageProvider(
+                  user.photoUrl
+                ),
+                radius: 50,
+              ),
+              kVerticalSpaceRegular,
+              AccountItemCard(
+                  title: "Driver Id", subtitle: user.id, isSelectable: true),
               kVerticalSpaceSmall,
               AccountItemCard(title: "First name", subtitle: user.firstName),
               SizedBox(height: 8),
               AccountItemCard(title: "Last name", subtitle: user.lastName),
               SizedBox(height: 8),
-              AccountItemCard(
-                  title: "Email", subtitle: user.email),
+              AccountItemCard(title: "Email", subtitle: user.email),
               SizedBox(height: 8),
-              AccountItemCard(title: "Driver type", subtitle: "Supervised"),
+              BlocBuilder<DriversCubit, DriversState>(
+                builder: (context, state) {
+                  String driverType = state is DriversStateManager ? "Manager" : GetIt.I<UserCubit>().user.hasManager ? "Supervised" : "Independent";
+
+                  return AccountItemCard(
+                      title: "Driver type", subtitle: driverType);
+                },
+              ),
               SizedBox(height: 8),
               AccountItemCard(title: "Manager", subtitle: user.fullName),
             ],
           ),
         ),
       ),
-    );
+    ),
+);
   }
 }

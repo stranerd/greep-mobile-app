@@ -1,6 +1,7 @@
 import 'package:grip/application/response.dart';
 import 'package:grip/application/driver/request/accept_manager_request.dart';
 import 'package:grip/application/driver/request/add_driver_request.dart';
+import 'package:grip/application/user/request/EditUserRequest.dart';
 import 'package:grip/domain/user/model/User.dart';
 import 'package:grip/domain/user/model/manager_request.dart';
 import 'package:grip/domain/user/user_client.dart';
@@ -35,5 +36,10 @@ class UserService {
 
   Future<ResponseEntity<ManagerRequest>> getManagerRequests(String userId) async {
     return await _client.fetchManagerRequests(userId);
+  }
+
+  Future<ResponseEntity> editUser(EditUserRequest request)async {
+    return await _client.editUser(request);
+
   }
 }

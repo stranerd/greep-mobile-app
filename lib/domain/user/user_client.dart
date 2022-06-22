@@ -6,6 +6,7 @@ import 'package:grip/application/dio_config.dart';
 import 'package:grip/application/response.dart';
 import 'package:grip/application/driver/request/accept_manager_request.dart';
 import 'package:grip/application/driver/request/add_driver_request.dart';
+import 'package:grip/application/user/request/EditUserRequest.dart';
 import 'package:grip/domain/auth/AuthenticationService.dart';
 import 'package:grip/domain/user/model/User.dart';
 import 'package:grip/domain/user/model/manager_request.dart';
@@ -126,7 +127,6 @@ class UserClient {
   }
 
   Future<ResponseEntity> sendOrRemoveDriverRequest(AddDriverRequest request) async {
-    print("add driver request");
     Response response;
     try {
       response = await dio.post("users/users/drivers/add", data: request.toJson());
@@ -282,6 +282,57 @@ class UserClient {
       print("Exception $e");
       return ResponseEntity.Error(
           "An error occurred  fetching user drivers. Try again");
+    }
+  }
+
+  Future<ResponseEntity> editUser(EditUserRequest request) async {
+    Response response;
+    try {
+      response = await dio.put("auth/user", data: request.toFormData());
+      return ResponseEntity.Data(null);
+    } on DioError catch (e) {
+      if (e.type == DioErrorType.connectTimeout) {
+        return ResponseEntity.Timeout();
+      }
+      if (e.error is SocketException) {
+        return ResponseEntity.Socket();
+      }
+
+      if (e.type == DioErrorType.response) {
+        try {
+          if (e.response!.data[0]["message"]
+              .toString()
+              .toLowerCase()
+              .contains("access token")) {
+            print("refreshing token");
+            var response =
+            await GetIt.I<AuthenticationService>().refreshToken();
+            if (response.isError) {
+              return ResponseEntity.Error(
+                  "An error occurred adding driver");
+            } else {
+              return editUser(request);
+            }
+          }
+        } catch (_) {}
+      }
+      dynamic error = e.response!.data;
+      print(error);
+      String message = "";
+      if (error == null) {
+        message = "An error occurred editing fields. Try again";
+      } else {
+        try {
+          message = "${error[0]["field"]??""} ${error[0]["message"]}";
+        } catch (e) {
+          message = "an error occurred. Try again";
+        }
+      }
+      return ResponseEntity.Error(message);
+    } catch (e) {
+      print("Exception $e");
+      return ResponseEntity.Error(
+          "An error occurred editing fields. Try again");
     }
   }
 

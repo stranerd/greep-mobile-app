@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/AuthenticationState.dart';
-import 'package:grip/application/user/user_state.dart';
 import 'package:grip/domain/user/UserService.dart';
 import 'package:grip/domain/user/model/User.dart';
+
+part 'user_state.dart';
 
 class UserCubit extends Cubit<UserState> {
   final UserService userService;
