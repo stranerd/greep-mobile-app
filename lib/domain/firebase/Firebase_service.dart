@@ -4,18 +4,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseApi {
   static Stream<QuerySnapshot<Map<String, dynamic>>> managerRequestsStream(
-      String firebaseId) {
+      String userId) {
     var data = FirebaseFirestore.instance
         .collection('ManagerRequests')
-        .where('userid', isEqualTo: firebaseId);
+        .where('userid', isEqualTo: userId);
     return data.snapshots();
   }
 
-  static clearManagerRequests(String firebaseId) {
-    print("clearing check chat for $firebaseId");
+  static clearManagerRequests(String userId) {
+    print("clearing check chat for $userId");
     var documentReference = FirebaseFirestore.instance
         .collection('ManagerRequests')
-        .where('userid', isEqualTo: firebaseId);
+        .where('userid', isEqualTo: userId);
 
     documentReference.get().then((querySnapshot) {
       querySnapshot.docs.forEach((doc) {
