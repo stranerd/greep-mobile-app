@@ -46,9 +46,10 @@ dependencies:
   get: ^4.3.8
   flutter_local_notifications:
   permission_handler: ^8.1.4+2
+  cloud_firestore: any
   equatable: ^2.0.3
   cupertino_icons: ^1.0.2
-  flutter_typeahead: ^4.0.0
+  flutter_typeahead: ^3.2.7
   firebase_core:
   firebase_messaging: "^11.2.0"
 

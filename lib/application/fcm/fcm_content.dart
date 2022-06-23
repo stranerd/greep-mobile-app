@@ -4,7 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:grip/application/fcm/fcm_message_model.dart';
 import 'package:grip/application/fcm/fcm_notification.dart';
 
-
 class FcmContent {
   final FcmMessage? fcmMessage;
   final FcmNotification? fcmNotification;

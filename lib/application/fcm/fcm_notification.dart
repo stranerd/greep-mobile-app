@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-import 'fcm_notification_payload.dart';
 
 class FcmNotification {
   final int id;
