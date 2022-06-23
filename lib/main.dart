@@ -1,3 +1,6 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +9,9 @@ import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/SignupCubit.dart';
 import 'package:grip/application/driver/manager_drivers_cubit.dart';
+import 'package:grip/application/driver/new_manager_requests_cubit.dart';
+import 'package:grip/application/fcm/fcm_notification_service.dart';
+import 'package:grip/application/local_notification/local_notification_service.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
@@ -18,8 +24,16 @@ import 'package:grip/commons/themes.dart';
 import 'package:grip/ioc.dart';
 import 'package:grip/presentation/splash/splash.dart';
 
-void main() {
+void main()async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   var ioc = IoC();
+  await Firebase.initializeApp();
+  await FirebaseMessaging.instance.getToken();
+  GestureBinding.instance!.resamplingEnabled = true;
+
+  FCMNotificationService.initialize();
+  LocalNotificationService.initialize();
   runApp(const MyApp());
 }
 
@@ -54,6 +68,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider.value(
           value: GetIt.I<CustomerStatisticsCubit>(),
+        ),
+        BlocProvider.value(
+          value: GetIt.I<NewManagerRequestsCubit>(),
         ),
         BlocProvider.value(
           value: GetIt.I<ManagerRequestsCubit>(),

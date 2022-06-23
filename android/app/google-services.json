@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "891214249172",
+    "project_id": "greepio",
+    "storage_bucket": "greepio.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:891214249172:android:79a9d9d9c002069bbe0f41",
+        "android_client_info": {
+          "package_name": "com.greepio.greep"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "891214249172-et0onshqv9tq4aeigfqeoritc1vt24pu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlpjseX7Z7MVIsyUGpU-UhzXqkxKtbA4c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "891214249172-et0onshqv9tq4aeigfqeoritc1vt24pu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
