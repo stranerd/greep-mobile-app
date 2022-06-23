@@ -5,7 +5,6 @@ import 'package:grip/application/driver/new_manager_requests_cubit.dart';
 import 'package:grip/application/driver/request/accept_manager_request.dart';
 import 'package:grip/application/driver/request/add_driver_request.dart';
 import 'package:grip/application/driver/drivers_cubit.dart';
-import 'package:grip/application/fcm/fcm_notification_service.dart';
 import 'package:grip/application/user/request/EditUserRequest.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/domain/firebase/Firebase_service.dart';
@@ -14,7 +13,6 @@ import 'package:grip/domain/user/UserService.dart';
 part 'user_crud_state.dart';
 
 class UserCrudCubit extends Cubit<UserCrudState> {
-
   UserCrudCubit({required this.userService}) : super(UserCrudInitial());
 
   final UserService userService;
@@ -34,14 +32,19 @@ class UserCrudCubit extends Cubit<UserCrudState> {
           errorMessage: response.errorMessage ?? "An error occurred"));
     } else {
       emit(UserCrudStateSuccess(isDriverAdd: true));
-      FirebaseApi.sendManagerRequest(driverId: driverId, managerId: managerId, managerName: managerName, commission: commission.toString());
+      FirebaseApi.sendManagerRequest(
+          driverId: driverId,
+          managerId: managerId,
+          managerName: managerName,
+          commission: commission.toString());
     }
   }
 
-  void acceptManager({
-    required String managerId,
-    required String driverId
-  }) async {
+  void acceptManager(
+      {
+        required String managerId,
+        required String driverId,
+      }) async {
     print("accepting manager");
     emit(UserCrudStateLoading(isManagerAdd: true));
     var response = await userService.acceptManager(
@@ -57,17 +60,16 @@ class UserCrudCubit extends Cubit<UserCrudState> {
     clearManagerRequests(driverId);
 
     GetIt.I<DriversCubit>().fetchUserDrivers();
-
   }
-  void rejectManager({
-    required String managerId,
-    required String driverId
-  }) async {
+
+  void rejectManager(
+      {required String managerId, required String driverId}) async {
     print("rejecting manager");
 
     emit(UserCrudStateLoading(isManagerReject: true));
     var response = await userService.acceptManager(
-        AcceptManagerRequest(managerId: managerId, accept: false));
+      AcceptManagerRequest(managerId: managerId, accept: false),
+    );
 
     if (response.isError) {
       emit(UserCrudStateFailure(
@@ -78,22 +80,21 @@ class UserCrudCubit extends Cubit<UserCrudState> {
     clearManagerRequests(driverId);
   }
 
-  void clearManagerRequests(String driverId){
+  void clearManagerRequests(String driverId) {
     FirebaseApi.clearManagerRequests(driverId);
     GetIt.I<NewManagerRequestsCubit>().makeUnavailable();
   }
 
-  void sendAccept(String managerId){
+  void sendAccept(String managerId) {
     print("accepting request");
     FirebaseApi.sendManagerAccept(managerId: managerId);
     GetIt.I<NewManagerAcceptsCubit>().makeUnavailable();
-
   }
 
-  void editUser(EditUserRequest request)async {
+  void editUser(EditUserRequest request) async {
     emit(UserCrudStateLoading());
 
-    var response  = await userService.editUser(request);
+    var response = await userService.editUser(request);
     if (response.isError) {
       emit(UserCrudStateFailure(
           errorMessage: response.errorMessage ?? "An error occurred"));

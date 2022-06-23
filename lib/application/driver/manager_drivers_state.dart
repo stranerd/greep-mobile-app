@@ -1,17 +1,21 @@
 part of 'manager_drivers_cubit.dart';
 
-@immutable
 abstract class ManagerDriversState {}
 
 class ManagerDriversInitial extends ManagerDriversState {}
 
-class ManagerDriversStateLoading extends ManagerDriversState {}
+class ManagerDriversStateLoading extends ManagerDriversState {
+}
 
 class ManagerDriversStateFetched extends ManagerDriversState {
-  final List<User> drivers;
+  final List<DriverCommission> drivers;
   final bool isDelete;
+  final bool isError;
+  final String errorMessage;
+  final bool isLoading;
+  final String loadingId;
 
-  ManagerDriversStateFetched(this.drivers, {this.isDelete = false});
+  ManagerDriversStateFetched(this.drivers, {this.isDelete = false,this.isLoading = false, this.loadingId = "",this.errorMessage="",this.isError=false});
 }
 
 class ManagerDriversStateError extends ManagerDriversState {

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -9,6 +10,7 @@ import 'package:grip/application/driver/request/add_driver_request.dart';
 import 'package:grip/application/user/request/EditUserRequest.dart';
 import 'package:grip/domain/auth/AuthenticationService.dart';
 import 'package:grip/domain/user/model/User.dart';
+import 'package:grip/domain/user/model/driver_commission.dart';
 import 'package:grip/domain/user/model/manager_request.dart';
 
 class UserClient {
@@ -42,6 +44,66 @@ class UserClient {
                   "An error occurred, please log in again");
             } else {
               return fetchUser(userId);
+            }
+          }
+        } catch (_) {}
+      }
+      dynamic error = e.response!.data;
+      String message = "";
+      if (error == null) {
+        message = "An error occurred logging you in. Try again";
+      } else {
+        try {
+          message = error["message"];
+        }
+        catch (e) {
+          message = "an error occurred. Try again";
+        }
+      }
+      return ResponseEntity.Error(message);
+    } catch (e) {
+      print("Exception $e");
+      return ResponseEntity.Error(
+          "An error occurred logging you in. Try again");
+    }
+  }
+
+  Future<ResponseEntity<List<DriverCommission>>> fetchUserDriverCommissions(String userId) async {
+    Response response;
+    try {
+      response = await dio.get("users/users/$userId");
+      List<DriverCommission> drivers = [];
+      if (response.data["drivers"]==null || response.data["drivers"].isEmpty){
+        return ResponseEntity.Data(const []);
+      }
+
+      response.data["drivers"].forEach((e) {
+        drivers.add(DriverCommission.fromServer(e));
+      });
+
+      return ResponseEntity.Data(drivers);
+    } on DioError catch (e) {
+
+      if (e.type == DioErrorType.connectTimeout) {
+        return ResponseEntity.Timeout();
+      }
+      if (e.error is SocketException) {
+        return ResponseEntity.Socket();
+      }
+      if (e.type == DioErrorType.response) {
+        try {
+          if (e.response!.data[0]["message"]
+              .toString()
+              .toLowerCase()
+              .contains("access token")) {
+            print("refreshing token");
+            var response =
+            await GetIt.I<AuthenticationService>().refreshToken();
+            if (response.isError) {
+              return ResponseEntity.Error(
+                  "An error occurred, please log in again");
+            } else {
+              return fetchUserDriverCommissions(userId);
             }
           }
         } catch (_) {}
@@ -205,6 +267,58 @@ class UserClient {
                   "An error occurred adding driver");
             } else {
               return acceptOrRejectManager(request);
+            }
+          }
+        } catch (_) {}
+      }
+      dynamic error = e.response!.data;
+      print(error);
+      String message = "";
+      if (error == null) {
+        message = "An error occurred adding driver. Try again";
+      } else {
+        try {
+          message = "${error[0]["field"]??""} ${error[0]["message"]}";
+        } catch (e) {
+          message = "an error occurred. Try again";
+        }
+      }
+      return ResponseEntity.Error(message);
+    } catch (e) {
+      print("Exception $e");
+      return ResponseEntity.Error(
+          "An error occurred adding driver. Try again");
+    }
+  }
+
+  Future<ResponseEntity> removeDriver(String driverId) async {
+    print("delete driver request");
+    Response response;
+    try {
+      response = await dio.post("users/users/drivers/remove", data: jsonEncode({"driverId": driverId}));
+      return ResponseEntity.Data(null);
+    } on DioError catch (e) {
+      if (e.type == DioErrorType.connectTimeout) {
+        return ResponseEntity.Timeout();
+      }
+      if (e.error is SocketException) {
+        return ResponseEntity.Socket();
+      }
+
+      if (e.type == DioErrorType.response) {
+        try {
+          if (e.response!.data[0]["message"]
+              .toString()
+              .toLowerCase()
+              .contains("access token")) {
+            print("refreshing token");
+            var response =
+            await GetIt.I<AuthenticationService>().refreshToken();
+            if (response.isError) {
+              return ResponseEntity.Error(
+                  "An error occurred adding driver");
+            } else {
+              return removeDriver(driverId);
             }
           }
         } catch (_) {}

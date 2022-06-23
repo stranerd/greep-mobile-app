@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
@@ -29,7 +31,18 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   var ioc = IoC();
-  await Firebase.initializeApp();
+  if (Platform.isIOS) {
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: "AIzaSyAij3Mzl2y_DxlZCC1mM9VXBk10fgHHwjE",
+        appId: "1:891214249172:ios:39ebf6ee08f51418be0f41",
+        messagingSenderId: "891214249172",
+        projectId: "greepio",
+      ),
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
   await FirebaseMessaging.instance.getToken();
   GestureBinding.instance!.resamplingEnabled = true;
 

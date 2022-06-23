@@ -6,12 +6,15 @@ import 'package:get_it/get_it.dart';
 import 'package:grip/application/driver/manager_drivers_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/colors.dart';
+import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/user/model/User.dart';
+import 'package:grip/domain/user/model/driver_commission.dart';
 import 'package:grip/presentation/driver_section/add_driver_screen.dart';
 import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
 import 'package:grip/utils/constants/app_colors.dart';
 import 'package:grip/utils/constants/app_styles.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class DriversScreen extends StatefulWidget {
   const DriversScreen({Key? key}) : super(key: key);
@@ -20,120 +23,159 @@ class DriversScreen extends StatefulWidget {
   State<DriversScreen> createState() => _DriversScreenState();
 }
 
-class _DriversScreenState extends State<DriversScreen> {
+class _DriversScreenState extends State<DriversScreen>
+    with ScaffoldMessengerService {
   late ManagerDriversCubit _driversCubit;
+  late RefreshController _refreshController;
 
   @override
   void initState() {
-    _driversCubit = GetIt.I<ManagerDriversCubit>();
+    _driversCubit = GetIt.I<ManagerDriversCubit>()..fetchDrivers(softUpdate: true);
     _driversCubit.fetchDrivers();
+    _refreshController = RefreshController();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              size: 16,
-            ),
-            color: AppColors.black),
-        title: Text(
-          'Drivers',
-          style: AppTextStyles.blackSizeBold14,
-        ),
-        centerTitle: false,
-        elevation: 0.0,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(kDefaultSpacing),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            GestureDetector(
-              onTap: () {
-                Get.to(() => const AddDriverScreen());
-              },
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.add,
-                    size: 25,
-                    color: kBlackColor,
-                  ),
-                  kHorizontalSpaceMedium,
-                  Text(
-                    "Add a driver",
-                    style: kDefaultTextStyle,
-                  )
-                ],
-              ),
-            ),
-            kVerticalSpaceRegular,
-            Expanded(
-              child: BlocBuilder<ManagerDriversCubit, ManagerDriversState>(
-                builder: (context, state) {
-                  if (state is ManagerDriversStateFetched) {
-                    if (state.drivers.isEmpty) {
-                      return const EmptyResultWidget(text: "No Drivers");
-                    }
-
-                    return ListView.builder(
-                      itemCount: state.drivers.length,
-                      itemBuilder: (c, i) {
-                        User driver = state.drivers[i];
-                        return ListTile(
-                          title: Text(
-                            driver.firstName,
-                            style: kBoldTextStyle,
-                          ),
-                          contentPadding: EdgeInsets.zero,
-                          trailing: GestureDetector(
-                            onTap: () => deleteDriver(driver),
-                            child:
-                                const Icon(Icons.delete, color: AppColors.red),
-                          ),
-                          subtitle: Text(
-                            "30% commission",
-                            style: kDefaultTextStyle.copyWith(fontSize: 13),
-                          ),
-                          leading: CircleAvatar(
-                            radius: 20,
-                            backgroundImage:
-                                CachedNetworkImageProvider(driver.photoUrl),
-                          ),
-                        );
-                      },
-                    );
-                  }
-
-                  if (state is ManagerDriversStateError) {
-                    return Text(
-                      "An error occurred fetching drivers",
-                      style: kErrorColorTextStyle,
-                    );
-                  }
-                  return const Center(
-                      child: SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: CircularProgressIndicator()));
+    return BlocConsumer<ManagerDriversCubit, ManagerDriversState>(
+      listener: (context, state) {
+        if (state is ManagerDriversStateFetched) {
+          if (state.isError) {
+            error = state.errorMessage;
+          }
+          if (state.isDelete) {
+            success = "Driver removed successfully";
+          }
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
                 },
-              ),
-            )
-          ],
-        ),
-      ),
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  size: 16,
+                ),
+                color: AppColors.black),
+            title: Text(
+              'Drivers',
+              style: AppTextStyles.blackSizeBold14,
+            ),
+            centerTitle: false,
+            elevation: 0.0,
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(kDefaultSpacing),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Get.to(() => const AddDriverScreen());
+                  },
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.add,
+                        size: 25,
+                        color: kBlackColor,
+                      ),
+                      kHorizontalSpaceMedium,
+                      Text(
+                        "Add a driver",
+                        style: kDefaultTextStyle,
+                      )
+                    ],
+                  ),
+                ),
+                kVerticalSpaceRegular,
+                Expanded(
+                  child: SmartRefresher(
+                    controller: _refreshController,
+                    onRefresh: _onRefresh,
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        BlocBuilder<ManagerDriversCubit, ManagerDriversState>(
+                          builder: (context, state) {
+                            if (state is ManagerDriversStateFetched) {
+                              if (state.drivers.isEmpty) {
+                                return const EmptyResultWidget(
+                                    text: "No Drivers");
+                              }
+
+                              return ListView.builder(
+                                itemCount: state.drivers.length,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (c, i) {
+                                  DriverCommission driver = state.drivers[i];
+
+                                  return ListTile(
+                                    title: Text(
+                                      driver.driverName,
+                                      style: kBoldTextStyle,
+                                    ),
+                                    contentPadding: EdgeInsets.zero,
+                                    trailing: state.isLoading &&
+                                            state.loadingId == driver.driverId
+                                        ? const SizedBox(
+                                            width: 25,
+                                            height: 25,
+                                            child: CircularProgressIndicator(),
+                                          )
+                                        : GestureDetector(
+                                            onTap: () => deleteDriver(driver),
+                                            child: const Icon(Icons.delete,
+                                                color: AppColors.red),
+                                          ),
+                                    subtitle: Text(
+                                      "${driver.commission * 100}% commission",
+                                      style: kDefaultTextStyle.copyWith(
+                                          fontSize: 13),
+                                    ),
+                                    leading: CircleAvatar(
+                                      radius: 20,
+                                      backgroundImage:
+                                          CachedNetworkImageProvider(
+                                              driver.driverPhoto),
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+
+                            if (state is ManagerDriversStateError) {
+                              return Text(
+                                "An error occurred fetching drivers",
+                                style: kErrorColorTextStyle,
+                              );
+                            }
+                            return const Center(
+                                child: SizedBox(
+                                    width: 40,
+                                    height: 40,
+                                    child: CircularProgressIndicator()));
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
-  void deleteDriver(User user) async {
+  void deleteDriver(DriverCommission driver) async {
     bool shouldDelete = await showDialog<bool?>(
             barrierDismissible: true,
             context: context,
@@ -157,11 +199,11 @@ class _DriversScreenState extends State<DriversScreen> {
                         CircleAvatar(
                           radius: 20,
                           backgroundImage:
-                              CachedNetworkImageProvider(user.photoUrl),
+                              CachedNetworkImageProvider(driver.driverPhoto),
                         ),
                         kVerticalSpaceSmall,
                         Text(
-                          user.firstName,
+                          driver.driverName,
                           style: kDefaultTextStyle,
                         )
                       ],
@@ -210,5 +252,14 @@ class _DriversScreenState extends State<DriversScreen> {
               ));
             }) ??
         false;
+
+    if (shouldDelete) {
+      _driversCubit.removeDriver(driver: driver);
+    }
+  }
+
+  void _onRefresh() {
+    _driversCubit.fetchDrivers(fullRefresh: true);
+    _refreshController.refreshCompleted();
   }
 }
