@@ -51,7 +51,7 @@ class _RecordTripState extends State<RecordTrip>
     paymentTypes = PaymentType.values.map((e) => e.name).toList();
     _transactionCrudCubit = GetIt.I<TransactionCrudCubit>();
     customersNames =
-        GetIt.I<CustomerStatisticsCubit>().customerTransactions.keys.toList();
+        GetIt.I<CustomerStatisticsCubit>().getUserCustomers();
     _nameController = TextEditingController();
     _priceController = TextEditingController();
     _paidController = TextEditingController();
@@ -114,12 +114,30 @@ class _RecordTripState extends State<RecordTrip>
                       kVerticalSpaceSmall,
                       TypeAheadField(
                         textFieldConfiguration: TextFieldConfiguration(
-                            autofocus: true,
-                            style: DefaultTextStyle.of(context)
-                                .style
-                                .copyWith(fontStyle: FontStyle.italic),
-                            decoration:
-                                InputDecoration(border: OutlineInputBorder())),
+                            autofocus: false,
+                            controller: _nameController,
+                            onChanged: (s){
+                              setState(() {
+                                _customerName = s;
+                              });
+                            },
+                            style: kSubtitleTextStyle,
+                            decoration:InputDecoration(
+                                filled: true,
+                            fillColor: kBorderColor,
+                            focusedBorder: InputBorder.none,
+                            border: InputBorder.none,
+                            enabledBorder:  InputBorder.none
+                               ,
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(color: kErrorColor, width: 0.5),
+                            )),
+                        ),
+                        hideOnEmpty: true,
+                        hideOnError: true,
+                        hideOnLoading: true,
+                        
                         suggestionsCallback: (pattern) async {
                           return customersNames.where((element) => element
                               .toLowerCase()
@@ -132,19 +150,10 @@ class _RecordTripState extends State<RecordTrip>
                         },
                         onSuggestionSelected: (suggestion) {
                           _customerName = suggestion.toString();
+                          _nameController.text=_customerName;
                         },
                       ),
                       kVerticalSpaceRegular,
-                      LoginTextField(
-                        customController: _nameController,
-                        validator: emptyFieldValidator,
-                        onChanged: (String v) {
-                          setState(() {
-                            _customerName = v;
-                          });
-                        },
-                        withTitle: false,
-                      ),
                       kVerticalSpaceRegular,
                       Text(
                         "Date/Time",

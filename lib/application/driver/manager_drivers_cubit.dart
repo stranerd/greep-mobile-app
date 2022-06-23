@@ -26,7 +26,7 @@ class ManagerDriversCubit extends Cubit<ManagerDriversState> {
     _streamSubscription = driversCubit.stream.listen((event) {
       if (event is DriversStateManager) {
         drivers = event.drivers;
-        fetchDrivers();
+        fetchDrivers(softUpdate: true);
       }
     });
   }
