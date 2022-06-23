@@ -2,6 +2,8 @@ import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/SignupCubit.dart';
 import 'package:grip/application/driver/manager_drivers_cubit.dart';
+import 'package:grip/application/driver/new_manager_accepts_cubit.dart';
+import 'package:grip/application/driver/new_manager_requests_cubit.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/application/transactions/transaction_crud_cubit.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
@@ -28,7 +30,9 @@ class IoC {
   late DriversCubit _driversCubit;
   late SignupCubit _signupCubit;
   late ManagerRequestsCubit _managerRequestsCubit;
+  late NewManagerRequestsCubit _newManagerRequestsCubit;
   late ManagerDriversCubit _managerDriversCubit;
+  late NewManagerAcceptsCubit _newManagerAcceptsCubit;
   var getIt = GetIt.instance;
 
   IoC() {
@@ -56,6 +60,10 @@ class IoC {
       userService: _userService,
     );
 
+    _newManagerRequestsCubit = NewManagerRequestsCubit(userCubit: _userCubit);
+    _newManagerAcceptsCubit = NewManagerAcceptsCubit(userCubit: _userCubit);
+
+
     _managerDriversCubit = ManagerDriversCubit(
       driversCubit: _driversCubit,
       userService: _userService,
@@ -71,9 +79,10 @@ class IoC {
 
     getIt.registerSingleton(_signupCubit);
     getIt.registerSingleton(_managerRequestsCubit);
+    getIt.registerSingleton(_newManagerRequestsCubit);
+    getIt.registerSingleton(_newManagerAcceptsCubit);
+
     getIt.registerSingleton(_managerDriversCubit);
-
-
     getIt.registerSingleton(TransactionSummaryCubit(
         userTransactionsCubit: _userTransactionsCubit,
         driversCubit: _driversCubit));

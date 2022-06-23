@@ -9,6 +9,7 @@ import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/SignupCubit.dart';
 import 'package:grip/application/driver/manager_drivers_cubit.dart';
+import 'package:grip/application/driver/new_manager_accepts_cubit.dart';
 import 'package:grip/application/driver/new_manager_requests_cubit.dart';
 import 'package:grip/application/fcm/fcm_notification_service.dart';
 import 'package:grip/application/local_notification/local_notification_service.dart';
@@ -24,7 +25,7 @@ import 'package:grip/commons/themes.dart';
 import 'package:grip/ioc.dart';
 import 'package:grip/presentation/splash/splash.dart';
 
-void main()async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   var ioc = IoC();
@@ -73,20 +74,23 @@ class MyApp extends StatelessWidget {
           value: GetIt.I<NewManagerRequestsCubit>(),
         ),
         BlocProvider.value(
+          value: GetIt.I<NewManagerAcceptsCubit>(),
+        ),
+        BlocProvider.value(
           value: GetIt.I<ManagerRequestsCubit>(),
         ),
       ],
       child: ScreenUtilInit(
-          designSize: const Size(414, 896),
-          minTextAdapt: true,
-          builder: () => GetMaterialApp(
-                debugShowCheckedModeBanner: false,
-                theme: theme,
-                color: kPrimaryColor,
-                home: const SplashScreen(),
-                scaffoldMessengerKey:
-                    ScaffoldMessengerService.scaffoldMessengerKey,
-              )),
+        designSize: const Size(414, 896),
+        minTextAdapt: true,
+        builder: () => GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: theme,
+          color: kPrimaryColor,
+          home: const SplashScreen(),
+          scaffoldMessengerKey: ScaffoldMessengerService.scaffoldMessengerKey,
+        ),
+      ),
     );
   }
 }
