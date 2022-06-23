@@ -51,6 +51,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_typeahead: ^3.2.7
   firebase_core:
+  firebase_auth:
   firebase_messaging: "^11.2.0"
 
 dev_dependencies:
