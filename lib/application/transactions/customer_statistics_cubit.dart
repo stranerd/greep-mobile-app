@@ -29,6 +29,9 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
 
   Map<String, List<Transaction>> _customerTransactions = {};
 
+  Map<String, List<Transaction>> get customerTransactions =>
+      _customerTransactions;
+
   CustomerStatisticsCubit(
       {required this.transactionsCubit, required this.driversCubit, required this.authenticationCubit})
       : super(CustomerStatisticsInitial()) {

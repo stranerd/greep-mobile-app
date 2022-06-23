@@ -105,8 +105,13 @@ class _ProfileViewState extends State<ProfileView> {
                         title: "Driver type", subtitle: driverType);
                   },
                 ),
-                SizedBox(height: 8),
-                AccountItemCard(title: "Manager", subtitle: user.fullName),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 8),
+                    AccountItemCard(title: "Manager", subtitle: user.fullName),
+                  ],
+                ),
               ],
             ),
           ),

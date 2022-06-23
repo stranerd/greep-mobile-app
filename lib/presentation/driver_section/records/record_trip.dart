@@ -4,6 +4,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/application/transactions/transaction_crud_cubit.dart';
 import 'package:grip/commons/Utils/input_validator.dart';
 import 'package:grip/commons/colors.dart';
@@ -15,8 +16,8 @@ import 'package:grip/presentation/widgets/input_text_field.dart';
 import 'package:grip/presentation/widgets/submit_button.dart';
 import 'package:grip/utils/constants/app_colors.dart';
 import 'package:grip/utils/constants/app_styles.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
-
 
 class RecordTrip extends StatefulWidget {
   const RecordTrip({Key? key}) : super(key: key);
@@ -40,6 +41,7 @@ class _RecordTripState extends State<RecordTrip>
 
   DateTime? recordDate;
   List<String> paymentTypes = [];
+  List<String> customersNames = [];
   final formKey = GlobalKey<FormState>();
 
   int _destinationCount = 1;
@@ -48,6 +50,8 @@ class _RecordTripState extends State<RecordTrip>
   void initState() {
     paymentTypes = PaymentType.values.map((e) => e.name).toList();
     _transactionCrudCubit = GetIt.I<TransactionCrudCubit>();
+    customersNames =
+        GetIt.I<CustomerStatisticsCubit>().customerTransactions.keys.toList();
     _nameController = TextEditingController();
     _priceController = TextEditingController();
     _paidController = TextEditingController();
@@ -66,14 +70,14 @@ class _RecordTripState extends State<RecordTrip>
               success = "Trip recorded successfully";
               Future.delayed(const Duration(milliseconds: 1500), () {
                 Get.back();
-              });
+              }
+              );
             }
 
-            if (state is TransactionCrudStateFailure){
+            if (state is TransactionCrudStateFailure) {
               error = state.errorMessage;
             }
           },
-
           builder: (c, s) => Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
@@ -108,6 +112,29 @@ class _RecordTripState extends State<RecordTrip>
                         style: AppTextStyles.blackSize14,
                       ),
                       kVerticalSpaceSmall,
+                      TypeAheadField(
+                        textFieldConfiguration: TextFieldConfiguration(
+                            autofocus: true,
+                            style: DefaultTextStyle.of(context)
+                                .style
+                                .copyWith(fontStyle: FontStyle.italic),
+                            decoration:
+                                InputDecoration(border: OutlineInputBorder())),
+                        suggestionsCallback: (pattern) async {
+                          return customersNames.where((element) => element
+                              .toLowerCase()
+                              .contains(pattern.toLowerCase()));
+                        },
+                        itemBuilder: (context, suggestion) {
+                          return ListTile(
+                            title: Text(suggestion.toString()),
+                          );
+                        },
+                        onSuggestionSelected: (suggestion) {
+                          _customerName = suggestion.toString();
+                        },
+                      ),
+                      kVerticalSpaceRegular,
                       LoginTextField(
                         customController: _nameController,
                         validator: emptyFieldValidator,
@@ -265,7 +292,7 @@ class _RecordTripState extends State<RecordTrip>
                                   customController: _paidController,
                                   validator: emptyFieldValidator,
                                   onChanged: (String value) {
-                                      _paid = value;
+                                    _paid = value;
                                     setState(() {});
                                   },
                                   withTitle: false,
