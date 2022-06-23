@@ -2,19 +2,12 @@ part of 'new_manager_requests_cubit.dart';
 
 abstract class NewManagerRequestsState {}
 
-class NewManagerRequestsStateFetched extends NewManagerRequestsState {
+class NewManagerRequestsStateInitial extends NewManagerRequestsState {}
+
+class NewManagerRequestsStateAvailable extends NewManagerRequestsState {
   final ManagerRequest request;
 
-  NewManagerRequestsStateFetched({required this.request});
+  NewManagerRequestsStateAvailable({required this.request});
 }
 
-class NewManagerRequestsStateLoading extends NewManagerRequestsState {}
-
-class NewManagerRequestsStateError extends NewManagerRequestsState {
-  final String? errorMessage;
-  bool isConnectionTimeout;
-  bool isSocket;
-
-  NewManagerRequestsStateError(this.errorMessage,
-      {this.isConnectionTimeout = false, this.isSocket = false});
-}
+class NewManagerRequestsStateUnAvailable extends NewManagerRequestsState {}

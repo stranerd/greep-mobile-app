@@ -4,13 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:grip/application/driver/drivers_cubit.dart';
+import 'package:grip/application/driver/new_manager_accepts_cubit.dart';
+import 'package:grip/application/driver/new_manager_requests_cubit.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/application/driver/manager_requests_cubit.dart';
 import 'package:grip/application/user/user_crud_cubit.dart';
+import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/domain/firebase/Firebase_service.dart';
 import 'package:grip/domain/user/model/manager_request.dart';
 import 'package:stacked/stacked.dart';
 
@@ -45,17 +50,29 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService{
             }
           },
         ),
-        BlocListener<ManagerRequestsCubit, ManagerRequestsState>(
+        BlocListener<NewManagerRequestsCubit, NewManagerRequestsState>(
           listener: (context, state) {
-            if (state is ManagerRequestsAvailable) {
+            if (state is NewManagerRequestsStateAvailable) {
               showManagerRequest(state.request);
             }
           },
-          child: BlocListener<CustomerStatisticsCubit, CustomerStatisticsState>(
-            listener: (context, state) {
-              setState(() {});
-            },
-          ),
+        ),
+        BlocListener<NewManagerAcceptsCubit, NewManagerAcceptsState>(
+          listener: (context, state) async {
+            if (state is NewManagerAcceptsStateAccepted) {
+              FirebaseApi.clearManagerAccepts(GetIt.I<UserCubit>().user.id);
+              Future.delayed(const Duration(seconds: 2), () {
+                success = "Driver accepted request";
+                GetIt.I<UserCubit>().fetchUser();
+              });
+              print("manager accepted");
+            }
+          },
+        ),
+        BlocListener<CustomerStatisticsCubit, CustomerStatisticsState>(
+          listener: (context, state) {
+            setState(() {});
+          },
         ),
       ],
       child: Scaffold(
@@ -192,7 +209,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService{
                                       kVerticalSpaceRegular,
                                       Text.rich(
                                         TextSpan(
-                                            text: "A manager with id ",
+                                            text: "Manager ${request.managerName} with id ",
                                             children: [
                                               TextSpan(
                                                   text: request.managerId,
@@ -225,6 +242,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService{
                                           if (shouldAccept) {
                                             userCrudCubit.acceptManager(
                                               managerId: request.managerId,
+                                              driverId: request.driverId
                                             );
                                           }
                                         },
@@ -249,6 +267,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService{
                                           if (shouldAccept) {
                                             userCrudCubit.rejectManager(
                                               managerId: request.managerId,
+                                              driverId: request.driverId
                                             );
                                           }
                                         },

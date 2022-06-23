@@ -25,11 +25,12 @@ class _DriversScreenState extends State<DriversScreen> {
 
   @override
   void initState() {
-   _driversCubit = GetIt.I<ManagerDriversCubit>();
-   _driversCubit.fetchDrivers();
+    _driversCubit = GetIt.I<ManagerDriversCubit>();
+    _driversCubit.fetchDrivers();
     super.initState();
   }
-   @override
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -79,13 +80,12 @@ class _DriversScreenState extends State<DriversScreen> {
               child: BlocBuilder<ManagerDriversCubit, ManagerDriversState>(
                 builder: (context, state) {
                   if (state is ManagerDriversStateFetched) {
-                    state.drivers.add(GetIt.I<UserCubit>().user);
                     if (state.drivers.isEmpty) {
                       return const EmptyResultWidget(text: "No Drivers");
                     }
 
                     return ListView.builder(
-                      itemCount:state.drivers.length,
+                      itemCount: state.drivers.length,
                       itemBuilder: (c, i) {
                         User driver = state.drivers[i];
                         return ListTile(
@@ -96,11 +96,13 @@ class _DriversScreenState extends State<DriversScreen> {
                           contentPadding: EdgeInsets.zero,
                           trailing: GestureDetector(
                             onTap: () => deleteDriver(driver),
-                            child: const Icon(Icons.delete, color: AppColors.red),
+                            child:
+                                const Icon(Icons.delete, color: AppColors.red),
                           ),
-                          subtitle: Text("30% commission",style: kDefaultTextStyle.copyWith(
-                            fontSize: 13
-                          ),),
+                          subtitle: Text(
+                            "30% commission",
+                            style: kDefaultTextStyle.copyWith(fontSize: 13),
+                          ),
                           leading: CircleAvatar(
                             radius: 20,
                             backgroundImage:
@@ -133,11 +135,11 @@ class _DriversScreenState extends State<DriversScreen> {
 
   void deleteDriver(User user) async {
     bool shouldDelete = await showDialog<bool?>(
-        barrierDismissible: true,
-        context: context,
-        builder: (context) {
-          return Dialog(
-              child: Container(
+            barrierDismissible: true,
+            context: context,
+            builder: (context) {
+              return Dialog(
+                  child: Container(
                 padding: const EdgeInsets.all(kDefaultSpacing),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -154,12 +156,14 @@ class _DriversScreenState extends State<DriversScreen> {
                       children: [
                         CircleAvatar(
                           radius: 20,
-                          backgroundImage: CachedNetworkImageProvider(
-                            user.photoUrl
-                          ),
+                          backgroundImage:
+                              CachedNetworkImageProvider(user.photoUrl),
                         ),
                         kVerticalSpaceSmall,
-                        Text(user.firstName,style: kDefaultTextStyle,)
+                        Text(
+                          user.firstName,
+                          style: kDefaultTextStyle,
+                        )
                       ],
                     ),
                     kVerticalSpaceRegular,
@@ -170,30 +174,25 @@ class _DriversScreenState extends State<DriversScreen> {
                           Flexible(
                             child: TextButton(
                                 style: TextButton.styleFrom(
-                                  padding: EdgeInsets.zero,
-                                  backgroundColor: kPrimaryColor,
-                                  minimumSize: Size(
-                                    150,50
-                                  )
-                                ),
+                                    padding: EdgeInsets.zero,
+                                    backgroundColor: kPrimaryColor,
+                                    minimumSize: Size(150, 50)),
                                 onPressed: () {
                                   Get.back(result: false);
                                 },
                                 child: Text(
                                   "Cancel",
-                                  style: kBoldTextStyle.copyWith(color: kWhiteColor),
-
+                                  style: kBoldTextStyle.copyWith(
+                                      color: kWhiteColor),
                                 )),
                           ),
                           kHorizontalSpaceSmall,
                           Flexible(
                             child: TextButton(
-                              style: TextButton.styleFrom(padding: EdgeInsets.zero, backgroundColor: AppColors.red,
-
-                                  minimumSize: Size(
-                                      150,50
-                                  )
-                              ),
+                              style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                  backgroundColor: AppColors.red,
+                                  minimumSize: Size(150, 50)),
                               child: Text(
                                 "Yes",
                                 style: kWhiteTextStyle,
@@ -209,7 +208,7 @@ class _DriversScreenState extends State<DriversScreen> {
                   ],
                 ),
               ));
-        }) ??
+            }) ??
         false;
   }
 }

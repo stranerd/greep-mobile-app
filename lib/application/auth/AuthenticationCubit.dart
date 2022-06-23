@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthStore.dart';
 import 'package:grip/application/auth/AuthenticationState.dart';
 import 'package:grip/application/auth/request/LoginRequest.dart';
@@ -77,27 +76,6 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       emit(AuthenticationStateError("An error occurred. Please try again"));
     }
   }
-
-  // void signupWithGoogle({required bool isClient, required User user, String? otp}) async {
-  //   String fcm = await fcmToken();
-  //   SignUpRequest request = SignUpRequest(
-  //     referralIdentity: " ",
-  //     password: user.uid,
-  //     otp: otp??"",
-  //     firebaseToken: fcm,
-  //     isGoogleSignIn: true,
-  //     fullName: user.displayName ?? "",
-  //     email: user.email!,
-  //   );
-  //   signup(request, isClient, true);
-  // }
-
-  // void loginWithGoogle({required bool isClient, required User user}) async {
-  //   String fcm = await fcmToken();
-  //   LoginRequest request = LoginRequest(
-  //       password: user.uid, email: user.email!, firebaseToken: fcm);
-  //   login(request, isClient);
-  // }
 
   void signout() async {
     // set firebase token to null

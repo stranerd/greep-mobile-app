@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/user/user_crud_cubit.dart';
+import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/Utils/input_validator.dart';
 import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/commons/ui_helpers.dart';
@@ -21,6 +22,7 @@ class AddDriverScreen extends StatefulWidget {
 
 class _AddDriverScreenState extends State<AddDriverScreen> with ScaffoldMessengerService,InputValidator{
   String _driverId = "";
+
   late TextEditingController _driverIdController;
 
   late UserCrudCubit _userCrudCubit;
@@ -177,8 +179,15 @@ class _AddDriverScreenState extends State<AddDriverScreen> with ScaffoldMessenge
 
   void _addDriver() {
     if (formKey.currentState!.validate()){
+      if (GetIt.I<UserCubit>().userId! == _driverId){
+        error = "You cannot add yourself";
+        return;
+      }
 
-      _userCrudCubit.addDriver(driverId: _driverId, commission: _commission/100);
+      _userCrudCubit.addDriver(
+          managerId: GetIt.I<UserCubit>().userId!,
+          managerName: GetIt.I<UserCubit>().user.fullName,
+          driverId: _driverId, commission: _commission/100);
     }
   }
 

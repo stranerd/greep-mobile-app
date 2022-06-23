@@ -36,8 +36,6 @@ class Transaction extends Equatable {
     num amount = data["amount"];
     num debt = 0;
     num credit = 0;
-    print(amount);
-    print("totalAmount: $totalAmount");
     if (totalAmount < amount) {
       debt = amount - totalAmount;
     }
