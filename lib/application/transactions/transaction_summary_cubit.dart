@@ -94,10 +94,8 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
   }
 
   CommissionSummary _calculateCommission(num commission, List<Transaction> transactions, DateTime from, DateTime to){
-    print("calculating commission ${commission} $transactions $from $to");
     var expenses = transactions.where((element) => element.data.transactionType == TransactionType.expense);
     num totalExpenses = expenses.isEmpty ? 0 : expenses.map((e) => e.amount).reduce((value, element) => value + element);
-    print(totalExpenses);
     var trips = transactions.where((element) => element.data.transactionType == TransactionType.trip);
     num totalIncome = trips.isEmpty  ? 0 : trips.map((e) => e.amount).reduce((value, element) => value + element);
     return CommissionSummary(commission: totalExpenses > totalIncome ? 0 : (totalIncome - totalExpenses) * commission, transactions: transactions);
@@ -211,6 +209,33 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     return map;
   }
 
+  Map<DateTime, CommissionSummary> getManagedMonthlyCommissions() {
+    String userId = currentUser().id;
+    var userTransactions = _transactions[userId] ?? const [];
+    if (userTransactions.isEmpty) {
+      return {DateTime.now(): CommissionSummary.Zero()};
+    }
+    if (!currentUser().hasManager){
+      return {DateTime.now(): CommissionSummary.Zero()};
+    }
+    num commission = currentUser().commission??0;
+    Map<DateTime, CommissionSummary> map = {};
+    for (var element in userTransactions) {
+      map.putIfAbsent(DateTime(element.timeAdded.year, element.timeAdded.month),
+              () {
+            List<Transaction> trans = userTransactions
+                .where((e) =>
+            e.timeAdded.year == element.timeAdded.year &&
+                element.timeAdded.month == e.timeAdded.month)
+                .toList();
+            Duration day = const Duration(days: 1);
+            return _calculateCommission(commission, trans, DateTime(element.timeAdded.add(day).year, element.timeAdded.add(day).month), DateTime(element.timeAdded.year, element.timeAdded.month));
+          });
+    }
+
+    return map;
+  }
+
 
   Map<DateTime, TransactionSummary> getMonthlyTransactions() {
     String userId = getSelectedUserId();
@@ -264,4 +289,5 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     _streamSubscription.cancel();
     return super.close();
   }
+
 }
