@@ -20,7 +20,7 @@ class ManagerDriversCubit extends Cubit<ManagerDriversState> {
   late StreamSubscription _streamSubscription;
   bool hasLoaded = false;
   List<User> drivers = [];
-  List<DriverCommission> driverCommissions = [];
+  Set<DriverCommission> driverCommissions = {};
 
   ManagerDriversCubit({required this.driversCubit, required this.userService})
       : super(ManagerDriversInitial()) {
@@ -43,7 +43,7 @@ class ManagerDriversCubit extends Cubit<ManagerDriversState> {
     if (!fullRefresh && !softUpdate) {
       // if there is an already loaded data plus when not a load more request, load cached data
       if (hasLoaded) {
-        emit(ManagerDriversStateFetched(_getMappedResults(driverCommissions)));
+        emit(ManagerDriversStateFetched(_getMappedResults(driverCommissions.toList()).toList()));
       } else {
         // if there is no more data, just emit previous loaded data
         // else fetch new paginated data from server
@@ -80,14 +80,14 @@ class ManagerDriversCubit extends Cubit<ManagerDriversState> {
       var drivers = response.data!;
       hasLoaded = true;
       driverCommissions = _getMappedResults(drivers);
-      var stateFetched = ManagerDriversStateFetched(driverCommissions);
+      var stateFetched = ManagerDriversStateFetched(driverCommissions.toList());
       emit(stateFetched);
       return stateFetched;
     }
   }
 
 
-  List<DriverCommission> _getMappedResults(List<DriverCommission> drivers) {
+  Set<DriverCommission> _getMappedResults(List<DriverCommission> drivers) {
     return drivers.map((e) {
       User? user = this.drivers.any((element) => element.id == e.driverId)
           ? this.drivers.firstWhere((element) => element.id == e.driverId)
@@ -97,20 +97,20 @@ class ManagerDriversCubit extends Cubit<ManagerDriversState> {
           commission: e.commission,
           driverName: user != null ? user.fullName : e.driverId,
           driverPhoto: user != null ? user.photoUrl : e.driverId);
-    }).toList();
+    }).toSet();
   }
 
   void removeDriver({required DriverCommission driver}) async {
-    emit(ManagerDriversStateFetched(_getMappedResults(driverCommissions),
+    emit(ManagerDriversStateFetched(_getMappedResults(driverCommissions.toList()).toList(),
         isLoading: true, loadingId: driver.driverId));
     var response = await userService.removeDriver(driver.driverId);
     if (response.isError) {
-      emit(ManagerDriversStateFetched(_getMappedResults(driverCommissions),
+      emit(ManagerDriversStateFetched(_getMappedResults(driverCommissions.toList()).toList(),
           errorMessage: response.errorMessage ?? "An error occurred",
           isError: true));
     } else {
       driverCommissions.removeWhere((element) => element.driverId == driver.driverId);
-      emit(ManagerDriversStateFetched(_getMappedResults(driverCommissions), isDelete: true));
+      emit(ManagerDriversStateFetched(_getMappedResults(driverCommissions.toList()).toList(), isDelete: true));
       fetchDrivers(softUpdate: true);
     }
   }

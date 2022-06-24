@@ -1,4 +1,6 @@
-class DriverCommission {
+import 'package:equatable/equatable.dart';
+
+class DriverCommission extends Equatable {
   final String driverId;
   final num commission;
   final String driverName;
@@ -12,4 +14,13 @@ class DriverCommission {
       commission: data["commission"],
     );
   }
+
+  @override
+  String toString() {
+    return 'DriverCommission{driverId: $driverId, commission: $commission, driverName: $driverName, driverPhoto: $driverPhoto}';
+  }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [driverId];
 }

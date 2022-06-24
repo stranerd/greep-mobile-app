@@ -86,7 +86,7 @@ class TotalIncome extends StatelessWidget {
                                   GetIt.I<TransactionSummaryCubit>()
                                       .getManagerTotalDailyCommissions();
                               return ListView.separated(
-                                separatorBuilder: (_,__) => kVerticalSpaceSmall,
+                                separatorBuilder: (_,__) => kVerticalSpaceRegular,
                                   itemCount: commissions.length,
                                   shrinkWrap: true,
                                   itemBuilder: (c, i) {
@@ -104,7 +104,7 @@ class TotalIncome extends StatelessWidget {
                           GetIt.I<TransactionSummaryCubit>()
                               .getManagerTotalMonthlyCommissions();
                           return ListView.separated(
-                              separatorBuilder: (_,__) => kVerticalSpaceSmall,
+                              separatorBuilder: (_,__) => kVerticalSpaceRegular,
                               itemCount: commissions.length,
                               shrinkWrap: true,
                               itemBuilder: (c, i) {

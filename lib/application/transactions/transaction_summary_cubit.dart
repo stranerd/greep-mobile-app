@@ -100,6 +100,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
 
   CommissionSummary _calculateCommission(num commission,
       List<Transaction> transactions, DateTime from, DateTime to) {
+    print("calculating commission $commission ${transactions.length}");
     var expenses = transactions.where(
         (element) => element.data.transactionType == TransactionType.expense);
     num totalExpenses = expenses.isEmpty
@@ -114,10 +115,11 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
         : trips
             .map((e) => e.amount)
             .reduce((value, element) => value + element);
+    print("total Expenses: $totalExpenses Total Income: $totalIncome");
     return CommissionSummary(
         commission: totalExpenses > totalIncome
             ? 0
-            : (totalIncome - totalExpenses) * commission,
+            : ((totalIncome - totalExpenses)) * commission,
         transactions: transactions);
   }
 
@@ -241,6 +243,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     String userId = currentUser().id;
     List<DriverCommission> driverCommissions = GetIt.I<ManagerDriversCubit>()
         .driverCommissions
+        .toList()
       ..add(DriverCommission(driverId: userId, commission: 1));
     var userTransactions = _transactions[userId] ?? const [];
     if (userTransactions.isEmpty) {
@@ -248,26 +251,34 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     }
     Map<DateTime, CommissionSummary> map = {};
     for (var driver in driverCommissions) {
+      print(driver);
       List<Transaction> driverTransactions =
           _transactions[driver.driverId] ?? [];
+      print("driver transaction size: ${driverTransactions.length}");
       driverTransactions.forEach((element) {
+        print("looping driver transactions");
         var time = DateTime(element.timeAdded.year, element.timeAdded.month,
             element.timeAdded.day);
-        CommissionSummary summary = _calculateCommission(
-            driver.commission,
-            driverTransactions
-                .where((e) =>
-                    e.timeAdded.year == time.year &&
-                    element.timeAdded.month == time.month &&
-                    element.timeAdded.day == time.day)
-                .toList(),
-            time,
-            time.add(const Duration(days: 1)));
+        var transactions2 = driverTransactions
+            .where((e) => (e.timeAdded.year == time.year &&
+                e.timeAdded.month == time.month &&
+                e.timeAdded.day == time.day))
+            .toList();
+        if (map.containsKey(time) &&
+            transactions2.every(
+                (element) => map[time]!.transactions.contains(element))) {
+          return;
+        }
+        CommissionSummary summary = _calculateCommission(driver.commission,
+            transactions2, time, time.add(const Duration(days: 1)));
         if (map.containsKey(time)) {
-          map[time]!.transactions.addAll(summary.transactions);
-          map[time] = CommissionSummary(
-              commission: map[time]!.commission + summary.commission,
-              transactions: map[time]?.transactions ?? []);
+          if (!summary.transactions
+              .every((element) => map[time]!.transactions.contains(element))) {
+            map[time]!.transactions.addAll(summary.transactions);
+            map[time] = CommissionSummary(
+                commission: map[time]!.commission + summary.commission,
+                transactions: map[time]?.transactions ?? []);
+          }
         } else {
           map[time] = summary;
         }
@@ -281,6 +292,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     String userId = currentUser().id;
     List<DriverCommission> driverCommissions = GetIt.I<ManagerDriversCubit>()
         .driverCommissions
+        .toList()
       ..add(DriverCommission(driverId: userId, commission: 1));
     var userTransactions = _transactions[userId] ?? const [];
     if (userTransactions.isEmpty) {
@@ -291,14 +303,24 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
       List<Transaction> driverTransactions =
           _transactions[driver.driverId] ?? [];
       driverTransactions.forEach((element) {
-        var time = DateTime(element.timeAdded.year, element.timeAdded.month,);
+        var time = DateTime(
+          element.timeAdded.year,
+          element.timeAdded.month,
+        );
+
+        var transactions3 = driverTransactions
+                .where((e) =>
+                    e.timeAdded.year == element.timeAdded.year &&
+                    element.timeAdded.month == e.timeAdded.month)
+                .toList();
+        if (map.containsKey(time) &&
+            transactions3.every(
+                    (element) => map[time]!.transactions.contains(element))) {
+          return;
+        }
         CommissionSummary summary = _calculateCommission(
             driver.commission,
-            driverTransactions
-                .where((e) =>
-            e.timeAdded.year == element.timeAdded.year &&
-                element.timeAdded.month == e.timeAdded.month)
-                .toList(),
+            transactions3,
             time,
             time.add(const Duration(days: 1)));
         if (map.containsKey(time)) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grip/application/transactions/response/commission_summary.dart';
 import 'package:grip/commons/Utils/utils.dart';
+import 'package:grip/commons/money.dart';
 import 'package:grip/utils/constants/app_styles.dart';
 import 'package:intl/intl.dart';
 
@@ -51,7 +52,7 @@ class CommissionSummaryItem extends StatelessWidget {
               width: 1.0,
             ),
           ),
-          child: Text("N${commissionSummary.commission}",
+          child: Text("N${commissionSummary.commission.toMoney}",
               style: AppTextStyles.greenSize16),
         ),
       ],
