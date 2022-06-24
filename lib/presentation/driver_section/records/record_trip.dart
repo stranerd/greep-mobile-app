@@ -121,7 +121,7 @@ class _RecordTripState extends State<RecordTrip>
                                 _customerName = s;
                               });
                             },
-                            style: kSubtitleTextStyle,
+                            style: kDefaultTextStyle,
                             decoration:InputDecoration(
                                 filled: true,
                             fillColor: kBorderColor,
@@ -137,11 +137,14 @@ class _RecordTripState extends State<RecordTrip>
                         hideOnEmpty: true,
                         hideOnError: true,
                         hideOnLoading: true,
-                        
+
                         suggestionsCallback: (pattern) async {
+                          if (pattern.isEmpty){
+                            return [];
+                          }
                           return customersNames.where((element) => element
                               .toLowerCase()
-                              .contains(pattern.toLowerCase()));
+                              .startsWith(pattern.toLowerCase()));
                         },
                         itemBuilder: (context, suggestion) {
                           return ListTile(

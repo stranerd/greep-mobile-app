@@ -99,14 +99,14 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                     Builder(builder: (context) {
                       if (transactions.isEmpty) {
                         return const EmptyResultWidget(
-                          text: 'You have no transactions',
+                          text: 'No transactions',
                         );
                       } else if (transactions.length == 1 &&
                           transactions[transactions.keys.first]!
                               .transactions
                               .isEmpty) {
                         return const EmptyResultWidget(
-                          text: 'You have no transactions',
+                          text: 'No transactions',
                         );
                       } else {
                         return ListView.separated(

@@ -7,8 +7,6 @@ import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/presentation/driver_section/home_page.dart';
 import 'package:grip/presentation/driver_section/nav_pages/nav_bar/nav_bar_view.dart';
-import 'package:grip/presentation/manager_section/home_page.dart';
-import 'package:grip/presentation/manager_section/nav_pages/nav_bar/nav_bar_view.dart';
 import 'package:grip/presentation/splash/splash.dart';
 
 class AuthenticationSplashScreen extends StatefulWidget {
@@ -30,13 +28,8 @@ class _SplashScreenState extends State<AuthenticationSplashScreen>
     return BlocListener<UserCubit, UserState>(
       listener: (context, state) {
         if (state is UserStateFetched) {
-          if (state.user.hasManager) {
-            g.Get.offAll(() => const NavBarViews(),
-                transition: g.Transition.fadeIn);
-          } else {
             g.Get.offAll(() => const NavBarView(),
                 transition: g.Transition.fadeIn);
-          }
         }
         if (state is UserStateError) {
           if (state.isSocket || state.isConnectionTimeout) {
