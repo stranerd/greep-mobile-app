@@ -21,10 +21,8 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
     });
 
     _driverStream = driversCubit.stream.listen((event) {
-      print("driver event changed for user transactions");
       if (event is DriversStateFetched){
         fetchUserTransactions(requestId: event.selectedUser.id);
-        print("fetched transactions on driver state change");
       }
     });
   }

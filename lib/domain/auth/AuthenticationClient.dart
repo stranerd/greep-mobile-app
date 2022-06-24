@@ -28,7 +28,6 @@ class AuthenticationClient {
         "email": request.email
       });
     } on DioError catch (e) {
-      print(e.type);
       if (e.type == DioErrorType.connectTimeout) {
         return ResponseEntity.Timeout();
       }
@@ -36,7 +35,6 @@ class AuthenticationClient {
         return ResponseEntity.Socket();
       }
       if (e.type == DioErrorType.response) {
-        print(e.response!.data);
         return ResponseEntity.Error(
             e.response!.data[0]["message"] ?? "Incorrect Credentials");
       }
@@ -52,7 +50,6 @@ class AuthenticationClient {
   Future<ResponseEntity<Map<String, dynamic>>> signup(
       SignUpRequest request) async {
     final Dio dio = Dio();
-    print(request.toString());
     Response response;
     try {
       response = await dio.post(
@@ -77,8 +74,6 @@ class AuthenticationClient {
         return ResponseEntity.Socket();
       }
       if (e.type == DioErrorType.response) {
-        print(e.response!.data);
-
         return ResponseEntity.Error(
             e.response!.data["message"] ?? "An error occurred in sign up");
       }

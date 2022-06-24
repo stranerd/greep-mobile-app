@@ -45,7 +45,6 @@ class UserCrudCubit extends Cubit<UserCrudState> {
         required String managerId,
         required String driverId,
       }) async {
-    print("accepting manager");
     emit(UserCrudStateLoading(isManagerAdd: true));
     var response = await userService.acceptManager(
         AcceptManagerRequest(managerId: managerId, accept: true));
@@ -64,8 +63,6 @@ class UserCrudCubit extends Cubit<UserCrudState> {
 
   void rejectManager(
       {required String managerId, required String driverId}) async {
-    print("rejecting manager");
-
     emit(UserCrudStateLoading(isManagerReject: true));
     var response = await userService.acceptManager(
       AcceptManagerRequest(managerId: managerId, accept: false),
@@ -86,7 +83,6 @@ class UserCrudCubit extends Cubit<UserCrudState> {
   }
 
   void sendAccept(String managerId) {
-    print("accepting request");
     FirebaseApi.sendManagerAccept(managerId: managerId);
     GetIt.I<NewManagerAcceptsCubit>().makeUnavailable();
   }

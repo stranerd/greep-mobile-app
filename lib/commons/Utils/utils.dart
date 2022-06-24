@@ -156,7 +156,6 @@ notifyListeners();
 
   onExpansionChanged1(bool val) {
     isExpanded1 = val;
-    print(val);
   }
 
   Future storeData(String name, data) async {

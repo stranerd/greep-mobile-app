@@ -9,6 +9,7 @@ import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/presentation/driver_section/add_driver_screen.dart';
 import 'package:grip/presentation/driver_section/drivers/drivers_screen.dart';
+import 'package:grip/presentation/driver_section/nav_pages/settings/commission/total_income.dart';
 import 'package:grip/presentation/driver_section/widgets/settings_home_item.dart';
 import 'package:grip/presentation/splash/splash.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
@@ -102,7 +103,7 @@ class SettingsHome extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                      const CommissionHome(),
+                                      const TotalIncome(),
                                     ),
                                   );
                                 },

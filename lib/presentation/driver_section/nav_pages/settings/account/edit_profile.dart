@@ -59,7 +59,6 @@ class _EditProfileState extends State<EditProfile>
         return BlocConsumer<UserCrudCubit, UserCrudState>(
             listener: (context, state) {
           if (state is UserCrudStateFailure) {
-            print(state.errorMessage);
             error = state.errorMessage;
           }
           if (state is UserCrudStateSuccess) {

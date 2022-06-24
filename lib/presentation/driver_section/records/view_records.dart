@@ -144,7 +144,7 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                             separatorBuilder: (_, __) => kVerticalSpaceRegular,
                             itemCount: transactions.length);
                       }
-                    }),
+                    },),
                     Column(
                       children: [
                         RecordCard(
@@ -154,7 +154,7 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                           titleStyle: kDefaultTextStyle.copyWith(
                             color: kGreenColor
                           ),
-                          subtitleStyle: TextStyle(),
+                          subtitleStyle: const TextStyle(),
                           transactions: totalIncome.transactions,
                         ),
                         kVerticalSpaceSmall,

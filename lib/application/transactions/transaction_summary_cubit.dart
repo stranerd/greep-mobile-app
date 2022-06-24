@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:grip/application/driver/manager_drivers_cubit.dart';
 import 'package:grip/application/transactions/response/commission_summary.dart';
 import 'package:grip/application/transactions/transaction_crud_cubit.dart';
 import 'package:grip/application/transactions/response/transaction_summary.dart';
@@ -11,6 +12,7 @@ import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/application/user/utils/get_current_user.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
+import 'package:grip/domain/user/model/driver_commission.dart';
 import 'package:meta/meta.dart';
 
 part 'transaction_summary_state.dart';
@@ -28,7 +30,8 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
 
   final Map<String, TransactionSummary> _yesterday = {};
 
-  TransactionSummaryCubit({required this.userTransactionsCubit, required this.driversCubit})
+  TransactionSummaryCubit(
+      {required this.userTransactionsCubit, required this.driversCubit})
       : super(TransactionSummaryInitial()) {
     _streamSubscription = userTransactionsCubit.stream.listen((event) {
       if (event is UserTransactionsStateFetched) {
@@ -66,8 +69,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     late TransactionSummary transactionSummary;
 
     var filteredTrans = transactions.where((element) {
-      return from.isBefore(element.timeAdded) &&
-          to.isAfter(element.timeAdded);
+      return from.isBefore(element.timeAdded) && to.isAfter(element.timeAdded);
     }).toList();
 
     num amount = filteredTrans.isNotEmpty
@@ -88,18 +90,35 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
                 (element) => element.transactionType == TransactionType.expense)
             .length
         : 0;
-    transactionSummary =
-        TransactionSummary(amount: amount, trips: trips, expenses: expenses, transactions: filteredTrans);
+    transactionSummary = TransactionSummary(
+        amount: amount,
+        trips: trips,
+        expenses: expenses,
+        transactions: filteredTrans);
     return transactionSummary;
   }
 
-  CommissionSummary _calculateCommission(num commission, List<Transaction> transactions, DateTime from, DateTime to){
-    var expenses = transactions.where((element) => element.data.transactionType == TransactionType.expense);
-    num totalExpenses = expenses.isEmpty ? 0 : expenses.map((e) => e.amount).reduce((value, element) => value + element);
-    var trips = transactions.where((element) => element.data.transactionType == TransactionType.trip);
-    num totalIncome = trips.isEmpty  ? 0 : trips.map((e) => e.amount).reduce((value, element) => value + element);
-    return CommissionSummary(commission: totalExpenses > totalIncome ? 0 : (totalIncome - totalExpenses) * commission, transactions: transactions);
-
+  CommissionSummary _calculateCommission(num commission,
+      List<Transaction> transactions, DateTime from, DateTime to) {
+    var expenses = transactions.where(
+        (element) => element.data.transactionType == TransactionType.expense);
+    num totalExpenses = expenses.isEmpty
+        ? 0
+        : expenses
+            .map((e) => e.amount)
+            .reduce((value, element) => value + element);
+    var trips = transactions.where(
+        (element) => element.data.transactionType == TransactionType.trip);
+    num totalIncome = trips.isEmpty
+        ? 0
+        : trips
+            .map((e) => e.amount)
+            .reduce((value, element) => value + element);
+    return CommissionSummary(
+        commission: totalExpenses > totalIncome
+            ? 0
+            : (totalIncome - totalExpenses) * commission,
+        transactions: transactions);
   }
 
   TransactionSummary todaySummary(String userId) {
@@ -110,15 +129,13 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
   }
 
   TransactionSummary yesterdaySummary(String userId) {
-    print(userId);
-    print(_yesterday[userId]);
     if (_yesterday[userId] == null) {
       return TransactionSummary.Zero();
     }
     return _yesterday[userId]!;
   }
 
-  TransactionSummary totalSummary(){
+  TransactionSummary totalSummary() {
     String userId = getSelectedUserId();
     if (_transactions[userId] == null || _transactions[userId]!.isEmpty) {
       return TransactionSummary.Zero();
@@ -131,79 +148,168 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
             .reduce((value, element) => element + value),
         trips: trans
             .map((e) => e.data)
-            .where((element) =>
-        element.transactionType == TransactionType.trip)
+            .where((element) => element.transactionType == TransactionType.trip)
             .length,
         expenses: trans
             .map((e) => e.data)
-            .where((element) =>
-        element.transactionType == TransactionType.expense)
+            .where(
+                (element) => element.transactionType == TransactionType.expense)
             .length,
         transactions: trans);
-
   }
 
-  TransactionSummary calculateInterval(DateTime from, DateTime to){
+  TransactionSummary calculateInterval(DateTime from, DateTime to) {
     return _calculate(getSelectedUserId(), from, to);
   }
 
-  Map<DateTime, TransactionSummary> getDailyTransactions(){
+  Map<DateTime, TransactionSummary> getDailyTransactions() {
     String userId = getSelectedUserId();
     if (_transactions[userId] == null || _transactions[userId]!.isEmpty) {
       return {DateTime.now(): TransactionSummary.Zero()};
     }
     Map<DateTime, TransactionSummary> map = {};
     for (var element in _transactions[userId]!) {
-      map.putIfAbsent(DateTime(element.timeAdded.year, element.timeAdded.month, element.timeAdded.day),
-              () {
-            List<Transaction> trans = _transactions[userId]!
-                .where((e) =>
-            e.timeAdded.year == element.timeAdded.year &&
-                element.timeAdded.month == e.timeAdded.month && element.timeAdded.day == e.timeAdded.day)
-                .toList();
-            return TransactionSummary(
-                amount: trans
-                    .map((e) => e.amount)
-                    .reduce((value, element) => element + value),
-                trips: trans
-                    .map((e) => e.data)
-                    .where((element) =>
-                element.transactionType == TransactionType.trip)
-                    .length,
-                expenses: trans
-                    .map((e) => e.data)
-                    .where((element) =>
-                element.transactionType == TransactionType.expense)
-                    .length,
-                transactions: trans);
-          });
+      map.putIfAbsent(
+          DateTime(element.timeAdded.year, element.timeAdded.month,
+              element.timeAdded.day), () {
+        List<Transaction> trans = _transactions[userId]!
+            .where((e) =>
+                e.timeAdded.year == element.timeAdded.year &&
+                element.timeAdded.month == e.timeAdded.month &&
+                element.timeAdded.day == e.timeAdded.day)
+            .toList();
+        return TransactionSummary(
+            amount: trans
+                .map((e) => e.amount)
+                .reduce((value, element) => element + value),
+            trips: trans
+                .map((e) => e.data)
+                .where((element) =>
+                    element.transactionType == TransactionType.trip)
+                .length,
+            expenses: trans
+                .map((e) => e.data)
+                .where((element) =>
+                    element.transactionType == TransactionType.expense)
+                .length,
+            transactions: trans);
+      });
     }
 
     return map;
   }
 
-  Map<DateTime, CommissionSummary> getManagedDailyCommissions(){
+  Map<DateTime, CommissionSummary> getManagedDailyCommissions() {
     String userId = currentUser().id;
     var userTransactions = _transactions[userId] ?? const [];
     if (userTransactions.isEmpty) {
       return {DateTime.now(): CommissionSummary.Zero()};
     }
-    if (!currentUser().hasManager){
+    if (!currentUser().hasManager) {
       return {DateTime.now(): CommissionSummary.Zero()};
     }
-    num commission = currentUser().commission??0;
+    num commission = currentUser().commission ?? 0;
     Map<DateTime, CommissionSummary> map = {};
     for (var element in userTransactions) {
-      map.putIfAbsent(DateTime(element.timeAdded.year, element.timeAdded.month, element.timeAdded.day),
-              () {
-            List<Transaction> trans = userTransactions
+      map.putIfAbsent(
+          DateTime(element.timeAdded.year, element.timeAdded.month,
+              element.timeAdded.day), () {
+        List<Transaction> trans = userTransactions
+            .where((e) =>
+                e.timeAdded.year == element.timeAdded.year &&
+                element.timeAdded.month == e.timeAdded.month &&
+                element.timeAdded.day == e.timeAdded.day)
+            .toList();
+        Duration day = const Duration(days: 1);
+        return _calculateCommission(
+            commission,
+            trans,
+            DateTime(
+              element.timeAdded.add(day).year,
+              element.timeAdded.add(day).month,
+              element.timeAdded.add(day).day,
+            ),
+            DateTime(element.timeAdded.year, element.timeAdded.month,
+                element.timeAdded.day));
+      });
+    }
+
+    return map;
+  }
+
+  Map<DateTime, CommissionSummary> getManagerTotalDailyCommissions() {
+    String userId = currentUser().id;
+    List<DriverCommission> driverCommissions = GetIt.I<ManagerDriversCubit>()
+        .driverCommissions
+      ..add(DriverCommission(driverId: userId, commission: 1));
+    var userTransactions = _transactions[userId] ?? const [];
+    if (userTransactions.isEmpty) {
+      return {DateTime.now(): CommissionSummary.Zero()};
+    }
+    Map<DateTime, CommissionSummary> map = {};
+    for (var driver in driverCommissions) {
+      List<Transaction> driverTransactions =
+          _transactions[driver.driverId] ?? [];
+      driverTransactions.forEach((element) {
+        var time = DateTime(element.timeAdded.year, element.timeAdded.month,
+            element.timeAdded.day);
+        CommissionSummary summary = _calculateCommission(
+            driver.commission,
+            driverTransactions
+                .where((e) =>
+                    e.timeAdded.year == time.year &&
+                    element.timeAdded.month == time.month &&
+                    element.timeAdded.day == time.day)
+                .toList(),
+            time,
+            time.add(const Duration(days: 1)));
+        if (map.containsKey(time)) {
+          map[time]!.transactions.addAll(summary.transactions);
+          map[time] = CommissionSummary(
+              commission: map[time]!.commission + summary.commission,
+              transactions: map[time]?.transactions ?? []);
+        } else {
+          map[time] = summary;
+        }
+      });
+    }
+
+    return map;
+  }
+
+  Map<DateTime, CommissionSummary> getManagerTotalMonthlyCommissions() {
+    String userId = currentUser().id;
+    List<DriverCommission> driverCommissions = GetIt.I<ManagerDriversCubit>()
+        .driverCommissions
+      ..add(DriverCommission(driverId: userId, commission: 1));
+    var userTransactions = _transactions[userId] ?? const [];
+    if (userTransactions.isEmpty) {
+      return {DateTime.now(): CommissionSummary.Zero()};
+    }
+    Map<DateTime, CommissionSummary> map = {};
+    for (var driver in driverCommissions) {
+      List<Transaction> driverTransactions =
+          _transactions[driver.driverId] ?? [];
+      driverTransactions.forEach((element) {
+        var time = DateTime(element.timeAdded.year, element.timeAdded.month,);
+        CommissionSummary summary = _calculateCommission(
+            driver.commission,
+            driverTransactions
                 .where((e) =>
             e.timeAdded.year == element.timeAdded.year &&
-                element.timeAdded.month == e.timeAdded.month && element.timeAdded.day == e.timeAdded.day)
-                .toList();
-            Duration day = const Duration(days: 1);
-            return _calculateCommission(commission, trans, DateTime(element.timeAdded.add(day).year, element.timeAdded.add(day).month, element.timeAdded.add(day).day,), DateTime(element.timeAdded.year, element.timeAdded.month, element.timeAdded.day));
-          });
+                element.timeAdded.month == e.timeAdded.month)
+                .toList(),
+            time,
+            time.add(const Duration(days: 1)));
+        if (map.containsKey(time)) {
+          map[time]!.transactions.addAll(summary.transactions);
+          map[time] = CommissionSummary(
+              commission: map[time]!.commission + summary.commission,
+              transactions: map[time]?.transactions ?? []);
+        } else {
+          map[time] = summary;
+        }
+      });
     }
 
     return map;
@@ -215,27 +321,31 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     if (userTransactions.isEmpty) {
       return {DateTime.now(): CommissionSummary.Zero()};
     }
-    if (!currentUser().hasManager){
+    if (!currentUser().hasManager) {
       return {DateTime.now(): CommissionSummary.Zero()};
     }
-    num commission = currentUser().commission??0;
+    num commission = currentUser().commission ?? 0;
     Map<DateTime, CommissionSummary> map = {};
     for (var element in userTransactions) {
       map.putIfAbsent(DateTime(element.timeAdded.year, element.timeAdded.month),
-              () {
-            List<Transaction> trans = userTransactions
-                .where((e) =>
-            e.timeAdded.year == element.timeAdded.year &&
+          () {
+        List<Transaction> trans = userTransactions
+            .where((e) =>
+                e.timeAdded.year == element.timeAdded.year &&
                 element.timeAdded.month == e.timeAdded.month)
-                .toList();
-            Duration day = const Duration(days: 1);
-            return _calculateCommission(commission, trans, DateTime(element.timeAdded.add(day).year, element.timeAdded.add(day).month), DateTime(element.timeAdded.year, element.timeAdded.month));
-          });
+            .toList();
+        Duration day = const Duration(days: 1);
+        return _calculateCommission(
+            commission,
+            trans,
+            DateTime(element.timeAdded.add(day).year,
+                element.timeAdded.add(day).month),
+            DateTime(element.timeAdded.year, element.timeAdded.month));
+      });
     }
 
     return map;
   }
-
 
   Map<DateTime, TransactionSummary> getMonthlyTransactions() {
     String userId = getSelectedUserId();
@@ -279,7 +389,6 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     }
 
     return _calculate(userId, from, to).transactions;
-
   }
 
   String getSelectedUserId() => driversCubit.selectedUser.id;
@@ -289,5 +398,4 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     _streamSubscription.cancel();
     return super.close();
   }
-
 }

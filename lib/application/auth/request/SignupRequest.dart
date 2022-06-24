@@ -21,7 +21,6 @@ class SignUpRequest {
       required this.photo});
 
   Map<String, dynamic> toMap() {
-    print(photo.contentType);
     return {
       'password': password,
       'firstName': firstName,

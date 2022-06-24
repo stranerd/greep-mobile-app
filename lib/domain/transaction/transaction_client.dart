@@ -23,8 +23,6 @@ class TransactionClient {
     Response response;
     try {
       response = await dio.get("users/transactions",queryParameters: queryParams);
-      print("transaction data");
-      print(response.data);
       List<Transaction> transactions = [];
       response.data["results"].forEach((e) {
         transactions.add(Transaction.fromServer(e));

@@ -160,7 +160,6 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService{
                 child: Builder(builder: (context) {
                   return BlocConsumer<UserCrudCubit, UserCrudState>(
                     listener: (context, state) {
-                      print(state);
                       if (state is UserCrudStateFailure){
                         Get.back();
                         error = state.errorMessage;
@@ -177,7 +176,6 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService{
                      }
                     },
                     builder: (context, state) {
-                      print(state);
                       return WillPopScope(
                         onWillPop: () {
                           return Future.value(false);

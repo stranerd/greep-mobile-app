@@ -45,7 +45,6 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
     });
     _streamSubscription = transactionsCubit.stream.listen((event) {
       if (event is UserTransactionsStateFetched) {
-        print("calculating statistics based off of transactions fetched");
         _transactions = transactionsCubit.transactions
             .map((key, value) => MapEntry(key, value.toList()));
         _calculateStatistics();
