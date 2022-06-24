@@ -1,10 +1,14 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:grip/application/transactions/response/commission_summary.dart';
 import 'package:grip/application/transactions/transaction_crud_cubit.dart';
 import 'package:grip/application/transactions/response/transaction_summary.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/application/driver/drivers_cubit.dart';
+import 'package:grip/application/user/user_cubit.dart';
+import 'package:grip/application/user/utils/get_current_user.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:meta/meta.dart';
@@ -89,6 +93,17 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     return transactionSummary;
   }
 
+  CommissionSummary _calculateCommission(num commission, List<Transaction> transactions, DateTime from, DateTime to){
+    print("calculating commission ${commission} $transactions $from $to");
+    var expenses = transactions.where((element) => element.data.transactionType == TransactionType.expense);
+    num totalExpenses = expenses.isEmpty ? 0 : expenses.map((e) => e.amount).reduce((value, element) => value + element);
+    print(totalExpenses);
+    var trips = transactions.where((element) => element.data.transactionType == TransactionType.trip);
+    num totalIncome = trips.isEmpty  ? 0 : trips.map((e) => e.amount).reduce((value, element) => value + element);
+    return CommissionSummary(commission: totalExpenses > totalIncome ? 0 : (totalIncome - totalExpenses) * commission, transactions: transactions);
+
+  }
+
   TransactionSummary todaySummary(String userId) {
     if (_today[userId] == null) {
       return TransactionSummary.Zero();
@@ -168,6 +183,34 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
 
     return map;
   }
+
+  Map<DateTime, CommissionSummary> getManagedDailyCommissions(){
+    String userId = currentUser().id;
+    var userTransactions = _transactions[userId] ?? const [];
+    if (userTransactions.isEmpty) {
+      return {DateTime.now(): CommissionSummary.Zero()};
+    }
+    if (!currentUser().hasManager){
+      return {DateTime.now(): CommissionSummary.Zero()};
+    }
+    num commission = currentUser().commission??0;
+    Map<DateTime, CommissionSummary> map = {};
+    for (var element in userTransactions) {
+      map.putIfAbsent(DateTime(element.timeAdded.year, element.timeAdded.month, element.timeAdded.day),
+              () {
+            List<Transaction> trans = userTransactions
+                .where((e) =>
+            e.timeAdded.year == element.timeAdded.year &&
+                element.timeAdded.month == e.timeAdded.month && element.timeAdded.day == e.timeAdded.day)
+                .toList();
+            Duration day = const Duration(days: 1);
+            return _calculateCommission(commission, trans, DateTime(element.timeAdded.add(day).year, element.timeAdded.add(day).month, element.timeAdded.add(day).day,), DateTime(element.timeAdded.year, element.timeAdded.month, element.timeAdded.day));
+          });
+    }
+
+    return map;
+  }
+
 
   Map<DateTime, TransactionSummary> getMonthlyTransactions() {
     String userId = getSelectedUserId();

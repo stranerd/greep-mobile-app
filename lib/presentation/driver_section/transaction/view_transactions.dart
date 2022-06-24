@@ -10,7 +10,6 @@ import 'package:get_it/get_it.dart';
 import 'package:grip/application/transactions/response/transaction_summary.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/application/driver/drivers_cubit.dart';
-import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/money.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/presentation/widgets/driver_selector_widget.dart';
@@ -21,11 +20,6 @@ import 'package:intl/intl.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_styles.dart';
 import '../widgets/transactions_card.dart';
-import 'balance.dart';
-import 'to_collect_screen.dart';
-import 'to_pay_screen.dart';
-import 'transaction_details.dart';
-import 'view_expense.dart';
 import 'view_range_transactions.dart';
 
 class TransactionView extends StatefulWidget {

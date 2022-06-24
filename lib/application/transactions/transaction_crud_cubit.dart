@@ -5,6 +5,7 @@ import 'package:grip/application/transactions/request/add_expense_request.dart';
 import 'package:grip/application/transactions/request/add_trip_request.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
+import 'package:grip/application/user/utils/get_current_user.dart';
 import 'package:grip/domain/transaction/transaction_service.dart';
 import 'package:meta/meta.dart';
 
@@ -61,6 +62,6 @@ class TransactionCrudCubit extends Cubit<TransactionCrudState> {
   }
 
   void _refreshTransactions(){
-    GetIt.I<UserTransactionsCubit>().fetchUserTransactions(requestId: GetIt.I<UserCubit>().userId!,fullRefresh: true);
+    GetIt.I<UserTransactionsCubit>().fetchUserTransactions(requestId: currentUser().id,fullRefresh: true);
   }
 }

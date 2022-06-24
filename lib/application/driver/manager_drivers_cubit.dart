@@ -6,6 +6,7 @@ import 'package:grip/application/driver/drivers_cubit.dart';
 import 'package:grip/application/response.dart';
 import 'package:grip/application/user/user_crud_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
+import 'package:grip/application/user/utils/get_current_user.dart';
 import 'package:grip/domain/user/UserService.dart';
 import 'package:grip/domain/user/model/User.dart';
 import 'package:grip/domain/user/model/driver_commission.dart';
@@ -32,7 +33,7 @@ class ManagerDriversCubit extends Cubit<ManagerDriversState> {
   }
 
   void fetchDrivers({bool fullRefresh = false, bool softUpdate = false}) async {
-    String requestId = GetIt.I<UserCubit>().userId!;
+    String requestId = currentUser().id;
     if (fullRefresh && !softUpdate) {
       emit(ManagerDriversStateLoading());
     }
