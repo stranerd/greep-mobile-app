@@ -413,6 +413,17 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     return _calculate(userId, from, to).transactions;
   }
 
+
+  List<String> expensesList(){
+    String userId = currentUser().id;
+    if (_transactions[userId] == null ||
+        _transactions[userId]!.isEmpty) {
+      return [];
+    }
+    Set<String> expenses = _transactions[userId]!.where((element) => element.data.transactionType == TransactionType.expense).map((e) => e.data.name??"").toSet();
+    return expenses.toList();
+  }
+
   String getSelectedUserId() => driversCubit.selectedUser.id;
 
   @override

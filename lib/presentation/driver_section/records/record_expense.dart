@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/transactions/transaction_crud_cubit.dart';
+import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/commons/ui_helpers.dart';
@@ -25,6 +27,9 @@ class _RecordExpenseState extends State<RecordExpense> with ScaffoldMessengerSer
   String _expenseName = "";
   String _price = "";
   String _description = "";
+  List<String> expenseList = [];
+  late TextEditingController _expenseNameController;
+
 
   late TransactionCrudCubit _transactionCrudCubit;
 
@@ -33,6 +38,9 @@ class _RecordExpenseState extends State<RecordExpense> with ScaffoldMessengerSer
 
   @override
   void initState() {
+    expenseList =
+        GetIt.I<TransactionSummaryCubit>().expensesList();
+    _expenseNameController = TextEditingController();
     _transactionCrudCubit = GetIt.I<TransactionCrudCubit>();
 
 
@@ -98,15 +106,51 @@ class _RecordExpenseState extends State<RecordExpense> with ScaffoldMessengerSer
 
                           ),
                           kVerticalSpaceSmall,
-                          LoginTextField(
-                            validator: (_) {},
-                            onChanged: (String v) {
-                              setState(() {
-                                _expenseName = v;
-                              });
+                          TypeAheadField(
+                            textFieldConfiguration: TextFieldConfiguration(
+                              autofocus: false,
+                              controller: _expenseNameController,
+                              onChanged: (s){
+                                setState(() {
+                                  _expenseName = s;
+                                });
+                              },
+                              style: kDefaultTextStyle,
+                              decoration:InputDecoration(
+                                  filled: true,
+                                  fillColor: kBorderColor,
+                                  focusedBorder: InputBorder.none,
+                                  border: InputBorder.none,
+                                  enabledBorder:  InputBorder.none
+                                  ,
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: const BorderSide(color: kErrorColor, width: 0.5),
+                                  )),
+                            ),
+                            hideOnEmpty: true,
+                            hideOnError: true,
+                            hideOnLoading: true,
+
+                            suggestionsCallback: (pattern) async {
+                              if (pattern.isEmpty){
+                                return [];
+                              }
+                              return expenseList.where((element) => element
+                                  .toLowerCase()
+                                  .startsWith(pattern.toLowerCase()));
                             },
-                            withTitle: false,
+                            itemBuilder: (context, suggestion) {
+                              return ListTile(
+                                title: Text(suggestion.toString()),
+                              );
+                            },
+                            onSuggestionSelected: (suggestion) {
+                              _expenseName = suggestion.toString();
+                              _expenseNameController.text=_expenseName;
+                            },
                           ),
+
                           kVerticalSpaceMedium,
                           Text(
                             "Date/Time",
