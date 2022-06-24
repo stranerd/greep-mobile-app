@@ -9,6 +9,7 @@ import 'package:grip/application/transactions/response/customer_summary.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/application/driver/drivers_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
+import 'package:grip/application/user/utils/get_current_user.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:meta/meta.dart';
@@ -125,7 +126,7 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
   }
 
   List<String> getUserCustomers(){
-    String userId = GetIt.I<UserCubit>().userId!;
+    String userId = currentUser().id;
     if (_customerTransactions[userId] == null ||
         _customerTransactions[userId]!.isEmpty) {
       return [];

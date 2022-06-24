@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:grip/application/user/utils/get_current_user.dart';
+
 import 'package:grip/application/driver/drivers_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/ui_helpers.dart';
@@ -25,7 +27,7 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   void initState() {
-    user = GetIt.I<UserCubit>().user;
+    user = currentUser();
     super.initState();
   }
 
@@ -97,7 +99,7 @@ class _ProfileViewState extends State<ProfileView> {
                   builder: (context, state) {
                     String driverType = state is DriversStateManager
                         ? "Manager"
-                        : GetIt.I<UserCubit>().user.hasManager
+                        : currentUser().hasManager
                             ? "Supervised"
                             : "Independent";
 

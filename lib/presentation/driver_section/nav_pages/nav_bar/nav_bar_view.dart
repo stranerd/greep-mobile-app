@@ -26,7 +26,8 @@ import '../../customer/customer_page.dart';
 import '../../home_page.dart';
 import '../../transaction/view_transactions.dart';
 import '../settings/home_page.dart';
-import 'nav_bar_viewmodel.dart';
+import 'nav_bar_viewmodel.dart';import 'package:grip/application/user/utils/get_current_user.dart';
+
 
 class NavBarView extends StatefulWidget {
   const NavBarView({Key? key}) : super(key: key);
@@ -60,7 +61,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService{
         BlocListener<NewManagerAcceptsCubit, NewManagerAcceptsState>(
           listener: (context, state) async {
             if (state is NewManagerAcceptsStateAccepted) {
-              FirebaseApi.clearManagerAccepts(GetIt.I<UserCubit>().user.id);
+              FirebaseApi.clearManagerAccepts(currentUser().id);
               Future.delayed(const Duration(seconds: 2), () {
                 success = "Driver accepted request";
                 GetIt.I<UserCubit>().fetchUser();

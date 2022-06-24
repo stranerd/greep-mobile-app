@@ -5,6 +5,8 @@ import 'package:get_it/get_it.dart';
 import 'package:grip/application/user/user_crud_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/Utils/input_validator.dart';
+import 'package:grip/application/user/utils/get_current_user.dart';
+
 import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/presentation/widgets/form_input_bg_widget.dart';
@@ -179,14 +181,14 @@ class _AddDriverScreenState extends State<AddDriverScreen> with ScaffoldMessenge
 
   void _addDriver() {
     if (formKey.currentState!.validate()){
-      if (GetIt.I<UserCubit>().userId! == _driverId){
+      if (currentUser().id == _driverId){
         error = "You cannot add yourself";
         return;
       }
 
       _userCrudCubit.addDriver(
-          managerId: GetIt.I<UserCubit>().userId!,
-          managerName: GetIt.I<UserCubit>().user.fullName,
+          managerId: currentUser().id,
+          managerName: currentUser().fullName,
           driverId: _driverId, commission: _commission/100);
     }
   }

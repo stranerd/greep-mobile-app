@@ -4,6 +4,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:grip/application/user/utils/get_current_user.dart';
+
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/user/request/EditUserRequest.dart';
 import 'package:grip/application/user/user_crud_cubit.dart';
@@ -42,7 +44,7 @@ class _EditProfileState extends State<EditProfile>
   @override
   void initState() {
     _userCrudCubit = GetIt.I<UserCrudCubit>();
-    user = GetIt.I<UserCubit>().user;
+    user = currentUser();
     _firstNameController = TextEditingController()..text = user.firstName;
     _lastNameController = TextEditingController()..text = user.lastName;
 

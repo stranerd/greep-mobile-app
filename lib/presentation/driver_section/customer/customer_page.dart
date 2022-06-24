@@ -7,6 +7,8 @@ import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/application/driver/drivers_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/application/user/utils/get_current_user.dart';
+
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
 import 'package:grip/presentation/widgets/driver_selector_widget.dart';
@@ -92,7 +94,7 @@ class _CustomerViewState extends State<CustomerView> {
                             style: AppTextStyles.blackSizeBold16,
                           ),
                         ): Text(
-                    driverState.selectedUser == GetIt.I<UserCubit>().user ?'Your customers': "${driverState.selectedUser.firstName} customers",
+                    driverState.selectedUser == currentUser() ?'Your customers': "${driverState.selectedUser.firstName} customers",
                     style: AppTextStyles.blackSizeBold16,
                     ),
 

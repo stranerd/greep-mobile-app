@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:grip/application/user/utils/get_current_user.dart';
+
 import 'package:grip/application/transactions/response/transaction_summary.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
@@ -50,7 +52,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
   Widget build(BuildContext context) {
     return BlocBuilder<UserCubit, UserState>(
       builder: (context, userState) {
-        var userId = GetIt.I<UserCubit>().userId!;
+        var userId = currentUser().id;
 
         return Scaffold(
             backgroundColor: Colors.white,
@@ -114,9 +116,9 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                                     : ""),
                                         child: const Text(""),
                                       ),
-                                    ): Text(driverState is DriversStateManager ? driverState.selectedUser ==  GetIt.I<UserCubit>().user ?"Your activity" : "${driverState.selectedUser.firstName} Activities":"", style: AppTextStyles.blackSizeBold16),
+                                    ): Text(driverState is DriversStateManager ? driverState.selectedUser ==  currentUser() ?"Your activity" : "${driverState.selectedUser.firstName} Activities":"", style: AppTextStyles.blackSizeBold16),
 
-                                    if (driverState is DriversStateFetched && driverState.selectedUser == GetIt.I<UserCubit>().user)LayoutBuilder(
+                                    if (driverState is DriversStateFetched && driverState.selectedUser == currentUser())LayoutBuilder(
                                         builder: (context, constraints) {
                                       return Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,

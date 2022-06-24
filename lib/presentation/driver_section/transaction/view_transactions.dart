@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:grip/application/user/utils/get_current_user.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -114,7 +116,7 @@ class _TransactionViewState extends State<TransactionView> {
                               style: AppTextStyles.blackSizeBold16,
                             ),
                           ): Text(
-                            driverState.selectedUser == GetIt.I<UserCubit>().user ?'Your transactions': "${driverState.selectedUser.firstName} transactions",
+                            driverState.selectedUser == currentUser() ?'Your transactions': "${driverState.selectedUser.firstName} transactions",
                             style: AppTextStyles.blackSizeBold16,
                           ),
 
@@ -290,7 +292,7 @@ class _TransactionViewState extends State<TransactionView> {
                                   enabled: from != null && to != null,
                                   onSubmit: (){
                                 Get.to(() => Range(
-                                  userId: GetIt.I<UserCubit>().userId!,
+                                  userId: currentUser().id,
                                   from: from!,
                                   to: to!,
                                 ));
