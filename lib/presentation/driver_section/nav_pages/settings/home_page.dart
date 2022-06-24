@@ -9,7 +9,7 @@ import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/presentation/driver_section/add_driver_screen.dart';
 import 'package:grip/presentation/driver_section/drivers/drivers_screen.dart';
-import 'package:grip/presentation/manager_section/widgets/settings_home_item.dart';
+import 'package:grip/presentation/driver_section/widgets/settings_home_item.dart';
 import 'package:grip/presentation/splash/splash.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
 import 'package:grip/utils/constants/app_styles.dart';
@@ -29,7 +29,7 @@ class SettingsHome extends StatelessWidget {
       listener: (context, state) {
         if (state is AuthenticationStateNotAuthenticated) {
           Get.offAll(
-            () => const SplashScreen(),
+                () => const SplashScreen(),
           );
         }
       },
@@ -64,20 +64,32 @@ class SettingsHome extends StatelessWidget {
                           title: "Account", icon: "assets/icons/person.svg"),
                     ),
                     const SizedBox(height: 8),
-                    SplashTap(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const DriversScreen(),
-                          ),
+                    BlocBuilder<UserCubit, UserState>(
+                      builder: (context, state) {
+                        if (state is UserStateFetched && state.user.hasManager) {
+                          return Container();
+                        }
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SplashTap(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const DriversScreen(),
+                                  ),
+                                );
+                              },
+                              child: const SettingsHomeItem(
+                                  title: "Drivers",
+                                  icon: "assets/icons/local_taxi.svg"),
+                            ),
+                            kVerticalSpaceSmall,
+                          ],
                         );
                       },
-                      child: const SettingsHomeItem(
-                          title: "Drivers",
-                          icon: "assets/icons/local_taxi.svg"),
                     ),
-                    kVerticalSpaceSmall,
                     BlocBuilder<DriversCubit, DriversState>(
                       builder: (context, state) {
                         if (state is DriversStateManager) {
@@ -90,7 +102,7 @@ class SettingsHome extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const CommissionHome(),
+                                      const CommissionHome(),
                                     ),
                                   );
                                 },
@@ -118,7 +130,7 @@ class SettingsHome extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const CommissionHome(),
+                                      const CommissionHome(),
                                     ),
                                   );
                                 },

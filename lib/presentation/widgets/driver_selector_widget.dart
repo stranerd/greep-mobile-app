@@ -7,7 +7,6 @@ import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/user/model/User.dart';
 import 'package:grip/presentation/driver_section/add_driver_screen.dart';
-import 'package:grip/presentation/splash_screen.dart';
 import 'package:grip/presentation/widgets/driver_item_widget.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
 import 'package:grip/utils/constants/app_styles.dart';
