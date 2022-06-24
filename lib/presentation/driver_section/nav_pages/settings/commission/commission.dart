@@ -35,7 +35,7 @@ class CommissionHome extends StatelessWidget {
             "Commission",
             style: AppTextStyles.blackSizeBold14,
           ),
-          centerTitle: true,
+          centerTitle: false,
           elevation: 0.0,
         ),
         body: SingleChildScrollView(

@@ -35,7 +35,7 @@ class TotalIncome extends StatelessWidget {
             "Total Income",
             style: AppTextStyles.blackSizeBold14,
           ),
-          centerTitle: true,
+          centerTitle: false,
           elevation: 0.0,
         ),
         body: SingleChildScrollView(

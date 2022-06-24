@@ -83,7 +83,7 @@ class _EditProfileState extends State<EditProfile>
                 "Edit Account",
                 style: AppTextStyles.blackSizeBold14,
               ),
-              centerTitle: true,
+              centerTitle: false,
               elevation: 0.0,
             ),
             body: SingleChildScrollView(

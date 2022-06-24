@@ -22,7 +22,7 @@ class AboutHome extends StatelessWidget {
           "About",
           style: AppTextStyles.blackSizeBold14,
         ),
-        centerTitle: true,
+        centerTitle: false,
         elevation: 0.0,
       ),
       body: SingleChildScrollView(

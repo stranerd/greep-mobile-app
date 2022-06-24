@@ -63,7 +63,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                 'Greep',
                 style: AppTextStyles.blackSizeBold16,
               ),
-              centerTitle: true,
+              centerTitle: false,
               elevation: 0.0,
             ),
             body: BlocConsumer<UserTransactionsCubit, UserTransactionsState>(

@@ -25,7 +25,7 @@ class ViewExpense extends StatelessWidget {
           'Transaction details',
           style: AppTextStyles.blackSizeBold14,
         ),
-        centerTitle: true,
+        centerTitle: false,
         elevation: 0.0,
       ),
       body: SingleChildScrollView(

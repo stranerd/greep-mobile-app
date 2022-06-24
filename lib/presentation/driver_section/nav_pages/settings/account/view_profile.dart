@@ -71,7 +71,7 @@ class _ProfileViewState extends State<ProfileView> {
               icon: SvgPicture.asset("assets/icons/edit-icon.svg"),
             ),
           ],
-          centerTitle: true,
+          centerTitle: false,
           elevation: 0.0,
         ),
         body: Padding(

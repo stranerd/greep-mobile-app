@@ -2,13 +2,11 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:grip/application/driver/drivers_cubit.dart';
 import 'package:grip/application/driver/manager_drivers_cubit.dart';
 import 'package:grip/application/transactions/response/commission_summary.dart';
-import 'package:grip/application/transactions/transaction_crud_cubit.dart';
 import 'package:grip/application/transactions/response/transaction_summary.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
-import 'package:grip/application/driver/drivers_cubit.dart';
-import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/application/user/utils/get_current_user.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
@@ -285,7 +283,10 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
       });
     }
 
-    return map;
+    return map.map((key, value) {
+      value.transactions.sort((a,b) => b.timeAdded.compareTo(a.timeAdded));
+      return MapEntry(key, value);
+    });
   }
 
   Map<DateTime, CommissionSummary> getManagerTotalMonthlyCommissions() {
