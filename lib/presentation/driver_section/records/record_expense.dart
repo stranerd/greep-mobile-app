@@ -29,8 +29,6 @@ class _RecordExpenseState extends State<RecordExpense> with ScaffoldMessengerSer
   String _description = "";
   List<String> expenseList = [];
   late TextEditingController _expenseNameController;
-
-
   late TransactionCrudCubit _transactionCrudCubit;
 
   DateTime? recordDate;
