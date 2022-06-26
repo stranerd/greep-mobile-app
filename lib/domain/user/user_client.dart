@@ -124,7 +124,7 @@ class UserClient {
     } catch (e) {
       print("Exception $e");
       return ResponseEntity.Error(
-          "An error occurred logging you in. Try again");
+          "An error occurred fetching driver. Try again");
     }
   }
 

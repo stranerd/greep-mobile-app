@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/SignupCubit.dart';
+import 'package:grip/application/customers/user_customers_cubit.dart';
 import 'package:grip/application/driver/manager_drivers_cubit.dart';
 import 'package:grip/application/driver/new_manager_accepts_cubit.dart';
 import 'package:grip/application/driver/new_manager_requests_cubit.dart';
@@ -14,6 +15,8 @@ import 'package:grip/application/user/user_crud_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/domain/auth/AuthenticationClient.dart';
 import 'package:grip/domain/auth/AuthenticationService.dart';
+import 'package:grip/domain/customer/customer_client.dart';
+import 'package:grip/domain/customer/customer_service.dart';
 import 'package:grip/domain/transaction/transaction_client.dart';
 import 'package:grip/domain/transaction/transaction_service.dart';
 import 'package:grip/domain/user/UserService.dart';
@@ -32,6 +35,8 @@ class IoC {
   late ManagerRequestsCubit _managerRequestsCubit;
   late NewManagerRequestsCubit _newManagerRequestsCubit;
   late ManagerDriversCubit _managerDriversCubit;
+  late CustomerService _customerService;
+  late UserCustomersCubit _userCustomersCubit;
   late NewManagerAcceptsCubit _newManagerAcceptsCubit;
   var getIt = GetIt.instance;
 
@@ -42,6 +47,7 @@ class IoC {
     _userService = UserService(UserClient());
     _userCubit = UserCubit(
         authenticationCubit: _authenticationCubit, userService: _userService);
+    _customerService = CustomerService(CustomerClient());
     _driversCubit =
         DriversCubit(userCubit: _userCubit, userService: _userService);
     _transactionService = TransactionService(TransactionClient());
@@ -68,6 +74,8 @@ class IoC {
       driversCubit: _driversCubit,
       userService: _userService,
     );
+
+    _userCustomersCubit = UserCustomersCubit(customerService: _customerService, transactionsCubit: _userTransactionsCubit);
 
     getIt.registerLazySingleton(() => _authenticationCubit);
     getIt.registerSingleton(_authenticationService);
