@@ -9,6 +9,7 @@ class SubmitButton extends StatelessWidget {
   final bool enabled;
   final bool isLoading;
   final double borderRadius;
+  final double padding;
   final double fontSize;
   final TextStyle? textStyle;
   final Color? backgroundColor;
@@ -19,6 +20,7 @@ class SubmitButton extends StatelessWidget {
         this.borderRadius = kDefaultSpacing * 0.3,
       required this.text,
       this.fontSize = 22,
+        this.padding = kDefaultSpacing,
       required this.onSubmit,
         this.backgroundColor,
         this.textStyle,
@@ -33,7 +35,7 @@ class SubmitButton extends StatelessWidget {
         onTap: enabled ? onSubmit : null,
         child: Container(
           width: constraints.maxWidth,
-          padding: const EdgeInsets.all(kDefaultSpacing),
+          padding: EdgeInsets.all(padding),
           decoration: BoxDecoration(
             borderRadius:  BorderRadius.all(Radius.circular(borderRadius)),
             color: enabled ? bgcolor : bgcolor.withOpacity(0.3),

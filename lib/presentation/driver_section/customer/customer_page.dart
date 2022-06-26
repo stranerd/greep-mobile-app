@@ -49,7 +49,7 @@ class _CustomerViewState extends State<CustomerView> {
               setState(() {
                 transactions =
                     GetIt.I<CustomerStatisticsCubit>()
-                        .getDebtTransactions();
+                        .getCustomerTransactions();
               });
             }
           },

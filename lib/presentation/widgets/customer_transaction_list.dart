@@ -16,7 +16,7 @@ class CustomerTransactionListWidget extends StatelessWidget {
  return BlocBuilder<CustomerStatisticsCubit, CustomerStatisticsState>(
   builder: (context, state) {
     if (state is CustomerStatisticsStateDone){
-      List<Transaction> transactions  = GetIt.I<CustomerStatisticsCubit>().getDebtTransactions().take(3).toList();
+      List<Transaction> transactions  = GetIt.I<CustomerStatisticsCubit>().getCustomerTransactions().take(3).toList();
       if (transactions.isEmpty) return const EmptyResultWidget(text: "No Customer transactions");
 
       return LayoutBuilder(builder: (c,cs){

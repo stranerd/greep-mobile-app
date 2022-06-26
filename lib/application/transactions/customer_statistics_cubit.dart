@@ -17,7 +17,6 @@ import 'package:meta/meta.dart';
 part 'customer_statistics_state.dart';
 
 class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
-
   final UserTransactionsCubit transactionsCubit;
 
   final AuthenticationCubit authenticationCubit;
@@ -36,7 +35,9 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
       _customerTransactions;
 
   CustomerStatisticsCubit(
-      {required this.transactionsCubit, required this.driversCubit, required this.authenticationCubit})
+      {required this.transactionsCubit,
+      required this.driversCubit,
+      required this.authenticationCubit})
       : super(CustomerStatisticsInitial()) {
     _authSubscription = authenticationCubit.stream.listen((event) {
       if (event is AuthenticationStateNotAuthenticated) {
@@ -54,18 +55,17 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
 
   void _calculateStatistics() {
     emit(CustomerStatisticsStateLoading());
-    _customerTransactions = _transactions.map((key, value) =>
-        MapEntry(
-            key,
-            value.where((element) =>
-            element.data.transactionType == TransactionType.trip ||
+    _customerTransactions = _transactions.map((key, value) => MapEntry(
+        key,
+        value
+            .where((element) =>
+                element.data.transactionType == TransactionType.trip ||
                 element.data.transactionType == TransactionType.balance)
-                .toList()));
+            .toList()));
     emit(CustomerStatisticsStateDone());
-
   }
 
-  List<Transaction> getDebtTransactions() {
+  List<Transaction> getCustomerTransactions() {
     String userId = driversCubit.selectedUser.id;
     if (_customerTransactions[userId] == null ||
         _customerTransactions[userId]!.isEmpty) {
@@ -75,12 +75,49 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
 
     for (var element in _customerTransactions[userId]!) {
       var customerName = element.data.customerName!.toLowerCase().trim();
-      if (trans[customerName] ==null){
-      trans.putIfAbsent(customerName, () => element);
-    }
+      if (trans[customerName] == null) {
+        trans.putIfAbsent(customerName, () => element);
+      }
     }
 
     return trans.values.toList();
+  }
+
+  List<Transaction> getDebtTransactions(
+      {required bool toPay, required bool toCollect, required String customer}) {
+    List<Transaction> trans = [];
+    String userId = GetIt.I<UserCubit>().userId!;
+    if (_customerTransactions[userId] == null ||
+        _customerTransactions[userId]!.isEmpty) {
+      return [];
+    } else {
+      trans = [..._customerTransactions[userId]!.where((element) => element.data.customerName!.toLowerCase() == customer.toLowerCase())];
+    }
+    // for (var element in trans) {
+    //   print(element);
+    // }
+
+    if (!toPay && !toCollect) {
+      return const [];
+    }
+
+    if (toPay && !toCollect) {
+      trans = trans.where((element) {
+        return element.credit > 0;
+      }).toList();
+
+    } else if (!toPay && toCollect) {
+      trans = trans.where((element) {
+        return element.debt > 0;
+      }).toList();
+
+    } else {
+      trans = trans.where((element) {
+        return element.credit > 0 || element.debt > 0;
+      }).toList();
+    }
+    print(trans.length);
+    return trans;
   }
 
   Transaction? getByParentBalance(String parentId) {
@@ -90,8 +127,8 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
       return null;
     }
     List<Transaction> transactions = _customerTransactions[userId]!;
-    Transaction? transaction = transactions.firstWhereOrNull((
-        element) => element.id == parentId);
+    Transaction? transaction =
+        transactions.firstWhereOrNull((element) => element.id == parentId);
     return transaction;
   }
 
@@ -102,35 +139,40 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
       return CustomerSummary.Zero(name);
     }
     List<Transaction> _transactions = _customerTransactions[userId]!;
-    List<Transaction> _custTransactions = _transactions.where((e) =>
-    e.data.transactionType == TransactionType.trip &&
-        e.data.customerName!.toLowerCase() == name.toLowerCase()).toList();
+    List<Transaction> _custTransactions = _transactions
+        .where((e) =>
+            e.data.transactionType == TransactionType.trip &&
+            e.data.customerName!.toLowerCase() == name.toLowerCase())
+        .toList();
 
-    return CustomerSummary(name: name,
-        totalPaid: _custTransactions.map((e) => e.amount).reduce((value,
-            element) => value + value),
-        toPay: _custTransactions.map((e) => e.debt).reduce((value,
-            element) {
-          value = value;
-          element = element;
-          return element + value;
-        }),
-        transactions: _custTransactions,
-        toCollect: _custTransactions.map((e) => e.credit).reduce((value,
-            element) {
-          value = value;
-          element = element;
-          return element + value;
-        }),);
+    return CustomerSummary(
+      name: name,
+      totalPaid: _custTransactions
+          .map((e) => e.amount)
+          .reduce((value, element) => value + value),
+      toPay: _custTransactions.map((e) => e.debt).reduce((value, element) {
+        value = value;
+        element = element;
+        return element + value;
+      }),
+      transactions: _custTransactions,
+      toCollect:
+          _custTransactions.map((e) => e.credit).reduce((value, element) {
+        value = value;
+        element = element;
+        return element + value;
+      }),
+    );
   }
 
-  List<String> getUserCustomers(){
+  List<String> getUserCustomers() {
     String userId = currentUser().id;
     if (_customerTransactions[userId] == null ||
         _customerTransactions[userId]!.isEmpty) {
       return [];
     }
-    Set<String> customerNames = _customerTransactions[userId]!.map((e) => e.data.customerName!).toSet();
+    Set<String> customerNames =
+        _customerTransactions[userId]!.map((e) => e.data.customerName!).toSet();
     return customerNames.toList();
   }
 

@@ -160,6 +160,7 @@ class TransactionClient {
         } catch (_) {}
       }
       dynamic error = e.response!.data;
+      print(error);
       String message = "";
       if (error == null) {
         message = "An error occurred adding transactions. Try again";

@@ -57,9 +57,10 @@ class Transaction extends Equatable {
     );
   }
 
+
   @override
   String toString() {
-    return 'Transaction{driverId: $driverId, id: $id, managerId: $managerId, amount: $amount, description: $description, timeAdded: $timeAdded, timeCreated: $timeCreated, timeUpdated: $timeUpdated, data: $data}';
+    return 'Transaction{driverId: $driverId, id: $id, managerId: $managerId, amount: $amount, description: $description, timeAdded: $timeAdded, timeCreated: $timeCreated, timeUpdated: $timeUpdated, debt: $debt, credit: $credit, data: $data}';
   }
 
   @override
