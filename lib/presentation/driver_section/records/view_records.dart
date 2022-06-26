@@ -84,11 +84,11 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                   unselectedLabelStyle: AppTextStyles.blackSize12,
                   tabs: const [
                     Tab(
-                      height: 40,
+                      height: 35,
                       text: 'Recent',
                     ),
                     Tab(
-                      height: 40,
+                      height: 35,
                       text: 'All time',
                     ),
                   ],

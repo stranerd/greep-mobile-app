@@ -71,28 +71,27 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
       return from.isBefore(element.timeAdded) && to.isAfter(element.timeAdded);
     }).toList();
 
-    num amount = filteredTrans.isNotEmpty
-        ? filteredTrans
-            .map((e) => e.amount)
-            .reduce((value, element) => value + element)
-        : 0;
-    num trips = filteredTrans.isNotEmpty
-        ? filteredTrans
-            .map((e) => e.data)
-            .where((element) => element.transactionType == TransactionType.trip)
-            .length
-        : 0;
-    num expenses = filteredTrans.isNotEmpty
-        ? filteredTrans
-            .map((e) => e.data)
-            .where(
-                (element) => element.transactionType == TransactionType.expense)
-            .length
-        : 0;
+    var expenses = filteredTrans.where(
+            (element) => element.data.transactionType == TransactionType.expense);
+    num totalExpenses = expenses.isEmpty
+        ? 0
+        : expenses
+        .map((e) => e.amount)
+        .reduce((value, element) => value + element);
+
+    var trips = filteredTrans.where(
+            (element) => element.data.transactionType == TransactionType.trip);
+    num totalIncome = trips.isEmpty
+        ? 0
+        : trips
+        .map((e) => e.amount)
+        .reduce((value, element) => value + element);
+
+
     transactionSummary = TransactionSummary(
-        amount: amount,
-        trips: trips,
-        expenses: expenses,
+        amount: totalIncome < totalExpenses ? 0 : totalIncome  -totalExpenses,
+        trips: trips.length,
+        expenses: expenses.length,
         transactions: filteredTrans);
     return transactionSummary;
   }

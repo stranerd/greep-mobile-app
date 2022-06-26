@@ -58,11 +58,11 @@ class CommissionHome extends StatelessWidget {
                     unselectedLabelStyle: AppTextStyles.blackSize12,
                     tabs: const [
                       Tab(
-                        height: 40,
+                        height: 35,
                         text: 'Daily',
                       ),
                       Tab(
-                        height: 40,
+                        height: 35,
                         text: 'Monthly',
                       ),
                     ],

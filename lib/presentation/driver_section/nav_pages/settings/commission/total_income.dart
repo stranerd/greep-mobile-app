@@ -24,6 +24,17 @@ class TotalIncome extends StatelessWidget {
       length: 2,
       child: Scaffold(
         backgroundColor: Colors.white,
+        bottomNavigationBar: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: kDefaultSpacing * 0.5,
+            vertical: kDefaultSpacing
+          ),
+          child: Text(
+            "Total income = Your income + Your drivers income",
+            style: kDefaultTextStyle.copyWith(fontSize: 13),
+            textAlign: TextAlign.center,
+          ),
+        ),
         appBar: AppBar(
           backgroundColor: Colors.white,
           leading: IconButton(
@@ -57,12 +68,11 @@ class TotalIncome extends StatelessWidget {
                   unselectedLabelStyle: AppTextStyles.blackSize12,
                   tabs: const [
                     Tab(
-                      height: 40,
-
+                      height: 35,
                       text: 'Daily',
                     ),
                     Tab(
-                      height: 40,
+                      height: 35,
                       text: 'Monthly',
                     ),
                   ],
@@ -90,36 +100,43 @@ class TotalIncome extends StatelessWidget {
                                   GetIt.I<TransactionSummaryCubit>()
                                       .getManagerTotalDailyCommissions();
                               return ListView.separated(
-                                separatorBuilder: (_,__) => kVerticalSpaceRegular,
+                                  separatorBuilder: (_, __) =>
+                                      kVerticalSpaceRegular,
                                   itemCount: commissions.length,
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder: (c, i) {
-                                    CommissionSummary summary = commissions[commissions.keys.toList()[i]]!;
-                                    return CommissionSummaryItem(commissionSummary: summary);
+                                    CommissionSummary summary = commissions[
+                                        commissions.keys.toList()[i]]!;
+                                    return CommissionSummaryItem(
+                                        commissionSummary: summary);
                                   });
                             }),
                           ],
                         ),
-                    ListView(
-                      shrinkWrap: true,
-                      physics: const ScrollPhysics(),
-                      children: [
-                        Builder(builder: (context) {
-                          Map<DateTime, CommissionSummary> commissions =
-                          GetIt.I<TransactionSummaryCubit>()
-                              .getManagerTotalMonthlyCommissions();
-                          return ListView.separated(
-                              separatorBuilder: (_,__) => kVerticalSpaceRegular,
-                              itemCount: commissions.length,
-                              shrinkWrap: true,
-                              itemBuilder: (c, i) {
-                                CommissionSummary summary = commissions[commissions.keys.toList()[i]]!;
-                         return CommissionSummaryItem(commissionSummary: summary,isMonthly:true);
-                        });})
-                      ],
-                    ),
-
+                        ListView(
+                          shrinkWrap: true,
+                          physics: const ScrollPhysics(),
+                          children: [
+                            Builder(builder: (context) {
+                              Map<DateTime, CommissionSummary> commissions =
+                                  GetIt.I<TransactionSummaryCubit>()
+                                      .getManagerTotalMonthlyCommissions();
+                              return ListView.separated(
+                                  separatorBuilder: (_, __) =>
+                                      kVerticalSpaceRegular,
+                                  itemCount: commissions.length,
+                                  shrinkWrap: true,
+                                  itemBuilder: (c, i) {
+                                    CommissionSummary summary = commissions[
+                                        commissions.keys.toList()[i]]!;
+                                    return CommissionSummaryItem(
+                                        commissionSummary: summary,
+                                        isMonthly: true);
+                                  });
+                            })
+                          ],
+                        ),
                       ],
                     ),
                   );

@@ -134,11 +134,11 @@ class _TransactionViewState extends State<TransactionView> {
                       unselectedLabelStyle: AppTextStyles.blackSize12,
                       tabs: const [
                         Tab(
-                          height: 40,
+                          height: 30,
                           text: 'Recent',
                         ),
                         Tab(
-                          height: 40,
+                          height: 30,
                           text: 'Range',
                         ),
                       ],
