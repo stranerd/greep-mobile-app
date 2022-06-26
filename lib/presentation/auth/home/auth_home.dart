@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/AuthenticationState.dart';
 import 'package:grip/application/auth/SignupCubit.dart';
@@ -250,7 +251,9 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
                           ),
                           kVerticalSpaceRegular,
                           SocialSigninWidget(
-                            onTap: () {},
+                            onTap: () {
+                              GetIt.I<AuthenticationCubit>().signinWithGoogle();
+                            },
                             text: "Google",
                             icon: "assets/icons/google.png",
                           ),

@@ -1,36 +1,30 @@
+import 'dart:convert';
+
 class GoogleSigninRequest {
-  final String email;
-  final String uuid;
-  final String? displayName;
-  final String? photoUrl;
-  final String? phoneNumber;
+  final String accessToken;
+  final String idToken;
+
 
   const GoogleSigninRequest({
-    required this.email,
-    required this.uuid,
-    required this.displayName,
-    required this.photoUrl,
-    required this.phoneNumber,
+    required this.accessToken,
+    required this.idToken,
   });
 
-  factory GoogleSigninRequest.fromMap(Map<String, dynamic> map) {
-    return new GoogleSigninRequest(
-      email: map['email'] as String,
-      uuid: map['uuid'] as String,
-      displayName: map['displayName'] as String?,
-      photoUrl: map['photoUrl'] as String?,
-      phoneNumber: map['phoneNumber'] as String?,
-    );
+  String toJson(){
+    return jsonEncode(toMap());
   }
 
   Map<String, dynamic> toMap() {
-    // ignore: unnecessary_cast
     return {
-      'email': this.email,
-      'uuid': this.uuid,
-      'displayName': this.displayName,
-      'photoUrl': this.photoUrl,
-      'phoneNumber': this.phoneNumber,
-    } as Map<String, dynamic>;
+      'accessToken': this.accessToken,
+      'idToken': this.idToken,
+    };
+  }
+
+  factory GoogleSigninRequest.fromMap(Map<String, dynamic> map) {
+    return GoogleSigninRequest(
+      accessToken: map['accessToken'] as String,
+      idToken: map['idToken'] as String,
+    );
   }
 }

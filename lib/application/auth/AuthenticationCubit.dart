@@ -32,6 +32,17 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     }
   }
 
+  void signinWithGoogle()async{
+    var response = await authenticationService.initiateGoogleSignin();
+    if (response.isError){
+      emit(AuthenticationStateError(response.errorMessage??""));
+
+    }
+    else {
+      emit(AuthenticationStateAuthenticated(token: response.data["token"], userId: response.data["id"]));
+    }
+  }
+
   // Check if authentication is still valid on previous app usage
   Future<bool> checkAuth() async {
     Map<String, dynamic> token = await authStore.getAuthToken();
@@ -79,6 +90,8 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     // set firebase token to null
     emit(AuthenticationStateLoading());
     await authenticationService.logout();
+    authenticationService.googleSignout();
+
     Future.delayed(Duration(seconds: 1), () {
       emit(AuthenticationStateNotAuthenticated());
     });

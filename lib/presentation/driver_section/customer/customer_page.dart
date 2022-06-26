@@ -71,7 +71,7 @@ class _CustomerViewState extends State<CustomerView> {
             'Greep',
             style: AppTextStyles.blackSizeBold16,
           ),
-          centerTitle: false,
+          centerTitle: true,
           elevation: 0.0,
         ),
         body: Padding(

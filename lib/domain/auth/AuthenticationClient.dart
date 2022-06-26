@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:grip/application/auth/request/GoogleSigninRequest.dart';
 import 'package:grip/application/auth/request/LoginRequest.dart';
 import 'package:grip/application/auth/request/SignupRequest.dart';
 import 'package:grip/application/dio_config.dart';
@@ -37,6 +38,42 @@ class AuthenticationClient {
       if (e.type == DioErrorType.response) {
         return ResponseEntity.Error(
             e.response!.data[0]["message"] ?? "Incorrect Credentials");
+      }
+
+      return ResponseEntity.Error("Incorrect credentials");
+    } catch (e) {
+      print("Exception $e");
+      return ResponseEntity.Error(
+          "An error occurred logging you in. Try again");
+    }
+  }
+
+  Future<ResponseEntity<Map<String,dynamic>>> googleLogin(GoogleSigninRequest request) async {
+    print("signing up with Google");
+    final Dio dio = Dio();
+    Response response;
+    try {
+      response = await dio.post(
+        "${baseApi}auth/identities/google",
+        data: request.toJson(),
+      );
+
+      print("response from google signin ${response.data}");
+      return ResponseEntity.Data({
+        "id": response.data["user"]["id"],
+        "token": response.data["accessToken"],
+        "refreshToken": response.data["refreshToken"],
+      });
+    } on DioError catch (e) {
+      if (e.type == DioErrorType.connectTimeout) {
+        return ResponseEntity.Timeout();
+      }
+      if (e.error is SocketException) {
+        return ResponseEntity.Socket();
+      }
+      if (e.type == DioErrorType.response) {
+        return ResponseEntity.Error(
+            e.response!.data[0]["message"] ?? "An error occurred. Please try again");
       }
 
       return ResponseEntity.Error("Incorrect credentials");
