@@ -25,6 +25,12 @@ class AddBalanceRequest {
     };
   }
 
+
+  @override
+  String toString() {
+    return 'AddBalanceRequest{customerId: $customerId, description: $description, amount: $amount, dateRecorded: $dateRecorded}';
+  }
+
   String toJson(){
     return jsonEncode(toServer());
   }

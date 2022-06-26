@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:grip/application/customers/user_customers_cubit.dart';
+import 'package:grip/application/driver/drivers_cubit.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/application/transactions/response/customer_summary.dart';
 import 'package:grip/application/transactions/transaction_crud_cubit.dart';
+import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
+import 'package:grip/application/user/utils/get_current_user.dart';
 import 'package:grip/commons/money.dart';
 import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/domain/customer/customer.dart';
 import 'package:grip/presentation/widgets/transaction_balance_widget.dart';
 
 import '../../../utils/constants/app_colors.dart';
@@ -25,23 +31,35 @@ class CustomerDetails extends StatefulWidget {
 }
 
 class _CustomerDetailsState extends State<CustomerDetails> {
-  late TransactionCrudCubit _transactionCrudCubit;
 
   List<String> paymentTypes = [];
   final formKey = GlobalKey<FormState>();
   late CustomerSummary _customerSummary;
+  Customer? customer;
 
   @override
   void initState() {
-    _transactionCrudCubit = GetIt.I<TransactionCrudCubit>();
     _customerSummary =
         GetIt.I<CustomerStatisticsCubit>().getCustomerSummary(widget.name);
+
+    customer =
+        GetIt.I<UserCustomersCubit>().getCustomerByName(widget.name);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    num debt = customer !=null ? customer!.debt : 0;
+
+    return BlocListener<UserCustomersCubit, UserCustomersState>(
+  listener: (context, state) {
+    if (state is UserCustomersStateFetched){
+      setState(() {
+        customer = GetIt.I<UserCustomersCubit>().getCustomerByName(widget.name);
+      });
+    }
+  },
+  child: Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -64,95 +82,76 @@ class _CustomerDetailsState extends State<CustomerDetails> {
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
         child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _customerSummary.name.capitalize ?? "",
-                  style: AppTextStyles.blackSizeBold16,
-                ),
-                const SizedBox(
-                  height: 16.0,
-                ),
-                Text(
-                  "Account",
-                  style: AppTextStyles.blackSizeBold12,
-                ),
-                const SizedBox(
-                  height: 8.0,
-                ),
-                LayoutBuilder(builder: (context, constraints) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      RecordCard(
-                          width: constraints.maxWidth * 0.31,
-                          title: "N${_customerSummary.totalPaid.toMoney}",
-                          subtitle: "Total paid",
-                          titleStyle: AppTextStyles.greenSize16,
-                          subtitleStyle: AppTextStyles.blackSize12),
-                      RecordCard(
-                          width: constraints.maxWidth * 0.31,
-                          title: "N${_customerSummary.toCollect.toMoney}",
-                          subtitle: "To collect",
-                          titleStyle: AppTextStyles.blueSize16,
-                          subtitleStyle: AppTextStyles.blackSize12),
-                      RecordCard(
-                          width: constraints.maxWidth * 0.31,
-                          title: "N${_customerSummary.toPay.toMoney}",
-                          subtitle: "To pay",
-                          titleStyle: AppTextStyles.redSize16,
-                          subtitleStyle: AppTextStyles.blackSize12),
-                    ],
-                  );
-                }),
-                kVerticalSpaceRegular,
-
-                Builder(builder: (c) {
-                  var transactions = GetIt.I<CustomerStatisticsCubit>()
-                      .getDebtTransactions(toPay: true, toCollect: true,customer: widget.name);
-                  if (transactions.isEmpty) {
-                    return Container();
-                  }
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Settle last transaction",
-                        style: AppTextStyles.blackSizeBold12,
-                      ),
-                      kVerticalSpaceSmall,
-                      TransactionBalanceWidget(
-                          transaction: transactions.first,customerName: widget.name,),
-                    ],
-                  );
-                }),
-                kVerticalSpaceRegular,
-                Text("Transaction history",
-                    style: AppTextStyles.blackSizeBold12),
-                const SizedBox(
-                  height: 8.0,
-                ),
-                Column(
-                    children: _customerSummary.transactions
-                        .map(
-                          (e) => TransactionListCard(
-                            title: "Trip",
-                            subtitle: "Mar 19 . 10:54 AM",
-                            trailing: "+20\$",
-                            transaction: e,
-                            titleStyle: AppTextStyles.blackSize14,
-                            subtitleStyle: AppTextStyles.blackSize12,
-                            trailingStyle: AppTextStyles.greenSize14,
-                          ),
-                        )
-                        .toList()),
-              ],
-            ),
+          child: ListView(
+            shrinkWrap: true,
+            physics: const ScrollPhysics(),
+            children: [
+              Text(
+                _customerSummary.name.capitalize ?? "",
+                style: AppTextStyles.blackSizeBold16,
+              ),
+              const SizedBox(
+                height: 16.0,
+              ),
+              Text(
+                "Account",
+                style: AppTextStyles.blackSizeBold12,
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              LayoutBuilder(builder: (context, constraints) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    RecordCard(
+                        width: constraints.maxWidth * 0.31,
+                        title: "N${_customerSummary.totalPaid.toMoney}",
+                        subtitle: "Total paid",
+                        titleStyle: AppTextStyles.greenSize16,
+                        subtitleStyle: AppTextStyles.blackSize12),
+                    RecordCard(
+                        width: constraints.maxWidth * 0.31,
+                        title: "N${customer !=null ? debt > 0 ? debt : 0 : _customerSummary.toCollect.toMoney}",
+                        subtitle: "To collect",
+                        titleStyle: AppTextStyles.blueSize16,
+                        subtitleStyle: AppTextStyles.blackSize12),
+                    RecordCard(
+                        width: constraints.maxWidth * 0.31,
+                        title: "N${customer !=null ? debt < 0 ? debt.abs() : 0  : _customerSummary.toPay.toMoney}",
+                        subtitle: "To pay",
+                        titleStyle: AppTextStyles.redSize16,
+                        subtitleStyle: AppTextStyles.blackSize12),
+                  ],
+                );
+              }),
+              kVerticalSpaceRegular,
+              if (GetIt.I<DriversCubit>().selectedUser == currentUser())TransactionBalanceWidget(customerName: widget.name,),
+              kVerticalSpaceRegular,
+              Text("Transaction history",
+                  style: AppTextStyles.blackSizeBold12),
+              const SizedBox(
+                height: 8.0,
+              ),
+              Column(
+                  children: _customerSummary.transactions
+                      .map(
+                        (e) => TransactionListCard(
+                          title: "Trip",
+                          subtitle: "Mar 19 . 10:54 AM",
+                          trailing: "+20\$",
+                          transaction: e,
+                          titleStyle: AppTextStyles.blackSize14,
+                          subtitleStyle: AppTextStyles.blackSize12,
+                          trailingStyle: AppTextStyles.greenSize14,
+                        ),
+                      )
+                      .toList()),
+            ],
           ),
         ),
       ),
-    );
+    ),
+);
   }
 }

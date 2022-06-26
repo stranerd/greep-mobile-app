@@ -7,19 +7,14 @@ import 'package:grip/commons/Utils/input_validator.dart';
 import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/customer/customer.dart';
-import 'package:grip/domain/transaction/TransactionData.dart';
-import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/widgets/input_text_field.dart';
 import 'package:grip/presentation/widgets/submit_button.dart';
-import 'package:grip/utils/constants/app_colors.dart';
 import 'package:grip/utils/constants/app_styles.dart';
-import 'package:intl/intl.dart';
+import 'dart:math';
 
 class TransactionBalanceWidget extends StatefulWidget {
-  const TransactionBalanceWidget({Key? key, this.withDetails = true, required this.transaction, required this.customerName})
+  const TransactionBalanceWidget({Key? key, required this.customerName})
       : super(key: key);
-  final Transaction transaction;
-  final bool withDetails;
   final String customerName;
 
   @override
@@ -35,28 +30,29 @@ class _TransactionBalanceWidgetState extends State<TransactionBalanceWidget>
   late String _debtType;
   late String _debtAmount;
   Customer? customer;
+  late bool isCredit;
 
   @override
   void initState() {
-    _debtType = widget.transaction.credit > 0
-        ? "Pay"
-        : widget.transaction.debt > 0
-            ? "Collect"
-            : "Balance";
-    _debtAmount = (widget.transaction.credit > 0
-            ? widget.transaction.credit
-            : widget.transaction.debt)
-        .toString();
-
     _transactionCrudCubit = GetIt.I<TransactionCrudCubit>();
-    _amountController = TextEditingController()..text = _debtAmount;
-    customer = GetIt.I<UserCustomersCubit>().getCustomerByName(widget.customerName);
+
+    customer =
+        GetIt.I<UserCustomersCubit>().getCustomerByName(widget.customerName);
+
+    _amountController = TextEditingController();
+    if (customer != null) {
+      _amountController.text = customer!.debt.abs().toString();
+      _debtType = customer!.debt > 0 ? "Collect": "Pay";
+      setState(() {
+        isCredit = customer!.debt > 0;
+      });
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (customer==null){
+    if (customer == null || customer!.debt == 0) {
       return Container();
     }
     return BlocProvider.value(
@@ -76,27 +72,11 @@ class _TransactionBalanceWidgetState extends State<TransactionBalanceWidget>
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (widget.withDetails)Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text("${widget.transaction.data.customerName} ."),
-                          kHorizontalSpaceTiny,
-                          Text(DateFormat(
-                                  "${DateFormat.ABBR_MONTH} ${DateFormat.DAY} . hh:${DateFormat.MINUTE} a")
-                              .format(widget.transaction.timeAdded)),
-                        ],
-                      ),
-                      kVerticalSpaceTiny,
-                      Text("Trip Amount: ${widget.transaction.amount}"),
-                      kVerticalSpaceTiny,
-                      Text("Paid: ${widget.transaction.data.paidAmount}"),
-                      kVerticalSpaceRegular,
-
-                    ],
+                  Text(
+                    "Settle customer transactions",
+                    style: AppTextStyles.blackSizeBold12,
                   ),
-
+                  kVerticalSpaceSmall,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -138,7 +118,7 @@ class _TransactionBalanceWidgetState extends State<TransactionBalanceWidget>
   void transact() {
     _transactionCrudCubit.addBalance(
         customerId: customer!.id,
-        amount: num.parse(_amountController.text),
+        amount: num.parse("${isCredit?"":"-"}${_amountController.text}"),
         description: "",
         dateRecorded: DateTime.now());
   }

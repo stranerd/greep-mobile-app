@@ -63,24 +63,6 @@ class TransactionDetails extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if ((transaction.debt > 0 || transaction.credit > 0) && GetIt.I<DriversCubit>().selectedUser == currentUser())
-                        Builder(builder: (c) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Settle pending balance",
-                                style: AppTextStyles.blackSizeBold12,
-                              ),
-                              kVerticalSpaceSmall,
-                              TransactionBalanceWidget(
-                                withDetails: false,
-                                transaction: transaction,
-                                customerName: transaction.data.customerName!,
-                              )
-                            ],
-                          );
-                        }),
                       kVerticalSpaceRegular,
                       Text("Customer", style: AppTextStyles.blackSize12),
                       const SizedBox(

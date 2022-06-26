@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/SignupCubit.dart';
+import 'package:grip/application/customers/user_customers_cubit.dart';
 import 'package:grip/application/driver/manager_drivers_cubit.dart';
 import 'package:grip/application/driver/new_manager_accepts_cubit.dart';
 import 'package:grip/application/driver/new_manager_requests_cubit.dart';
@@ -88,6 +89,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider.value(
           value: GetIt.I<NewManagerAcceptsCubit>(),
+        ),
+        BlocProvider.value(
+          value: GetIt.I<UserCustomersCubit>(),
         ),
         BlocProvider.value(
           value: GetIt.I<ManagerRequestsCubit>(),

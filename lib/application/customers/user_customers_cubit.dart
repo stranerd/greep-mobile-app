@@ -53,7 +53,6 @@ class UserCustomersCubit extends Cubit<UserCustomersState> {
       ));
     } else {
       customers = response.data!;
-      print("fetched customers ${customers}");
       hasFetched = true;
       emit(UserCustomersStateFetched(customers));
     }

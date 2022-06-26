@@ -73,7 +73,6 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
     Map<String, Transaction> trans = {};
 
     for (var element in _customerTransactions[userId]!) {
-      print(element);
       var customerName = element.data.customerName!.toLowerCase().trim();
       if (trans[customerName] == null) {
         trans.putIfAbsent(customerName, () => element);
