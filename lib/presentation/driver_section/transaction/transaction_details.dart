@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:grip/application/driver/drivers_cubit.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
+import 'package:grip/application/user/utils/get_current_user.dart';
 import 'package:grip/commons/money.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/widgets/transactions_card.dart';
+import 'package:grip/presentation/widgets/transaction_balance_widget.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/constants/app_colors.dart';
@@ -23,10 +26,6 @@ class TransactionDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
-      Transaction? parentBalance;
-      if (transaction.data.transactionType == TransactionType.balance) {
-        parentBalance = GetIt.I<CustomerStatisticsCubit>().getByParentBalance(transaction.data.parentId!);
-      }
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -53,68 +52,36 @@ class TransactionDetails extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (transaction.data.transactionType ==
-                        TransactionType.balance &&
-                    parentBalance != null)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                        margin: const EdgeInsets.only(
-                            bottom: kDefaultSpacing * 0.5),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.white,
-                          border: Border.all(
-                              width: 1,
-                              color: const Color.fromRGBO(221, 226, 224, 1)),
-                        ),
-                        child: TransactionCard(
-                            title: "",
-                            transaction: parentBalance,
-                            subtitle: "",
-                            trailing: "",
-                            titleStyle: TextStyle(),
-                            subtitleStyle: const TextStyle(),
-                            trailingStyle: const TextStyle(),
-                            subTrailing: "",
-                            subTrailingStyle: const TextStyle()),
-                      ),
-                      kVerticalSpaceRegular,
-                    ],
-                  ),
                 if (transaction.data.transactionType == TransactionType.balance)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("From the trip above",
-                          style: AppTextStyles.blackSize12),
-                      const SizedBox(
-                        height: 4.0,
-                      ),
-                      Text("Price > Paid", style: AppTextStyles.blackSize16),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      Text("Therefore you have to collect",
-                          style: AppTextStyles.blackSize12),
-                      const SizedBox(
-                        height: 4.0,
-                      ),
-                      Text(
-                          "N${parentBalance!.amount.toMoney} - N${parentBalance.data.paidAmount!.toMoney} = N${(parentBalance.amount - parentBalance.data.paidAmount!).toMoney}",
-                          style: AppTextStyles.blackSize16),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
+                      kVerticalSpaceRegular,
                     ],
                   ),
                 if (transaction.data.transactionType == TransactionType.trip)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      if ((transaction.debt > 0 || transaction.credit > 0) && GetIt.I<DriversCubit>().selectedUser == currentUser())
+                        Builder(builder: (c) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Settle pending balance",
+                                style: AppTextStyles.blackSizeBold12,
+                              ),
+                              kVerticalSpaceSmall,
+                              TransactionBalanceWidget(
+                                withDetails: false,
+                                transaction: transaction,
+                                customerName: transaction.data.customerName!,
+                              )
+                            ],
+                          );
+                        }),
+                      kVerticalSpaceRegular,
                       Text("Customer", style: AppTextStyles.blackSize12),
                       const SizedBox(
                         height: 4.0,

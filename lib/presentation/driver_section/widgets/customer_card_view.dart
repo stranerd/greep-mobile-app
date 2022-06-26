@@ -51,10 +51,10 @@ class CustomerCardView extends StatelessWidget {
           fontSize: 12
       );
       if (type == TransactionType.balance) {
-        if (data.parentId == null || data.parentId!.isEmpty) {
+        if (data.customerId == null || data.customerId!.isEmpty) {
           text = "Customer";
         }
-        var transaction = GetIt.I<CustomerStatisticsCubit>().getByParentBalance(data.parentId!);
+        var transaction = GetIt.I<CustomerStatisticsCubit>().getByParentBalance(data.customerId!);
         if (transaction == null || transaction.data.customerName == null) {
           text = "Customer";
         }

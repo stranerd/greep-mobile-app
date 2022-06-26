@@ -4,7 +4,7 @@ class TransactionData {
   final PaymentType? paymentType;
   final String? customerName;
   final num? paidAmount;
-  final String? parentId;
+  final String? customerId;
 
   TransactionData(
       {required this.transactionType,
@@ -12,7 +12,7 @@ class TransactionData {
       this.paymentType,
       this.customerName,
       this.paidAmount,
-      this.parentId});
+      this.customerId});
 
   factory TransactionData.fromServer(dynamic json) {
     return TransactionData(
@@ -20,7 +20,7 @@ class TransactionData {
       name: json["name"],
       customerName: json["customerName"],
       paidAmount: json["totalAmount"],
-      parentId: json["parentId"],
+      customerId: json["customerId"],
       paymentType: json["paymentType"] == null
           ? null
           : getPaymentType(json["paymentType"]),
@@ -64,7 +64,7 @@ class TransactionData {
 
   @override
   String toString() {
-    return 'TransactionData{transactionType: $transactionType, name: $name, paymentType: $paymentType, customerName: $customerName, paidAmount: $paidAmount, parentId: $parentId}';
+    return 'TransactionData{transactionType: $transactionType, name: $name, paymentType: $paymentType, customerName: $customerName, paidAmount: $paidAmount, parentId: $customerId}';
   }
 
   Map<String, dynamic> toMap(){
@@ -82,7 +82,7 @@ class TransactionData {
 
     else if (transactionType == TransactionType.balance){
       map.addAll({
-        "parentId": parentId,
+        "parentId": customerId,
       });
     }
 

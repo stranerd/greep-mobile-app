@@ -1,7 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get_utils/get_utils.dart';
+import 'package:get_it/get_it.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
+import 'package:grip/application/user/user_cubit.dart';
+import 'package:grip/application/user/utils/get_current_user.dart';
 import 'package:grip/domain/customer/customer.dart';
 import 'package:grip/domain/customer/customer_service.dart';
 
@@ -18,14 +22,19 @@ class UserCustomersCubit extends Cubit<UserCustomersState> {
     required this.transactionsCubit,
   }) : super(UserCustomersStateUninitialized()) {
     _streamSubscription = transactionsCubit.stream.listen((event) {
-      if (event is UserTransactionsStateFetched) {
+      if (event is UserTransactionsStateFetched && event.userId == currentUser().id) {
         fetchUserCustomers(softUpdate: true);
       }
     });
   }
 
+  Customer? getCustomerByName(String customer){
+    return customers.firstWhereOrNull((element) => element.name.toLowerCase().trim() == customer.toLowerCase().trim());
+  }
+
   void fetchUserCustomers(
       {bool fullRefresh = false, bool softUpdate = true}) async {
+    print("fetching customers");
     if (!softUpdate) {
       emit(UserCustomersStateLoading());
     }
@@ -44,6 +53,7 @@ class UserCustomersCubit extends Cubit<UserCustomersState> {
       ));
     } else {
       customers = response.data!;
+      print("fetched customers ${customers}");
       hasFetched = true;
       emit(UserCustomersStateFetched(customers));
     }

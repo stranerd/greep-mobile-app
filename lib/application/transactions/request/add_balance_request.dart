@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 class AddBalanceRequest {
-  final String parentId;
+  final String customerId;
   final String description;
   final num amount;
   final DateTime dateRecorded;
 
   const AddBalanceRequest({
-    required this.parentId,
+    required this.customerId,
     required this.description,
     required this.amount,
     required this.dateRecorded,
@@ -20,7 +20,7 @@ class AddBalanceRequest {
       "recordedAt": dateRecorded.millisecondsSinceEpoch,
       "data": {
         "type": "balance",
-        "parentId": parentId,
+        "customerId": customerId,
       }
     };
   }

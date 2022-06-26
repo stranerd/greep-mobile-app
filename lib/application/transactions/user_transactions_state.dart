@@ -8,8 +8,9 @@ class UserTransactionsStateLoading extends UserTransactionsState {}
 
 class UserTransactionsStateFetched extends UserTransactionsState {
   final List<Transaction> transactions;
+  final String userId;
 
-  UserTransactionsStateFetched({required this.transactions});
+  UserTransactionsStateFetched({required this.transactions,required this.userId});
 
 }
 

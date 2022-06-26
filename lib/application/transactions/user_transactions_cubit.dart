@@ -60,9 +60,9 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
     if (!fullRefresh && !softUpdate) {
       // if there is an already loaded data plus when not a load more request, load cached data
       if (hasLoaded && transactions[requestId] != null && !loadMore) {
-        emit(UserTransactionsStateFetched(transactions: transactions[requestId]!.toList()));
+        emit(UserTransactionsStateFetched(transactions: transactions[requestId]!.toList(),userId: requestId));
 
-        return UserTransactionsStateFetched(transactions: transactions[requestId]!.toList());
+        return UserTransactionsStateFetched(transactions: transactions[requestId]!.toList(),userId: requestId);
       } else {
         // if there is no more data, just emit previous loaded data
         // else fetch new paginated data from server
@@ -98,14 +98,14 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
       if (!loadMore) {
         hasLoaded = true;
         transactions[requestId] = Set.of(newServices);
-        var stateFetched = UserTransactionsStateFetched(transactions: newServices.toList());
+        var stateFetched = UserTransactionsStateFetched(transactions: newServices.toList(),userId: requestId);
         emit(stateFetched);
         return stateFetched;
       } else {
         hasLoaded = true;
         transactions[requestId]!.addAll(newServices);
-        emit(UserTransactionsStateFetched(transactions: transactions[requestId]!.toList()));
-        return UserTransactionsStateFetched(transactions: transactions[requestId]!.toList());
+        emit(UserTransactionsStateFetched(transactions: transactions[requestId]!.toList(),userId: requestId));
+        return UserTransactionsStateFetched(transactions: transactions[requestId]!.toList(),userId: requestId);
       }
     }
   }

@@ -124,7 +124,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                       ),
                       kVerticalSpaceSmall,
                       TransactionBalanceWidget(
-                          transaction: transactions.first),
+                          transaction: transactions.first,customerName: widget.name,),
                     ],
                   );
                 }),

@@ -46,13 +46,14 @@ class TransactionCrudCubit extends Cubit<TransactionCrudState> {
     }
   }
 
-  void addBalance({required String parentId, required num amount, required String paymentType, required String description, required DateTime dateRecorded}) async {
+  void addBalance({required String customerId, required num amount, required String description, required DateTime dateRecorded}) async {
     emit(TransactionCrudStateLoading());
 
-    var response = await transactionService.addBalance(AddBalanceRequest(parentId: paymentType, description: description, amount: amount, dateRecorded: dateRecorded,));
+    var response = await transactionService.addBalance(AddBalanceRequest(customerId: customerId, description: description, amount: amount, dateRecorded: dateRecorded,));
 
     if (response.isError){
       emit(TransactionCrudStateFailure(errorMessage: response.errorMessage ?? "An error occurred"));
+      GetIt.I<UserTransactionsCubit>().fetchUserTransactions(requestId: currentUser().id,softUpdate: true);
     }
 
     else {

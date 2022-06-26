@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:grip/application/customers/user_customers_cubit.dart';
 import 'package:grip/application/transactions/transaction_crud_cubit.dart';
 import 'package:grip/commons/Utils/input_validator.dart';
 import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/domain/customer/customer.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/widgets/input_text_field.dart';
@@ -14,9 +16,11 @@ import 'package:grip/utils/constants/app_styles.dart';
 import 'package:intl/intl.dart';
 
 class TransactionBalanceWidget extends StatefulWidget {
-  const TransactionBalanceWidget({Key? key, required this.transaction})
+  const TransactionBalanceWidget({Key? key, this.withDetails = true, required this.transaction, required this.customerName})
       : super(key: key);
   final Transaction transaction;
+  final bool withDetails;
+  final String customerName;
 
   @override
   State<TransactionBalanceWidget> createState() =>
@@ -30,6 +34,7 @@ class _TransactionBalanceWidgetState extends State<TransactionBalanceWidget>
   String _amount = "";
   late String _debtType;
   late String _debtAmount;
+  Customer? customer;
 
   @override
   void initState() {
@@ -45,11 +50,15 @@ class _TransactionBalanceWidgetState extends State<TransactionBalanceWidget>
 
     _transactionCrudCubit = GetIt.I<TransactionCrudCubit>();
     _amountController = TextEditingController()..text = _debtAmount;
+    customer = GetIt.I<UserCustomersCubit>().getCustomerByName(widget.customerName);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (customer==null){
+      return Container();
+    }
     return BlocProvider.value(
       value: _transactionCrudCubit,
       child: Builder(builder: (context) {
@@ -67,20 +76,27 @@ class _TransactionBalanceWidgetState extends State<TransactionBalanceWidget>
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                  if (widget.withDetails)Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("${widget.transaction.data.customerName} ."),
-                      kHorizontalSpaceTiny,
-                      Text(DateFormat(
-                              "${DateFormat.ABBR_MONTH} ${DateFormat.DAY} . hh:${DateFormat.MINUTE} a")
-                          .format(widget.transaction.timeAdded)),
+                      Row(
+                        children: [
+                          Text("${widget.transaction.data.customerName} ."),
+                          kHorizontalSpaceTiny,
+                          Text(DateFormat(
+                                  "${DateFormat.ABBR_MONTH} ${DateFormat.DAY} . hh:${DateFormat.MINUTE} a")
+                              .format(widget.transaction.timeAdded)),
+                        ],
+                      ),
+                      kVerticalSpaceTiny,
+                      Text("Trip Amount: ${widget.transaction.amount}"),
+                      kVerticalSpaceTiny,
+                      Text("Paid: ${widget.transaction.data.paidAmount}"),
+                      kVerticalSpaceRegular,
+
                     ],
                   ),
-                  kVerticalSpaceTiny,
-                  Text("Trip Amount: ${widget.transaction.amount}"),
-                  kVerticalSpaceTiny,
-                  Text("Paid: ${widget.transaction.data.paidAmount}"),
-                  kVerticalSpaceRegular,
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -121,9 +137,8 @@ class _TransactionBalanceWidgetState extends State<TransactionBalanceWidget>
 
   void transact() {
     _transactionCrudCubit.addBalance(
-        parentId: widget.transaction.id,
+        customerId: customer!.id,
         amount: num.parse(_amountController.text),
-        paymentType: "cash",
         description: "",
         dateRecorded: DateTime.now());
   }

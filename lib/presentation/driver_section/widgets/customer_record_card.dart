@@ -60,11 +60,11 @@ class CustomerRecordCard extends StatelessWidget {
               ? kDefaultTextStyle.copyWith(fontSize: 12)
               : kDefaultTextStyle.copyWith(fontSize: 12);
       if (type == TransactionType.balance) {
-        if (data.parentId == null || data.parentId!.isEmpty) {
+        if (data.customerId == null || data.customerId!.isEmpty) {
           subText2 = "Customer";
         }
         var transaction = GetIt.I<CustomerStatisticsCubit>()
-            .getByParentBalance(data.parentId!);
+            .getByParentBalance(data.customerId!);
         if (transaction == null || transaction.data.customerName == null) {
           subText2 = "Customer";
         } else {

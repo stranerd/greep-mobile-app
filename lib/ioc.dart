@@ -101,6 +101,8 @@ class IoC {
     getIt.registerFactory(() => TransactionCrudCubit(
           transactionService: _transactionService,
         ));
+    getIt.registerSingleton(_userCustomersCubit);
+
 
     getIt.registerFactory(() => UserCrudCubit(
           userService: _userService,
