@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -233,8 +234,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
                 element.timeAdded.day));
       });
     }
-
-    return map;
+    return SplayTreeMap.from(map,(a,b) => b.compareTo(a));
   }
 
   Map<DateTime, CommissionSummary> getManagerTotalDailyCommissions() {
@@ -282,11 +282,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
         }
       });
     }
-
-    return map.map((key, value) {
-      value.transactions.sort((a,b) => b.timeAdded.compareTo(a.timeAdded));
-      return MapEntry(key, value);
-    });
+    return SplayTreeMap.from(map,(a,b) => b.compareTo(a));
   }
 
   Map<DateTime, CommissionSummary> getManagerTotalMonthlyCommissions() {
@@ -335,7 +331,8 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
       });
     }
 
-    return map;
+    return SplayTreeMap.from(map,(a,b) => b.compareTo(a));
+
   }
 
   Map<DateTime, CommissionSummary> getManagedMonthlyCommissions() {
@@ -367,7 +364,8 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
       });
     }
 
-    return map;
+    return SplayTreeMap.from(map,(a,b) => b.compareTo(a));
+
   }
 
   Map<DateTime, TransactionSummary> getMonthlyTransactions() {

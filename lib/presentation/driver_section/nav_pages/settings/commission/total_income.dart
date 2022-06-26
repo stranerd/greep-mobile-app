@@ -38,39 +38,39 @@ class TotalIncome extends StatelessWidget {
           centerTitle: false,
           elevation: 0.0,
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(width: 1, color: AppColors.black)),
-                  child: TabBar(
-                    indicator: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.black,
-                    ),
-                    labelColor: Colors.white,
-                    labelStyle: AppTextStyles.whiteSize12,
-                    unselectedLabelColor: Colors.black,
-                    unselectedLabelStyle: AppTextStyles.blackSize12,
-                    tabs: const [
-                      Tab(
-                        height: 40,
-
-                        text: 'Daily',
-                      ),
-                      Tab(
-                        height: 40,
-                        text: 'Monthly',
-                      ),
-                    ],
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(width: 1, color: AppColors.black)),
+                child: TabBar(
+                  indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.black,
                   ),
+                  labelColor: Colors.white,
+                  labelStyle: AppTextStyles.whiteSize12,
+                  unselectedLabelColor: Colors.black,
+                  unselectedLabelStyle: AppTextStyles.blackSize12,
+                  tabs: const [
+                    Tab(
+                      height: 40,
+
+                      text: 'Daily',
+                    ),
+                    Tab(
+                      height: 40,
+                      text: 'Monthly',
+                    ),
+                  ],
                 ),
               ),
-              BlocBuilder<UserCubit, UserState>(
+            ),
+            Expanded(
+              child: BlocBuilder<UserCubit, UserState>(
                 builder: (context, state) {
                   return Container(
                     padding: const EdgeInsets.fromLTRB(16, 32, 16, 20),
@@ -81,8 +81,9 @@ class TotalIncome extends StatelessWidget {
                         MediaQuery.of(context).padding.top,
                     child: TabBarView(
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        ListView(
+                          shrinkWrap: true,
+                          physics: const ScrollPhysics(),
                           children: [
                             Builder(builder: (context) {
                               Map<DateTime, CommissionSummary> commissions =
@@ -92,6 +93,7 @@ class TotalIncome extends StatelessWidget {
                                 separatorBuilder: (_,__) => kVerticalSpaceRegular,
                                   itemCount: commissions.length,
                                   shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder: (c, i) {
                                     CommissionSummary summary = commissions[commissions.keys.toList()[i]]!;
                                     return CommissionSummaryItem(commissionSummary: summary);
@@ -99,8 +101,9 @@ class TotalIncome extends StatelessWidget {
                             }),
                           ],
                         ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    ListView(
+                      shrinkWrap: true,
+                      physics: const ScrollPhysics(),
                       children: [
                         Builder(builder: (context) {
                           Map<DateTime, CommissionSummary> commissions =
@@ -122,8 +125,8 @@ class TotalIncome extends StatelessWidget {
                   );
                 },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

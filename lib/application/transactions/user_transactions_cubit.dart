@@ -22,7 +22,14 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
 
     _driverStream = driversCubit.stream.listen((event) {
       if (event is DriversStateFetched){
+        if (event is DriversStateDriver){
         fetchUserTransactions(requestId: event.selectedUser.id);
+        }
+        if (event is DriversStateManager){
+          for (var element in event.drivers) {
+            fetchUserTransactions(requestId: element.id);
+          }
+        }
       }
     });
   }
