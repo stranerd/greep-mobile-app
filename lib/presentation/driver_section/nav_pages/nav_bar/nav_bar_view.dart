@@ -208,8 +208,14 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService{
                                       kVerticalSpaceRegular,
                                       Text.rich(
                                         TextSpan(
-                                            text: "Manager ${request.managerName} with id ",
                                             children: [
+                                              TextSpan(
+                                                  text: "Manager ${request.managerName} ",
+                                                  style: kBoldTextStyle),
+                                              const TextSpan(
+                                                  text: "with id ",
+                                              ),
+
                                               TextSpan(
                                                   text: request.managerId,
                                                   style: kBoldTextStyle),
@@ -219,7 +225,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService{
                                                   style: kDefaultTextStyle),
                                               TextSpan(
                                                   text:
-                                                      "${request.commission * 100}% ",
+                                                      "${(request.commission * 100).toStringAsFixed(1)}% ",
                                                   style: kBoldTextStyle),
                                               TextSpan(
                                                   text:

@@ -10,6 +10,7 @@ import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/money.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
+import 'package:grip/presentation/widgets/driver_selector_widget.dart';
 import 'package:grip/presentation/widgets/transaction_summary_builder.dart';
 import 'package:intl/intl.dart';
 
@@ -65,6 +66,7 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
         ),
         body: Column(
           children: [
+            DriverSelectorRow(),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Container(

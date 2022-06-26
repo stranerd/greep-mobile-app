@@ -135,7 +135,7 @@ class _DriversScreenState extends State<DriversScreen>
                                                 color: AppColors.red),
                                           ),
                                     subtitle: Text(
-                                      "${driver.commission * 100}% commission",
+                                      "${(driver.commission * 100).toStringAsFixed(1)}% commission",
                                       style: kDefaultTextStyle.copyWith(
                                           fontSize: 13),
                                     ),
