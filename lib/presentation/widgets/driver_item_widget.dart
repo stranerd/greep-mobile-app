@@ -1,16 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
 
 class DriverItemWidget extends StatelessWidget {
   final String name;
   final String asset;
   final bool isSelected;
+  final Color textColor;
 
   const DriverItemWidget(
       {Key? key,
       required this.name,
       required this.isSelected,
+        this.textColor = kBlackColor,
       required this.asset})
       : super(key: key);
 
@@ -29,7 +32,7 @@ class DriverItemWidget extends StatelessWidget {
                     fit: BoxFit.cover),
                 shape: BoxShape.circle,
                 // borderRadius: isSelected ? BorderRadius.circular(kDefaultSpacing): null,
-                border: isSelected ? Border.all(width: 2) : null),
+                border: isSelected ? Border.all(width: 2,color: textColor == kBlackColor ? kBlackColor : kGreenColor) : null),
           ),
           const SizedBox(
             height: 4.0,
@@ -37,8 +40,10 @@ class DriverItemWidget extends StatelessWidget {
           Text(
             name,
             style: isSelected
-                ? kBoldTextStyle2.copyWith()
-                : kDefaultTextStyle.copyWith(fontSize: 13),
+                ? kBoldTextStyle2.copyWith(
+              color: textColor
+            )
+                : kDefaultTextStyle.copyWith(fontSize: 13,color: textColor),
           ),
         ],
       ),

@@ -100,7 +100,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   kVerticalSpaceSmall,
-                                  const DriverSelectorRow(),
+                                  const DriverSelectorRow(withWhiteText: true,),
                                   BlocBuilder<DriversCubit, DriversState>(
                                     builder: (context, driverState) {
                                       return Column(
@@ -131,7 +131,10 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                                 child: const Text(""),
                                               ),
                                             ),
-                                          ): Text(driverState is DriversStateManager ? driverState.selectedUser ==  currentUser() ?"Your activity" : "${driverState.selectedUser.firstName} Activities":"", style: kBoldWhiteTextStyle),
+                                          ): Text(driverState is DriversStateManager ? driverState.selectedUser ==  currentUser() ?"Your activity" : "${driverState.selectedUser.firstName} Activities":"", style: kBoldTextStyle2.copyWith(
+                                            color: kWhiteColor,
+                                            fontSize: 16.18
+                                          )),
 
                                           if (driverState is DriversStateFetched && driverState.selectedUser == currentUser())LayoutBuilder(
                                               builder: (context, constraints) {
@@ -166,7 +169,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                                           child: AddRecord(
                                                             width:
                                                             constraints.maxWidth * 0.47,
-                                                            svg: SvgPicture.asset("assets/icons/local_taxi.svg", width: 30, height: 30),
+                                                            svg: SvgPicture.asset("assets/icons/local_taxi.svg", width: 33, height: 33),
                                                             title: "Trip",
 
                                                           ),

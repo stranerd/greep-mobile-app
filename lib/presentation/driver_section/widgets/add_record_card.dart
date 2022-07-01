@@ -31,10 +31,10 @@ class AddRecord extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.8),
+            color: Colors.grey.shade300,
             spreadRadius: 1,
             blurRadius: 0.5,
-            offset: Offset(1, 1), // changes position of shadow
+            offset: Offset(0, 2), // changes position of shadow
           ),
         ]
       ),
