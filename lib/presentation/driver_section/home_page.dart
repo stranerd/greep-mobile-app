@@ -139,12 +139,10 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                                 child: AddRecord(
                                                   width:
                                                       constraints.maxWidth * 0.47,
-                                                  color: AppColors.black,
                                                   icon:
                                                       "assets/icons/local_taxi.svg",
                                                   title: "Trip",
-                                                  textStyle:
-                                                      AppTextStyles.blackSize14,
+
                                                 ),
                                               ),
                                               SplashTap(
@@ -154,11 +152,8 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                                 },
                                                 child: AddRecord(
                                                   width: constraints.maxWidth * 0.47,
-                                                  color: AppColors.red,
-                                                  icon: "assets/icons/handyman.svg",
+                                                  icon: "assets/icons/expense.svg",
                                                   title: "Expenses",
-                                                  textStyle:
-                                                      AppTextStyles.redSize14,
                                                 ),
                                               ),
                                             ],

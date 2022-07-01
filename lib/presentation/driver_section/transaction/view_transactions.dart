@@ -36,6 +36,7 @@ class _TransactionViewState extends State<TransactionView> {
   DateTime? to;
   bool showAppBar = false;
 
+
   @override
   void initState() {
     super.initState();

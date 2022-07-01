@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:grip/application/user/user_crud_cubit.dart';
 import 'package:grip/commons/Utils/input_validator.dart';
 import 'package:grip/application/user/utils/get_current_user.dart';
+import 'package:grip/commons/colors.dart';
 
 import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/commons/ui_helpers.dart';
@@ -163,6 +164,7 @@ class _AddDriverScreenState extends State<AddDriverScreen> with ScaffoldMessenge
                               )),
                           kVerticalSpaceMedium,
                           SubmitButton(
+                            backgroundColor: kGreenColor,
                               isLoading: s is UserCrudStateLoading,
                               enabled: _driverId.isNotEmpty && _commission <= 100 && _commission>=0 && s is! UserCrudStateLoading,
                               text: "Submit", onSubmit: _addDriver)

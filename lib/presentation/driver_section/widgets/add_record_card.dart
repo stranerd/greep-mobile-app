@@ -3,22 +3,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/utils/constants/app_colors.dart';
+import 'package:grip/utils/constants/app_styles.dart';
 
 class AddRecord extends StatelessWidget {
   const AddRecord(
       {Key? key,
-      required this.color,
       required this.icon,
       required this.title,
         this.width,
-      required this.textStyle})
+      })
       : super(key: key);
 
-  final Color color;
   final String icon;
   final double? width;
   final String title;
-  final TextStyle textStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,7 @@ class AddRecord extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(
-          color: color,
+          color: AppColors.black,
           width: 0.7,
         ),
       ),
@@ -40,7 +39,7 @@ class AddRecord extends StatelessWidget {
           kHorizontalSpaceRegular,
           Text(
             title,
-            style: textStyle,
+            style: AppTextStyles.blackSize14,
           ),
         ],
       ),

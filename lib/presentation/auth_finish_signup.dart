@@ -245,14 +245,8 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
                             height: 16.0,
                           ),
                           SubmitButton(
-                              enabled: (
-                                  selectedImage != null &&
-                                  validateEmail(_emailController.text) ==
-                                          null &&
-                                      _userName.isNotEmpty &&
-                                      _firstName.isNotEmpty &&
-                                      _lastName.isNotEmpty &&
-                                      _phoneNumber.isNotEmpty),
+                            backgroundColor: kGreenColor,
+                              enabled: state is! SignupStateLoading,
                               text: "Save",
                               isLoading: state is SignupStateLoading,
                               onSubmit: _signUp)

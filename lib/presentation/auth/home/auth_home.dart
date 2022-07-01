@@ -203,6 +203,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
                                       state is AuthenticationStateLoading,
                                   enabled: state is! AuthenticationStateLoading,
                                   text:  "Login",
+                                  backgroundColor: kGreenColor,
                                   onSubmit: _login, )
                               : BlocConsumer<SignupCubit, SignupState>(
                                   listener: (context, state) {
@@ -225,6 +226,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
                                         enabled: state
                                             is! SignupStateLoading,
                                         text: "Create Account",
+                                        backgroundColor: kGreenColor,
                                         onSubmit: _signup
                                         );
                                   },

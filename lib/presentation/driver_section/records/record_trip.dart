@@ -33,6 +33,8 @@ class _RecordTripState extends State<RecordTrip>
   String _paid = "";
   String _paymentType = "cash";
   String _description = "";
+  bool dateError = false;
+  bool typeAheadError = false;
   late TextEditingController _nameController;
   late TextEditingController _priceController;
   late TextEditingController _paidController;
@@ -116,18 +118,24 @@ class _RecordTripState extends State<RecordTrip>
                         textFieldConfiguration: TextFieldConfiguration(
                             autofocus: false,
                             controller: _nameController,
+
                             onChanged: (s){
                               setState(() {
+                                typeAheadError = false;
                                 _customerName = s;
                               });
                             },
+
                             style: kDefaultTextStyle,
                             decoration:InputDecoration(
                                 filled: true,
                             fillColor: kBorderColor,
                             focusedBorder: InputBorder.none,
                             border: InputBorder.none,
-                            enabledBorder:  InputBorder.none
+                            enabledBorder:  typeAheadError ? OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: const BorderSide(color: kErrorColor, width: 0.5),
+                            ) :InputBorder.none
                                ,
                             errorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
@@ -137,7 +145,6 @@ class _RecordTripState extends State<RecordTrip>
                         hideOnEmpty: true,
                         hideOnError: true,
                         hideOnLoading: true,
-
                         suggestionsCallback: (pattern) async {
                           if (pattern.isEmpty){
                             return [];
@@ -156,6 +163,14 @@ class _RecordTripState extends State<RecordTrip>
                           _nameController.text=_customerName;
                         },
                       ),
+                      if (typeAheadError)Row(
+                        children: [
+                          kHorizontalSpaceSmall,
+                          Text("This cannot be empty", style: kErrorColorTextStyle.copyWith(
+                              fontSize: 13
+                          ),),
+                        ],
+                      ),
                       kVerticalSpaceRegular,
                       kVerticalSpaceRegular,
                       Text(
@@ -168,6 +183,7 @@ class _RecordTripState extends State<RecordTrip>
                           Expanded(
                             child: GestureDetector(
                               onTap: () {
+                                dateError = false;
                                 _pickDate();
                               },
                               child: Container(
@@ -177,6 +193,7 @@ class _RecordTripState extends State<RecordTrip>
                                 alignment: Alignment.centerLeft,
                                 decoration: BoxDecoration(
                                   color: kBorderColor,
+                                  border: dateError ? Border.all(color: kErrorColor,): null,
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 child: Text(
@@ -195,6 +212,7 @@ class _RecordTripState extends State<RecordTrip>
                           ),
                           GestureDetector(
                             onTap: () {
+                              dateError = false;
                               setState(() {
                                 recordDate = DateTime.now();
                               });
@@ -212,6 +230,14 @@ class _RecordTripState extends State<RecordTrip>
                               ),
                             ),
                           ),
+                        ],
+                      ),
+                      if (dateError)Row(
+                        children: [
+                          kHorizontalSpaceSmall,
+                          Text("Date cannot be empty", style: kErrorColorTextStyle.copyWith(
+                              fontSize: 13
+                          ),),
                         ],
                       ),
                       const SizedBox(
@@ -392,12 +418,9 @@ class _RecordTripState extends State<RecordTrip>
                         height: 16.0,
                       ),
                       SubmitButton(
+                        backgroundColor: kGreenColor,
                           isLoading: s is TransactionCrudStateLoading,
-                          enabled: recordDate != null &&
-                              _customerName.isNotEmpty &&
-                              _price.isNotEmpty &&
-                              _paid.isNotEmpty &&
-                              s is! TransactionCrudStateLoading,
+                          enabled: s is! TransactionCrudStateLoading,
                           text: "Submit",
                           onSubmit: _recordTrip)
                     ],
@@ -412,6 +435,22 @@ class _RecordTripState extends State<RecordTrip>
   }
 
   void _recordTrip() {
+    formKey.currentState!.validate();
+    if (recordDate == null)
+      {
+        setState(() {
+          dateError = true;
+        });
+      }
+    if (_customerName.trim().isEmpty){
+      setState(() {
+        typeAheadError = true;
+      });
+    }
+
+    if (typeAheadError || dateError){
+      return;
+    }
     if (formKey.currentState!.validate()) {
       _transactionCrudCubit.addTrip(
           customerName: _customerName,

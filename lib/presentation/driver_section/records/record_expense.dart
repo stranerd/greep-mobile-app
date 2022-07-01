@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/transactions/transaction_crud_cubit.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
+import 'package:grip/commons/Utils/input_validator.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/commons/ui_helpers.dart';
@@ -23,11 +24,14 @@ class RecordExpense extends StatefulWidget {
   State<RecordExpense> createState() => _RecordExpenseState();
 }
 
-class _RecordExpenseState extends State<RecordExpense> with ScaffoldMessengerService{
+class _RecordExpenseState extends State<RecordExpense> with ScaffoldMessengerService, InputValidator{
   String _expenseName = "";
   String _price = "";
   String _description = "";
   List<String> expenseList = [];
+  bool typeAheadError = false;
+  bool dateError = false;
+
   late TextEditingController _expenseNameController;
   late TransactionCrudCubit _transactionCrudCubit;
 
@@ -104,49 +108,66 @@ class _RecordExpenseState extends State<RecordExpense> with ScaffoldMessengerSer
 
                           ),
                           kVerticalSpaceSmall,
-                          TypeAheadField(
-                            textFieldConfiguration: TextFieldConfiguration(
-                              autofocus: false,
-                              controller: _expenseNameController,
-                              onChanged: (s){
-                                setState(() {
-                                  _expenseName = s;
-                                });
-                              },
-                              style: kDefaultTextStyle,
-                              decoration:InputDecoration(
-                                  filled: true,
-                                  fillColor: kBorderColor,
-                                  focusedBorder: InputBorder.none,
-                                  border: InputBorder.none,
-                                  enabledBorder:  InputBorder.none
-                                  ,
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    borderSide: const BorderSide(color: kErrorColor, width: 0.5),
-                                  )),
-                            ),
-                            hideOnEmpty: true,
-                            hideOnError: true,
-                            hideOnLoading: true,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TypeAheadField(
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  autofocus: false,
+                                  controller: _expenseNameController,
+                                  onChanged: (s){
+                                    setState(() {
+                                      typeAheadError = false;
+                                      _expenseName = s;
+                                    });
+                                  },
+                                  style: kDefaultTextStyle,
+                                  decoration:InputDecoration(
+                                      filled: true,
+                                      fillColor: kBorderColor,
+                                      focusedBorder: InputBorder.none,
+                                      border: InputBorder.none,
+                                      enabledBorder:  typeAheadError ? OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: const BorderSide(color: kErrorColor, width: 0.5),
+                                      ): InputBorder.none
+                                      ,
+                                      errorBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: const BorderSide(color: kErrorColor, width: 0.5),
+                                      )),
+                                ),
+                                hideOnEmpty: true,
+                                hideOnError: true,
+                                hideOnLoading: true,
 
-                            suggestionsCallback: (pattern) async {
-                              if (pattern.isEmpty){
-                                return [];
-                              }
-                              return expenseList.where((element) => element
-                                  .toLowerCase()
-                                  .startsWith(pattern.toLowerCase()));
-                            },
-                            itemBuilder: (context, suggestion) {
-                              return ListTile(
-                                title: Text(suggestion.toString()),
-                              );
-                            },
-                            onSuggestionSelected: (suggestion) {
-                              _expenseName = suggestion.toString();
-                              _expenseNameController.text=_expenseName;
-                            },
+                                suggestionsCallback: (pattern) async {
+                                  if (pattern.isEmpty){
+                                    return [];
+                                  }
+                                  return expenseList.where((element) => element
+                                      .toLowerCase()
+                                      .startsWith(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    title: Text(suggestion.toString()),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  _expenseName = suggestion.toString();
+                                  _expenseNameController.text=_expenseName;
+                                },
+                              ),
+                              if (typeAheadError)Row(
+                                children: [
+                                  kHorizontalSpaceSmall,
+                                  Text("This cannot be empty", style: kErrorColorTextStyle.copyWith(
+                                    fontSize: 10
+                                  ),),
+                                ],
+                              ),
+                            ],
                           ),
 
                           kVerticalSpaceMedium,
@@ -160,6 +181,9 @@ class _RecordExpenseState extends State<RecordExpense> with ScaffoldMessengerSer
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
+                                    setState(() {
+                                      dateError = false;
+                                    });
                                     _pickDate();
                                   },
                                   child: Container(
@@ -170,6 +194,7 @@ class _RecordExpenseState extends State<RecordExpense> with ScaffoldMessengerSer
                                     decoration: BoxDecoration(
                                       color: kBorderColor,
                                       borderRadius: BorderRadius.circular(5),
+                                      border: dateError ? Border.all(color: kErrorColor,): null,
                                     ),
                                     child: Text(
                                       recordDate == null
@@ -184,12 +209,14 @@ class _RecordExpenseState extends State<RecordExpense> with ScaffoldMessengerSer
                                   ),
                                 ),
                               ),
+
                               const SizedBox(
                                 width: 16.0,
                               ),
                               GestureDetector(
                                 onTap: () {
                                   setState(() {
+                                    dateError  = false;
                                     recordDate = DateTime.now();
                                   });
                                 },
@@ -208,6 +235,14 @@ class _RecordExpenseState extends State<RecordExpense> with ScaffoldMessengerSer
                               ),
                             ],
                           ),
+                          if (dateError)Row(
+                            children: [
+                              kHorizontalSpaceSmall,
+                              Text("Date cannot be empty", style: kErrorColorTextStyle.copyWith(
+                                  fontSize: 13
+                              ),),
+                            ],
+                          ),
                           kVerticalSpaceMedium,
                           Text(
                             "Expense Cost",
@@ -215,7 +250,7 @@ class _RecordExpenseState extends State<RecordExpense> with ScaffoldMessengerSer
                           ),
                           kVerticalSpaceSmall,
                           LoginTextField(
-                            validator: (_) {},
+                            validator: emptyFieldValidator,
                             onChanged: (String v) {
                               setState(() {
                                 _price = v;
@@ -243,6 +278,7 @@ class _RecordExpenseState extends State<RecordExpense> with ScaffoldMessengerSer
                           kVerticalSpaceRegular,
                           SubmitButton(
                               isLoading: s is TransactionCrudStateLoading,
+                              backgroundColor: kGreenColor,
                               enabled: s is! TransactionCrudStateLoading,
                               text: "Submit", onSubmit: _recordExpense)
                         ],
@@ -262,6 +298,20 @@ class _RecordExpenseState extends State<RecordExpense> with ScaffoldMessengerSer
   }
 
   void _recordExpense() {
+    formKey.currentState!.validate();
+    if (recordDate == null){
+      print("record date is false");
+      setState(() {
+        dateError = true
+;      });
+    }
+    if (_expenseName.trim().isEmpty){
+      setState(() {
+        typeAheadError = true;      });
+    }
+    if (dateError ||typeAheadError){
+      return;
+    }
     if (formKey.currentState!.validate()) {
       _transactionCrudCubit.addExpense(
           name: _expenseName,
