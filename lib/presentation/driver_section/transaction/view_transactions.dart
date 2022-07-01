@@ -171,15 +171,15 @@ class _TransactionViewState extends State<TransactionView> {
                                         style: AppTextStyles.blackSizeBold12,
                                       ),
                                       Text(
-                                        "Income: N${e.amount.toMoney}",
+                                        "Income: N${e.income.toMoney}",
                                         style: AppTextStyles.blackSize10,
                                       ),
                                       Text(
-                                        "Trips: ${e.trips}",
+                                        "Trips: ${e.tripCount}",
                                         style: AppTextStyles.blackSize10,
                                       ),
                                       Text(
-                                        "Expenses: ${e.expenses}",
+                                        "Expenses: ${e.expenseCount}",
                                         style: AppTextStyles.blackSize10,
                                       ),
                                     ],

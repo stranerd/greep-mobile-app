@@ -65,8 +65,9 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
               icon: const Icon(Icons.arrow_back_ios, size: 16)),
         ),
         body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DriverSelectorRow(),
+            const DriverSelectorRow(),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Container(
@@ -152,7 +153,7 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                     Column(
                       children: [
                         RecordCard(
-                          title: "N${totalIncome.amount.toMoney}",
+                          title: "N${totalIncome.income.toMoney}",
                           subtitle: "Total Income",
                           width: Get.width * 0.9,
                           titleStyle: kDefaultTextStyle.copyWith(
@@ -163,20 +164,20 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                         ),
                         kVerticalSpaceSmall,
                         RecordCard(
-                          title: totalIncome.trips.toString(),
+                          title: totalIncome.tripCount.toString(),
                           subtitle: "Total Trips",
                           width: Get.width * 0.9,
-                          titleStyle: TextStyle(),
-                          subtitleStyle: TextStyle(),
+                          titleStyle: const TextStyle(),
+                          subtitleStyle: const TextStyle(),
                           transactions: totalIncome.transactions,
                         ),
                         kVerticalSpaceSmall,
                         RecordCard(
-                          title: totalIncome.expenses.toString(),
+                          title: totalIncome.expenseCount.toString(),
                           subtitle: "Total Expenses",
                           width: Get.width * 0.9,
-                          titleStyle: TextStyle(),
-                          subtitleStyle: TextStyle(),
+                          titleStyle: const TextStyle(),
+                          subtitleStyle: const TextStyle(),
                           transactions: totalIncome.transactions,
                         ),
                       ],

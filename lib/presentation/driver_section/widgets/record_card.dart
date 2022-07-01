@@ -34,6 +34,7 @@ class RecordCard extends StatefulWidget {
 class _RecordCardState extends State<RecordCard> {
   @override
   Widget build(BuildContext context) {
+
     return SplashTap(
       onTap: _openDialog,
       child: Container(
@@ -41,6 +42,7 @@ class _RecordCardState extends State<RecordCard> {
         height: 80,
         width: widget.width ?? Get.width * 0.31,
         decoration: BoxDecoration(
+          color: kLightGrayColor,
           borderRadius: BorderRadius.circular(8.0),
           border: Border.all(
             color: kGreyColor2,
@@ -48,9 +50,11 @@ class _RecordCardState extends State<RecordCard> {
           ),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(widget.title, style: widget.titleStyle),
+            Text(widget.title, style: widget.titleStyle.copyWith(
+              fontSize: 18
+            )),
             const SizedBox(height: 8.0),
             Text(widget.subtitle,
                 style: kDefaultTextStyle.copyWith(fontSize: 12)),

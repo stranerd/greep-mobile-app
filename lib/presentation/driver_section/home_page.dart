@@ -56,7 +56,6 @@ class _DriverHomePageState extends State<DriverHomePage> {
     return BlocBuilder<UserCubit, UserState>(
       builder: (context, userState) {
         var userId = currentUser().id;
-
         return Scaffold(
             backgroundColor: Colors.white,
             // appBar: AppBar(
@@ -70,7 +69,8 @@ class _DriverHomePageState extends State<DriverHomePage> {
             //   elevation: 0.0,
             // ),
             body: BlocConsumer<UserTransactionsCubit, UserTransactionsState>(
-              listener: (c, s) {
+              listener: (c, s)
+              {
                 if (s is UserTransactionsStateError ||
                     s is UserTransactionsStateFetched) {
                   setState(() {});
@@ -82,245 +82,261 @@ class _DriverHomePageState extends State<DriverHomePage> {
                     TransactionSummaryState>(
                   builder: (context, summaryState) {
                     return SafeArea(
-                      child: SmartRefresher(
-                        controller: _refreshController,
-                        onRefresh: onRefresh,
-                        child: ListView(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
+                      child: Stack(
                           children: [
-                            Container(
-                              clipBehavior: Clip.none,
-                              padding: EdgeInsets.all(kDefaultSpacing * 0.5),
-                              decoration: BoxDecoration(
-                                color: kBlackColor,
-
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  kVerticalSpaceSmall,
-                                  const DriverSelectorRow(withWhiteText: true,),
-                                  BlocBuilder<DriversCubit, DriversState>(
-                                    builder: (context, driverState) {
-                                      return Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          kVerticalSpaceSmall,
-                                          driverState is DriversStateDriver ? ListTile(
-                                            contentPadding:
-                                                const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                            title: Text(
-                                              DateFormat(
-                                                      "${DateFormat.ABBR_WEEKDAY}, ${DateFormat.ABBR_MONTH} ${DateFormat.DAY}")
-                                                  .format(DateTime.now()),
-                                              style: AppTextStyles.whiteSize12,
-                                            ),
-                                            subtitle: Text(
-                                                "Hi ${userState is UserStateFetched ? userState.user.firstName : "!"}",
-                                                style: kBoldWhiteTextStyle),
-                                            trailing: SplashTap(
-                                              onTap: (){
-                                                g.Get.to(() => const ProfileView(),transition: g.Transition.fadeIn);},
-                                              child: CircleAvatar(
-                                                backgroundImage:
-                                                    CachedNetworkImageProvider(
-                                                        userState is UserStateFetched
-                                                            ? userState.user.photoUrl
-                                                            : ""),
-                                                child: const Text(""),
-                                              ),
-                                            ),
-                                          ): Text(driverState is DriversStateManager ? driverState.selectedUser ==  currentUser() ?"Your activity" : "${driverState.selectedUser.firstName} Activities":"", style: kBoldTextStyle2.copyWith(
-                                            color: kWhiteColor,
-                                            fontSize: 16.18
-                                          )),
-
-                                          if (driverState is DriversStateFetched && driverState.selectedUser == currentUser())LayoutBuilder(
-                                              builder: (context, constraints) {
-                                            return Container(
-                                              width: g.Get.width,
-                                              clipBehavior: Clip.none,
-                                              height: 80,
-                                              child: Stack(
-                                                clipBehavior: Clip.none,
-                                                children: [
-                                                  Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      kVerticalSpaceRegular,
-                                                      Text("Add a record",
-                                                          style: kBoldWhiteTextStyle.copyWith(
-                                                              fontSize: 14)),
-                                                      kVerticalSpaceSmall,
-                                                    ],
-                                                  ),
-                                                  Positioned(
-                                                    width: g.Get.width - (kDefaultSpacing),
-                                                    bottom: -35,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment.spaceBetween,
-                                                      children: [
-                                                        SplashTap(
-                                                          onTap: () {
-                                                            g.Get.to(() => const RecordTrip(),transition: g.Transition.fadeIn);
-                                                          },
-                                                          child: AddRecord(
-                                                            width:
-                                                            constraints.maxWidth * 0.47,
-                                                            svg: SvgPicture.asset("assets/icons/local_taxi.svg", width: 33, height: 33),
-                                                            title: "Trip",
-
-                                                          ),
-                                                        ),
-                                                        SplashTap(
-                                                          onTap: () {
-                                                            g.Get.to(
-                                                                    () => const RecordExpense(),
-                                                                transition: g.Transition.fadeIn);
-                                                          },
-                                                          child: AddRecord(
-                                                            width: constraints.maxWidth * 0.47,
-                                                            svg: SvgPicture.asset("assets/icons/expense.svg", width: 25, height: 25),
-
-                                                            title: "Expense",
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-
-                                                ],
-                                              ),
+                            Positioned(
+                              top: 250,
+                              width: g.Get.width,
+                              height: g.Get.height -300,
+                              child: SmartRefresher(
+                                controller: _refreshController,
+                                onRefresh: _onRefresh,
+                                child: SizedBox(
+                                  height: g.Get.height - 300,
+                                  child: ListView(
+                                  shrinkWrap: true,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: kDefaultSpacing),
+                                  physics: const BouncingScrollPhysics(),
+                                  children: [
+                                    ListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      title: Text("Today",
+                                          style: AppTextStyles.blackSizeBold12),
+                                      trailing: SplashTap(
+                                        onTap: () {
+                                          g.Get.to(() => ViewAllRecords(), transition: g.Transition.fadeIn);
+                                        },
+                                        child: Text("view all",
+                                            style: AppTextStyles.blackSize12),
+                                      ),
+                                    ),
+                                    TransactionIntervalSummaryWidget(
+                                        userId: userId,
+                                        to: DateTime.now(),
+                                        from: DateTime(DateTime.now().year,
+                                            DateTime.now().month, DateTime.now().day)),
+                                    kVerticalSpaceRegular,
+                                    ListTile(
+                                      contentPadding:
+                                          const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                      title: Text("Yesterday",
+                                          style: AppTextStyles.blackSizeBold12),
+                                      trailing: SplashTap(
+                                        onTap: () {
+                                          g.Get.to(() => ViewAllRecords(),transition: g.Transition.fadeIn);
+                                        },
+                                        child: Text("view all",
+                                            style: AppTextStyles.blackSize12),
+                                      ),
+                                    ),
+                                    TransactionIntervalSummaryWidget(
+                                        userId: userId,
+                                        to: DateTime(DateTime.now().year,
+                                            DateTime.now().month, DateTime.now().day),
+                                        from: DateTime(
+                                            DateTime.now()
+                                                .subtract(const Duration(days: 1))
+                                                .year,
+                                            DateTime.now()
+                                                .subtract(const Duration(days: 1))
+                                                .month,
+                                            DateTime.now()
+                                                .subtract(const Duration(days: 1))
+                                                .day)),
+                                    kVerticalSpaceRegular,
+                                    ListTile(
+                                      contentPadding:
+                                          const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                      title: Text("Customers",
+                                          style: AppTextStyles.blackSizeBold12),
+                                      trailing: InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const CustomerView()),
                                             );
-                                          }),
-                                        ],
+                                          },
+                                          child: Text("view all",
+                                              style: AppTextStyles.blackSize12)),
+                                    ),
+                                    const CustomerTransactionListWidget(
+                                    ),
+                                    kVerticalSpaceRegular,
+                                    ListTile(
+                                      contentPadding:
+                                          const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                      title: Text("Transaction history",
+                                          style: AppTextStyles.blackSizeBold12),
+                                      trailing: SplashTap(
+                                        onTap: () {
+                                          g.Get.to(() => TransactionView(),arguments: {"showAppBar": true},
+                                              transition: g.Transition.fadeIn);
+                                        },
+                                        child: Text("view all",
+                                            style: AppTextStyles.blackSize12),
+                                      ),
+                                    ),
+                                    Builder(builder: (context) {
+                                      List<Transaction> transactions =
+                                          GetIt.I<UserTransactionsCubit>()
+                                              .getLastUserTransactions();
+                                      if (transactions.isEmpty) {
+                                        return const EmptyResultWidget(
+                                            text: "No recent transactions");
+                                      }
+                                      return ListView.builder(
+                                        itemCount: transactions.length,
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        padding: EdgeInsets.zero,
+                                        itemBuilder: (c, i) {
+                                          return TransactionListCard(
+                                            title: "Kemi",
+                                            subtitle: "Mar 19 . 10:54 AM",
+                                            trailing: "+20\$",
+                                            transaction: transactions[i],
+                                            titleStyle: AppTextStyles.blackSize14,
+                                            subtitleStyle: AppTextStyles.blackSize12,
+                                            trailingStyle: AppTextStyles.greenSize14,
+                                          );
+                                        },
                                       );
-                                    },
-                                  ),
-                                ],
+                                    }),
+                                    kVerticalSpaceLarge,
+                                  ],
                               ),
+                                ),),
                             ),
-                            ListView(
-                              shrinkWrap: true,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: kDefaultSpacing),
-                              physics: const BouncingScrollPhysics(),
-                              children: [
-                                kVerticalSpaceLarge,
-                                ListTile(
-                                  contentPadding: EdgeInsets.zero,
-                                  title: Text("Today",
-                                      style: AppTextStyles.blackSizeBold12),
-                                  trailing: SplashTap(
-                                    onTap: () {
-                                      g.Get.to(() => ViewAllRecords(), transition: g.Transition.fadeIn);
-                                    },
-                                    child: Text("view all",
-                                        style: AppTextStyles.blackSize12),
-                                  ),
+                            Positioned(
+                              top: 0,
+                              width: g.Get.width,
+                              child: Container(
+                                width: g.Get.width,
+                                height: 230,
+                                clipBehavior: Clip.none,
+                                padding: const EdgeInsets.all(kDefaultSpacing * 0.5),
+                                decoration: const BoxDecoration(
+                                  color: kBlackColor,
+
                                 ),
-                                TransactionIntervalSummaryWidget(
-                                    userId: userId,
-                                    to: DateTime.now(),
-                                    from: DateTime(DateTime.now().year,
-                                        DateTime.now().month, DateTime.now().day)),
-                                kVerticalSpaceRegular,
-                                ListTile(
-                                  contentPadding:
-                                      const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                  title: Text("Yesterday",
-                                      style: AppTextStyles.blackSizeBold12),
-                                  trailing: SplashTap(
-                                    onTap: () {
-                                      g.Get.to(() => ViewAllRecords(),transition: g.Transition.fadeIn);
-                                    },
-                                    child: Text("view all",
-                                        style: AppTextStyles.blackSize12),
-                                  ),
-                                ),
-                                TransactionIntervalSummaryWidget(
-                                    userId: userId,
-                                    to: DateTime(DateTime.now().year,
-                                        DateTime.now().month, DateTime.now().day),
-                                    from: DateTime(
-                                        DateTime.now()
-                                            .subtract(const Duration(days: 1))
-                                            .year,
-                                        DateTime.now()
-                                            .subtract(const Duration(days: 1))
-                                            .month,
-                                        DateTime.now()
-                                            .subtract(const Duration(days: 1))
-                                            .day)),
-                                kVerticalSpaceRegular,
-                                ListTile(
-                                  contentPadding:
-                                      const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                  title: Text("Customers",
-                                      style: AppTextStyles.blackSizeBold12),
-                                  trailing: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const CustomerView()),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    kVerticalSpaceSmall,
+                                    const DriverSelectorRow(withWhiteText: true,),
+                                    BlocBuilder<DriversCubit, DriversState>(
+                                      builder: (context, driverState) {
+                                        return Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            kVerticalSpaceSmall,
+                                            driverState is DriversStateDriver
+                                                ? ListTile(
+                                              contentPadding:
+                                              const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                              title: Text(
+                                                DateFormat(
+                                                    "${DateFormat.ABBR_WEEKDAY}, ${DateFormat.ABBR_MONTH} ${DateFormat.DAY}")
+                                                    .format(DateTime.now()),
+                                                style: AppTextStyles.whiteSize12,
+                                              ),
+                                              subtitle: Text(
+                                                  "Hi ${userState is UserStateFetched ? userState.user.firstName : "!"}",
+                                                  style: kBoldWhiteTextStyle),
+                                              trailing: SplashTap(
+                                                onTap: (){
+                                                  g.Get.to(() => const ProfileView(),transition: g.Transition.fadeIn);},
+                                                child: CircleAvatar(
+                                                  backgroundImage:
+                                                  CachedNetworkImageProvider(
+                                                      userState is UserStateFetched
+                                                          ? userState.user.photoUrl
+                                                          : ""),
+                                                  child: const Text(""),
+                                                ),
+                                              ),
+                                            ): Text(driverState is DriversStateManager ? driverState.selectedUser ==  currentUser() ?"Your activity" : "${driverState.selectedUser.firstName} Activities":"", style: kBoldTextStyle2.copyWith(
+                                              color: kWhiteColor,
+                                              fontSize: 16.18,
+                                            ),
+                                            ),
+                                            if (driverState is DriversStateFetched && driverState.selectedUser == currentUser())
+                                              LayoutBuilder(
+                                                  builder: (context, constraints) {
+                                                    return Container(
+                                                      width: g.Get.width,
+                                                      clipBehavior: Clip.none,
+                                                      decoration: BoxDecoration(),
+                                                      height: 80,
+                                                      child: Stack(
+                                                        clipBehavior: Clip.none,
+                                                        children: [
+                                                          Positioned.fill(
+                                                            child: Column(
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                kVerticalSpaceRegular,
+                                                                Text("Add a record",
+                                                                    style: kBoldWhiteTextStyle.copyWith(
+                                                                        fontSize: 14)),
+                                                                kVerticalSpaceSmall,
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Positioned(
+                                                            width: g.Get.width - (kDefaultSpacing),
+                                                            bottom: -35,
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                              MainAxisAlignment.spaceBetween,
+                                                              children: [
+                                                                SplashTap(
+                                                                  onTap: () {
+                                                                    g.Get.to(() => const RecordTrip(),transition: g.Transition.fadeIn);
+                                                                  },
+                                                                  child: AddRecord(
+                                                                    width:
+                                                                    constraints.maxWidth * 0.47,
+                                                                    svg: SvgPicture.asset("assets/icons/local_taxi.svg", width: 33, height: 33),
+                                                                    title: "Trip",
+
+                                                                  ),
+                                                                ),
+                                                                SplashTap(
+                                                                  onTap: () {
+                                                                    g.Get.to(
+                                                                            () => const RecordExpense(),
+                                                                        transition: g.Transition.fadeIn);
+                                                                  },
+                                                                  child: AddRecord(
+                                                                    width: constraints.maxWidth * 0.47,
+                                                                    svg: SvgPicture.asset("assets/icons/expense.svg", width: 25, height: 25),
+
+                                                                    title: "Expense",
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+
+                                                        ],
+                                                      ),
+                                                    );
+                                                  }),
+                                          ],
                                         );
                                       },
-                                      child: Text("view all",
-                                          style: AppTextStyles.blackSize12)),
+                                    ),
+                                  ],
                                 ),
-                                const CustomerTransactionListWidget(
-                                ),
-                                kVerticalSpaceRegular,
-                                ListTile(
-                                  contentPadding:
-                                      const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                  title: Text("Transaction history",
-                                      style: AppTextStyles.blackSizeBold12),
-                                  trailing: SplashTap(
-                                    onTap: () {
-                                      g.Get.to(() => TransactionView(),arguments: {"showAppBar": true},
-                                          transition: g.Transition.fadeIn);
-                                    },
-                                    child: Text("view all",
-                                        style: AppTextStyles.blackSize12),
-                                  ),
-                                ),
-                                Builder(builder: (context) {
-                                  List<Transaction> transactions =
-                                      GetIt.I<UserTransactionsCubit>()
-                                          .getLastUserTransactions();
-                                  if (transactions.isEmpty) {
-                                    return const EmptyResultWidget(
-                                        text: "No recent transactions");
-                                  }
-                                  return ListView.builder(
-                                    itemCount: transactions.length,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    padding: EdgeInsets.zero,
-                                    itemBuilder: (c, i) {
-                                      return TransactionListCard(
-                                        title: "Kemi",
-                                        subtitle: "Mar 19 . 10:54 AM",
-                                        trailing: "+20\$",
-                                        transaction: transactions[i],
-                                        titleStyle: AppTextStyles.blackSize14,
-                                        subtitleStyle: AppTextStyles.blackSize12,
-                                        trailingStyle: AppTextStyles.greenSize14,
-                                      );
-                                    },
-                                  );
-                                }),
-                                kVerticalSpaceLarge,
-                              ],
-                            )
+                              ),
+                            ),
+
                           ],
                         ),
-                      ),
                     );
                   },
                 );
@@ -330,7 +346,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
     );
   }
 
-  void onRefresh() {
+  void _onRefresh() {
     _userTransactionsCubit.fetchUserTransactions(fullRefresh: true);
   }
 }

@@ -5,6 +5,7 @@ const kPrimaryColor = Color(0xff001726);
 const kWhiteColor = Color(0xffffffff);
 const kGreenColor = Color(0xff04D28C);
 const kBlueColor = Color(0xff0250C6);
+const kLightGrayColor = Color(0xffF3F6F8);
 const kBlackColor = Color(0xff001726);
 const kErrorColor = Color(0xffFF5656);
 const kBlackLightColor = Colors.black54;
