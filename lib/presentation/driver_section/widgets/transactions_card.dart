@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' as g;
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
@@ -65,7 +65,7 @@ class TransactionCard extends StatelessWidget {
     }
     return SplashTap(
       onTap: transaction == null ? null : !shouldTap ? null : (){
-        Get.to(() => TransactionDetails(transaction: transaction!,));
+        g.Get.to(() => TransactionDetails(transaction: transaction!,),transition: g.Transition.fadeIn);
       },
       child: Container(
         padding: const EdgeInsets.fromLTRB(

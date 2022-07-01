@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' as g;
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/user/utils/get_current_user.dart';
 
@@ -134,7 +134,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                             children: [
                                               SplashTap(
                                                 onTap: () {
-                                                  Get.to(() => const RecordTrip());
+                                                  g.Get.to(() => const RecordTrip(),transition: g.Transition.fadeIn);
                                                 },
                                                 child: AddRecord(
                                                   width:
@@ -147,8 +147,9 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                               ),
                                               SplashTap(
                                                 onTap: () {
-                                                  Get.to(
-                                                      () => const RecordExpense());
+                                                  g.Get.to(
+                                                      () => const RecordExpense(),
+                                                      transition: g.Transition.fadeIn);
                                                 },
                                                 child: AddRecord(
                                                   width: constraints.maxWidth * 0.47,
@@ -172,7 +173,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                   style: AppTextStyles.blackSizeBold12),
                               trailing: SplashTap(
                                 onTap: () {
-                                  Get.to(() => ViewAllRecords());
+                                  g.Get.to(() => ViewAllRecords(), transition: g.Transition.fadeIn);
                                 },
                                 child: Text("view all",
                                     style: AppTextStyles.blackSize12),
@@ -191,7 +192,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                   style: AppTextStyles.blackSizeBold12),
                               trailing: SplashTap(
                                 onTap: () {
-                                  Get.to(() => ViewAllRecords());
+                                  g.Get.to(() => ViewAllRecords(),transition: g.Transition.fadeIn);
                                 },
                                 child: Text("view all",
                                     style: AppTextStyles.blackSize12),
@@ -239,7 +240,8 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                   style: AppTextStyles.blackSizeBold12),
                               trailing: SplashTap(
                                 onTap: () {
-                                  Get.to(() => TransactionView(),arguments: {"showAppBar": true});
+                                  g.Get.to(() => TransactionView(),arguments: {"showAppBar": true},
+                                      transition: g.Transition.fadeIn);
                                 },
                                 child: Text("view all",
                                     style: AppTextStyles.blackSize12),

@@ -202,6 +202,7 @@ class _EditProfileState extends State<EditProfile>
                             height: 16.0,
                           ),
                           SubmitButton(
+                            backgroundColor: kGreenColor,
                               enabled: (_firstNameController.text.isNotEmpty &&
                                   _lastNameController.text.isNotEmpty),
                               text: "Save",

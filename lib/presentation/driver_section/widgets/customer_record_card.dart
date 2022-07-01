@@ -80,7 +80,7 @@ class CustomerRecordCard extends StatelessWidget {
         if (transaction != null) {
           Get.to(() {
             return CustomerDetails(name: transaction!.data.customerName!);
-          });
+          },transition: Transition.fadeIn);
         }
       },
       child: Container(

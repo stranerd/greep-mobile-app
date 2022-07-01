@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' as g;
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/AuthenticationState.dart';
@@ -82,7 +82,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
     return BlocConsumer<AuthenticationCubit, AuthenticationState>(
       listener: (context, state) {
         if (state is AuthenticationStateAuthenticated) {
-          Get.offAll(() => const AuthenticationSplashScreen());
+          g.Get.offAll(() => const AuthenticationSplashScreen(),transition: g.Transition.fadeIn);
         }
         if (state is AuthenticationStateError) {
           error = state.errorMessage;
@@ -208,7 +208,9 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
                               : BlocConsumer<SignupCubit, SignupState>(
                                   listener: (context, state) {
                                     if (state is SignupStateReady){
-                                      Get.to(() =>  AuthFinishSignup(email: email,password: password,));
+                                      g.Get.to(() =>  AuthFinishSignup(email: email,password: password,),
+                                          transition: g.Transition.fadeIn
+                                      );
 
                                     }
                                     if (state is SignupStateError){
@@ -236,7 +238,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
                             alignment: Alignment.centerLeft,
                             child: TextButton(
                               onPressed: () {
-                                Get.to(() => const ForgotPasswordScreen());
+                                g.Get.to(() => const ForgotPasswordScreen(),transition: g.Transition.fadeIn);
                               },
                               child: Text(
                                 "Forgot Password?",

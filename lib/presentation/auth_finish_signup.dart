@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' as g;
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/SignupCubit.dart';
 import 'package:grip/application/auth/SignupState.dart';
@@ -63,7 +63,7 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
           error = state.errorMessage ?? "Sign up failed";
         }
         if (state is SignupStateSuccess) {
-          Get.to(() => const AuthenticationSplashScreen());
+          g.Get.to(() => const AuthenticationSplashScreen(),transition: g.Transition.fadeIn);
         }
       },
       builder: (context, state) {
@@ -86,7 +86,7 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
                   Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: kDefaultSpacing * 0.5),
-                    width: Get.width,
+                    width: g.Get.width,
                     alignment: Alignment.centerLeft,
                     child: SizedBox(
                       height: 100,

@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
-import 'package:get_it/get_it.dart';
+import 'package:get/get.dart' as g;
+import 'package:get_it/get_it.dart' ;
 import 'package:grip/application/driver/manager_drivers_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/colors.dart';
@@ -76,7 +76,7 @@ class _DriversScreenState extends State<DriversScreen>
               children: [
                 GestureDetector(
                   onTap: () {
-                    Get.to(() => const AddDriverScreen());
+                    g.Get.to(() => const AddDriverScreen(),transition: g.Transition.fadeIn);
                   },
                   child: Row(
                     children: [
@@ -220,7 +220,7 @@ class _DriversScreenState extends State<DriversScreen>
                                     backgroundColor: kPrimaryColor,
                                     minimumSize: Size(150, 50)),
                                 onPressed: () {
-                                  Get.back(result: false);
+                                  g.Get.back(result: false);
                                 },
                                 child: Text(
                                   "Cancel",
@@ -240,7 +240,7 @@ class _DriversScreenState extends State<DriversScreen>
                                 style: kWhiteTextStyle,
                               ),
                               onPressed: () {
-                                Get.back(result: true);
+                                g.Get.back(result: true);
                               },
                             ),
                           ),

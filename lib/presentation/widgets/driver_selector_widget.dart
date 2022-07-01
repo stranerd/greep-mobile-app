@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' as g;
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/driver/drivers_cubit.dart';
 import 'package:grip/commons/colors.dart';
@@ -44,7 +44,7 @@ class _DriverSelectorRowState extends State<DriverSelectorRow> {
               if (i == state.drivers.length){
                 return SplashTap(
                   onTap: (){
-                    Get.to(() => const AddDriverScreen());
+                    g.Get.to(() => const AddDriverScreen(),transition: g.Transition.fadeIn);
                   },
                   child: Column(
                     children: [

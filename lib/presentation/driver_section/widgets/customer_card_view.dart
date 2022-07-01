@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' as g;
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
@@ -70,9 +70,9 @@ class CustomerCardView extends StatelessWidget {
     return SplashTap(
         onTap: () {
           if (transaction!=null) {
-          Get.to(() => CustomerDetails(
+          g.Get.to(() => CustomerDetails(
             name: transaction!.data.customerName!,
-          ),);
+          ),transition: g.Transition.fadeIn);
           }
     },
     child:  Container(

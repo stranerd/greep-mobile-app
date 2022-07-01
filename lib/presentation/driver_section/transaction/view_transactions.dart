@@ -5,11 +5,12 @@ import 'package:grip/application/user/utils/get_current_user.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' as g;
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/transactions/response/transaction_summary.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/application/driver/drivers_cubit.dart';
+import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/money.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/presentation/widgets/driver_selector_widget.dart';
@@ -286,13 +287,15 @@ class _TransactionViewState extends State<TransactionView> {
                               ),
 
                               SubmitButton(text: "Show Transactions",
+                                  backgroundColor: kGreenColor,
                                   enabled: from != null && to != null,
                                   onSubmit: (){
-                                Get.to(() => Range(
+                                g.Get.to(() => Range(
                                   userId: currentUser().id,
                                   from: from!,
                                   to: to!,
-                                ));
+
+                                ),transition: g.Transition.fadeIn);
                               }),
                             ],
                           ),

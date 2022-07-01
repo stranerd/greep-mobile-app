@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' as g;
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
@@ -60,7 +60,7 @@ class TransactionListCard extends StatelessWidget {
 
       onTap: transaction == null
           ? null
-          : shouldTap ? () => Get.to(() => TransactionDetails(transaction: transaction!)): null,
+          : shouldTap ? () => g.Get.to(() => TransactionDetails(transaction: transaction!),transition: g.Transition.fadeIn): null,
       title: Text(text, style: titleStyle),
       subtitle: Text(
         subText,

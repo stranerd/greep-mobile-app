@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:grip/commons/colors.dart';
+import 'package:grip/presentation/widgets/submit_button.dart';
 
 import '../../../../utils/constants/app_colors.dart';
 import '../../../../utils/constants/app_styles.dart';
@@ -37,9 +39,12 @@ class ContactUs extends StatelessWidget {
             children: [
               TextFormField(
                 controller: _textController,
+                minLines: 4,
+                maxLines: 4,
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
                   hintText: "Send us a message",
+
                   hintStyle: AppTextStyles.blackSize14,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -53,19 +58,7 @@ class ContactUs extends StatelessWidget {
               const SizedBox(
                 height: 16.0,
               ),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  color: AppColors.black,
-                ),
-                child: Text(
-                  "Send",
-                  style: AppTextStyles.whiteSize14,
-                  textAlign: TextAlign.center,
-                ),
-              ),
+              SubmitButton(text: "Send", onSubmit: (){}, backgroundColor: kGreenColor,),
             ],
           ),
         ),
