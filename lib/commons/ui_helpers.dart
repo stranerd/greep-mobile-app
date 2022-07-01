@@ -50,6 +50,10 @@ var kHeadingTextStyle = kDefaultTextStyle.copyWith(
 
 var kWhiteTextStyle = kDefaultTextStyle.copyWith(color: kWhiteColor);
 
+var kBoldWhiteTextStyle = kWhiteTextStyle.copyWith(
+  fontWeight: FontWeight.bold
+);
+
 var kSubtitleTextStyle = kDefaultTextStyle.copyWith(
   color: kBlackLightColor,
 );
