@@ -13,32 +13,40 @@ class CustomerTransactionListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
- return BlocBuilder<CustomerStatisticsCubit, CustomerStatisticsState>(
-  builder: (context, state) {
-    if (state is CustomerStatisticsStateDone){
-      List<Transaction> transactions  = GetIt.I<CustomerStatisticsCubit>().getCustomerTransactions().take(3).toList();
-      if (transactions.isEmpty) return const EmptyResultWidget(text: "No Customer transactions");
+    return BlocBuilder<CustomerStatisticsCubit, CustomerStatisticsState>(
+      builder: (context, state) {
+        if (state is CustomerStatisticsStateDone) {
+          List<Transaction> transactions = GetIt.I<CustomerStatisticsCubit>()
+              .getCustomerTransactions()
+              .take(3)
+              .toList();
+          if (transactions.isEmpty)
+            return const EmptyResultWidget(text: "No Customer transactions");
 
-      return LayoutBuilder(builder: (c,cs){
-      return Row(
-        mainAxisAlignment: transactions.length > 1 ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: transactions.map((e) => CustomerRecordCard(
-          width: transactions.length == 2 ? cs.maxWidth * 0.48 :  cs.maxWidth * 0.31,
-          transaction: e,
-          subtextTitleStyle:
-          AppTextStyles.blackSize12,
-          subtitleStyle: AppTextStyles.blackSize12,
-          titleStyle: AppTextStyles.greenSize16,
-        ),).toList(),
-      );
-    }
+          return LayoutBuilder(builder: (c, cs) {
+            return Row(
+              mainAxisAlignment: transactions.length > 1
+                  ? MainAxisAlignment.spaceBetween
+                  : MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: transactions
+                  .map(
+                    (e) => CustomerRecordCard(
+                      width: transactions.length == 2
+                          ? cs.maxWidth * 0.48
+                          : cs.maxWidth * 0.31,
+                      transaction: e,
+                      subtextTitleStyle: AppTextStyles.blackSize12,
+                      subtitleStyle: AppTextStyles.blackSize12,
+                      titleStyle: AppTextStyles.greenSize16,
+                    ),
+                  )
+                  .toList(),
+            );
+          });
+        }
+        return Container();
+      },
     );
-  }
-    return Container();
-    }
-
-    ,
-);
   }
 }

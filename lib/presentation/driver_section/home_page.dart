@@ -194,9 +194,6 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                         padding: EdgeInsets.zero,
                                         itemBuilder: (c, i) {
                                           return TransactionListCard(
-                                            title: "Kemi",
-                                            subtitle: "Mar 19 . 10:54 AM",
-                                            trailing: "+20\$",
                                             transaction: transactions[i],
                                             titleStyle: AppTextStyles.blackSize14,
                                             subtitleStyle: AppTextStyles.blackSize12,

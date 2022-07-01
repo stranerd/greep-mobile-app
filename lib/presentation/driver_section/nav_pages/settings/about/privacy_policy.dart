@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:grip/commons/ui_helpers.dart';
 
 import '../../../../../utils/constants/app_styles.dart';
 
@@ -32,8 +33,25 @@ class PrivacyPolicy extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("Privacy Policy", style: AppTextStyles.blackSizeBold16),
+              kVerticalSpaceSmall,
+              Text.rich(TextSpan(
+                  style:kDefaultTextStyle,
+                  children: [
+                TextSpan(text: "  At Stranerd, accessible from stranerd.com, one of our main priorities is the privacy of our visitors."
+                    " This Privacy Policy document contains types of information that is collected and recorded by Stranerd and how we use it."
+                    " If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us. "
+                    "This Privacy Policy applies only to our online activities and is valid for visitors to our website with regards to the information that they shared and/or collect in Stranerd. "
+                    "This policy is not applicable to any information collected offline or via channels otherthan this website."),
+
+                TextSpan(text: "\n\nConsent\n\n", style: kBoldTextStyle2),
+                TextSpan(text: """  By using our website, you hereby consent to our Privacy Policy and agree to its terms."""),
+                TextSpan(
+                    text: "\n\nInformation we collect\n\n", style: kBoldTextStyle2),
+                TextSpan(text: """  The personal information that you are asked to provide,and the reasons why you are asked to provide it, will be made clear to you at the point we ask you to provide your personal information.""")
+              ]))
             ],
           ),
         ),

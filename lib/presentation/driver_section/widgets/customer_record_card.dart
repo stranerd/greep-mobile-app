@@ -40,23 +40,24 @@ class CustomerRecordCard extends StatelessWidget {
       text = transaction!.amount.toString();
 
       var paymentType = type == TransactionType.trip && transaction!.credit > 0
-          ? "to collect"
+          ? "to pay"
           : transaction!.debt > 0
-              ? "to pay"
+              ? "to collect"
               : type == TransactionType.balance
                   ? "balanced"
                   : "balanced";
       if (paymentType.contains("collect")){
-        text = transaction!.credit.toString();
+        text = transaction!.debt.toString();
       }
       if (paymentType.contains("pay")){
-        text = transaction!.debt.toString();
+        text = transaction!.credit.toString();
       }
       subText = paymentType;
 
-      textStyle = type == TransactionType.trip && transaction!.debt > 0
-          ? kDefaultTextStyle.copyWith(color: kGreenColor, fontSize: 12)
-          : type == TransactionType.balance
+      textStyle = type == TransactionType.trip && transaction!.credit > 0
+          ? kDefaultTextStyle.copyWith(color: kErrorColor, fontSize: 12) :
+          transaction!.debt > 0 ? kDefaultTextStyle.copyWith(color: kBlueColor, fontSize: 12)
+              : type == TransactionType.balance
               ? kDefaultTextStyle.copyWith(fontSize: 12)
               : kDefaultTextStyle.copyWith(fontSize: 12);
       if (type == TransactionType.balance) {
@@ -86,7 +87,7 @@ class CustomerRecordCard extends StatelessWidget {
       child: Container(
         width: width ?? Get.width * 0.31,
         height: 110,
-        padding: EdgeInsets.all(kDefaultSpacing),
+        padding: const EdgeInsets.all(kDefaultSpacing),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
           border: Border.all(

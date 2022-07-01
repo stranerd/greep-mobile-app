@@ -42,7 +42,7 @@ class _TransactionBalanceWidgetState extends State<TransactionBalanceWidget>
     _amountController = TextEditingController();
     if (customer != null) {
       _amountController.text = customer!.debt.abs().toString();
-      _debtType = customer!.debt > 0 ? "Collect": "Pay";
+      _debtType = customer!.debt > 0 ? "Pay": "Collect";
       setState(() {
         isCredit = customer!.debt > 0;
       });
@@ -82,7 +82,7 @@ class _TransactionBalanceWidgetState extends State<TransactionBalanceWidget>
                     children: [
                       Container(
                         width: constraints.maxWidth * 0.5,
-                        decoration: BoxDecoration(),
+                        decoration: const BoxDecoration(),
                         child: LoginTextField(
                           customController: _amountController,
                           withTitle: false,

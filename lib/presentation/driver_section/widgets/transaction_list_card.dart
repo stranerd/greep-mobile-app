@@ -10,31 +10,26 @@ import 'package:intl/intl.dart';
 class TransactionListCard extends StatelessWidget {
   const TransactionListCard(
       {Key? key,
-      required this.title,
-      required this.subtitle,
-      required this.trailing,
         this.shouldTap = true,
       required this.titleStyle,
+        this.withBorder = false,
       this.transaction,
       required this.subtitleStyle,
       required this.trailingStyle})
       : super(key: key);
-  final String title;
-  final String subtitle;
-  final String trailing;
   final Transaction? transaction;
   final TextStyle titleStyle;
   final TextStyle subtitleStyle;
+  final bool withBorder;
   final TextStyle trailingStyle;
   final bool shouldTap;
 
   @override
   Widget build(BuildContext context) {
-    String text = title;
-    String subText = subtitle;
-    String trailText = trailing;
+    String text = "";
+    String subText = "";
+    String trailText = "";
 
-    TextStyle subStyle = subtitleStyle;
     TextStyle trailStyle = trailingStyle;
     if (transaction != null) {
       var type = transaction!.data.transactionType;
@@ -44,7 +39,7 @@ class TransactionListCard extends StatelessWidget {
               ? "balance"
               : type == TransactionType.expense
                   ? transaction!.data.name!
-                  : title)!;
+                  : "")!;
 
       subText = DateFormat(
               "${DateFormat.ABBR_MONTH} ${DateFormat.DAY} . hh:${DateFormat.MINUTE} a")
@@ -56,19 +51,26 @@ class TransactionListCard extends StatelessWidget {
           ? kDefaultTextStyle.copyWith(color: kGreenColor, fontSize: 12)
           : kErrorColorTextStyle.copyWith(fontSize: 12);
     }
-    return ListTile(
+    return Container(
+      decoration:withBorder ? BoxDecoration(
+        border: Border.all(color: Colors.grey.shade200,
+        ),
+        borderRadius: BorderRadius.circular(kDefaultSpacing * 0.5)
 
-      onTap: transaction == null
-          ? null
-          : shouldTap ? () => g.Get.to(() => TransactionDetails(transaction: transaction!),transition: g.Transition.fadeIn): null,
-      title: Text(text, style: titleStyle),
-      subtitle: Text(
-        subText,
-        style: kDefaultTextStyle.copyWith(fontSize: 13),
-      ),
-      trailing: Text(
-        trailText,
-        style: trailStyle,
+      ): null,
+      child: ListTile(
+        onTap: transaction == null
+            ? null
+            : shouldTap ? () => g.Get.to(() => TransactionDetails(transaction: transaction!),transition: g.Transition.fadeIn): null,
+        title: Text(text, style: titleStyle),
+        subtitle: Text(
+          subText,
+          style: kDefaultTextStyle.copyWith(fontSize: 13),
+        ),
+        trailing: Text(
+          trailText,
+          style: trailStyle,
+        ),
       ),
     );
   }

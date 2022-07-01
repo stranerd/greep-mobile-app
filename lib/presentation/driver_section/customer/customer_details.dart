@@ -112,13 +112,13 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                         subtitleStyle: AppTextStyles.blackSize12),
                     RecordCard(
                         width: constraints.maxWidth * 0.31,
-                        title: "N${customer !=null ? debt > 0 ? debt : 0 : _customerSummary.toCollect.toMoney}",
+                        title: "N${customer !=null ? debt < 0 ? debt.abs() : 0 : _customerSummary.toPay.toMoney}",
                         subtitle: "To collect",
                         titleStyle: AppTextStyles.blueSize16,
                         subtitleStyle: AppTextStyles.blackSize12),
                     RecordCard(
                         width: constraints.maxWidth * 0.31,
-                        title: "N${customer !=null ? debt < 0 ? debt.abs() : 0  : _customerSummary.toPay.toMoney}",
+                        title: "N${customer !=null ? debt > 0 ? debt : 0  : _customerSummary.toCollect.toMoney}",
                         subtitle: "To pay",
                         titleStyle: AppTextStyles.redSize16,
                         subtitleStyle: AppTextStyles.blackSize12),
@@ -126,7 +126,8 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                 );
               }),
               kVerticalSpaceRegular,
-              if (GetIt.I<DriversCubit>().selectedUser == currentUser())TransactionBalanceWidget(customerName: widget.name,),
+              if (GetIt.I<DriversCubit>().selectedUser == currentUser())
+                TransactionBalanceWidget(customerName: widget.name,),
               kVerticalSpaceRegular,
               Text("Transaction history",
                   style: AppTextStyles.blackSizeBold12),
@@ -137,10 +138,8 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                   children: _customerSummary.transactions
                       .map(
                         (e) => TransactionListCard(
-                          title: "Trip",
-                          subtitle: "Mar 19 . 10:54 AM",
-                          trailing: "+20\$",
                           transaction: e,
+                          withBorder: true,
                           titleStyle: AppTextStyles.blackSize14,
                           subtitleStyle: AppTextStyles.blackSize12,
                           trailingStyle: AppTextStyles.greenSize14,
