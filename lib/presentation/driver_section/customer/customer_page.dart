@@ -64,16 +64,16 @@ class _CustomerViewState extends State<CustomerView> {
       ],
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          toolbarHeight: 30,
-          backgroundColor: Colors.white,
-          title: Text(
-            'Greep',
-            style: AppTextStyles.blackSizeBold16,
-          ),
-          centerTitle: true,
-          elevation: 0.0,
-        ),
+        // appBar: AppBar(
+        //   toolbarHeight: 30,
+        //   backgroundColor: Colors.white,
+        //   title: Text(
+        //     'Greep',
+        //     style: AppTextStyles.blackSizeBold16,
+        //   ),
+        //   centerTitle: true,
+        //   elevation: 0.0,
+        // ),
         body: Padding(
           padding: const EdgeInsets.all(kDefaultSpacing * 0.5),
           child: SafeArea(

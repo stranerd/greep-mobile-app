@@ -56,16 +56,16 @@ class _DriverHomePageState extends State<DriverHomePage> {
 
         return Scaffold(
             backgroundColor: Colors.white,
-            appBar: AppBar(
-              toolbarHeight: 30,
-              backgroundColor: Colors.white,
-              title: Text(
-                'Greep',
-                style: AppTextStyles.blackSizeBold16,
-              ),
-              centerTitle: true,
-              elevation: 0.0,
-            ),
+            // appBar: AppBar(
+            //   toolbarHeight: 30,
+            //   backgroundColor: Colors.white,
+            //   title: Text(
+            //     'Greep',
+            //     style: AppTextStyles.blackSizeBold16,
+            //   ),
+            //   centerTitle: true,
+            //   elevation: 0.0,
+            // ),
             body: BlocConsumer<UserTransactionsCubit, UserTransactionsState>(
               listener: (c, s) {
                 if (s is UserTransactionsStateError ||
