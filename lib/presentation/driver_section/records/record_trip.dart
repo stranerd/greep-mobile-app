@@ -422,8 +422,10 @@ class _RecordTripState extends State<RecordTrip>
                           isLoading: s is TransactionCrudStateLoading,
                           enabled: s is! TransactionCrudStateLoading,
                           text: "Submit",
-                          onSubmit: _recordTrip)
+                          onSubmit: _recordTrip),
+                      kVerticalSpaceRegular
                     ],
+
                   ),
                 ),
               ),
