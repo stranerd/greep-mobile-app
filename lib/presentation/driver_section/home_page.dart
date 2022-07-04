@@ -92,12 +92,12 @@ class _DriverHomePageState extends State<DriverHomePage> {
                             width: g.Get.width,
                             height: g.Get.height - (driverState is DriversStateDriver ? 240 :(driverState is DriversStateFetched &&
                                 driverState.selectedUser == currentUser()) ? 300: 230),
-                            child: SmartRefresher(
-                              controller: _refreshController,
-                              onRefresh: _onRefresh,
-                              child: SizedBox(
-                                height: g.Get.height - (driverState is DriversStateDriver ? 240 :(driverState is DriversStateFetched &&
-                                    driverState.selectedUser == currentUser()) ? 300: 230),
+                            child: SizedBox(
+                              height: g.Get.height - (driverState is DriversStateDriver ? 240 :(driverState is DriversStateFetched &&
+                                  driverState.selectedUser == currentUser()) ? 300: 230),
+                              child: SmartRefresher(
+                                controller: _refreshController,
+                                onRefresh: _onRefresh,
                                 child: ListView(
                                   shrinkWrap: true,
                                   padding: const EdgeInsets.symmetric(

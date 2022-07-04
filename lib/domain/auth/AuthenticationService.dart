@@ -152,4 +152,8 @@ class AuthenticationService {
     print("token data $data");
     AuthStore().setToken(data);
   }
+
+  Future<ResponseEntity> sendResetPasswordCode(String email) async {
+    return await authenticationClient.sendResetPasswordCode(email);
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/SignupCubit.dart';
+import 'package:grip/application/auth/password/reset_password_cubit.dart';
 import 'package:grip/application/customers/user_customers_cubit.dart';
 import 'package:grip/application/driver/manager_drivers_cubit.dart';
 import 'package:grip/application/driver/new_manager_accepts_cubit.dart';
@@ -38,6 +39,7 @@ class IoC {
   late CustomerService _customerService;
   late UserCustomersCubit _userCustomersCubit;
   late NewManagerAcceptsCubit _newManagerAcceptsCubit;
+
   var getIt = GetIt.instance;
 
   IoC() {
@@ -103,7 +105,9 @@ class IoC {
         ));
     getIt.registerSingleton(_userCustomersCubit);
 
-
+    getIt.registerFactory(() => ResetPasswordCubit(
+      authenticationService: _authenticationService,
+    ));
     getIt.registerFactory(() => UserCrudCubit(
           userService: _userService,
         ));

@@ -196,4 +196,36 @@ class AuthenticationClient {
           "An error occurred logging you in. Try again");
     }
   }
+
+  Future<ResponseEntity> sendResetPasswordCode(
+      String email,
+      ) async {
+    final Dio dio = Dio();
+    Response response;
+    try {
+      response = await dio.post(
+        "${baseApi}auth/passwords/reset",
+      );
+
+      return ResponseEntity.Data(null);
+    } on DioError catch (e) {
+      if (e.type == DioErrorType.connectTimeout) {
+        return ResponseEntity.Timeout();
+      }
+      if (e.error is SocketException) {
+        return ResponseEntity.Socket();
+      }
+      if (e.type == DioErrorType.response) {
+        return ResponseEntity.Error(
+            e.response!.data[0]["message"] ?? "Password Reset failed");
+      }
+
+      return ResponseEntity.Error("Password Reset failed");
+    } catch (e) {
+      print("Exception $e");
+      return ResponseEntity.Error(
+          "An error occurred sending code. Try again");
+    }
+  }
+
 }
