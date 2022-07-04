@@ -38,6 +38,7 @@ class _RecordTripState extends State<RecordTrip>
   late TextEditingController _nameController;
   late TextEditingController _priceController;
   late TextEditingController _paidController;
+  late TextEditingController _destinationController;
 
   late TransactionCrudCubit _transactionCrudCubit;
 
@@ -56,6 +57,7 @@ class _RecordTripState extends State<RecordTrip>
     _nameController = TextEditingController();
     _priceController = TextEditingController();
     _paidController = TextEditingController();
+    _destinationController = TextEditingController()..text="1";
 
     super.initState();
   }
@@ -265,6 +267,8 @@ class _RecordTripState extends State<RecordTrip>
                             onTap: () {
                               if (_destinationCount > 1) {
                                 _destinationCount--;
+                                _destinationController.text = _destinationCount.toString();
+
                                 setState(() {});
                               }
                             },
@@ -279,14 +283,34 @@ class _RecordTripState extends State<RecordTrip>
                               ),
                             ),
                           ),
-                          Text(
-                            _destinationCount.toString(),
-                            style: kBoldTextStyle.copyWith(fontSize: 20),
+                          SizedBox(
+                            width: 50,
+                            height: 60,
+                            child: TextField(
+                              style: kBoldTextStyle.copyWith(
+                                fontSize: 18
+                              ),
+                              controller: _destinationController,
+                              onChanged: (String s) {
+                                int l = int.tryParse(s)??0;
+                                _destinationCount = l;
+                                _destinationController..text = _destinationCount.toString()
+                                  ..selection = TextSelection.fromPosition(
+                                      TextPosition(offset: _destinationController.text.length));
+                              },
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                enabledBorder:InputBorder.none
+                              ),
+                            ),
                           ),
+
                           GestureDetector(
                             onTap: () {
                               if (_destinationCount < 10) {
                                 _destinationCount++;
+                                _destinationController.text = _destinationCount.toString();
                                 setState(() {});
                               }
                             },

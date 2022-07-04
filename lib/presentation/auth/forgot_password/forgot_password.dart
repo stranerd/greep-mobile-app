@@ -127,7 +127,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
       return null;
   }
 
-
   void _sendResetPasswordCode() {
     if (formKey.currentState!.validate()){
     _resetPasswordCubit.sendResetCode(email);

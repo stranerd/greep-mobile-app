@@ -6,6 +6,7 @@ import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/application/user/utils/get_current_user.dart';
+import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/money.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
@@ -29,6 +30,7 @@ class TransactionDetails extends StatelessWidget {
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+
           backgroundColor: Colors.white,
           leading: IconButton(
               onPressed: () {
@@ -44,135 +46,137 @@ class TransactionDetails extends StatelessWidget {
             style: AppTextStyles.blackSizeBold14,
           ),
           centerTitle: false,
-          elevation: 0.0,
+          elevation: 1.0,
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (transaction.data.transactionType == TransactionType.balance)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      kVerticalSpaceRegular,
-                    ],
-                  ),
-                if (transaction.data.transactionType == TransactionType.trip)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      kVerticalSpaceRegular,
-                      Text("Customer", style: AppTextStyles.blackSize12),
-                      const SizedBox(
-                        height: 4.0,
-                      ),
-                      Text(transaction.data.customerName ?? "",
-                          style: AppTextStyles.blackSize16),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                    ],
-                  ),
-                if (transaction.data.transactionType == TransactionType.expense)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Expense", style: AppTextStyles.blackSize12),
-                      const SizedBox(
-                        height: 4.0,
-                      ),
-                      Text(transaction.data.name ?? "",
-                          style: AppTextStyles.blackSize16),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                    ],
-                  ),
-                Text(
-                  "Date/Time",
-                  style: AppTextStyles.blackSize12,
-                ),
-                const SizedBox(
-                  height: 4.0,
-                ),
-                Text(
-                  DateFormat(
-                          "${DateFormat.ABBR_MONTH} ${DateFormat.DAY} . hh:mm a")
-                      .format(transaction.timeAdded),
-                  style: AppTextStyles.blackSize16,
-                ),
-                const SizedBox(
-                  height: 16.0,
-                ),
-                Text(
-                  "Price",
-                  style: AppTextStyles.blackSize12,
-                ),
-                const SizedBox(
-                  height: 4.0,
-                ),
-                Text(
-                  "N${transaction.amount.toMoney}",
-                  style: AppTextStyles.blackSize16,
-                ),
-                const SizedBox(
-                  height: 16.0,
-                ),
-                if (transaction.data.transactionType == TransactionType.trip)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Paid",
-                        style: AppTextStyles.blackSize12,
-                      ),
-                      const SizedBox(
-                        height: 4.0,
-                      ),
-                      Text(
-                        "N${transaction.data.paidAmount!.toMoney}",
-                        style: AppTextStyles.blackSize16,
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                    ],
-                  ),
-                if (transaction.data.transactionType == TransactionType.trip)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Payment Type",
-                        style: AppTextStyles.blackSize12,
-                      ),
-                      const SizedBox(
-                        height: 4.0,
-                      ),
-                      Text(
-                        transaction.data.paymentType!.name.capitalize!,
-                        style: AppTextStyles.blackSize16,
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                    ],
-                  ),
-                Text(
-                  "Description",
-                  style: AppTextStyles.blackSize12,
-                ),
-                const SizedBox(
-                  height: 4.0,
-                ),
-                Text(
-                  transaction.description,
-                  style: AppTextStyles.blackSize16,
-                ),
-              ],
+        body: Container(
+          margin: const EdgeInsets.all(kDefaultSpacing * 0.5),
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: AppColors.darkGray,
+
             ),
+            borderRadius: BorderRadius.circular(kDefaultSpacing)
+          ),
+          child: ListView(
+            shrinkWrap: true,
+            physics: const BouncingScrollPhysics(),
+            children: [
+              if (transaction.data.transactionType == TransactionType.balance)
+                kVerticalSpaceRegular,
+              if (transaction.data.transactionType == TransactionType.trip)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    kVerticalSpaceRegular,
+                    Text("Customer", style: AppTextStyles.blackSize12),
+                    const SizedBox(
+                      height: 4.0,
+                    ),
+                    Text(transaction.data.customerName ?? "",
+                        style: AppTextStyles.blackSize16),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                  ],
+                ),
+              if (transaction.data.transactionType == TransactionType.expense)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Expense", style: AppTextStyles.blackSize12),
+                    const SizedBox(
+                      height: 4.0,
+                    ),
+                    Text(transaction.data.name ?? "",
+                        style: AppTextStyles.blackSize16),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                  ],
+                ),
+              Text(
+                "Date/Time",
+                style: AppTextStyles.blackSize12,
+              ),
+              const SizedBox(
+                height: 4.0,
+              ),
+              Text(
+                DateFormat(
+                        "${DateFormat.ABBR_MONTH} ${DateFormat.DAY} . hh:mm a")
+                    .format(transaction.timeAdded),
+                style: AppTextStyles.blackSize16,
+              ),
+              const SizedBox(
+                height: 16.0,
+              ),
+              Text(
+                "Price",
+                style: AppTextStyles.blackSize12,
+              ),
+              const SizedBox(
+                height: 4.0,
+              ),
+              Text(
+                "N${transaction.amount.toMoney}",
+                style: AppTextStyles.blackSize16,
+              ),
+              const SizedBox(
+                height: 16.0,
+              ),
+              if (transaction.data.transactionType == TransactionType.trip)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Paid",
+                      style: AppTextStyles.blackSize12,
+                    ),
+                    const SizedBox(
+                      height: 4.0,
+                    ),
+                    Text(
+                      "N${transaction.data.paidAmount!.toMoney}",
+                      style: AppTextStyles.blackSize16,
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                  ],
+                ),
+              if (transaction.data.transactionType == TransactionType.trip)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Payment Type",
+                      style: AppTextStyles.blackSize12,
+                    ),
+                    const SizedBox(
+                      height: 4.0,
+                    ),
+                    Text(
+                      transaction.data.paymentType!.name.capitalize!,
+                      style: AppTextStyles.blackSize16,
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                  ],
+                ),
+              Text(
+                "Description",
+                style: AppTextStyles.blackSize12,
+              ),
+              const SizedBox(
+                height: 4.0,
+              ),
+              Text(
+                transaction.description,
+                style: AppTextStyles.blackSize16,
+              ),
+            ],
           ),
         ),
       );

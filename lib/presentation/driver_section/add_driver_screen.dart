@@ -26,6 +26,8 @@ class _AddDriverScreenState extends State<AddDriverScreen> with ScaffoldMessenge
   String _driverId = "";
 
   late TextEditingController _driverIdController;
+  late TextEditingController _commissionController;
+
 
   late UserCrudCubit _userCrudCubit;
 
@@ -36,6 +38,8 @@ class _AddDriverScreenState extends State<AddDriverScreen> with ScaffoldMessenge
   @override
   void initState() {
     _driverIdController = TextEditingController();
+    _commissionController = TextEditingController()..text="0";
+
     _userCrudCubit = GetIt.I<UserCrudCubit>();
     super.initState();
   }
@@ -136,10 +140,29 @@ class _AddDriverScreenState extends State<AddDriverScreen> with ScaffoldMessenge
                                       ),
                                     ),
                                   ),
-                                  Text(
-                                    _commission.toString(),
-                                    style: kBoldTextStyle.copyWith(fontSize: 20),
+                                  SizedBox(
+                                    width: 50,
+                                    height: 60,
+                                    child: TextField(
+                                      style: kBoldTextStyle.copyWith(
+                                          fontSize: 18
+                                      ),
+                                      controller: _commissionController,
+                                      onChanged: (String s) {
+                                        int l = int.tryParse(s)??0;
+                                        _commission = l;
+                                        _commissionController..text = _commission.toString()
+                                          ..selection = TextSelection.fromPosition(
+                                              TextPosition(offset: _commissionController.text.length));
+                                      },
+                                      keyboardType: TextInputType.number,
+                                      decoration: const InputDecoration(
+                                          border: InputBorder.none,
+                                          enabledBorder:InputBorder.none
+                                      ),
+                                    ),
                                   ),
+
                                   GestureDetector(
                                     onTap: () {
                                       if (_commission <= 100) {
