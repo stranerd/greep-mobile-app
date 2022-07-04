@@ -97,36 +97,36 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                   ),
                 ),
                 kVerticalSpaceRegular,
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: kDefaultSpacing),
-                  width: Get.width,
-                  padding: EdgeInsets.all(kDefaultSpacing * 0.5),
-                  decoration: BoxDecoration(
-                    color: kLightGrayColor,
-                    borderRadius: BorderRadius.circular(kDefaultSpacing * 0.5),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      isDense: true,
-                      isExpanded: true,
-                      value: selectedInterval,
-                      items: timeIntervals
-                          .map((e) => DropdownMenuItem(
-                                child: Text(
-                                  e,
-                                  style:
-                                      kDefaultTextStyle.copyWith(fontSize: 14),
-                                ),
-                                value: e,
-                              ))
-                          .toList(),
-                      onChanged: (String? value) {
-                        selectedInterval = value ?? selectedInterval;
-                        setState(() {});
-                      },
-                    ),
-                  ),
-                ),
+                // Container(
+                //   margin: EdgeInsets.symmetric(horizontal: kDefaultSpacing),
+                //   width: Get.width,
+                //   padding: EdgeInsets.all(kDefaultSpacing * 0.5),
+                //   decoration: BoxDecoration(
+                //     color: kLightGrayColor,
+                //     borderRadius: BorderRadius.circular(kDefaultSpacing * 0.5),
+                //   ),
+                //   child: DropdownButtonHideUnderline(
+                //     child: DropdownButton<String>(
+                //       isDense: true,
+                //       isExpanded: true,
+                //       value: selectedInterval,
+                //       items: timeIntervals
+                //           .map((e) => DropdownMenuItem(
+                //                 child: Text(
+                //                   e,
+                //                   style:
+                //                       kDefaultTextStyle.copyWith(fontSize: 14),
+                //                 ),
+                //                 value: e,
+                //               ))
+                //           .toList(),
+                //       onChanged: (String? value) {
+                //         selectedInterval = value ?? selectedInterval;
+                //         setState(() {});
+                //       },
+                //     ),
+                //   ),
+                // ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(kDefaultSpacing),

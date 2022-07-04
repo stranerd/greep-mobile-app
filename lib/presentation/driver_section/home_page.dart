@@ -58,43 +58,47 @@ class _DriverHomePageState extends State<DriverHomePage> {
       builder: (context, userState) {
         var userId = currentUser().id;
         return Scaffold(
-            backgroundColor: Colors.white,
-            // appBar: AppBar(
-            //   toolbarHeight: 30,
-            //   backgroundColor: Colors.white,
-            //   title: Text(
-            //     'Greep',
-            //     style: AppTextStyles.blackSizeBold16,
-            //   ),
-            //   centerTitle: true,
-            //   elevation: 0.0,
-            // ),
-            body: BlocConsumer<UserTransactionsCubit, UserTransactionsState>(
-              listener: (c, s)
-              {
-                if (s is UserTransactionsStateError ||
-                    s is UserTransactionsStateFetched) {
-                  setState(() {});
-                  _refreshController.refreshCompleted();
-                }
-              },
-              builder: (context, transState) {
-                return BlocBuilder<TransactionSummaryCubit,
-                    TransactionSummaryState>(
-                  builder: (context, summaryState) {
+          backgroundColor: Colors.white,
+          // appBar: AppBar(
+          //   toolbarHeight: 30,
+          //   backgroundColor: Colors.white,
+          //   title: Text(
+          //     'Greep',
+          //     style: AppTextStyles.blackSizeBold16,
+          //   ),
+          //   centerTitle: true,
+          //   elevation: 0.0,
+          // ),
+          body: BlocConsumer<UserTransactionsCubit, UserTransactionsState>(
+              listener: (c, s) {
+            if (s is UserTransactionsStateError ||
+                s is UserTransactionsStateFetched) {
+              setState(() {});
+              _refreshController.refreshCompleted();
+            }
+          }, builder: (context, transState) {
+            return BlocBuilder<TransactionSummaryCubit,
+                TransactionSummaryState>(
+              builder: (context, summaryState) {
+                return BlocBuilder<DriversCubit, DriversState>(
+                  builder: (context, driverState) {
                     return SafeArea(
                       child: Stack(
-                          children: [
-                            Positioned(
-                              top: 250,
-                              width: g.Get.width,
-                              height: g.Get.height -300,
-                              child: SmartRefresher(
-                                controller: _refreshController,
-                                onRefresh: _onRefresh,
-                                child: SizedBox(
-                                  height: g.Get.height - 300,
-                                  child: ListView(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Positioned(
+                            top: driverState is DriversStateDriver ? 185 :(driverState is DriversStateFetched &&
+                                driverState.selectedUser == currentUser()) ? 230 : 170,
+                            width: g.Get.width,
+                            height: g.Get.height - (driverState is DriversStateDriver ? 240 :(driverState is DriversStateFetched &&
+                                driverState.selectedUser == currentUser()) ? 300: 230),
+                            child: SmartRefresher(
+                              controller: _refreshController,
+                              onRefresh: _onRefresh,
+                              child: SizedBox(
+                                height: g.Get.height - (driverState is DriversStateDriver ? 240 :(driverState is DriversStateFetched &&
+                                    driverState.selectedUser == currentUser()) ? 300: 230),
+                                child: ListView(
                                   shrinkWrap: true,
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: kDefaultSpacing),
@@ -106,7 +110,8 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                           style: AppTextStyles.blackSizeBold12),
                                       trailing: SplashTap(
                                         onTap: () {
-                                          g.Get.to(() => ViewAllRecords(), transition: g.Transition.fadeIn);
+                                          g.Get.to(() => ViewAllRecords(),
+                                              transition: g.Transition.fadeIn);
                                         },
                                         child: Text("view all",
                                             style: AppTextStyles.blackSize12),
@@ -115,8 +120,10 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                     TransactionIntervalSummaryWidget(
                                         userId: userId,
                                         to: DateTime.now(),
-                                        from: DateTime(DateTime.now().year,
-                                            DateTime.now().month, DateTime.now().day)),
+                                        from: DateTime(
+                                            DateTime.now().year,
+                                            DateTime.now().month,
+                                            DateTime.now().day)),
                                     kVerticalSpaceRegular,
                                     ListTile(
                                       contentPadding:
@@ -125,7 +132,8 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                           style: AppTextStyles.blackSizeBold12),
                                       trailing: SplashTap(
                                         onTap: () {
-                                          g.Get.to(() => ViewAllRecords(),transition: g.Transition.fadeIn);
+                                          g.Get.to(() => ViewAllRecords(),
+                                              transition: g.Transition.fadeIn);
                                         },
                                         child: Text("view all",
                                             style: AppTextStyles.blackSize12),
@@ -133,17 +141,22 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                     ),
                                     TransactionIntervalSummaryWidget(
                                         userId: userId,
-                                        to: DateTime(DateTime.now().year,
-                                            DateTime.now().month, DateTime.now().day),
+                                        to: DateTime(
+                                            DateTime.now().year,
+                                            DateTime.now().month,
+                                            DateTime.now().day),
                                         from: DateTime(
                                             DateTime.now()
-                                                .subtract(const Duration(days: 1))
+                                                .subtract(
+                                                    const Duration(days: 1))
                                                 .year,
                                             DateTime.now()
-                                                .subtract(const Duration(days: 1))
+                                                .subtract(
+                                                    const Duration(days: 1))
                                                 .month,
                                             DateTime.now()
-                                                .subtract(const Duration(days: 1))
+                                                .subtract(
+                                                    const Duration(days: 1))
                                                 .day)),
                                     kVerticalSpaceRegular,
                                     ListTile(
@@ -161,10 +174,10 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                             );
                                           },
                                           child: Text("view all",
-                                              style: AppTextStyles.blackSize12)),
+                                              style:
+                                                  AppTextStyles.blackSize12)),
                                     ),
-                                    const CustomerTransactionListWidget(
-                                    ),
+                                    const CustomerTransactionListWidget(),
                                     kVerticalSpaceRegular,
                                     ListTile(
                                       contentPadding:
@@ -173,7 +186,9 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                           style: AppTextStyles.blackSizeBold12),
                                       trailing: SplashTap(
                                         onTap: () {
-                                          g.Get.to(() => const TransactionView(),arguments: {"showAppBar": true},
+                                          g.Get.to(
+                                              () => const TransactionView(),
+                                              arguments: {"showAppBar": true},
                                               transition: g.Transition.fadeIn);
                                         },
                                         child: Text("view all",
@@ -189,7 +204,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                             text: "No recent transactions");
                                       }
                                       return ListView.separated(
-                                        separatorBuilder: (_,__) => Row(
+                                        separatorBuilder: (_, __) => Row(
                                           children: [
                                             SizedBox(
                                               width: 70,
@@ -199,162 +214,213 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                                 width: Get.width * 0.7,
                                                 height: 4,
                                                 decoration: const BoxDecoration(
-                                                  color: AppColors.lightGray
-                                                ),
+                                                    color: AppColors.lightGray),
                                               ),
                                             ),
                                           ],
                                         ),
                                         itemCount: transactions.length,
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,
                                         padding: EdgeInsets.zero,
                                         itemBuilder: (c, i) {
                                           return TransactionListCard(
                                             transaction: transactions[i],
                                             withLeading: true,
-
                                           );
                                         },
                                       );
                                     }),
                                     kVerticalSpaceLarge,
                                   ],
-                              ),
-                                ),),
-                            ),
-                            Positioned(
-                              top: 0,
-                              width: g.Get.width,
-                              child: Container(
-                                width: g.Get.width,
-                                height: 230,
-                                clipBehavior: Clip.none,
-                                padding: const EdgeInsets.all(kDefaultSpacing * 0.5),
-                                decoration: const BoxDecoration(
-                                  color: kBlackColor,
-
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    kVerticalSpaceSmall,
-                                    const DriverSelectorRow(withWhiteText: true,),
-                                    BlocBuilder<DriversCubit, DriversState>(
-                                      builder: (context, driverState) {
-                                        return Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 0,
+                            width: g.Get.width,
+                            child: Container(
+                              width: g.Get.width,
+                              height: driverState is DriversStateDriver ? 185 : ((driverState is DriversStateFetched &&
+                                  driverState.selectedUser == currentUser()) ? 230: 160),
+                              decoration: const BoxDecoration(
+                                color: kWhiteColor,
+                              ),
+                              child: Stack(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        color: kBlackColor,
+                                        height: driverState is DriversStateDriver ? 160 : ((driverState is DriversStateFetched &&
+                                            driverState.selectedUser == currentUser()) ? 205: 160),
+                                        width: Get.width,
+                                        padding: const EdgeInsets.all(kDefaultSpacing * 0.5),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             kVerticalSpaceSmall,
-                                            driverState is DriversStateDriver
-                                                ? ListTile(
-                                              contentPadding:
-                                              const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                              title: Text(
-                                                DateFormat(
-                                                    "${DateFormat.ABBR_WEEKDAY}, ${DateFormat.ABBR_MONTH} ${DateFormat.DAY}")
-                                                    .format(DateTime.now()),
-                                                style: AppTextStyles.whiteSize12,
-                                              ),
-                                              subtitle: Text(
-                                                  "Hi ${userState is UserStateFetched ? userState.user.firstName : "!"}",
-                                                  style: kBoldWhiteTextStyle),
-                                              trailing: SplashTap(
-                                                onTap: (){
-                                                  g.Get.to(() => const ProfileView(),transition: g.Transition.fadeIn);},
-                                                child: CircleAvatar(
-                                                  backgroundImage:
-                                                  CachedNetworkImageProvider(
-                                                      userState is UserStateFetched
-                                                          ? userState.user.photoUrl
-                                                          : ""),
-                                                  child: const Text(""),
+                                            const DriverSelectorRow(
+                                              withWhiteText: true,
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                kVerticalSpaceSmall,
+                                                driverState
+                                                        is DriversStateDriver
+                                                    ? ListTile(
+                                                        contentPadding:
+                                                            const EdgeInsets
+                                                                    .fromLTRB(
+                                                                0, 0, 0, 0),
+                                                        title: Text(
+                                                          DateFormat(
+                                                                  "${DateFormat.ABBR_WEEKDAY}, ${DateFormat.ABBR_MONTH} ${DateFormat.DAY}")
+                                                              .format(DateTime
+                                                                  .now()),
+                                                          style: AppTextStyles
+                                                              .whiteSize12,
+                                                        ),
+                                                        subtitle: Text(
+                                                            "Hi ${userState is UserStateFetched ? userState.user.firstName : "!"}",
+                                                            style:
+                                                                kBoldWhiteTextStyle),
+                                                        trailing: SplashTap(
+                                                          onTap: () {
+                                                            g.Get.to(
+                                                                () =>
+                                                                    const ProfileView(),
+                                                                transition: g
+                                                                    .Transition
+                                                                    .fadeIn);
+                                                          },
+                                                          child: CircleAvatar(
+                                                            backgroundImage:
+                                                                CachedNetworkImageProvider(userState
+                                                                        is UserStateFetched
+                                                                    ? userState
+                                                                        .user
+                                                                        .photoUrl
+                                                                    : ""),
+                                                            child:
+                                                                const Text(""),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    : Text(
+                                                        driverState
+                                                                is DriversStateManager
+                                                            ? driverState
+                                                                        .selectedUser ==
+                                                                    currentUser()
+                                                                ? "Your activity"
+                                                                : "${driverState.selectedUser.firstName} Activities"
+                                                            : "",
+                                                        style: kBoldTextStyle2
+                                                            .copyWith(
+                                                          color: kWhiteColor,
+                                                          fontSize: 16.18,
+                                                        ),
+                                                      ),
+                                                kVerticalSpaceTiny,
+                                                if (driverState
+                                                        is DriversStateFetched &&
+                                                    driverState.selectedUser ==
+                                                        currentUser())
+                                                  Text(
+                                                        "Add a record",
+                                                        style: kBoldWhiteTextStyle.copyWith(
+                                                            fontSize:
+                                                                14))
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      if ((driverState is DriversStateFetched &&
+                                          driverState.selectedUser == currentUser()))Container(
+                                        height: 25,
+                                        decoration: const BoxDecoration(
+                                            color: kWhiteColor),
+                                      )
+                                    ],
+                                  ),
+                                  if (driverState is DriversStateFetched &&
+                                      driverState.selectedUser == currentUser())
+                                    Positioned(
+                                      width: g.Get.width,
+                                      bottom: 0,
+                                      child: Container(
+                                        height: 60,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: kDefaultSpacing * 0.3),
+                                        decoration: const BoxDecoration(),
+                                        child: LayoutBuilder(
+                                            builder: (context, constraints) {
+                                          return Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              SplashTap(
+                                                onTap: () {
+                                                  g.Get.to(
+                                                      () => const RecordTrip(),
+                                                      transition:
+                                                          g.Transition.fadeIn);
+                                                },
+                                                child: AddRecord(
+                                                  width: constraints.maxWidth *
+                                                      0.47,
+                                                  svg: SvgPicture.asset(
+                                                      "assets/icons/local_taxi.svg",
+                                                      width: 33,
+                                                      height: 33),
+                                                  title: "Trip",
                                                 ),
                                               ),
-                                            ): Text(driverState is DriversStateManager ? driverState.selectedUser ==  currentUser() ?"Your activity" : "${driverState.selectedUser.firstName} Activities":"", style: kBoldTextStyle2.copyWith(
-                                              color: kWhiteColor,
-                                              fontSize: 16.18,
-                                            ),
-                                            ),
-                                            if (driverState is DriversStateFetched && driverState.selectedUser == currentUser())
-                                              LayoutBuilder(
-                                                  builder: (context, constraints) {
-                                                    return Container(
-                                                      width: g.Get.width,
-                                                      clipBehavior: Clip.none,
-                                                      decoration: BoxDecoration(),
-                                                      height: 80,
-                                                      child: Stack(
-                                                        clipBehavior: Clip.none,
-                                                        children: [
-                                                          Positioned.fill(
-                                                            child: Column(
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                kVerticalSpaceRegular,
-                                                                Text("Add a record",
-                                                                    style: kBoldWhiteTextStyle.copyWith(
-                                                                        fontSize: 14)),
-                                                                kVerticalSpaceSmall,
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Positioned(
-                                                            width: g.Get.width - (kDefaultSpacing),
-                                                            bottom: -35,
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                              MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                SplashTap(
-                                                                  onTap: () {
-                                                                    g.Get.to(() => const RecordTrip(),transition: g.Transition.fadeIn);
-                                                                  },
-                                                                  child: AddRecord(
-                                                                    width:
-                                                                    constraints.maxWidth * 0.47,
-                                                                    svg: SvgPicture.asset("assets/icons/local_taxi.svg", width: 33, height: 33),
-                                                                    title: "Trip",
-
-                                                                  ),
-                                                                ),
-                                                                SplashTap(
-                                                                  onTap: () {
-                                                                    g.Get.to(
-                                                                            () => const RecordExpense(),
-                                                                        transition: g.Transition.fadeIn);
-                                                                  },
-                                                                  child: AddRecord(
-                                                                    width: constraints.maxWidth * 0.47,
-                                                                    svg: SvgPicture.asset("assets/icons/expense.svg", width: 25, height: 25),
-
-                                                                    title: "Expense",
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-
-                                                        ],
-                                                      ),
-                                                    );
-                                                  }),
-                                          ],
-                                        );
-                                      },
+                                              SplashTap(
+                                                onTap: () {
+                                                  g.Get.to(
+                                                      () =>
+                                                          const RecordExpense(),
+                                                      transition:
+                                                          g.Transition.fadeIn);
+                                                },
+                                                child: AddRecord(
+                                                  width: constraints.maxWidth *
+                                                      0.47,
+                                                  svg: SvgPicture.asset(
+                                                      "assets/icons/expense.svg",
+                                                      width: 25,
+                                                      height: 25),
+                                                  title: "Expense",
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        }),
+                                      ),
                                     ),
-                                  ],
-                                ),
+                                ],
                               ),
                             ),
-
-                          ],
-                        ),
+                          ),
+                        ],
+                      ),
                     );
                   },
                 );
               },
-            ));
+            );
+          }),
+        );
       },
     );
   }

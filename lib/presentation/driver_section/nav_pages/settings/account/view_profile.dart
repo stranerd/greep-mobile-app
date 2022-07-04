@@ -74,16 +74,21 @@ class _ProfileViewState extends State<ProfileView> {
           centerTitle: false,
           elevation: 0.0,
         ),
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-          child: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+            child: ListView(
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
               children: [
                 kVerticalSpaceRegular,
-                CircleAvatar(
-                  backgroundImage: CachedNetworkImageProvider(user.photoUrl),
-                  radius: 50,
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: CircleAvatar(
+                    backgroundImage: CachedNetworkImageProvider(user.photoUrl,),
+                    radius: 50,
+
+                  ),
                 ),
                 kVerticalSpaceRegular,
                 AccountItemCard(
