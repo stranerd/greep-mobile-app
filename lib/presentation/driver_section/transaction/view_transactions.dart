@@ -175,12 +175,12 @@ class _TransactionViewState extends State<TransactionView> {
                                         style: AppTextStyles.blackSize10,
                                       ),
                                       Text(
-                                        "Trips: ${e.tripCount}",
-                                        style: AppTextStyles.blackSize10,
+                                        "Trips: ${e.tripAmount == 0 ? "":"+"}N${e.tripAmount.toMoney}",
+                                        style: AppTextStyles.greenSize10,
                                       ),
                                       Text(
-                                        "Expenses: ${e.expenseCount}",
-                                        style: AppTextStyles.blackSize10,
+                                        "Expenses: ${e.expenseAmount == 0 ? "":"-"}N${e.expenseAmount.toMoney}",
+                                        style: AppTextStyles.redSize10,
                                       ),
                                     ],
                                   ),
@@ -202,7 +202,7 @@ class _TransactionViewState extends State<TransactionView> {
                                       );
                                     }).toList(),
                                   ),
-                                  kVerticalSpaceRegular
+                                  kVerticalSpaceLarge
                                 ],
                               );
                             }).toList(),

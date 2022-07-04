@@ -109,7 +109,7 @@ class _RecordCardState extends State<RecordCard> {
                           onTap: () {
                             Get.back();
                           },
-                          child: Icon(
+                          child:const Icon(
                             Icons.close,
                           ),
                         )
@@ -117,9 +117,9 @@ class _RecordCardState extends State<RecordCard> {
                     ),
                     kVerticalSpaceRegular,
                     if (trans.isEmpty)
-                      SizedBox(
+                      const SizedBox(
                         height: 80,
-                        child: EmptyResultWidget(
+                        child: const EmptyResultWidget(
                           text: "No Transactions",
                         ),
                       ),

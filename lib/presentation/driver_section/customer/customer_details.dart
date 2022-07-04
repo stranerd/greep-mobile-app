@@ -141,11 +141,10 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             TransactionListCard(
+                              withColor: true,
+                              padding: kDefaultSpacing * 0.5,
                               transaction: e,
                               withBorder: true,
-                              titleStyle: AppTextStyles.blackSize14,
-                              subtitleStyle: AppTextStyles.blackSize12,
-                              trailingStyle: AppTextStyles.greenSize14,
                             ),
                             kVerticalSpaceSmall,
                           ],

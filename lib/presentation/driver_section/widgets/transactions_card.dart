@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as g;
 import 'package:grip/commons/colors.dart';
+import 'package:grip/commons/money.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/transaction/transaction_details.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
+import 'package:grip/utils/constants/app_colors.dart';
 import 'package:intl/intl.dart';
 
 class TransactionCard extends StatelessWidget {
@@ -53,7 +55,7 @@ class TransactionCard extends StatelessWidget {
 
       subText = DateFormat("${DateFormat.ABBR_MONTH} ${DateFormat.DAY} . hh:${DateFormat.MINUTE} a").format(transaction!.timeAdded);
 
-      trailText = "${type == TransactionType.trip ? "+":"-"}${transaction!.amount}";
+      trailText = "${type == TransactionType.trip ? "+":"-"}N${transaction!.amount.toMoney}";
       trailStyle = type == TransactionType.trip ? kDefaultTextStyle.copyWith(
           color: kGreenColor,
           fontSize: 12
@@ -68,16 +70,16 @@ class TransactionCard extends StatelessWidget {
         g.Get.to(() => TransactionDetails(transaction: transaction!,),transition: g.Transition.fadeIn);
       },
       child: Container(
-        padding: const EdgeInsets.fromLTRB(
-            16, 16, 16, 16),
+        padding: const EdgeInsets.all(kDefaultSpacing * 0.5),
         margin: const EdgeInsets.only(
             bottom: kDefaultSpacing * 0.5
         ),
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
+          color: AppColors.lightGray,
           border: Border.all(
-              width: 1,
+              width: 0.5,
               color: const Color.fromRGBO(
                   221, 226, 224, 1)),
         ),
@@ -100,10 +102,13 @@ class TransactionCard extends StatelessWidget {
             ),
             const Spacer(),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
                   trailText,
-                  style: trailStyle,
+                  style: trailStyle.copyWith(
+                    fontSize: 18
+                  ),
                 ),
                 const SizedBox(
                   height: 4,

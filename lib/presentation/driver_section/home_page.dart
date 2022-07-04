@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart' as g;
+import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/user/utils/get_current_user.dart';
 
@@ -172,7 +173,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                           style: AppTextStyles.blackSizeBold12),
                                       trailing: SplashTap(
                                         onTap: () {
-                                          g.Get.to(() => TransactionView(),arguments: {"showAppBar": true},
+                                          g.Get.to(() => const TransactionView(),arguments: {"showAppBar": true},
                                               transition: g.Transition.fadeIn);
                                         },
                                         child: Text("view all",
@@ -187,7 +188,23 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                         return const EmptyResultWidget(
                                             text: "No recent transactions");
                                       }
-                                      return ListView.builder(
+                                      return ListView.separated(
+                                        separatorBuilder: (_,__) => Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 70,
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                width: Get.width * 0.7,
+                                                height: 4,
+                                                decoration: const BoxDecoration(
+                                                  color: AppColors.lightGray
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                         itemCount: transactions.length,
                                         physics: const NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,
@@ -195,9 +212,8 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                         itemBuilder: (c, i) {
                                           return TransactionListCard(
                                             transaction: transactions[i],
-                                            titleStyle: AppTextStyles.blackSize14,
-                                            subtitleStyle: AppTextStyles.blackSize12,
-                                            trailingStyle: AppTextStyles.greenSize14,
+                                            withLeading: true,
+
                                           );
                                         },
                                       );
