@@ -156,4 +156,8 @@ class AuthenticationService {
   Future<ResponseEntity> sendResetPasswordCode(String email) async {
     return await authenticationClient.sendResetPasswordCode(email);
   }
+
+  Future<ResponseEntity> confirmPasswordResetChange({required String password,required String token}) async {
+    return await authenticationClient.confirmPasswordResetChange(password: password, token: token);
+  }
 }

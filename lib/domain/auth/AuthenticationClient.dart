@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -204,7 +205,10 @@ class AuthenticationClient {
     Response response;
     try {
       response = await dio.post(
-        "${baseApi}auth/passwords/reset",
+        "${baseApi}auth/passwords/reset/mail",
+        data: {
+          "email": email
+        }
       );
 
       return ResponseEntity.Data(null);
@@ -228,4 +232,36 @@ class AuthenticationClient {
     }
   }
 
+  Future<ResponseEntity> confirmPasswordResetChange({required String password, required String token})async {
+    final Dio dio = Dio();
+    Response response;
+    try {
+      response = await dio.post(
+          "${baseApi}auth/passwords/reset",
+          data: jsonEncode({
+            "password": password,
+            "token": token
+          })
+      );
+
+      return ResponseEntity.Data(null);
+    } on DioError catch (e) {
+      if (e.type == DioErrorType.connectTimeout) {
+        return ResponseEntity.Timeout();
+      }
+      if (e.error is SocketException) {
+        return ResponseEntity.Socket();
+      }
+      if (e.type == DioErrorType.response) {
+        return ResponseEntity.Error(
+            e.response!.data[0]["message"] ?? "Password Reset failed");
+      }
+
+      return ResponseEntity.Error("Password Reset failed");
+    } catch (e) {
+      print("Exception $e");
+      return ResponseEntity.Error(
+          "An error occurred sending code. Try again");
+    }
+  }
 }
