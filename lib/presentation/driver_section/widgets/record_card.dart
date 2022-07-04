@@ -16,12 +16,14 @@ class RecordCard extends StatefulWidget {
     required this.subtitle,
     required this.titleStyle,
     this.transactions,
+    this.centerAlign = true,
     this.width,
     required this.subtitleStyle,
   }) : super(key: key);
 
   final String title;
   final String subtitle;
+  final bool centerAlign;
   final List<Transaction>? transactions;
   final double? width;
   final TextStyle titleStyle;
@@ -34,7 +36,6 @@ class RecordCard extends StatefulWidget {
 class _RecordCardState extends State<RecordCard> {
   @override
   Widget build(BuildContext context) {
-
     return SplashTap(
       onTap: _openDialog,
       child: Container(
@@ -50,11 +51,15 @@ class _RecordCardState extends State<RecordCard> {
           ),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: widget.centerAlign
+              ? CrossAxisAlignment.center
+              : CrossAxisAlignment.start,
           children: [
-            Text(widget.title, style: widget.titleStyle.copyWith(
-              fontSize: 18
-            )),
+            Text(
+              widget.title,
+              style: widget.titleStyle.copyWith(fontSize: 18),
+              overflow: TextOverflow.ellipsis,
+            ),
             const SizedBox(height: 8.0),
             Text(widget.subtitle,
                 style: kDefaultTextStyle.copyWith(fontSize: 12)),
@@ -79,8 +84,8 @@ class _RecordCardState extends State<RecordCard> {
             .toList();
       }
     }
-    if (["trip","expense"].any((e) => widget.subtitle.toLowerCase().contains(e))){
-
+    if (["trip", "expense"]
+        .any((e) => widget.subtitle.toLowerCase().contains(e))) {
       showDialog(
           context: context,
           builder: (context) {
@@ -88,7 +93,7 @@ class _RecordCardState extends State<RecordCard> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(kDefaultSpacing)),
               child: Container(
-                height: trans.isEmpty ? 200 :Get.height * 0.5,
+                height: trans.isEmpty ? 200 : Get.height * 0.5,
                 padding: const EdgeInsets.all(kDefaultSpacing),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,48 +106,47 @@ class _RecordCardState extends State<RecordCard> {
                           style: kTitleTextStyle,
                         ),
                         GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             Get.back();
                           },
                           child: Icon(
                             Icons.close,
-
                           ),
                         )
                       ],
                     ),
                     kVerticalSpaceRegular,
-                    if(trans.isEmpty)SizedBox(
-                      height: 80,
-                      child: EmptyResultWidget(
-                        text: "No Transactions",
+                    if (trans.isEmpty)
+                      SizedBox(
+                        height: 80,
+                        child: EmptyResultWidget(
+                          text: "No Transactions",
+                        ),
                       ),
-                    ),
-                    if (trans.isNotEmpty)Expanded(
-                        child: ListView(
-                      shrinkWrap: true,
-                      physics: const ScrollPhysics(),
-                      children: trans.map((e) {
-                        return TransactionCard(
-                          transaction: e,
-                          title: "title",
-                          subtitle: "",
-                          trailing: "",
-                          titleStyle: TextStyle(),
-                          subtitleStyle: TextStyle(),
-                          trailingStyle: TextStyle(),
-                          subTrailing: "",
-                          subTrailingStyle: TextStyle(),
-
-                        );
-                      }).toList(),
-                    ))
+                    if (trans.isNotEmpty)
+                      Expanded(
+                          child: ListView(
+                        shrinkWrap: true,
+                        physics: const ScrollPhysics(),
+                        children: trans.map((e) {
+                          return TransactionCard(
+                            transaction: e,
+                            title: "title",
+                            subtitle: "",
+                            trailing: "",
+                            titleStyle: TextStyle(),
+                            subtitleStyle: TextStyle(),
+                            trailingStyle: TextStyle(),
+                            subTrailing: "",
+                            subTrailingStyle: TextStyle(),
+                          );
+                        }).toList(),
+                      ))
                   ],
                 ),
               ),
             );
           });
-
-  }
+    }
   }
 }

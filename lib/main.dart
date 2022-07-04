@@ -105,7 +105,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: theme,
           color: kPrimaryColor,
-          home: const OnboardingSlides(),
+          home: const SplashScreen(),
           scaffoldMessengerKey: ScaffoldMessengerService.scaffoldMessengerKey,
         ),
       ),

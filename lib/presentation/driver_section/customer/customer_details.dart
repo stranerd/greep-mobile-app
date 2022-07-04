@@ -137,12 +137,18 @@ class _CustomerDetailsState extends State<CustomerDetails> {
               Column(
                   children: _customerSummary.transactions
                       .map(
-                        (e) => TransactionListCard(
-                          transaction: e,
-                          withBorder: true,
-                          titleStyle: AppTextStyles.blackSize14,
-                          subtitleStyle: AppTextStyles.blackSize12,
-                          trailingStyle: AppTextStyles.greenSize14,
+                        (e) => Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TransactionListCard(
+                              transaction: e,
+                              withBorder: true,
+                              titleStyle: AppTextStyles.blackSize14,
+                              subtitleStyle: AppTextStyles.blackSize12,
+                              trailingStyle: AppTextStyles.greenSize14,
+                            ),
+                            kVerticalSpaceSmall,
+                          ],
                         ),
                       )
                       .toList()),

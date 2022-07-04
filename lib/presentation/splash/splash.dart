@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/presentation/auth/home/auth_home.dart';
+import 'package:grip/presentation/auth/onboarding/OnboardingSlides.dart';
 import 'package:grip/presentation/driver_section/home_page.dart';
 import 'package:grip/presentation/driver_section/nav_pages/nav_bar/nav_bar_view.dart';
 import 'package:grip/presentation/splash/authentication_splash.dart';
@@ -24,16 +25,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     SharedPreferences.getInstance().then((pref) {
-      if (pref.get("FirstRun") != null && pref.get("FirstRun") == true) {
+      print(pref.get("FirstRun"));
+      if (pref.get("FirstRun") == null || pref.get("FirstRun") == true) {
         print("firstRun is not null");
-        setState(() {
           isFirstTime = true;
-        });
       } else if (pref.get("FirstRun") != null &&
           pref.get("FirstRun") == false) {
-        setState(() {
           isFirstTime = false;
-        });
       }
       Future.delayed(const Duration(milliseconds: 800), () => loadApp());
     });
@@ -63,7 +61,11 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> loadApp() async {
-
+    print("isfirst time: $isFirstTime");
+    if (isFirstTime) {
+      Get.offAll(() => const OnboardingSlides());
+      return;
+    }
 
     var authenticationCubit = BlocProvider.of<AuthenticationCubit>(context);
     var isAuthenticated = await authenticationCubit.checkAuth();
@@ -75,4 +77,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
     }
   }
+
+
 }

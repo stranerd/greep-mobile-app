@@ -170,11 +170,11 @@ class OnboardingSlidesWidgetView
                                 margin: const EdgeInsets.symmetric(
                                     horizontal: kDefaultSpacing * 0.2),
                                 decoration: BoxDecoration(
-                                    color: index == 0
+                                    color: state.currentPage == 0
                                         ? kBlackColor
-                                        : index == 1
+                                        : state.currentPage == 1
                                             ? kBlueColor
-                                            : kWhiteColor,
+                                            :state.currentPage == 2 ?  kWhiteColor: kWhiteColor,
                                     borderRadius: BorderRadius.circular(
                                         kDefaultSpacing * 0.25)),
                               ),

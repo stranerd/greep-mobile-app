@@ -166,7 +166,7 @@ class _AddDriverScreenState extends State<AddDriverScreen> with ScaffoldMessenge
                           SubmitButton(
                             backgroundColor: kGreenColor,
                               isLoading: s is UserCrudStateLoading,
-                              enabled: _driverId.isNotEmpty && _commission <= 100 && _commission>=0 && s is! UserCrudStateLoading,
+                              enabled: _commission <= 100 && _commission>=0 && s is! UserCrudStateLoading,
                               text: "Submit", onSubmit: _addDriver)
                         ],
                       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:grip/presentation/auth/home/auth_home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'OnboardingSlidesWidgetView.dart';
 
@@ -100,7 +101,9 @@ class OnboardingSlidesStateController extends State<OnboardingSlides> {
   @override
   build(context) => OnboardingSlidesWidgetView(this);
 
-  void getStarted() {
+  void getStarted() async{
+    var pref = await SharedPreferences.getInstance();
+    pref.setBool("FirstRun", false);
     Get.offAll(() => const AuthHomeScreen());
   }
 }

@@ -20,8 +20,9 @@ class CustomerTransactionListWidget extends StatelessWidget {
               .getCustomerTransactions()
               .take(3)
               .toList();
-          if (transactions.isEmpty)
+          if (transactions.isEmpty) {
             return const EmptyResultWidget(text: "No Customer transactions");
+          }
 
           return LayoutBuilder(builder: (c, cs) {
             return Row(
