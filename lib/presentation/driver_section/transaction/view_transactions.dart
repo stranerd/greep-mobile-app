@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:grip/application/user/utils/get_current_user.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -313,12 +314,7 @@ class _TransactionViewState extends State<TransactionView> {
   }
 
   void _pickDate(bool isFrom) {
-    showDatePicker(
-            context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime.now().subtract(const Duration(days: 365 * 10)),
-            lastDate: DateTime.now().add(const Duration(days: 365 * 2)))
-        .then((value) {
+    DatePicker.showDatePicker(context, theme: const DatePickerTheme()).then((value) {
       if (value != null) {
         if (isFrom) {
           from = value;
@@ -327,6 +323,22 @@ class _TransactionViewState extends State<TransactionView> {
         }
         setState(() {});
       }
+
     });
+    // showDatePicker(
+    //         context: context,
+    //         initialDate: DateTime.now(),
+    //         firstDate: DateTime.now().subtract(const Duration(days: 365 * 10)),
+    //         lastDate: DateTime.now().add(const Duration(days: 365 * 2)))
+    //     .then((value) {
+    //   if (value != null) {
+    //     if (isFrom) {
+    //       from = value;
+    //     } else {
+    //       to = value;
+    //     }
+    //     setState(() {});
+    //   }
+    // });
   }
 }

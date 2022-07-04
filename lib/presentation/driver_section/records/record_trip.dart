@@ -52,8 +52,7 @@ class _RecordTripState extends State<RecordTrip>
   void initState() {
     paymentTypes = PaymentType.values.map((e) => e.name).toList();
     _transactionCrudCubit = GetIt.I<TransactionCrudCubit>();
-    customersNames =
-        GetIt.I<CustomerStatisticsCubit>().getUserCustomers();
+    customersNames = GetIt.I<CustomerStatisticsCubit>().getUserCustomers();
     _nameController = TextEditingController();
     _priceController = TextEditingController();
     _paidController = TextEditingController();
@@ -72,8 +71,7 @@ class _RecordTripState extends State<RecordTrip>
               success = "Trip recorded successfully";
               Future.delayed(const Duration(milliseconds: 1500), () {
                 Get.back();
-              }
-              );
+              });
             }
 
             if (state is TransactionCrudStateFailure) {
@@ -116,37 +114,38 @@ class _RecordTripState extends State<RecordTrip>
                       kVerticalSpaceSmall,
                       TypeAheadField(
                         textFieldConfiguration: TextFieldConfiguration(
-                            autofocus: false,
-                            controller: _nameController,
-
-                            onChanged: (s){
-                              setState(() {
-                                typeAheadError = false;
-                                _customerName = s;
-                              });
-                            },
-
-                            style: kDefaultTextStyle,
-                            decoration:InputDecoration(
-                                filled: true,
-                            fillColor: kBorderColor,
-                            focusedBorder: InputBorder.none,
-                            border: InputBorder.none,
-                            enabledBorder:  typeAheadError ? OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              borderSide: const BorderSide(color: kErrorColor, width: 0.5),
-                            ) :InputBorder.none
-                               ,
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              borderSide: const BorderSide(color: kErrorColor, width: 0.5),
-                            )),
+                          autofocus: false,
+                          controller: _nameController,
+                          onChanged: (s) {
+                            setState(() {
+                              typeAheadError = false;
+                              _customerName = s;
+                            });
+                          },
+                          style: kDefaultTextStyle,
+                          decoration: InputDecoration(
+                              filled: true,
+                              fillColor: kBorderColor,
+                              focusedBorder: InputBorder.none,
+                              border: InputBorder.none,
+                              enabledBorder: typeAheadError
+                                  ? OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: const BorderSide(
+                                          color: kErrorColor, width: 0.5),
+                                    )
+                                  : InputBorder.none,
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: const BorderSide(
+                                    color: kErrorColor, width: 0.5),
+                              )),
                         ),
                         hideOnEmpty: true,
                         hideOnError: true,
                         hideOnLoading: true,
                         suggestionsCallback: (pattern) async {
-                          if (pattern.isEmpty){
+                          if (pattern.isEmpty) {
                             return [];
                           }
                           return customersNames.where((element) => element
@@ -160,17 +159,20 @@ class _RecordTripState extends State<RecordTrip>
                         },
                         onSuggestionSelected: (suggestion) {
                           _customerName = suggestion.toString();
-                          _nameController.text=_customerName;
+                          _nameController.text = _customerName;
                         },
                       ),
-                      if (typeAheadError)Row(
-                        children: [
-                          kHorizontalSpaceSmall,
-                          Text("This cannot be empty", style: kErrorColorTextStyle.copyWith(
-                              fontSize: 13
-                          ),),
-                        ],
-                      ),
+                      if (typeAheadError)
+                        Row(
+                          children: [
+                            kHorizontalSpaceSmall,
+                            Text(
+                              "This cannot be empty",
+                              style:
+                                  kErrorColorTextStyle.copyWith(fontSize: 13),
+                            ),
+                          ],
+                        ),
                       kVerticalSpaceRegular,
                       kVerticalSpaceRegular,
                       Text(
@@ -193,7 +195,11 @@ class _RecordTripState extends State<RecordTrip>
                                 alignment: Alignment.centerLeft,
                                 decoration: BoxDecoration(
                                   color: kBorderColor,
-                                  border: dateError ? Border.all(color: kErrorColor,): null,
+                                  border: dateError
+                                      ? Border.all(
+                                          color: kErrorColor,
+                                        )
+                                      : null,
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 child: Text(
@@ -232,14 +238,17 @@ class _RecordTripState extends State<RecordTrip>
                           ),
                         ],
                       ),
-                      if (dateError)Row(
-                        children: [
-                          kHorizontalSpaceSmall,
-                          Text("Date cannot be empty", style: kErrorColorTextStyle.copyWith(
-                              fontSize: 13
-                          ),),
-                        ],
-                      ),
+                      if (dateError)
+                        Row(
+                          children: [
+                            kHorizontalSpaceSmall,
+                            Text(
+                              "Date cannot be empty",
+                              style:
+                                  kErrorColorTextStyle.copyWith(fontSize: 13),
+                            ),
+                          ],
+                        ),
                       const SizedBox(
                         height: 16.0,
                       ),
@@ -418,14 +427,13 @@ class _RecordTripState extends State<RecordTrip>
                         height: 16.0,
                       ),
                       SubmitButton(
-                        backgroundColor: kGreenColor,
+                          backgroundColor: kGreenColor,
                           isLoading: s is TransactionCrudStateLoading,
                           enabled: s is! TransactionCrudStateLoading,
                           text: "Submit",
                           onSubmit: _recordTrip),
                       kVerticalSpaceRegular
                     ],
-
                   ),
                 ),
               ),
@@ -438,19 +446,18 @@ class _RecordTripState extends State<RecordTrip>
 
   void _recordTrip() {
     formKey.currentState!.validate();
-    if (recordDate == null)
-      {
-        setState(() {
-          dateError = true;
-        });
-      }
-    if (_customerName.trim().isEmpty){
+    if (recordDate == null) {
+      setState(() {
+        dateError = true;
+      });
+    }
+    if (_customerName.trim().isEmpty) {
       setState(() {
         typeAheadError = true;
       });
     }
 
-    if (typeAheadError || dateError){
+    if (typeAheadError || dateError) {
       return;
     }
     if (formKey.currentState!.validate()) {
@@ -465,37 +472,48 @@ class _RecordTripState extends State<RecordTrip>
   }
 
   void _pickDate() {
-    // DatePicker.showDateTimePicker(context,
-    //   theme: DatePickerTheme()
-    //
-    // ).then((value) {
-    //   if (value == null) return;
-    //   setState(() {
-    //     recordDate = value;
-    //   });
-    // });
-    showDatePicker(
-            context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime.now().subtract(const Duration(days: 365 * 10)),
-            lastDate: DateTime.now().add(const Duration(days: 365 * 2)))
-        .then((value) {
+    DatePicker.showDatePicker(context, theme: DatePickerTheme()).then((value) {
       if (value == null) return;
       DateTime selectedDate = value;
-      showTimePicker(context: context, initialTime: TimeOfDay.now())
-          .then((value) {
-        TimeOfDay timeOfDay = value ?? TimeOfDay.now();
-        selectedDate = DateTime(
-          selectedDate.year,
-          selectedDate.month,
-          selectedDate.day,
-          timeOfDay.hour,
-          timeOfDay.minute,
-        );
+      DatePicker.showTime12hPicker(
+        context,
+      ).then((value) {
+        if (value == null) {
+          return;
+        }
         setState(() {
-          recordDate = selectedDate;
+          recordDate = DateTime(
+            selectedDate.year,
+            selectedDate.month,
+            selectedDate.day,
+            value.hour,
+            value.minute,
+          );
         });
       });
     });
+    // showDatePicker(
+    //         context: context,
+    //         initialDate: DateTime.now(),
+    //         firstDate: DateTime.now().subtract(const Duration(days: 365 * 10)),
+    //         lastDate: DateTime.now().add(const Duration(days: 365 * 2)))
+    //     .then((value) {
+    //   if (value == null) return;
+    //   DateTime selectedDate = value;
+    //   showTimePicker(context: context, initialTime: TimeOfDay.now())
+    //       .then((value) {
+    //     TimeOfDay timeOfDay = value ?? TimeOfDay.now();
+    //     selectedDate = DateTime(
+    //       selectedDate.year,
+    //       selectedDate.month,
+    //       selectedDate.day,
+    //       timeOfDay.hour,
+    //       timeOfDay.minute,
+    //     );
+    //     setState(() {
+    //       recordDate = selectedDate;
+    //     });
+    //   });
+    // });
   }
 }

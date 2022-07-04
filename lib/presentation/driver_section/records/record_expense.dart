@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
@@ -322,37 +323,48 @@ class _RecordExpenseState extends State<RecordExpense> with ScaffoldMessengerSer
   }
 
   void _pickDate() {
-    // DatePicker.showDateTimePicker(context,
-    //   theme: DatePickerTheme()
-    //
-    // ).then((value) {
-    //   if (value == null) return;
-    //   setState(() {
-    //     recordDate = value;
-    //   });
-    // });
-    showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now().subtract(const Duration(days: 365 * 10)),
-        lastDate: DateTime.now().add(const Duration(days: 365 * 2)))
-        .then((value) {
+    DatePicker.showDatePicker(context, theme: DatePickerTheme()).then((value) {
       if (value == null) return;
       DateTime selectedDate = value;
-      showTimePicker(context: context, initialTime: TimeOfDay.now())
-          .then((value) {
-        TimeOfDay timeOfDay = value ?? TimeOfDay.now();
-        selectedDate = DateTime(
-          selectedDate.year,
-          selectedDate.month,
-          selectedDate.day,
-          timeOfDay.hour,
-          timeOfDay.minute,
-        );
+      DatePicker.showTime12hPicker(
+        context,
+      ).then((value) {
+        if (value == null) {
+          return;
+        }
         setState(() {
-          recordDate = selectedDate;
+          recordDate = DateTime(
+            selectedDate.year,
+            selectedDate.month,
+            selectedDate.day,
+            value.hour,
+            value.minute,
+          );
         });
       });
     });
+    // showDatePicker(
+    //     context: context,
+    //     initialDate: DateTime.now(),
+    //     firstDate: DateTime.now().subtract(const Duration(days: 365 * 10)),
+    //     lastDate: DateTime.now().add(const Duration(days: 365 * 2)))
+    //     .then((value) {
+    //   if (value == null) return;
+    //   DateTime selectedDate = value;
+    //   showTimePicker(context: context, initialTime: TimeOfDay.now())
+    //       .then((value) {
+    //     TimeOfDay timeOfDay = value ?? TimeOfDay.now();
+    //     selectedDate = DateTime(
+    //       selectedDate.year,
+    //       selectedDate.month,
+    //       selectedDate.day,
+    //       timeOfDay.hour,
+    //       timeOfDay.minute,
+    //     );
+    //     setState(() {
+    //       recordDate = selectedDate;
+    //     });
+    //   });
+    // });
   }
 }
