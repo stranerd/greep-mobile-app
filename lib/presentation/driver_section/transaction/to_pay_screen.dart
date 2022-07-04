@@ -44,16 +44,7 @@ class ToPayScreen extends StatelessWidget {
                   border: Border.all(
                       width: 1, color: const Color.fromRGBO(221, 226, 224, 1)),
                 ),
-                child: TransactionCard(
-                  title: "Kemi",
-                  subtitle: "Mar 19 . 10:54 AM",
-                  trailing: "+20\$",
-                  subTrailing: "Trip",
-                  subTrailingStyle: AppTextStyles.blackSize12,
-                  titleStyle: AppTextStyles.blackSize14,
-                  subtitleStyle: AppTextStyles.blackSize12,
-                  trailingStyle: AppTextStyles.greenSize14,
-                ),
+                child: Container(),
               ),
               const SizedBox(height: 16.0),
               Text("From the trip above", style: AppTextStyles.blackSize12),

@@ -93,11 +93,8 @@ class _RangeState extends State<Range> {
                     );
                   },
                   child: TransactionCard(
-                    title: "Kemi",
-                    subtitle: "Mar 19 . 10:54 AM",
                     transaction: e,
-                    trailing: "+20\$",
-                    subTrailing: "Trip",
+                    withBigAmount: false,
                     subTrailingStyle: AppTextStyles.blackSize12,
                     titleStyle: AppTextStyles.blackSize14,
                     subtitleStyle: AppTextStyles.blackSize12,

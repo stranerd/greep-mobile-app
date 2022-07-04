@@ -74,122 +74,121 @@ class _CustomerViewState extends State<CustomerView> {
         //   centerTitle: true,
         //   elevation: 0.0,
         // ),
-        body: Padding(
-          padding: const EdgeInsets.all(kDefaultSpacing * 0.5),
-          child: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DriverSelectorRow(),
-                kVerticalSpaceSmall,
-                BlocBuilder<DriversCubit, DriversState>(
-                  builder: (context, driverState) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        driverState is! DriversStateManager ? Align(
-                          alignment:Alignment.center,
-                          child: Text(
-                            'Customers',
-                            style: AppTextStyles.blackSizeBold16,
-                          ),
-                        ): Text(
-                    driverState.selectedUser == currentUser() ?'Your customers': "${driverState.selectedUser.firstName} customers",
-                    style: AppTextStyles.blackSizeBold16,
-                    ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(kDefaultSpacing * 0.5),
+            child: SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const DriverSelectorRow(),
+                  kVerticalSpaceSmall,
+                  BlocBuilder<DriversCubit, DriversState>(
+                    builder: (context, driverState) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          driverState is! DriversStateManager ? Align(
+                            alignment:Alignment.center,
+                            child: Text(
+                              'Customers',
+                              style: AppTextStyles.blackSizeBold16,
+                            ),
+                          ): Text(
+                      driverState.selectedUser == currentUser() ?'Your customers': "${driverState.selectedUser.firstName} customers",
+                      style: AppTextStyles.blackSizeBold16,
+                      ),
 
-                      ],
-                    );
-                  },
-                ),
-                kVerticalSpaceRegular,
-                Row(
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 16.0,
-                          height: 16.0,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.blue,
-                          ),
-                        ),
-                        const SizedBox(width: 8.0),
-                        Text("To collect", style: AppTextStyles.blackSize12),
-                      ],
-                    ),
-                    const SizedBox(width: 48.0),
-                    Row(
-                      children: [
-                        Container(
-                          width: 16.0,
-                          height: 16.0,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.red,
-                          ),
-                        ),
-                        const SizedBox(width: 8.0),
-                        Text("To pay", style: AppTextStyles.blackSize12),
-                      ],
-                    ),
-                    const SizedBox(width: 48.0),
-                    Row(
-                      children: [
-                        Container(
-                          width: 16.0,
-                          height: 16.0,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.black,
-                          ),
-                        ),
-                        const SizedBox(width: 8.0),
-                        Text("Balanced", style: AppTextStyles.blackSize12),
-                      ],
-                    ),
-                  ],
-                ),
-                kVerticalSpaceMedium,
-                Expanded(
-                  child: SmartRefresher(
-                    controller: refreshController,
-                    onRefresh: () {
-                      GetIt.I<UserTransactionsCubit>().fetchUserTransactions();
+                        ],
+                      );
                     },
-                    child: ListView(
-                      shrinkWrap: true,
-                      physics: const ScrollPhysics(),
-                      children: [
-                        Builder(builder: (c) {
-                          if (transactions.isEmpty) {
-                            return SizedBox(
-                              height: Get.height * 0.7,
-                              child: const EmptyResultWidget(
-                                  text: "No customer transactions"),
-                            );
-                          }
+                  ),
+                  kVerticalSpaceRegular,
+                  Row(
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 16.0,
+                            height: 16.0,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.blue,
+                            ),
+                          ),
+                          const SizedBox(width: 8.0),
+                          Text("To collect", style: AppTextStyles.blackSize12),
+                        ],
+                      ),
+                      const SizedBox(width: 48.0),
+                      Row(
+                        children: [
+                          Container(
+                            width: 16.0,
+                            height: 16.0,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.red,
+                            ),
+                          ),
+                          const SizedBox(width: 8.0),
+                          Text("To pay", style: AppTextStyles.blackSize12),
+                        ],
+                      ),
+                      const SizedBox(width: 48.0),
+                      Row(
+                        children: [
+                          Container(
+                            width: 16.0,
+                            height: 16.0,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.black,
+                            ),
+                          ),
+                          const SizedBox(width: 8.0),
+                          Text("Balanced", style: AppTextStyles.blackSize12),
+                        ],
+                      ),
+                    ],
+                  ),
+                  kVerticalSpaceMedium,
+                  Expanded(
+                    child: SmartRefresher(
+                      controller: refreshController,
+                      onRefresh: () {
+                        GetIt.I<UserTransactionsCubit>().fetchUserTransactions();
+                      },
+                      child: ListView(
+                        shrinkWrap: true,
+                        physics: const ScrollPhysics(),
+                        children: [
+                          Builder(builder: (c) {
+                            if (transactions.isEmpty) {
+                              return SizedBox(
+                                height: Get.height * 0.7,
+                                child: const EmptyResultWidget(
+                                    text: "No customer transactions"),
+                              );
+                            }
 
-                          return ListView.separated(
-                              separatorBuilder: (c, i) => kVerticalSpaceSmall,
-                              shrinkWrap: true,
-                              physics: const ScrollPhysics(),
-                              itemCount: transactions.length,
-                              itemBuilder: (c, i) {
-                                return CustomerCardView(
-                                    title: "Kemi",
-                                    transaction: transactions[i],
-                                    subtitle: "8\$",
-                                    titleStyle: AppTextStyles.blackSize16,
-                                    subtitleStyle: AppTextStyles.redSize16);
-                              });
-                        }),
-                      ],
+                            return ListView.separated(
+                                separatorBuilder: (c, i) => kVerticalSpaceSmall,
+                                shrinkWrap: true,
+                                physics: const ScrollPhysics(),
+                                itemCount: transactions.length,
+                                itemBuilder: (c, i) {
+                                  return CustomerCardView(
+                                      transaction: transactions[i],
+                                  );
+                                });
+                          }),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

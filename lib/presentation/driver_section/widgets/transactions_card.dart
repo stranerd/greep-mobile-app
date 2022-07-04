@@ -13,49 +13,42 @@ import 'package:intl/intl.dart';
 class TransactionCard extends StatelessWidget {
   const TransactionCard(
       {Key? key,
-      required this.title,
-      required this.subtitle,
-      required this.trailing,
       required this.titleStyle,
       required this.subtitleStyle,
       required this.trailingStyle,
-        this.transaction,
+        required this.transaction,
         this.shouldTap = true,
-      required this.subTrailing,
+        this.withBigAmount = true,
       required this.subTrailingStyle})
       : super(key: key);
-  final String title;
-  final String subtitle;
-  final String trailing;
-  final String subTrailing;
-  final Transaction? transaction;
+  final Transaction transaction;
 
   final TextStyle titleStyle;
   final TextStyle subtitleStyle;
   final TextStyle trailingStyle;
   final TextStyle subTrailingStyle;
   final bool shouldTap;
+  final bool withBigAmount;
 
 
   @override
   Widget build(BuildContext context) {
-    String text = title;
-    String subText = subtitle;
-    String trailText = trailing;
+    String text = "";
+    String subText = "";
+    String trailText = "";
     TextStyle subStyle = subtitleStyle;
     TextStyle trailStyle = trailingStyle;
-    String subTrailText = subTrailing;
+    String subTrailText = "";
 
-    if (transaction!=null){
-      var type = transaction!.data.transactionType;
+      var type = transaction.data.transactionType;
       text = (type == TransactionType.trip
-          ? transaction!.data.customerName : type == TransactionType.balance
+          ? transaction.data.customerName : type == TransactionType.balance
           ? "balance": type == TransactionType.expense
-          ? transaction!.data.name! : title)!;
+          ? transaction.data.name! : "")!;
 
-      subText = DateFormat("${DateFormat.ABBR_MONTH} ${DateFormat.DAY} . hh:${DateFormat.MINUTE} a").format(transaction!.timeAdded);
+      subText = DateFormat("${DateFormat.ABBR_MONTH} ${DateFormat.DAY} . hh:${DateFormat.MINUTE} a").format(transaction.timeAdded);
 
-      trailText = "${type == TransactionType.trip ? "+":"-"}N${transaction!.amount.toMoney}";
+      trailText = "${type == TransactionType.trip ? "+":"-"}N${transaction.amount.toMoney}";
       trailStyle = type == TransactionType.trip ? kDefaultTextStyle.copyWith(
           color: kGreenColor,
           fontSize: 12
@@ -63,11 +56,10 @@ class TransactionCard extends StatelessWidget {
           fontSize: 12
       );
 
-      subTrailText = transaction!.data.transactionType.name;
-    }
+      subTrailText = transaction.data.transactionType.name;
     return SplashTap(
-      onTap: transaction == null ? null : !shouldTap ? null : (){
-        g.Get.to(() => TransactionDetails(transaction: transaction!,),transition: g.Transition.fadeIn);
+      onTap: !shouldTap ? null : (){
+        g.Get.to(() => TransactionDetails(transaction: transaction,),transition: g.Transition.fadeIn);
       },
       child: Container(
         padding: const EdgeInsets.all(kDefaultSpacing * 0.5),
@@ -107,7 +99,8 @@ class TransactionCard extends StatelessWidget {
                 Text(
                   trailText,
                   style: trailStyle.copyWith(
-                    fontSize: 18
+                    fontSize:withBigAmount ?  18 : 15,
+
                   ),
                 ),
                 const SizedBox(

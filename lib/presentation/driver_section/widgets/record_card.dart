@@ -131,13 +131,9 @@ class _RecordCardState extends State<RecordCard> {
                         children: trans.map((e) {
                           return TransactionCard(
                             transaction: e,
-                            title: "title",
-                            subtitle: "",
-                            trailing: "",
                             titleStyle: TextStyle(),
                             subtitleStyle: TextStyle(),
                             trailingStyle: TextStyle(),
-                            subTrailing: "",
                             subTrailingStyle: TextStyle(),
                           );
                         }).toList(),

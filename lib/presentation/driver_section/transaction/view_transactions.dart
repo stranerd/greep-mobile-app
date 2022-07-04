@@ -83,7 +83,7 @@ class _TransactionViewState extends State<TransactionView> {
           ): null,
           body: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kDefaultSpacing * 0.5,),
+              padding: const EdgeInsets.symmetric(horizontal: kDefaultSpacing * 0.5,vertical: kDefaultSpacing * 0.5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -192,10 +192,7 @@ class _TransactionViewState extends State<TransactionView> {
                                     children: e.transactions.map((e) {
                                       return TransactionCard(
                                         transaction: e,
-                                        title: "Kemi",
-                                        subtitle: "Mar 19 . 10:54 AM",
-                                        trailing: "+20\$",
-                                        subTrailing: "Trip",
+                                        withBigAmount: false,
                                         subTrailingStyle: AppTextStyles.blackSize12,
                                         titleStyle: AppTextStyles.blackSize14,
                                         subtitleStyle: AppTextStyles.blackSize12,
