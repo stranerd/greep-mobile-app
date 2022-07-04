@@ -26,6 +26,7 @@ import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/commons/themes.dart';
 import 'package:grip/ioc.dart';
+import 'package:grip/presentation/auth/onboarding/OnboardingSlides.dart';
 import 'package:grip/presentation/splash/splash.dart';
 
 void main() async {
@@ -104,7 +105,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: theme,
           color: kPrimaryColor,
-          home: const SplashScreen(),
+          home: const OnboardingSlides(),
           scaffoldMessengerKey: ScaffoldMessengerService.scaffoldMessengerKey,
         ),
       ),
