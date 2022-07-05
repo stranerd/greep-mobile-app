@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:grip/application/customers/user_customers_cubit.dart';
 import 'package:grip/application/transactions/request/add_balance_request.dart';
 import 'package:grip/application/transactions/request/add_expense_request.dart';
 import 'package:grip/application/transactions/request/add_trip_request.dart';
@@ -27,6 +28,8 @@ class TransactionCrudCubit extends Cubit<TransactionCrudState> {
     else {
       emit(TransactionCrudStateSuccess());
       _refreshTransactions();
+      GetIt.I<UserCustomersCubit>().fetchUserCustomers(fullRefresh: true);
+
     }
   }
 
@@ -44,6 +47,8 @@ class TransactionCrudCubit extends Cubit<TransactionCrudState> {
       _refreshTransactions();
 
     }
+
+
   }
 
   void addBalance({required String customerId, required num amount, required String description, required DateTime dateRecorded}) async {
@@ -57,6 +62,7 @@ class TransactionCrudCubit extends Cubit<TransactionCrudState> {
     if (response.isError){
       emit(TransactionCrudStateFailure(errorMessage: response.errorMessage ?? "An error occurred"));
       GetIt.I<UserTransactionsCubit>().fetchUserTransactions(requestId: currentUser().id,softUpdate: true);
+      GetIt.I<UserCustomersCubit>().fetchUserCustomers(fullRefresh: true);
     }
 
     else {

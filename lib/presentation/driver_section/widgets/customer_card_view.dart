@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as g;
 import 'package:get_it/get_it.dart';
+import 'package:grip/application/customers/user_customers_cubit.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/money.dart';
 import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/domain/customer/customer.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/customer/customer_details.dart';
@@ -24,19 +26,31 @@ class CustomerCardView extends StatelessWidget {
   Widget build(BuildContext context) {
     String text = "";
     String subText = "";
-
+    TextStyle subTextStyle = TextStyle();
     TransactionType type = transaction.data.transactionType;
     TransactionData data = transaction.data;
-    subText = "N${transaction.amount.toMoney}";
-
-    TextStyle subTextStyle =
-        type == TransactionType.trip && transaction.credit > 0
-            ? kDefaultTextStyle.copyWith(color: AppColors.blue, fontSize: 12)
-            : transaction.debt > 0
-                ? kDefaultTextStyle.copyWith(color: AppColors.red, fontSize: 12)
-                : type == TransactionType.balance
-                    ? kDefaultTextStyle.copyWith(fontSize: 12)
-                    : kDefaultTextStyle.copyWith(fontSize: 12);
+    Customer? customer = GetIt.I<UserCustomersCubit>().getCustomerByName(transaction.data.customerName!);
+    if (customer==null) {
+      subText =
+      "N${transaction.credit > 0 ? transaction.credit.toMoney : transaction.debt
+          .toMoney}";
+     subTextStyle =
+      type == TransactionType.trip && transaction.credit > 0
+          ? kDefaultTextStyle.copyWith(color: AppColors.blue, fontSize: 12)
+          : transaction.debt > 0
+          ? kDefaultTextStyle.copyWith(color: AppColors.red, fontSize: 12)
+          : type == TransactionType.balance
+          ? kDefaultTextStyle.copyWith(fontSize: 12)
+          : kDefaultTextStyle.copyWith(fontSize: 12);
+    }
+    else {
+      subText = "N${customer.debt.toMoney.toString()}";
+      subTextStyle =customer.debt < 0
+          ? kDefaultTextStyle.copyWith(color: AppColors.blue, fontSize: 12)
+          : customer.debt > 0
+          ? kDefaultTextStyle.copyWith(color: AppColors.red, fontSize: 12)
+          : kDefaultTextStyle.copyWith(fontSize: 12);
+    }
 
     if (type == TransactionType.balance) {
       if (data.customerId == null || data.customerId!.isEmpty) {

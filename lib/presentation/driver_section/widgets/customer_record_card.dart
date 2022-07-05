@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:grip/application/customers/user_customers_cubit.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/domain/customer/customer.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/customer/customer_details.dart';
@@ -17,11 +19,11 @@ class CustomerRecordCard extends StatelessWidget {
       required this.titleStyle,
       required this.subtitleStyle,
       this.width,
-      this.transaction,
+      required this.transaction,
       required this.subtextTitleStyle})
       : super(key: key);
 
-  final Transaction? transaction;
+  final Transaction transaction;
   final TextStyle titleStyle;
   final TextStyle subtitleStyle;
   final TextStyle subtextTitleStyle;
@@ -34,32 +36,44 @@ class CustomerRecordCard extends StatelessWidget {
     TextStyle textStyle = titleStyle;
     String subText2 = "";
 
-    if (transaction != null) {
-      TransactionType type = transaction!.data.transactionType;
-      TransactionData data = transaction!.data;
-      text = transaction!.amount.toString();
+      TransactionType type = transaction.data.transactionType;
+      TransactionData data = transaction.data;
+      text = transaction.amount.toString();
 
-      var paymentType = type == TransactionType.trip && transaction!.credit > 0
+    Customer? customer = GetIt.I<UserCustomersCubit>().getCustomerByName(transaction.data.customerName!);
+
+    if (customer == null) {
+    var paymentType = type == TransactionType.trip && transaction.credit > 0
           ? "to pay"
-          : transaction!.debt > 0
+          : transaction.debt > 0
               ? "to collect"
               : type == TransactionType.balance
                   ? "balanced"
                   : "balanced";
       if (paymentType.contains("collect")){
-        text = transaction!.debt.toString();
+        text = transaction.debt.toString();
       }
       if (paymentType.contains("pay")){
-        text = transaction!.credit.toString();
+        text = transaction.credit.toString();
       }
       subText = paymentType;
 
-      textStyle = type == TransactionType.trip && transaction!.credit > 0
+      textStyle = type == TransactionType.trip && transaction.credit > 0
           ? kDefaultTextStyle.copyWith(color: kErrorColor, fontSize: 12) :
-          transaction!.debt > 0 ? kDefaultTextStyle.copyWith(color: kBlueColor, fontSize: 12)
+          transaction.debt > 0 ? kDefaultTextStyle.copyWith(color: kBlueColor, fontSize: 12)
               : type == TransactionType.balance
               ? kDefaultTextStyle.copyWith(fontSize: 12)
               : kDefaultTextStyle.copyWith(fontSize: 12);
+    }
+    else {
+      textStyle = customer.debt > 0
+          ? kDefaultTextStyle.copyWith(color: kErrorColor, fontSize: 12) :
+      customer.debt < 0 ? kDefaultTextStyle.copyWith(color: kBlueColor, fontSize: 12)
+          : kDefaultTextStyle.copyWith(fontSize: 12);
+      var paymentType = customer.debt > 0 ?"to pay": customer.debt < 0 ? "to collect" : "balanced";
+      text = customer.debt.abs().toString();
+      subText = paymentType;
+    }
       if (type == TransactionType.balance) {
         if (data.customerId == null || data.customerId!.isEmpty) {
           subText2 = "Customer";
@@ -74,20 +88,17 @@ class CustomerRecordCard extends StatelessWidget {
       } else {
         subText2 = data.customerName!;
       }
-    }
 
     return SplashTap(
       onTap: () {
-        if (transaction != null) {
           Get.to(() {
-            return CustomerDetails(name: transaction!.data.customerName!);
+            return CustomerDetails(name: transaction.data.customerName!);
           },transition: Transition.fadeIn);
-        }
       },
       child: Container(
         width: width ?? Get.width * 0.31,
         height: 110,
-        padding: const EdgeInsets.all(kDefaultSpacing),
+        padding: const EdgeInsets.all(kDefaultSpacing * 0.95),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
           border: Border.all(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:grip/application/customers/user_customers_cubit.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/application/driver/drivers_cubit.dart';
@@ -45,7 +46,6 @@ class _CustomerViewState extends State<CustomerView> {
         BlocListener<CustomerStatisticsCubit, CustomerStatisticsState>(
           listener: (context, state) {
             if (state is CustomerStatisticsStateDone) {
-              print("Setting summary state");
               setState(() {
                 transactions =
                     GetIt.I<CustomerStatisticsCubit>()
@@ -62,18 +62,11 @@ class _CustomerViewState extends State<CustomerView> {
           },
         ),
       ],
-      child: Scaffold(
+      child: BlocBuilder<UserCustomersCubit, UserCustomersState>(
+  builder: (context, state) {
+    return Scaffold(
         backgroundColor: Colors.white,
-        // appBar: AppBar(
-        //   toolbarHeight: 30,
-        //   backgroundColor: Colors.white,
-        //   title: Text(
-        //     'Greep',
-        //     style: AppTextStyles.blackSizeBold16,
-        //   ),
-        //   centerTitle: true,
-        //   elevation: 0.0,
-        // ),
+
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(kDefaultSpacing * 0.5),
@@ -192,7 +185,9 @@ class _CustomerViewState extends State<CustomerView> {
             ),
           ),
         ),
-      ),
+      );
+  },
+),
     );
   }
 }
