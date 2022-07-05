@@ -176,6 +176,7 @@ class TransactionDetails extends StatelessWidget {
                 transaction.description,
                 style: AppTextStyles.blackSize16,
               ),
+              kVerticalSpaceMedium
             ],
           ),
         ),

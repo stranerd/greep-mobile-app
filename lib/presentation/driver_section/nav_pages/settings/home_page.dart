@@ -67,9 +67,6 @@ class SettingsHome extends StatelessWidget {
                     const SizedBox(height: 8),
                     BlocBuilder<UserCubit, UserState>(
                       builder: (context, state) {
-                        if (state is UserStateFetched && state.user.hasManager) {
-                          return Container();
-                        }
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

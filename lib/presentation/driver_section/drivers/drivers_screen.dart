@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart' as g;
-import 'package:get_it/get_it.dart' ;
+import 'package:get_it/get_it.dart';
 import 'package:grip/application/driver/manager_drivers_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/colors.dart';
@@ -30,7 +30,8 @@ class _DriversScreenState extends State<DriversScreen>
 
   @override
   void initState() {
-    _driversCubit = GetIt.I<ManagerDriversCubit>()..fetchDrivers(softUpdate: true);
+    _driversCubit = GetIt.I<ManagerDriversCubit>()
+      ..fetchDrivers(softUpdate: true);
     _driversCubit.fetchDrivers();
     _refreshController = RefreshController();
     super.initState();
@@ -69,106 +70,144 @@ class _DriversScreenState extends State<DriversScreen>
             centerTitle: false,
             elevation: 0.0,
           ),
-          body: Padding(
-            padding: const EdgeInsets.all(kDefaultSpacing),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    g.Get.to(() => const AddDriverScreen(),transition: g.Transition.fadeIn);
-                  },
-                  child: Row(
+          body: BlocBuilder<UserCubit, UserState>(
+            builder: (context, state) {
+              if (state is UserStateFetched && state.user.hasManager) {
+                return Container(
+                  decoration: const BoxDecoration(
+                    color: kLightGrayColor
+                  ),
+                  padding: const EdgeInsets.all(kDefaultSpacing),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Icon(
-                        Icons.add,
-                        size: 25,
-                        color: kBlackColor,
-                      ),
-                      kHorizontalSpaceMedium,
+                      Image.asset("assets/images/last_onboarding.png"),
+                      kVerticalSpaceMedium,
                       Text(
-                        "Add a driver",
-                        style: kDefaultTextStyle,
-                      )
+                        "You can not add or manager a driver because you already have a manager",
+                        style: kSubtitleTextStyle.copyWith(
+                          fontSize: 20
+                        ),
+                        textAlign: TextAlign.center,
+
+                      ),
+                      kVerticalSpaceLarge,
+                      kVerticalSpaceLarge,
+                      kVerticalSpaceLarge
                     ],
                   ),
-                ),
-                kVerticalSpaceRegular,
-                Expanded(
-                  child: SmartRefresher(
-                    controller: _refreshController,
-                    onRefresh: _onRefresh,
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: [
-                        BlocBuilder<ManagerDriversCubit, ManagerDriversState>(
-                          builder: (context, state) {
-                            if (state is ManagerDriversStateFetched) {
-                              if (state.drivers.isEmpty) {
-                                return const EmptyResultWidget(
-                                    text: "No Drivers");
-                              }
-
-                              return ListView.builder(
-                                itemCount: state.drivers.length,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (c, i) {
-                                  DriverCommission driver = state.drivers[i];
-
-                                  return ListTile(
-                                    title: Text(
-                                      driver.driverName,
-                                      style: kBoldTextStyle,
-                                    ),
-                                    contentPadding: EdgeInsets.zero,
-                                    trailing: state.isLoading &&
-                                            state.loadingId == driver.driverId
-                                        ? const SizedBox(
-                                            width: 25,
-                                            height: 25,
-                                            child: CircularProgressIndicator(),
-                                          )
-                                        : GestureDetector(
-                                            onTap: () => deleteDriver(driver),
-                                            child: const Icon(Icons.delete,
-                                                color: AppColors.red),
-                                          ),
-                                    subtitle: Text(
-                                      "${(driver.commission * 100).toStringAsFixed(1)}% commission",
-                                      style: kDefaultTextStyle.copyWith(
-                                          fontSize: 13),
-                                    ),
-                                    leading: CircleAvatar(
-                                      radius: 20,
-                                      backgroundImage:
-                                          CachedNetworkImageProvider(
-                                              driver.driverPhoto),
-                                    ),
-                                  );
-                                },
-                              );
-                            }
-
-                            if (state is ManagerDriversStateError) {
-                              return Text(
-                                "An error occurred fetching drivers",
-                                style: kErrorColorTextStyle,
-                              );
-                            }
-                            return const Center(
-                                child: SizedBox(
-                                    width: 40,
-                                    height: 40,
-                                    child: CircularProgressIndicator()));
-                          },
-                        ),
-                      ],
+                );
+              }
+              return Padding(
+                padding: const EdgeInsets.all(kDefaultSpacing),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        g.Get.to(() => const AddDriverScreen(),
+                            transition: g.Transition.fadeIn);
+                      },
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.add,
+                            size: 25,
+                            color: kBlackColor,
+                          ),
+                          kHorizontalSpaceMedium,
+                          Text(
+                            "Add a driver",
+                            style: kDefaultTextStyle,
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                )
-              ],
-            ),
+                    kVerticalSpaceRegular,
+                    Expanded(
+                      child: SmartRefresher(
+                        controller: _refreshController,
+                        onRefresh: _onRefresh,
+                        child: ListView(
+                          shrinkWrap: true,
+                          children: [
+                            BlocBuilder<ManagerDriversCubit,
+                                ManagerDriversState>(
+                              builder: (context, state) {
+                                if (state is ManagerDriversStateFetched) {
+                                  if (state.drivers.isEmpty) {
+                                    return const EmptyResultWidget(
+                                        text: "No Drivers");
+                                  }
+
+                                  return ListView.builder(
+                                    itemCount: state.drivers.length,
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (c, i) {
+                                      DriverCommission driver =
+                                          state.drivers[i];
+
+                                      return ListTile(
+                                        title: Text(
+                                          driver.driverName,
+                                          style: kBoldTextStyle,
+                                        ),
+                                        contentPadding: EdgeInsets.zero,
+                                        trailing: state.isLoading &&
+                                                state.loadingId ==
+                                                    driver.driverId
+                                            ? const SizedBox(
+                                                width: 25,
+                                                height: 25,
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              )
+                                            : GestureDetector(
+                                                onTap: () =>
+                                                    deleteDriver(driver),
+                                                child: const Icon(Icons.delete,
+                                                    color: AppColors.red),
+                                              ),
+                                        subtitle: Text(
+                                          "${(driver.commission * 100).toStringAsFixed(1)}% commission",
+                                          style: kDefaultTextStyle.copyWith(
+                                              fontSize: 13),
+                                        ),
+                                        leading: CircleAvatar(
+                                          radius: 20,
+                                          backgroundImage:
+                                              CachedNetworkImageProvider(
+                                                  driver.driverPhoto),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
+
+                                if (state is ManagerDriversStateError) {
+                                  return Text(
+                                    "An error occurred fetching drivers",
+                                    style: kErrorColorTextStyle,
+                                  );
+                                }
+                                return const Center(
+                                    child: SizedBox(
+                                        width: 40,
+                                        height: 40,
+                                        child: CircularProgressIndicator()));
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
           ),
         );
       },
