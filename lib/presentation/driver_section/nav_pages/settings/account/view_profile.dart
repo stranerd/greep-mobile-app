@@ -108,17 +108,18 @@ class _ProfileViewState extends State<ProfileView> {
                             ? "Supervised"
                             : "Independent";
 
-                    return AccountItemCard(
-                        title: "Driver type", subtitle: driverType);
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AccountItemCard(
+                            title: "Driver type", subtitle: driverType),
+                        kVerticalSpaceRegular,
+                        if (user.hasManager && user.managerName!=null)
+                          AccountItemCard(
+                              title: "Manager", subtitle: user.managerName!),
+                      ],
+                    );
                   },
-                ),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                     kVerticalSpaceRegular,
-                    AccountItemCard(title: "Manager", subtitle: user.fullName),
-                  ],
                 ),
               ],
             ),

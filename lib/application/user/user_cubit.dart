@@ -34,10 +34,26 @@ class UserCubit extends Cubit<UserState> {
           isSocket: response.isSocket));
       return null;
     } else {
-      user = response.data;
+      print(response.data);
+      if (response.data!.hasManager){
+        getUserManager(response.data!.managerId??"");
+      }
+      user = response.data!;
       emit(UserStateFetched(user));
       return user;
     }
+  }
+
+  void getUserManager(String userId)async {
+     userService.fetchUser(userId).then((value) {
+    if (!value.isError){
+      user.managerName = value.data!.fullName;
+    }
+    else {
+      print("fetch user manager failed");
+    }
+  });
+
   }
 
   @override

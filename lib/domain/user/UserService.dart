@@ -12,7 +12,7 @@ class UserService {
 
   const UserService(this._client);
 
-  Future<ResponseEntity> fetchUser(String userId) async {
+  Future<ResponseEntity<User>> fetchUser(String userId) async {
     var response = await _client.fetchUser(userId);
     if (!response.isError) {}
     return response;

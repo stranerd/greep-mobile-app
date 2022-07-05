@@ -7,16 +7,18 @@ class User extends Equatable{
   final String lastName;
   final String fullName;
   final String photoUrl;
+  String? managerName;
   final bool hasManager;
   final num? commission;
   final String? managerId;
 
-  const User(
+   User(
       {required this.id,
       required this.email,
       required this.fullName,
         this.managerId,
         this.commission,
+        this.managerName,
       required this.firstName,
       required this.hasManager,
       required this.lastName,
