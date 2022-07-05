@@ -47,7 +47,7 @@ class AddRecord extends StatelessWidget {
           Text(
             title,
             style:kDefaultTextStyle.copyWith(
-              fontSize: 16.5,
+              fontSize: 16,
               fontWeight: FontWeight.bold
             ),
           ),

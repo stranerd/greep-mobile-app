@@ -77,13 +77,13 @@ class _HomePageState extends State<HomePage> {
                         clipBehavior: Clip.none,
                         children: [
                           Positioned(
-                            top: driverState is DriversStateDriver ? 185 :(driverState is DriversStateFetched &&
+                            top: driverState is DriversStateDriver ? 215 :(driverState is DriversStateFetched &&
                                 driverState.selectedUser == currentUser()) ? 270 : 190,
                             width: g.Get.width,
-                            height: g.Get.height - (driverState is DriversStateDriver ? 240 :(driverState is DriversStateFetched &&
+                            height: g.Get.height - (driverState is DriversStateDriver ? 250 :(driverState is DriversStateFetched &&
                                 driverState.selectedUser == currentUser()) ? 300: 230),
                             child: SizedBox(
-                              height: g.Get.height - (driverState is DriversStateDriver ? 240 :(driverState is DriversStateFetched &&
+                              height: g.Get.height - (driverState is DriversStateDriver ? 250 :(driverState is DriversStateFetched &&
                                   driverState.selectedUser == currentUser()) ? 300: 230),
                               child: SmartRefresher(
                                 controller: _refreshController,
@@ -98,7 +98,10 @@ class _HomePageState extends State<HomePage> {
                                     ListTile(
                                       contentPadding: EdgeInsets.zero,
                                       title: Text("Today",
-                                          style: AppTextStyles.blackSizeBold12),
+                                          style: kDefaultTextStyle.copyWith(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.bold
+                                          )),
                                       trailing: SplashTap(
                                         onTap: () {
                                           g.Get.to(() => ViewAllRecords(),
@@ -120,7 +123,10 @@ class _HomePageState extends State<HomePage> {
                                       contentPadding:
                                           const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                       title: Text("Yesterday",
-                                          style: AppTextStyles.blackSizeBold12),
+                                          style: kDefaultTextStyle.copyWith(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.bold
+                                          )),
                                       trailing: SplashTap(
                                         onTap: () {
                                           g.Get.to(() => ViewAllRecords(),
@@ -154,7 +160,10 @@ class _HomePageState extends State<HomePage> {
                                       contentPadding:
                                           const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                       title: Text("Customers",
-                                          style: AppTextStyles.blackSizeBold12),
+                                          style: kDefaultTextStyle.copyWith(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.bold
+                                          )),
                                       trailing: InkWell(
                                           onTap: () {
                                             Navigator.push(
@@ -174,7 +183,10 @@ class _HomePageState extends State<HomePage> {
                                       contentPadding:
                                           const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                       title: Text("Transaction history",
-                                          style: AppTextStyles.blackSizeBold12),
+                                          style: kDefaultTextStyle.copyWith(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.bold
+                                          )),
                                       trailing: SplashTap(
                                         onTap: () {
                                           g.Get.to(
@@ -234,7 +246,7 @@ class _HomePageState extends State<HomePage> {
                             width: g.Get.width,
                             child: Container(
                               width: g.Get.width,
-                              height: driverState is DriversStateDriver ? 185 : ((driverState is DriversStateFetched &&
+                              height: driverState is DriversStateDriver ? 215 : ((driverState is DriversStateFetched &&
                                   driverState.selectedUser == currentUser()) ? 270: 180),
                               decoration: const BoxDecoration(
                                 color: kWhiteColor,
@@ -247,7 +259,7 @@ class _HomePageState extends State<HomePage> {
                                     children: [
                                       Container(
                                         color: kBlackColor,
-                                        height: driverState is DriversStateDriver ? 160 : ((driverState is DriversStateFetched &&
+                                        height: driverState is DriversStateDriver ? 190 : ((driverState is DriversStateFetched &&
                                             driverState.selectedUser == currentUser()) ? 245: 180),
                                         width: Get.width,
                                         padding: const EdgeInsets.symmetric(horizontal: kDefaultSpacing,vertical: kDefaultSpacing * 0.5,),
@@ -371,8 +383,8 @@ class _HomePageState extends State<HomePage> {
                                                       0.48,
                                                   svg: SvgPicture.asset(
                                                       "assets/icons/local_taxi.svg",
-                                                      width: 30,
-                                                      height: 30,
+                                                      width: 25,
+                                                      height: 25,
 
                                                   ),
                                                   title: "Trip",
@@ -391,8 +403,8 @@ class _HomePageState extends State<HomePage> {
                                                       0.48,
                                                   svg: Image.asset(
                                                       "assets/icons/expense.png",
-                                                      width: 25,
-                                                      height: 25),
+                                                      width: 22,
+                                                      height: 22),
                                                   title: "Expense",
                                                 ),
                                               ),

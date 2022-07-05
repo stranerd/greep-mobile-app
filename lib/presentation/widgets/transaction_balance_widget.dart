@@ -67,6 +67,7 @@ class _TransactionBalanceWidgetState extends State<TransactionBalanceWidget>
               success = "Balance recorded";
               setState(() {
                 debt = debt - num.parse(_amountController.text);
+                _amountController.text=debt.toString();
               });
 
             }
