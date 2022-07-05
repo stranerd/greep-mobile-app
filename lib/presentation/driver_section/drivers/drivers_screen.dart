@@ -62,7 +62,8 @@ class _DriversScreenState extends State<DriversScreen>
                   Icons.arrow_back_ios,
                   size: 16,
                 ),
-                color: AppColors.black),
+                color: AppColors.black,
+            ),
             title: Text(
               'Drivers',
               style: AppTextStyles.blackSizeBold14,
@@ -167,7 +168,7 @@ class _DriversScreenState extends State<DriversScreen>
                                               )
                                             : GestureDetector(
                                                 onTap: () =>
-                                                    deleteDriver(driver),
+                                                    _deleteDriver(driver),
                                                 child: const Icon(Icons.delete,
                                                     color: AppColors.red),
                                               ),
@@ -214,7 +215,7 @@ class _DriversScreenState extends State<DriversScreen>
     );
   }
 
-  void deleteDriver(DriverCommission driver) async {
+  void _deleteDriver(DriverCommission driver) async {
     bool shouldDelete = await showDialog<bool?>(
             barrierDismissible: true,
             context: context,

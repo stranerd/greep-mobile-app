@@ -17,11 +17,13 @@ class Slide {
   final String image;
   final String text;
   final String title;
+  final String image2;
   bool alignLeft;
 
   Slide(
       {required this.image,
       required this.text,
+        required this.image2,
       required this.alignLeft,
       required this.title});
 }
@@ -37,11 +39,10 @@ class OnboardingSlidesStateController extends State<OnboardingSlides> {
   late PageController pageController;
   int currentPage = 0;
 
-
-
   var slides = <Slide>[
     Slide(
         image: "assets/images/first_cone_onboarding.png",
+        image2: "assets/images/first_onboarding_screenshot.png",
         text: "With a good perspective on history, "
             "we can have a better understanding of the past and present, "
             "and thus a clear vision of the future.",
@@ -49,13 +50,15 @@ class OnboardingSlidesStateController extends State<OnboardingSlides> {
         title: "Get a Greep"),
     Slide(
         image: "assets/images/second_cone_onboarding.png",
+        image2: "assets/images/second_onboarding_screenshot.png",
         text: "With a good perspective on history, "
             "we can have a better understanding of the past and present,"
             " and thus a clear vision of the future.",
         alignLeft: false,
         title: "If it’s Worth Recording"),
     Slide(
-        image: "assets/images/last_onboarding.png",
+        image: "assets/images/third_onboarding_screenshot.png",
+        image2: "assets/images/third2_onboarding_sceenshot.png",
         text: "With a good perspective on history,"
             " we can have a better understanding of the past and present,"
             " and thus a clear vision of the future.",
