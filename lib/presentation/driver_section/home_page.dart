@@ -34,14 +34,14 @@ import 'records/view_records.dart';
 import 'widgets/add_record_card.dart';
 import 'widgets/transaction_list_card.dart';
 
-class DriverHomePage extends StatefulWidget {
-  const DriverHomePage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<DriverHomePage> createState() => _DriverHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _DriverHomePageState extends State<DriverHomePage> {
+class _HomePageState extends State<HomePage> {
   late RefreshController _refreshController;
   late UserTransactionsCubit _userTransactionsCubit;
 
@@ -59,16 +59,6 @@ class _DriverHomePageState extends State<DriverHomePage> {
         var userId = currentUser().id;
         return Scaffold(
           backgroundColor: Colors.white,
-          // appBar: AppBar(
-          //   toolbarHeight: 30,
-          //   backgroundColor: Colors.white,
-          //   title: Text(
-          //     'Greep',
-          //     style: AppTextStyles.blackSizeBold16,
-          //   ),
-          //   centerTitle: true,
-          //   elevation: 0.0,
-          // ),
           body: BlocConsumer<UserTransactionsCubit, UserTransactionsState>(
               listener: (c, s) {
             if (s is UserTransactionsStateError ||
@@ -88,7 +78,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                         children: [
                           Positioned(
                             top: driverState is DriversStateDriver ? 185 :(driverState is DriversStateFetched &&
-                                driverState.selectedUser == currentUser()) ? 230 : 170,
+                                driverState.selectedUser == currentUser()) ? 270 : 190,
                             width: g.Get.width,
                             height: g.Get.height - (driverState is DriversStateDriver ? 240 :(driverState is DriversStateFetched &&
                                 driverState.selectedUser == currentUser()) ? 300: 230),
@@ -104,6 +94,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                       horizontal: kDefaultSpacing),
                                   physics: const BouncingScrollPhysics(),
                                   children: [
+                                    kVerticalSpaceMedium,
                                     ListTile(
                                       contentPadding: EdgeInsets.zero,
                                       title: Text("Today",
@@ -244,7 +235,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                             child: Container(
                               width: g.Get.width,
                               height: driverState is DriversStateDriver ? 185 : ((driverState is DriversStateFetched &&
-                                  driverState.selectedUser == currentUser()) ? 230: 160),
+                                  driverState.selectedUser == currentUser()) ? 270: 180),
                               decoration: const BoxDecoration(
                                 color: kWhiteColor,
                               ),
@@ -257,9 +248,9 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                       Container(
                                         color: kBlackColor,
                                         height: driverState is DriversStateDriver ? 160 : ((driverState is DriversStateFetched &&
-                                            driverState.selectedUser == currentUser()) ? 205: 160),
+                                            driverState.selectedUser == currentUser()) ? 245: 180),
                                         width: Get.width,
-                                        padding: const EdgeInsets.all(kDefaultSpacing * 0.5),
+                                        padding: const EdgeInsets.symmetric(horizontal: kDefaultSpacing,vertical: kDefaultSpacing * 0.5,),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -272,7 +263,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                kVerticalSpaceSmall,
+                                                kVerticalSpaceRegular,
                                                 driverState
                                                         is DriversStateDriver
                                                     ? ListTile(
@@ -326,10 +317,10 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                                         style: kBoldTextStyle2
                                                             .copyWith(
                                                           color: kWhiteColor,
-                                                          fontSize: 16.18,
+                                                          fontSize: 20,
                                                         ),
                                                       ),
-                                                kVerticalSpaceTiny,
+                                                kVerticalSpaceRegular,
                                                 if (driverState
                                                         is DriversStateFetched &&
                                                     driverState.selectedUser ==
@@ -338,7 +329,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                                         "Add a record",
                                                         style: kBoldWhiteTextStyle.copyWith(
                                                             fontSize:
-                                                                14))
+                                                                13))
                                               ],
                                             ),
                                           ],
@@ -358,9 +349,9 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                       width: g.Get.width,
                                       bottom: 0,
                                       child: Container(
-                                        height: 60,
+                                        height: 50,
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: kDefaultSpacing * 0.3),
+                                            horizontal: kDefaultSpacing),
                                         decoration: const BoxDecoration(),
                                         child: LayoutBuilder(
                                             builder: (context, constraints) {
@@ -377,11 +368,13 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                                 },
                                                 child: AddRecord(
                                                   width: constraints.maxWidth *
-                                                      0.47,
+                                                      0.48,
                                                   svg: SvgPicture.asset(
                                                       "assets/icons/local_taxi.svg",
-                                                      width: 33,
-                                                      height: 33),
+                                                      width: 30,
+                                                      height: 30,
+
+                                                  ),
                                                   title: "Trip",
                                                 ),
                                               ),
@@ -395,9 +388,9 @@ class _DriverHomePageState extends State<DriverHomePage> {
                                                 },
                                                 child: AddRecord(
                                                   width: constraints.maxWidth *
-                                                      0.47,
-                                                  svg: SvgPicture.asset(
-                                                      "assets/icons/expense.svg",
+                                                      0.48,
+                                                  svg: Image.asset(
+                                                      "assets/icons/expense.png",
                                                       width: 25,
                                                       height: 25),
                                                   title: "Expense",

@@ -24,8 +24,8 @@ class DriverItemWidget extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: 60,
-            width: 60,
+            height: 55,
+            width: 55,
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: CachedNetworkImageProvider(asset),
@@ -41,9 +41,10 @@ class DriverItemWidget extends StatelessWidget {
             name,
             style: isSelected
                 ? kBoldTextStyle2.copyWith(
-              color: textColor
+              color: textColor,
+              fontSize: 13
             )
-                : kDefaultTextStyle.copyWith(fontSize: 13,color: textColor),
+                : kDefaultTextStyle.copyWith(fontSize: 12,color: textColor),
           ),
         ],
       ),

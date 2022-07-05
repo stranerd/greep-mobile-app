@@ -24,8 +24,8 @@ class AddRecord extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: width ?? Get.width * 0.45,
-      height: 60,
-      padding: const EdgeInsets.symmetric(vertical: kDefaultSpacing, horizontal: kDefaultSpacing * 1.25),
+      height: 50,
+      padding: const EdgeInsets.symmetric(vertical: kDefaultSpacing * 0.5, horizontal: kDefaultSpacing * 1.5),
       decoration: BoxDecoration(
         color: kWhiteColor,
         borderRadius: BorderRadius.circular(8.0),
@@ -46,7 +46,10 @@ class AddRecord extends StatelessWidget {
           kHorizontalSpaceRegular,
           Text(
             title,
-            style:kDefaultTextStyle,
+            style:kDefaultTextStyle.copyWith(
+              fontSize: 16.5,
+              fontWeight: FontWeight.bold
+            ),
           ),
         ],
       ),

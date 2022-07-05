@@ -123,6 +123,8 @@ class _AddDriverScreenState extends State<AddDriverScreen> with ScaffoldMessenge
                                     onTap: () {
                                       if (_commission >= 0) {
                                         _commission--;
+                                        _commissionController.text = _commission.toString();
+
                                         setState(() {
 
                                         });
@@ -167,6 +169,8 @@ class _AddDriverScreenState extends State<AddDriverScreen> with ScaffoldMessenge
                                     onTap: () {
                                       if (_commission <= 100) {
                                         _commission++;
+                                        _commissionController.text = _commission.toString();
+
                                         setState(() {
 
                                         });

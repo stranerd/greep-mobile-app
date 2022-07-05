@@ -73,7 +73,10 @@ class TransactionListCard extends StatelessWidget {
             shape: BoxShape.circle,
             color: AppColors.lightGray,
             ),
-          child: SvgPicture.asset(transaction.data.transactionType == TransactionType.expense ?"assets/icons/expense.svg": "assets/icons/local_taxi.svg"),
+          child: transaction.data.transactionType == TransactionType.expense ? Image.asset(
+              "assets/icons/expense.png",
+              width: 25,
+              height: 25) : SvgPicture.asset("assets/icons/local_taxi.svg"),
           ) : null,
         onTap: shouldTap ? () => g.Get.to(() => TransactionDetails(transaction: transaction),transition: g.Transition.fadeIn): null,
         title: Text(text, style: AppTextStyles.blackSize14),
