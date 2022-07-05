@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:grip/commons/colors.dart';
 
 import '../../../../../utils/constants/app_styles.dart';
 import 'privacy_policy.dart';
@@ -44,10 +45,7 @@ class AboutHome extends StatelessWidget {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
-                    border: Border.all(
-                      color: const Color.fromRGBO(221, 226, 224, 1),
-                      width: 1.0,
-                    ),
+                    color: kLightGrayColor,
                   ),
                   child: Row(
                     children: [
@@ -73,10 +71,7 @@ class AboutHome extends StatelessWidget {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
-                    border: Border.all(
-                      color: const Color.fromRGBO(221, 226, 224, 1),
-                      width: 1.0,
-                    ),
+                    color: kLightGrayColor,
                   ),
                   child: Row(
                     children: [

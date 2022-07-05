@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:grip/commons/colors.dart';
+import 'package:grip/commons/ui_helpers.dart';
 
 import '../../../utils/constants/app_styles.dart';
 
@@ -14,14 +16,11 @@ class SettingsHomeItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+      padding: const EdgeInsets.all(kDefaultSpacing),
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(
-          color: const Color.fromRGBO(221, 226, 224, 1),
-          width: 1.0,
-        ),
+        color: kLightGrayColor,
       ),
       child: Row(
         children: [

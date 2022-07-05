@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:grip/commons/colors.dart';
+import 'package:grip/commons/ui_helpers.dart';
 
 import '../../../../../utils/constants/app_styles.dart';
 
 class AccountItemCard extends StatelessWidget {
+
   const AccountItemCard(
       {Key? key,
       required this.title,
@@ -19,23 +22,17 @@ class AccountItemCard extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 10, 0, 10),
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: kLightGrayColor,
         borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(
-          color: const Color.fromRGBO(221, 226, 224, 1),
-          width: 1.0,
-        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
-            style: AppTextStyles.blackSize12,
+            style: AppTextStyles.blackSize14,
           ),
-          const SizedBox(
-            height: 4.0,
-          ),
+         kVerticalSpaceTiny,
           isSelectable
               ? SelectableText(
                   subtitle,

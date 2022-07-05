@@ -54,12 +54,7 @@ class SettingsHome extends StatelessWidget {
                   children: [
                     SplashTap(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ProfileView(),
-                          ),
-                        );
+                        Get.to(() => const ProfileView());
                       },
                       child: const SettingsHomeItem(
                           title: "Account", icon: "assets/icons/person.svg"),
@@ -72,12 +67,7 @@ class SettingsHome extends StatelessWidget {
                           children: [
                             SplashTap(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const DriversScreen(),
-                                  ),
-                                );
+                                Get.to(() => const DriversScreen());
                               },
                               child: const SettingsHomeItem(
                                   title: "Drivers",
@@ -96,13 +86,7 @@ class SettingsHome extends StatelessWidget {
                             children: [
                               SplashTap(
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                      const TotalIncome(),
-                                    ),
-                                  );
+                                  Get.to(() => const TotalIncome());
                                 },
                                 child: const SettingsHomeItem(
                                     title: "Total Income",
@@ -124,13 +108,7 @@ class SettingsHome extends StatelessWidget {
                             children: [
                               SplashTap(
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                      const CommissionHome(),
-                                    ),
-                                  );
+                                  Get.to(() => const CommissionHome());
                                 },
                                 child: const SettingsHomeItem(
                                     title: "Commission",
@@ -145,12 +123,7 @@ class SettingsHome extends StatelessWidget {
                     ),
                     SplashTap(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AboutHome(),
-                          ),
-                        );
+                        Get.to(() => const AboutHome());
                       },
                       child: const SettingsHomeItem(
                           title: "About", icon: "assets/icons/info.svg"),
@@ -158,12 +131,8 @@ class SettingsHome extends StatelessWidget {
                     const SizedBox(height: 8),
                     SplashTap(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ContactUs(),
-                          ),
-                        );
+                        Get.to(() => const ContactUs());
+
                       },
                       child: const SettingsHomeItem(
                           title: "Contact Us",

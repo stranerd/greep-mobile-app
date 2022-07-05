@@ -46,12 +46,11 @@ class ContactUs extends StatelessWidget {
                   hintText: "Send us a message",
 
                   hintStyle: AppTextStyles.blackSize14,
+                  filled: true,
+                  fillColor: kLightGrayColor,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      color: AppColors.lightGray,
-                      width: 1,
-                    ),
+                    borderSide: BorderSide.none,
                   ),
                 ),
               ),

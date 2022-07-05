@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart' as g;
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/driver/manager_drivers_cubit.dart';
@@ -12,6 +13,7 @@ import 'package:grip/domain/user/model/User.dart';
 import 'package:grip/domain/user/model/driver_commission.dart';
 import 'package:grip/presentation/driver_section/add_driver_screen.dart';
 import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
+import 'package:grip/presentation/widgets/splash_tap.dart';
 import 'package:grip/utils/constants/app_colors.dart';
 import 'package:grip/utils/constants/app_styles.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -166,11 +168,18 @@ class _DriversScreenState extends State<DriversScreen>
                                                 child:
                                                     CircularProgressIndicator(),
                                               )
-                                            : GestureDetector(
+                                            : SplashTap(
                                                 onTap: () =>
                                                     _deleteDriver(driver),
-                                                child: const Icon(Icons.delete,
-                                                    color: AppColors.red),
+                                                child:  Container(
+                                                  padding: const EdgeInsets.all(kDefaultSpacing),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(kDefaultSpacing)
+                                                    ),
+                                                    child: SizedBox(
+                                                        height: 25,
+                                                        width: 25,
+                                                        child: SvgPicture.asset("assets/icons/driver_delete.svg", width: 25,height: 25,))),
                                               ),
                                         subtitle: Text(
                                           "${(driver.commission * 100).toStringAsFixed(1)}% commission",

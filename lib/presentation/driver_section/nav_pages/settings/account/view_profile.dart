@@ -95,11 +95,11 @@ class _ProfileViewState extends State<ProfileView> {
                     title: "Driver Id", subtitle: user.id, isSelectable: true),
                 kVerticalSpaceSmall,
                 AccountItemCard(title: "First name", subtitle: user.firstName),
-                SizedBox(height: 8),
+                kVerticalSpaceRegular,
                 AccountItemCard(title: "Last name", subtitle: user.lastName),
-                SizedBox(height: 8),
+                kVerticalSpaceRegular,
                 AccountItemCard(title: "Email", subtitle: user.email),
-                SizedBox(height: 8),
+                kVerticalSpaceRegular,
                 BlocBuilder<DriversCubit, DriversState>(
                   builder: (context, state) {
                     String driverType = state is DriversStateManager
@@ -112,10 +112,11 @@ class _ProfileViewState extends State<ProfileView> {
                         title: "Driver type", subtitle: driverType);
                   },
                 ),
+
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 8),
+                     kVerticalSpaceRegular,
                     AccountItemCard(title: "Manager", subtitle: user.fullName),
                   ],
                 ),
