@@ -10,6 +10,7 @@ import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/money.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
+import 'package:grip/presentation/driver_section/widgets/transactions_card.dart';
 import 'package:grip/presentation/widgets/driver_selector_widget.dart';
 import 'package:grip/presentation/widgets/transaction_summary_builder.dart';
 import 'package:intl/intl.dart';
@@ -96,37 +97,61 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                     ),
                   ),
                 ),
-                kVerticalSpaceRegular,
-                // Container(
-                //   margin: EdgeInsets.symmetric(horizontal: kDefaultSpacing),
-                //   width: Get.width,
-                //   padding: EdgeInsets.all(kDefaultSpacing * 0.5),
-                //   decoration: BoxDecoration(
-                //     color: kLightGrayColor,
-                //     borderRadius: BorderRadius.circular(kDefaultSpacing * 0.5),
-                //   ),
-                //   child: DropdownButtonHideUnderline(
-                //     child: DropdownButton<String>(
-                //       isDense: true,
-                //       isExpanded: true,
-                //       value: selectedInterval,
-                //       items: timeIntervals
-                //           .map((e) => DropdownMenuItem(
-                //                 child: Text(
-                //                   e,
-                //                   style:
-                //                       kDefaultTextStyle.copyWith(fontSize: 14),
-                //                 ),
-                //                 value: e,
-                //               ))
-                //           .toList(),
-                //       onChanged: (String? value) {
-                //         selectedInterval = value ?? selectedInterval;
-                //         setState(() {});
-                //       },
-                //     ),
-                //   ),
-                // ),
+                kVerticalSpaceSmall,
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: kDefaultSpacing * 0.5),
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("Filter",style: kDefaultTextStyle,),
+                      kHorizontalSpaceTiny,
+                      const Icon(Icons.sort),
+                    ],
+                  ),
+                ),
+                kVerticalSpaceSmall,
+
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: kDefaultSpacing),
+                  width: Get.width,
+                  padding: const EdgeInsets.all(kDefaultSpacing * 0.75),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: kLightGrayColor,
+
+                    ),
+                    borderRadius: BorderRadius.circular(kDefaultSpacing * 0.5),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      isDense: true,
+                      isExpanded: true,
+                      value: selectedInterval,
+                      items: timeIntervals
+                          .map((e) => DropdownMenuItem(
+                                child: Text(
+                                  e,
+                                  style:
+                                      kDefaultTextStyle.copyWith(fontSize: 14),
+                                ),
+                                value: e,
+                              ))
+                          .toList(),
+                      onChanged: (String? value) {
+                        selectedInterval = value ?? selectedInterval;
+                        if (selectedInterval.toLowerCase() == "daily"){
+                          transactions = GetIt.I<TransactionSummaryCubit>().getDailyTransactions();
+                        }
+                        else if (selectedInterval.toLowerCase() == "monthly"){
+                          transactions = GetIt.I<TransactionSummaryCubit>().getMonthlyTransactions();
+                        }
+
+                        setState(() {});
+                      },
+                    ),
+                  ),
+                ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(kDefaultSpacing),
@@ -153,6 +178,7 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                                     DateTime date =
                                         transactions.keys.toList()[i];
                                     String day = "";
+                                    if (selectedInterval.toLowerCase() == "daily"){
                                     if (areDatesEqual(DateTime.now(), date)) {
                                       day = "Today";
                                     } else if (areDatesEqual(
@@ -165,19 +191,62 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                                               "${DateFormat.ABBR_WEEKDAY}, ${DateFormat.DAY} ${DateFormat.MONTH} ${DateFormat.YEAR}")
                                           .format(date);
                                     }
+                                    }
+                                    else if (selectedInterval.toLowerCase() == "monthly"){
+                                      day =  DateFormat(
+                                          "${DateFormat.ABBR_MONTH} ${DateFormat.YEAR}")
+                                          .format(date);
+                                    }
                                     return Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          day,
-                                          style: kBoldTextStyle2.copyWith(
-                                              fontSize: 13),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              day,
+                                              style: kBoldTextStyle2.copyWith(
+                                                  fontSize: 13),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              children: [
+                                                Text(
+                                                  "Income: N${transactions[date]!.income.toMoney}",
+                                                  style: AppTextStyles.blackSize10,
+                                                ),
+                                                kHorizontalSpaceSmall,
+                                                Text(
+                                                  "Trips: ${transactions[date]!.tripAmount == 0 ? "":"+"}N${transactions[date]!.tripAmount.toMoney}",
+                                                  style: AppTextStyles.greenSize10,
+                                                ),
+                                                kHorizontalSpaceSmall,
+
+                                                Text(
+                                                  "Expenses: ${transactions[date]!.expenseAmount == 0 ? "":"-"}N${transactions[date]!.expenseAmount.toMoney}",
+                                                  style: AppTextStyles.redSize10,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
                                         kVerticalSpaceSmall,
-                                        TransactionSummaryBuilder(
-                                            transactionSummary:
-                                                transactions[date]!)
+                                        ListView(
+                                          shrinkWrap: true,
+                                          physics: const NeverScrollableScrollPhysics(),
+                                          children: transactions[date]!.transactions.map((e) {
+                                            return TransactionCard(
+                                              transaction: e,
+                                              withBigAmount: false,
+                                              subTrailingStyle: AppTextStyles.blackSize12,
+                                              titleStyle: AppTextStyles.blackSize14,
+                                              subtitleStyle: AppTextStyles.blackSize12,
+                                              trailingStyle: AppTextStyles.greenSize14,
+                                            );
+                                          }).toList(),
+                                        ),
+
                                       ],
                                     );
                                   },

@@ -7,6 +7,7 @@ import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
 import 'package:grip/application/driver/drivers_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
+import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/application/user/utils/get_current_user.dart';
 
@@ -30,8 +31,10 @@ class CustomerView extends StatefulWidget {
 class _CustomerViewState extends State<CustomerView> {
   late RefreshController refreshController;
 
-
   List<Transaction> transactions = [];
+
+  List<String> debtTypes = ["none", "collect", "pay","balance"];
+  var selectedDebtType = "none";
 
   @override
   void initState() {
@@ -49,7 +52,7 @@ class _CustomerViewState extends State<CustomerView> {
               setState(() {
                 transactions =
                     GetIt.I<CustomerStatisticsCubit>()
-                        .getCustomerTransactions();
+                        .getCustomerTransactions(type: selectedDebtType);
               });
             }
           },
@@ -98,6 +101,7 @@ class _CustomerViewState extends State<CustomerView> {
                   ),
                   kVerticalSpaceRegular,
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
@@ -144,6 +148,66 @@ class _CustomerViewState extends State<CustomerView> {
                         ],
                       ),
                     ],
+                  ),
+                  kVerticalSpaceSmall,
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: kDefaultSpacing * 0.5),
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("Filter",style: kDefaultTextStyle,),
+                        kHorizontalSpaceTiny,
+                        const Icon(Icons.sort),
+                      ],
+                    ),
+                  ),
+                  kVerticalSpaceSmall,
+                  Container(
+                    width: Get.width,
+                    padding: const EdgeInsets.all(kDefaultSpacing * 0.75),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: kLightGrayColor,
+
+                      ),
+                      borderRadius: BorderRadius.circular(kDefaultSpacing * 0.5),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        isDense: true,
+                        isExpanded: true,
+                        value: selectedDebtType,
+                        items: debtTypes
+                            .map((e) => DropdownMenuItem(
+                          child: Text(
+                            "${e == "collect" ?"To Collect" : e == "pay"? "To Pay": e == "balance" ? "Balanced": "None"}",
+                            style:
+                            kDefaultTextStyle.copyWith(fontSize: 14),
+                          ),
+                          value: e,
+                        ))
+                            .toList(),
+                        onChanged: (String? value) {
+                          selectedDebtType = value ?? selectedDebtType;
+                          if (selectedDebtType.toLowerCase() == "balance"){
+                            transactions = GetIt.I<CustomerStatisticsCubit>().getCustomerTransactions(type: "balance");
+                          }
+                          else if (selectedDebtType.toLowerCase() == "pay"){
+                            transactions = GetIt.I<CustomerStatisticsCubit>().getCustomerTransactions(type: "pay");
+                          }
+
+                          else if (selectedDebtType.toLowerCase() == "collect"){
+                            transactions = GetIt.I<CustomerStatisticsCubit>().getCustomerTransactions(type: "collect");
+                          }
+                          else {
+                              transactions = GetIt.I<CustomerStatisticsCubit>().getCustomerTransactions();
+                          }
+
+                          setState(() {});
+                        },
+                      ),
+                    ),
                   ),
                   kVerticalSpaceMedium,
                   Expanded(

@@ -64,7 +64,7 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
     emit(CustomerStatisticsStateDone());
   }
 
-  List<Transaction> getCustomerTransactions() {
+  List<Transaction> getCustomerTransactions({String type = "none"}) {
     String userId = driversCubit.selectedUser.id;
     if (_customerTransactions[userId] == null ||
         _customerTransactions[userId]!.isEmpty) {
@@ -72,7 +72,19 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
     }
     Map<String, Transaction> trans = {};
 
-    for (var element in _customerTransactions[userId]!) {
+    List<Transaction> filteredTransactions = [..._customerTransactions[userId]!];
+    if (type.toLowerCase() == "collect") {
+      filteredTransactions.removeWhere((element) => element.debt < 0);
+    }
+    else if (type.toLowerCase() == "pay"){
+      filteredTransactions.removeWhere((element) => element.debt > 0);
+    }
+
+    else if (type.toLowerCase() == "balance"){
+      filteredTransactions.removeWhere((element) => element.debt == 0);
+    }
+
+    for (var element in filteredTransactions) {
       var customerName = element.data.customerName!.toLowerCase().trim();
       if (trans[customerName] == null) {
         trans.putIfAbsent(customerName, () => element);
