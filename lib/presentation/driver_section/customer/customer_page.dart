@@ -33,7 +33,7 @@ class _CustomerViewState extends State<CustomerView> {
 
   List<Transaction> transactions = [];
 
-  List<String> debtTypes = ["none", "collect", "pay","balance"];
+  List<String> debtTypes = ["none", "collect", "pay", "balance"];
   var selectedDebtType = "none";
 
   @override
@@ -50,9 +50,8 @@ class _CustomerViewState extends State<CustomerView> {
           listener: (context, state) {
             if (state is CustomerStatisticsStateDone) {
               setState(() {
-                transactions =
-                    GetIt.I<CustomerStatisticsCubit>()
-                        .getCustomerTransactions(type: selectedDebtType);
+                transactions = GetIt.I<CustomerStatisticsCubit>()
+                    .getCustomerTransactions(type: selectedDebtType);
               });
             }
           },
@@ -66,192 +65,215 @@ class _CustomerViewState extends State<CustomerView> {
         ),
       ],
       child: BlocBuilder<UserCustomersCubit, UserCustomersState>(
-  builder: (context, state) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(kDefaultSpacing * 0.5),
-            child: SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const DriverSelectorRow(),
-                  kVerticalSpaceSmall,
-                  BlocBuilder<DriversCubit, DriversState>(
-                    builder: (context, driverState) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          driverState is! DriversStateManager ? Align(
-                            alignment:Alignment.center,
-                            child: Text(
-                              'Customers',
-                              style: AppTextStyles.blackSizeBold16,
-                            ),
-                          ): Text(
-                      driverState.selectedUser == currentUser() ?'Your customers': "${driverState.selectedUser.firstName} customers",
-                      style: AppTextStyles.blackSizeBold16,
-                      ),
-
-                        ],
-                      );
-                    },
-                  ),
-                  kVerticalSpaceRegular,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(kDefaultSpacing * 0.5),
+                child: SafeArea(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const DriverSelectorRow(),
+                      kVerticalSpaceSmall,
+                      BlocBuilder<DriversCubit, DriversState>(
+                        builder: (context, driverState) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              driverState is! DriversStateManager
+                                  ? Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        'Customers',
+                                        style: AppTextStyles.blackSizeBold16,
+                                      ),
+                                    )
+                                  : Text(
+                                      driverState.selectedUser == currentUser()
+                                          ? 'Your customers'
+                                          : "${driverState.selectedUser.firstName} customers",
+                                      style: AppTextStyles.blackSizeBold16,
+                                    ),
+                            ],
+                          );
+                        },
+                      ),
+                      kVerticalSpaceRegular,
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            width: 16.0,
-                            height: 16.0,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.blue,
-                            ),
+                          Row(
+                            children: [
+                              Container(
+                                width: 16.0,
+                                height: 16.0,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.blue,
+                                ),
+                              ),
+                              const SizedBox(width: 8.0),
+                              Text("To collect",
+                                  style: AppTextStyles.blackSize12),
+                            ],
                           ),
-                          const SizedBox(width: 8.0),
-                          Text("To collect", style: AppTextStyles.blackSize12),
+                          const SizedBox(width: 48.0),
+                          Row(
+                            children: [
+                              Container(
+                                width: 16.0,
+                                height: 16.0,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.red,
+                                ),
+                              ),
+                              const SizedBox(width: 8.0),
+                              Text("To pay", style: AppTextStyles.blackSize12),
+                            ],
+                          ),
+                          const SizedBox(width: 48.0),
+                          Row(
+                            children: [
+                              Container(
+                                width: 16.0,
+                                height: 16.0,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.black,
+                                ),
+                              ),
+                              const SizedBox(width: 8.0),
+                              Text("Balanced",
+                                  style: AppTextStyles.blackSize12),
+                            ],
+                          ),
                         ],
                       ),
-                      const SizedBox(width: 48.0),
-                      Row(
-                        children: [
-                          Container(
-                            width: 16.0,
-                            height: 16.0,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.red,
+                      kVerticalSpaceSmall,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: kDefaultSpacing * 0.5),
+                        alignment: Alignment.centerRight,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Filter",
+                              style: kDefaultTextStyle,
                             ),
-                          ),
-                          const SizedBox(width: 8.0),
-                          Text("To pay", style: AppTextStyles.blackSize12),
-                        ],
+                            kHorizontalSpaceTiny,
+                            const Icon(Icons.sort),
+                          ],
+                        ),
                       ),
-                      const SizedBox(width: 48.0),
-                      Row(
-                        children: [
-                          Container(
-                            width: 16.0,
-                            height: 16.0,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.black,
-                            ),
+                      kVerticalSpaceSmall,
+                      Container(
+                        width: Get.width,
+                        padding: const EdgeInsets.all(kDefaultSpacing * 0.75),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: kLightGrayColor,
                           ),
-                          const SizedBox(width: 8.0),
-                          Text("Balanced", style: AppTextStyles.blackSize12),
-                        ],
+                          borderRadius:
+                              BorderRadius.circular(kDefaultSpacing * 0.5),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            isDense: true,
+                            isExpanded: true,
+                            value: selectedDebtType,
+                            items: debtTypes
+                                .map((e) => DropdownMenuItem(
+                                      child: Text(
+                                        e == "collect"
+                                            ? "To Collect"
+                                            : e == "pay"
+                                                ? "To Pay"
+                                                : e == "balance"
+                                                    ? "Balanced"
+                                                    : "None",
+                                        style: kDefaultTextStyle.copyWith(
+                                            fontSize: 14),
+                                      ),
+                                      value: e,
+                                    ))
+                                .toList(),
+                            onChanged: (String? value) {
+                              selectedDebtType = value ?? selectedDebtType;
+                              if (selectedDebtType.toLowerCase() == "balance") {
+                                transactions =
+                                    GetIt.I<CustomerStatisticsCubit>()
+                                        .getCustomerTransactions(
+                                            type: "balance");
+                              } else if (selectedDebtType.toLowerCase() ==
+                                  "pay") {
+                                transactions =
+                                    GetIt.I<CustomerStatisticsCubit>()
+                                        .getCustomerTransactions(type: "pay");
+                              } else if (selectedDebtType.toLowerCase() ==
+                                  "collect") {
+                                transactions =
+                                    GetIt.I<CustomerStatisticsCubit>()
+                                        .getCustomerTransactions(
+                                            type: "collect");
+                              } else {
+                                transactions =
+                                    GetIt.I<CustomerStatisticsCubit>()
+                                        .getCustomerTransactions();
+                              }
+                              setState(() {});
+                            },
+                          ),
+                        ),
+                      ),
+                      kVerticalSpaceMedium,
+                      Expanded(
+                        child: SmartRefresher(
+                          controller: refreshController,
+                          onRefresh: () {
+                            GetIt.I<UserTransactionsCubit>()
+                                .fetchUserTransactions();
+                          },
+                          child: ListView(
+                            shrinkWrap: true,
+                            physics: const ScrollPhysics(),
+                            children: [
+                              Builder(builder: (c) {
+                                if (transactions.isEmpty) {
+                                  return SizedBox(
+                                    height: Get.height * 0.7,
+                                    child: const EmptyResultWidget(
+                                        text: "No customer transactions"),
+                                  );
+                                }
+
+                                return ListView.separated(
+                                    separatorBuilder: (c, i) =>
+                                        kVerticalSpaceSmall,
+                                    shrinkWrap: true,
+                                    physics: const ScrollPhysics(),
+                                    itemCount: transactions.length,
+                                    itemBuilder: (c, i) {
+                                      return CustomerCardView(
+                                        transaction: transactions[i],
+                                      );
+                                    });
+                              }),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  kVerticalSpaceSmall,
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: kDefaultSpacing * 0.5),
-                    alignment: Alignment.centerRight,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("Filter",style: kDefaultTextStyle,),
-                        kHorizontalSpaceTiny,
-                        const Icon(Icons.sort),
-                      ],
-                    ),
-                  ),
-                  kVerticalSpaceSmall,
-                  Container(
-                    width: Get.width,
-                    padding: const EdgeInsets.all(kDefaultSpacing * 0.75),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: kLightGrayColor,
-
-                      ),
-                      borderRadius: BorderRadius.circular(kDefaultSpacing * 0.5),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        isDense: true,
-                        isExpanded: true,
-                        value: selectedDebtType,
-                        items: debtTypes
-                            .map((e) => DropdownMenuItem(
-                          child: Text(
-                            "${e == "collect" ?"To Collect" : e == "pay"? "To Pay": e == "balance" ? "Balanced": "None"}",
-                            style:
-                            kDefaultTextStyle.copyWith(fontSize: 14),
-                          ),
-                          value: e,
-                        ))
-                            .toList(),
-                        onChanged: (String? value) {
-                          selectedDebtType = value ?? selectedDebtType;
-                          if (selectedDebtType.toLowerCase() == "balance"){
-                            transactions = GetIt.I<CustomerStatisticsCubit>().getCustomerTransactions(type: "balance");
-                          }
-                          else if (selectedDebtType.toLowerCase() == "pay"){
-                            transactions = GetIt.I<CustomerStatisticsCubit>().getCustomerTransactions(type: "pay");
-                          }
-
-                          else if (selectedDebtType.toLowerCase() == "collect"){
-                            transactions = GetIt.I<CustomerStatisticsCubit>().getCustomerTransactions(type: "collect");
-                          }
-                          else {
-                              transactions = GetIt.I<CustomerStatisticsCubit>().getCustomerTransactions();
-                          }
-
-                          setState(() {});
-                        },
-                      ),
-                    ),
-                  ),
-                  kVerticalSpaceMedium,
-                  Expanded(
-                    child: SmartRefresher(
-                      controller: refreshController,
-                      onRefresh: () {
-                        GetIt.I<UserTransactionsCubit>().fetchUserTransactions();
-                      },
-                      child: ListView(
-                        shrinkWrap: true,
-                        physics: const ScrollPhysics(),
-                        children: [
-                          Builder(builder: (c) {
-                            if (transactions.isEmpty) {
-                              return SizedBox(
-                                height: Get.height * 0.7,
-                                child: const EmptyResultWidget(
-                                    text: "No customer transactions"),
-                              );
-                            }
-
-                            return ListView.separated(
-                                separatorBuilder: (c, i) => kVerticalSpaceSmall,
-                                shrinkWrap: true,
-                                physics: const ScrollPhysics(),
-                                itemCount: transactions.length,
-                                itemBuilder: (c, i) {
-                                  return CustomerCardView(
-                                      transaction: transactions[i],
-                                  );
-                                });
-                          }),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-      );
-  },
-),
+          );
+        },
+      ),
     );
   }
 }

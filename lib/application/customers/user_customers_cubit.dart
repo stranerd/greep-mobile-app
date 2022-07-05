@@ -32,6 +32,8 @@ class UserCustomersCubit extends Cubit<UserCustomersState> {
     return customers.firstWhereOrNull((element) => element.name.toLowerCase().trim() == customer.toLowerCase().trim());
   }
 
+
+
   void fetchUserCustomers(
       {bool fullRefresh = false, bool softUpdate = true}) async {
     print("fetching customers");
