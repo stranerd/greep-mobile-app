@@ -111,7 +111,6 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                   ),
                 ),
                 kVerticalSpaceSmall,
-
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: kDefaultSpacing),
                   width: Get.width,
@@ -201,35 +200,37 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              day,
-                                              style: kBoldTextStyle2.copyWith(
-                                                  fontSize: 13),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.end,
-                                              children: [
-                                                Text(
-                                                  "Income: N${transactions[date]!.income.toMoney}",
-                                                  style: AppTextStyles.blackSize10,
-                                                ),
-                                                kHorizontalSpaceSmall,
-                                                Text(
-                                                  "Trips: ${transactions[date]!.tripAmount == 0 ? "":"+"}N${transactions[date]!.tripAmount.toMoney}",
-                                                  style: AppTextStyles.greenSize10,
-                                                ),
-                                                kHorizontalSpaceSmall,
+                                        SizedBox(
+                                          height: 30,
+                                          child: ListView(
+                                            scrollDirection: Axis.horizontal,
+                                            physics: const ScrollPhysics(),
+                                            shrinkWrap: true,
+                                            children: [
+                                              Text(
+                                                day,
+                                                style: kBoldTextStyle2.copyWith(
+                                                    fontSize: 13),
+                                              ),
+                                              kHorizontalSpaceRegular,
+                                              Text(
+                                                "Income: N${transactions[date]!.income.toMoney}",
+                                                style: AppTextStyles.blackSize10,
+                                              ),
+                                              kHorizontalSpaceRegular,
 
-                                                Text(
-                                                  "Expenses: ${transactions[date]!.expenseAmount == 0 ? "":"-"}N${transactions[date]!.expenseAmount.toMoney}",
-                                                  style: AppTextStyles.redSize10,
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                              Text(
+                                                "Trips: ${transactions[date]!.tripAmount == 0 ? "":"+"}N${transactions[date]!.tripAmount.toMoney}",
+                                                style: AppTextStyles.greenSize10,
+                                              ),
+                                              kHorizontalSpaceRegular,
+
+                                              Text(
+                                                "Expenses: ${transactions[date]!.expenseAmount == 0 ? "":"-"}N${transactions[date]!.expenseAmount.toMoney}",
+                                                style: AppTextStyles.redSize10,
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                         kVerticalSpaceSmall,
                                         ListView(

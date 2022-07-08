@@ -1,15 +1,14 @@
 import 'package:flutter/services.dart';
+import 'package:grip/application/auth/AuthStore.dart';
 import 'package:grip/application/auth/request/GoogleSigninRequest.dart';
+import 'package:grip/application/auth/request/LoginRequest.dart';
 
-// import 'package:google_sign_in/google_sign_in.dart';
 import 'package:grip/application/auth/request/SignupRequest.dart';
 import 'package:grip/application/response.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../application/auth/AuthStore.dart';
-import '../../../application/auth/request/LoginRequest.dart';
 import 'AuthenticationClient.dart';
 
 class AuthenticationService {
