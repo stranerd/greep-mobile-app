@@ -4,6 +4,7 @@ class TransactionData {
   final PaymentType? paymentType;
   final String? customerName;
   final num? paidAmount;
+  final num? debt;
   final String? customerId;
 
   TransactionData(
@@ -11,6 +12,7 @@ class TransactionData {
       this.name,
       this.paymentType,
       this.customerName,
+        this.debt,
       this.paidAmount,
       this.customerId});
 
@@ -18,8 +20,9 @@ class TransactionData {
     return TransactionData(
       transactionType: getTransactionType(json["type"]),
       name: json["name"],
+      debt: json["debt"],
       customerName: json["customerName"],
-      paidAmount: json["totalAmount"],
+      paidAmount: json["paidAmount"],
       customerId: json["customerId"],
       paymentType: json["paymentType"] == null
           ? null
@@ -64,7 +67,7 @@ class TransactionData {
 
   @override
   String toString() {
-    return 'TransactionData{transactionType: $transactionType, name: $name, paymentType: $paymentType, customerName: $customerName, paidAmount: $paidAmount, parentId: $customerId}';
+    return 'TransactionData{transactionType: $transactionType, debt: $debt, name: $name, paymentType: $paymentType, customerName: $customerName, paidAmount: $paidAmount, parentId: $customerId}';
   }
 
   Map<String, dynamic> toMap(){
@@ -75,7 +78,8 @@ class TransactionData {
     if (transactionType == TransactionType.trip){
       map.addAll({
         "customerName": customerName,
-        "totalAmount": paidAmount,
+        "paidAmount": paidAmount,
+        "debt": debt,
         "paymentType": paymentType!.name,
       });
     }

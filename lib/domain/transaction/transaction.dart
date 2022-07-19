@@ -30,17 +30,17 @@ class Transaction extends Equatable {
   });
 
   factory Transaction.fromServer(dynamic data) {
-    num totalAmount = data["data"]["totalAmount"] == null
+    num paidAmount = data["data"]["paidAmount"] == null
         ? 0
-        : data["data"]["totalAmount"] ?? 0;
+        : data["data"]["paidAmount"] ?? 0;
     num amount = data["amount"];
     num debt = 0;
     num credit = 0;
-    if (totalAmount < amount) {
-      debt = amount - totalAmount;
+    if (paidAmount < amount) {
+      debt = amount - paidAmount;
     }
-    else if (totalAmount > amount){
-      credit = totalAmount - amount;
+    else if (paidAmount > amount){
+      credit = paidAmount - amount;
     }
     return Transaction(
       driverId: data["driverId"],

@@ -20,7 +20,6 @@ void main() {
     userService = MockUserService(mockUserClient: userClient);
   });
 
-
   test("Test Checking Authentication", () async {
     print("testing");
     dynamic auths =  await userClient.fetchUserDrivers("ddfd");
