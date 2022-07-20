@@ -22,7 +22,8 @@ import '../widgets/customer_card_view.dart';
 import 'customer_details.dart';
 
 class CustomerView extends StatefulWidget {
-  const CustomerView({Key? key}) : super(key: key);
+  final bool withBackButton;
+  const CustomerView({Key? key, this.withBackButton = false}) : super(key: key);
 
   @override
   State<CustomerView> createState() => _CustomerViewState();
@@ -68,6 +69,9 @@ class _CustomerViewState extends State<CustomerView> {
         builder: (context, state) {
           return Scaffold(
             backgroundColor: Colors.white,
+            appBar: widget.withBackButton ? AppBar(
+              automaticallyImplyLeading: true,
+            ): null,
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(kDefaultSpacing * 0.5),

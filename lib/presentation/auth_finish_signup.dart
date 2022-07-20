@@ -120,7 +120,8 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
                             onTap: () async {
                               pickImage(
                                   source: ImageSource.gallery,
-                                  context: context);
+                                  context: context,
+                              );
                             },
                             child: Container(
                                 height: 50,

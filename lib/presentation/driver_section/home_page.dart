@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> {
                                           )),
                                       trailing: SplashTap(
                                         onTap: () {
-                                          g.Get.to(() => ViewAllRecords(),
+                                          g.Get.to(() => const ViewAllRecords(),
                                               transition: g.Transition.fadeIn);
                                         },
                                         child: Text("view all",
@@ -129,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                                           )),
                                       trailing: SplashTap(
                                         onTap: () {
-                                          g.Get.to(() => ViewAllRecords(),
+                                          g.Get.to(() => const ViewAllRecords(),
                                               transition: g.Transition.fadeIn);
                                         },
                                         child: Text("view all",
@@ -170,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      const CustomerView()),
+                                                      const CustomerView(withBackButton: true)),
                                             );
                                           },
                                           child: Text("view all",
