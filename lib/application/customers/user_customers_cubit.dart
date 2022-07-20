@@ -36,7 +36,6 @@ class UserCustomersCubit extends Cubit<UserCustomersState> {
 
   void fetchUserCustomers(
       {bool fullRefresh = false, bool softUpdate = true}) async {
-    print("fetching customers");
     if (!softUpdate) {
       emit(UserCustomersStateLoading());
     }

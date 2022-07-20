@@ -75,14 +75,24 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
 
     List<Transaction> filteredTransactions = [..._customerTransactions[userId]!];
     if (type.toLowerCase() == "collect") {
-      filteredTransactions.removeWhere((element) => element.debt < 0);
+      filteredTransactions.removeWhere((element) => element.debt >= 0);
     }
     else if (type.toLowerCase() == "pay"){
-      filteredTransactions.removeWhere((element) => element.debt > 0);
+      filteredTransactions.removeWhere((element) => element.debt <= 0);
     }
 
+    else if (type.toLowerCase() == "not balanced"){
+      filteredTransactions.removeWhere((element) {
+        return element.debt == 0;
+      });
+    }
+
+
+
     else if (type.toLowerCase() == "balance"){
-      filteredTransactions.removeWhere((element) => element.debt == 0);
+      filteredTransactions.removeWhere((element) {
+        return element.debt != 0;
+      });
     }
 
     for (var element in filteredTransactions) {
@@ -128,7 +138,6 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
         return element.debt!=0;
       }).toList();
     }
-    print(trans.length);
     return trans;
   }
 

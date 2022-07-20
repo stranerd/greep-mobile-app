@@ -28,7 +28,6 @@ class Transaction extends Equatable {
   });
 
   factory Transaction.fromServer(dynamic data) {
-    print(data);
     var transactionData = TransactionData.fromServer(data["data"]);
 
     return Transaction(

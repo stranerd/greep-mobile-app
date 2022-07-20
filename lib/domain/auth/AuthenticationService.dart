@@ -38,7 +38,6 @@ class AuthenticationService {
   }
 
   Future<ResponseEntity> initiateGoogleSignin() async {
-    print("signing with google");
     auth.FirebaseAuth firebaseAuth = auth.FirebaseAuth.instance;
     try {
       final GoogleSignInAccount? googleSignInAccount =
@@ -117,7 +116,6 @@ class AuthenticationService {
   Future<ResponseEntity> refreshToken() async {
     var pref = AuthStore();
     var token = await pref.getAuthToken();
-    print(token);
     bool isGoogle = token["isGoogle"] ?? false;
     if (!isGoogle) {
       var response = await login(
@@ -148,7 +146,6 @@ class AuthenticationService {
   }
 
   void setToken(dynamic data) async {
-    print("token data $data");
     AuthStore().setToken(data);
   }
 

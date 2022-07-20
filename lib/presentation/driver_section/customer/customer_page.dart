@@ -33,7 +33,7 @@ class _CustomerViewState extends State<CustomerView> {
 
   List<Transaction> transactions = [];
 
-  List<String> debtTypes = ["none", "collect", "pay", "balance"];
+  List<String> debtTypes = ["none", "collect","not balanced","pay", "balance"];
   var selectedDebtType = "none";
 
   @override
@@ -193,7 +193,7 @@ class _CustomerViewState extends State<CustomerView> {
                                             : e == "pay"
                                                 ? "To Pay"
                                                 : e == "balance"
-                                                    ? "Balanced"
+                                                    ? "Balanced" : e == "not balanced"? "Not Balanced"
                                                     : "None",
                                         style: kDefaultTextStyle.copyWith(
                                             fontSize: 14),
@@ -203,27 +203,10 @@ class _CustomerViewState extends State<CustomerView> {
                                 .toList(),
                             onChanged: (String? value) {
                               selectedDebtType = value ?? selectedDebtType;
-                              if (selectedDebtType.toLowerCase() == "balance") {
                                 transactions =
                                     GetIt.I<CustomerStatisticsCubit>()
                                         .getCustomerTransactions(
-                                            type: "balance");
-                              } else if (selectedDebtType.toLowerCase() ==
-                                  "pay") {
-                                transactions =
-                                    GetIt.I<CustomerStatisticsCubit>()
-                                        .getCustomerTransactions(type: "pay");
-                              } else if (selectedDebtType.toLowerCase() ==
-                                  "collect") {
-                                transactions =
-                                    GetIt.I<CustomerStatisticsCubit>()
-                                        .getCustomerTransactions(
-                                            type: "collect");
-                              } else {
-                                transactions =
-                                    GetIt.I<CustomerStatisticsCubit>()
-                                        .getCustomerTransactions();
-                              }
+                                            type: selectedDebtType);
                               setState(() {});
                             },
                           ),

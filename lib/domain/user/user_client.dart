@@ -140,7 +140,6 @@ class UserClient {
       response.data["results"].forEach((e){
         users.add(User.fromServer(e));
       });
-      print(users);
       return ResponseEntity.Data(users);
     } on DioError catch (e) {
 

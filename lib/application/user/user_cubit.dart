@@ -34,7 +34,6 @@ class UserCubit extends Cubit<UserState> {
           isSocket: response.isSocket));
       return null;
     } else {
-      print(response.data);
       if (response.data!.hasManager){
         getUserManager(response.data!.managerId??"");
       }
