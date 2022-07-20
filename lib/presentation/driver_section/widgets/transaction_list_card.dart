@@ -54,7 +54,6 @@ class TransactionListCard extends StatelessWidget {
       trailStyle = type == TransactionType.trip
           ? kDefaultTextStyle.copyWith(color: kGreenColor,)
           : kErrorColorTextStyle.copyWith();
-
     return Container(
       decoration: BoxDecoration(
         border: withBorder ?Border.all(color: Colors.grey.shade200,

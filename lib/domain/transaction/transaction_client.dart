@@ -166,7 +166,7 @@ class TransactionClient {
         message = "An error occurred adding transactions. Try again";
       } else {
         try {
-          message = error["message"];
+          message = error[0]["message"];
         } catch (e) {
           message = "an error occurred. Try again";
         }

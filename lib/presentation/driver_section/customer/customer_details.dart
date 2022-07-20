@@ -112,22 +112,20 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                         subtitleStyle: AppTextStyles.blackSize12),
                     RecordCard(
                         width: constraints.maxWidth * 0.31,
-                        title: "N${customer !=null ? debt < 0 ? debt.abs() : 0 : _customerSummary.toPay.toMoney}",
+                        title: "N${customer !=null ? debt > 0 ? debt.abs() : 0 : _customerSummary.toPay.toMoney}",
                         subtitle: "To collect",
                         titleStyle: AppTextStyles.blueSize16,
                         subtitleStyle: AppTextStyles.blackSize12),
                     RecordCard(
                         width: constraints.maxWidth * 0.31,
-                        title: "N${customer !=null ? debt > 0 ? debt : 0  : _customerSummary.toCollect.toMoney}",
+                        title: "N${customer !=null ? debt < 0 ? debt : 0  : _customerSummary.toCollect.toMoney}",
                         subtitle: "To pay",
                         titleStyle: AppTextStyles.redSize16,
                         subtitleStyle: AppTextStyles.blackSize12),
                   ],
                 );
               }),
-              kVerticalSpaceRegular,
-              if (GetIt.I<DriversCubit>().selectedUser == currentUser())
-                TransactionBalanceWidget(customerName: widget.name,),
+
               kVerticalSpaceRegular,
               Text("Transaction history",
                   style: AppTextStyles.blackSizeBold12),

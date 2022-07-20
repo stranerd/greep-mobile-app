@@ -43,7 +43,7 @@ class CustomerRecordCard extends StatelessWidget {
     Customer? customer = GetIt.I<UserCustomersCubit>().getCustomerByName(transaction.data.customerName!);
 
     if (customer == null) {
-    var paymentType = type == TransactionType.trip && transaction.credit > 0
+    var paymentType = type == TransactionType.trip && transaction.debt < 0
           ? "to pay"
           : transaction.debt > 0
               ? "to collect"
@@ -54,11 +54,11 @@ class CustomerRecordCard extends StatelessWidget {
         text = transaction.debt.toString();
       }
       if (paymentType.contains("pay")){
-        text = transaction.credit.toString();
+        text = transaction.debt.toString();
       }
       subText = paymentType;
 
-      textStyle = type == TransactionType.trip && transaction.credit > 0
+      textStyle = type == TransactionType.trip && transaction.debt < 0
           ? kDefaultTextStyle.copyWith(color: kErrorColor, fontSize: 12) :
           transaction.debt > 0 ? kDefaultTextStyle.copyWith(color: kBlueColor, fontSize: 12)
               : type == TransactionType.balance
@@ -66,20 +66,20 @@ class CustomerRecordCard extends StatelessWidget {
               : kDefaultTextStyle.copyWith(fontSize: 12);
     }
     else {
-      textStyle = customer.debt > 0
+      textStyle = customer.debt < 0
           ? kDefaultTextStyle.copyWith(color: kErrorColor, fontSize: 12) :
-      customer.debt < 0 ? kDefaultTextStyle.copyWith(color: kBlueColor, fontSize: 12)
+      customer.debt > 0 ? kDefaultTextStyle.copyWith(color: kBlueColor, fontSize: 12)
           : kDefaultTextStyle.copyWith(fontSize: 12);
-      var paymentType = customer.debt > 0 ?"to pay": customer.debt < 0 ? "to collect" : "balanced";
+      var paymentType = customer.debt < 0 ?"to pay": customer.debt > 0 ? "to collect" : "balanced";
       text = customer.debt.abs().toString();
       subText = paymentType;
     }
       if (type == TransactionType.balance) {
-        if (data.customerId == null || data.customerId!.isEmpty) {
+        if (data.parentId == null || data.parentId!.isEmpty) {
           subText2 = "Customer";
         }
         var transaction = GetIt.I<CustomerStatisticsCubit>()
-            .getByParentBalance(data.customerId!);
+            .getByParentBalance(data.parentId!);
         if (transaction == null || transaction.data.customerName == null) {
           subText2 = "Customer";
         } else {

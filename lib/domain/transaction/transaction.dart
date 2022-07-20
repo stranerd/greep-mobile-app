@@ -11,13 +11,11 @@ class Transaction extends Equatable {
   final DateTime timeCreated;
   final DateTime timeUpdated;
   final num debt;
-  final num credit;
   final TransactionData data;
 
   const Transaction({
     required this.driverId,
     required this.id,
-    required this.credit,
     required this.managerId,
     required this.amount,
     required this.debt,
@@ -30,37 +28,27 @@ class Transaction extends Equatable {
   });
 
   factory Transaction.fromServer(dynamic data) {
-    num paidAmount = data["data"]["paidAmount"] == null
-        ? 0
-        : data["data"]["paidAmount"] ?? 0;
-    num amount = data["amount"];
-    num debt = 0;
-    num credit = 0;
-    if (paidAmount < amount) {
-      debt = amount - paidAmount;
-    }
-    else if (paidAmount > amount){
-      credit = paidAmount - amount;
-    }
+    print(data);
+    var transactionData = TransactionData.fromServer(data["data"]);
+
     return Transaction(
       driverId: data["driverId"],
       id: data["id"],
-      credit: credit,
       managerId: data["managerId"],
       amount: data["amount"],
       description: data["description"],
       timeAdded: DateTime.fromMillisecondsSinceEpoch(data["recordedAt"]),
       timeCreated: DateTime.fromMillisecondsSinceEpoch(data["createdAt"]),
       timeUpdated: DateTime.fromMillisecondsSinceEpoch(data["updatedAt"]),
-      data: TransactionData.fromServer(data["data"]),
-      debt: debt,
+      data: transactionData,
+      debt: transactionData.debt??0,
     );
   }
 
 
   @override
   String toString() {
-    return 'Transaction{driverId: $driverId, id: $id, managerId: $managerId, amount: $amount, description: $description, timeAdded: $timeAdded, timeCreated: $timeCreated, timeUpdated: $timeUpdated, debt: $debt, credit: $credit, data: $data}';
+    return 'Transaction{driverId: $driverId, id: $id, managerId: $managerId, amount: $amount, description: $description, timeAdded: $timeAdded, timeCreated: $timeCreated, timeUpdated: $timeUpdated, debt: $debt, data: $data}';
   }
 
   @override

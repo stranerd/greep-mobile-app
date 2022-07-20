@@ -32,12 +32,12 @@ class CustomerCardView extends StatelessWidget {
     Customer? customer = GetIt.I<UserCustomersCubit>().getCustomerByName(transaction.data.customerName!);
     if (customer==null) {
       subText =
-      "N${transaction.credit > 0 ? transaction.credit.toMoney : transaction.debt
+      "N${transaction.debt < 0 ? transaction.debt.toMoney : transaction.debt
           .toMoney}";
      subTextStyle =
-      type == TransactionType.trip && transaction.credit > 0
+      type == TransactionType.trip && transaction.debt > 0
           ? kDefaultTextStyle.copyWith(color: AppColors.blue, fontSize: 12)
-          : transaction.debt > 0
+          : transaction.debt < 0
           ? kDefaultTextStyle.copyWith(color: AppColors.red, fontSize: 12)
           : type == TransactionType.balance
           ? kDefaultTextStyle.copyWith(fontSize: 12)
@@ -45,19 +45,19 @@ class CustomerCardView extends StatelessWidget {
     }
     else {
       subText = "N${customer.debt.toMoney.toString()}";
-      subTextStyle =customer.debt < 0
+      subTextStyle =customer.debt > 0
           ? kDefaultTextStyle.copyWith(color: AppColors.blue, fontSize: 12)
-          : customer.debt > 0
+          : customer.debt < 0
           ? kDefaultTextStyle.copyWith(color: AppColors.red, fontSize: 12)
           : kDefaultTextStyle.copyWith(fontSize: 12);
     }
 
     if (type == TransactionType.balance) {
-      if (data.customerId == null || data.customerId!.isEmpty) {
+      if (data.parentId == null || data.parentId!.isEmpty) {
         text = "Customer";
       }
       var transaction = GetIt.I<CustomerStatisticsCubit>()
-          .getByParentBalance(data.customerId!);
+          .getByParentBalance(data.parentId!);
       if (transaction == null || transaction.data.customerName == null) {
         text = "Customer";
       } else {

@@ -115,7 +115,7 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
 
     if (toPay && !toCollect) {
       trans = trans.where((element) {
-        return element.credit > 0;
+        return element.debt < 0;
       }).toList();
 
     } else if (!toPay && toCollect) {
@@ -125,7 +125,7 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
 
     } else {
       trans = trans.where((element) {
-        return element.credit > 0 || element.debt > 0;
+        return element.debt!=0;
       }).toList();
     }
     print(trans.length);
@@ -157,19 +157,21 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
             e.data.customerName!.toLowerCase() == name.toLowerCase())
         .toList();
 
+    var toPayList = _custTransactions.where((element) => element.debt < 0);
+    var toCollectList = _custTransactions.where((element) => element.debt > 0);
     return CustomerSummary(
       name: name,
       totalPaid: _custTransactions
           .map((e) => e.amount)
           .reduce((value, element) => value + value),
-      toPay: _custTransactions.map((e) => e.debt).reduce((value, element) {
+      toPay: toPayList.isEmpty ? 0 : toPayList.map((e) => e.debt).reduce((value, element) {
         value = value;
         element = element;
         return element + value;
       }),
       transactions: _custTransactions,
       toCollect:
-          _custTransactions.map((e) => e.credit).reduce((value, element) {
+          toCollectList.isEmpty ? 0 : toCollectList.map((e) => e.debt).reduce((value, element) {
         value = value;
         element = element;
         return element + value;
