@@ -3,14 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/customers/user_customers_cubit.dart';
+import 'package:grip/application/driver/drivers_cubit.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
-import 'package:grip/application/driver/drivers_cubit.dart';
-import 'package:grip/application/user/user_cubit.dart';
+import 'package:grip/application/user/utils/get_current_user.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
-import 'package:grip/application/user/utils/get_current_user.dart';
-
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
 import 'package:grip/presentation/widgets/driver_selector_widget.dart';
@@ -19,7 +17,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_styles.dart';
 import '../widgets/customer_card_view.dart';
-import 'customer_details.dart';
 
 class CustomerView extends StatefulWidget {
   final bool withBackButton;

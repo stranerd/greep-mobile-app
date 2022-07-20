@@ -11,7 +11,9 @@ import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
 import 'package:grip/application/auth/SignupCubit.dart';
 import 'package:grip/application/customers/user_customers_cubit.dart';
+import 'package:grip/application/driver/drivers_cubit.dart';
 import 'package:grip/application/driver/manager_drivers_cubit.dart';
+import 'package:grip/application/driver/manager_requests_cubit.dart';
 import 'package:grip/application/driver/new_manager_accepts_cubit.dart';
 import 'package:grip/application/driver/new_manager_requests_cubit.dart';
 import 'package:grip/application/fcm/fcm_notification_service.dart';
@@ -19,14 +21,11 @@ import 'package:grip/application/local_notification/local_notification_service.d
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
 import 'package:grip/application/transactions/user_transactions_cubit.dart';
-import 'package:grip/application/driver/drivers_cubit.dart';
-import 'package:grip/application/driver/manager_requests_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/commons/themes.dart';
 import 'package:grip/ioc.dart';
-import 'package:grip/presentation/auth/onboarding/OnboardingSlides.dart';
 import 'package:grip/presentation/splash/splash.dart';
 
 void main() async {

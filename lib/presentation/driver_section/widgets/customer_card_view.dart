@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as g;
 import 'package:get_it/get_it.dart';
-import 'package:grip/application/customers/user_customers_cubit.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
-import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/money.dart';
 import 'package:grip/commons/ui_helpers.dart';
-import 'package:grip/domain/customer/customer.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/customer/customer_details.dart';
