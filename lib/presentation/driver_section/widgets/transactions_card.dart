@@ -48,7 +48,7 @@ class TransactionCard extends StatelessWidget {
 
       subText = DateFormat("${DateFormat.ABBR_MONTH} ${DateFormat.DAY} . hh:${DateFormat.MINUTE} a").format(transaction.timeAdded);
 
-      trailText = "${type == TransactionType.trip ? "+":"-"}N${transaction.amount.toMoney}";
+      trailText = "${type == TransactionType.trip ? "+":"-"}N${transaction.amount.abs().toMoney}";
       trailStyle = type == TransactionType.trip ? kDefaultTextStyle.copyWith(
           color: kGreenColor,
           fontSize: 12

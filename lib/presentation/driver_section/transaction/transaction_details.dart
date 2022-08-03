@@ -217,7 +217,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                             height: 4.0,
                           ),
                           Text(
-                            "N${transaction.amount.toMoney}",
+                            "N${transaction.amount.abs().toMoney}",
                             style: AppTextStyles.blackSize16,
                           ),
                           const SizedBox(
