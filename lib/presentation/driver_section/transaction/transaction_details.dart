@@ -150,7 +150,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                 Text(
                                   parentTransaction!.data.debt == 0
                                       ? "Balanced"
-                                      : "Not Balanced (${parentTransaction!.debt > 0 ? "to pay N${parentTransaction!.debt.toMoney}" : "to collect N${parentTransaction!.debt.toMoney}"})",
+                                      : "Not Balanced (${parentTransaction!.debt.abs() > 0 ? "to pay N${parentTransaction!.debt.abs().toMoney}" : "to collect N${parentTransaction!.debt.abs().toMoney}"})",
                                   style: AppTextStyles.blackSize16,
                                 ),
                                 const SizedBox(
@@ -252,7 +252,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                 Text(
                                   transaction.data.debt == 0
                                       ? "Balanced"
-                                      : "Not Balanced (${transaction.debt > 0 ? "to pay N${transaction.debt.toMoney}" : "to collect N${transaction.debt.toMoney}"})",
+                                      : "Not Balanced (${transaction.debt.abs() > 0 ? "to pay N${transaction.debt.abs().toMoney}" : "to collect N${transaction.debt.abs().toMoney}"})",
                                   style: AppTextStyles.blackSize16,
                                 ),
                                 const SizedBox(
