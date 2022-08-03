@@ -45,7 +45,7 @@ void main() async {
     await Firebase.initializeApp();
   }
   await FirebaseMessaging.instance.getToken();
-  GestureBinding.instance!.resamplingEnabled = true;
+  GestureBinding.instance.resamplingEnabled = true;
 
   FCMNotificationService.initialize();
   LocalNotificationService.initialize();
@@ -100,7 +100,7 @@ class MyApp extends StatelessWidget {
       child: ScreenUtilInit(
         designSize: const Size(414, 896),
         minTextAdapt: true,
-        builder: () => GetMaterialApp(
+        builder: (_,__) => GetMaterialApp(
           debugShowCheckedModeBanner: false,
           theme: theme,
           color: kPrimaryColor,

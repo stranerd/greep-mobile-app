@@ -272,7 +272,11 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
   void _signUp() async {
 
     if (formKey.currentState!.validate()) {
-      lookupMimeType(selectedImage!.path);
+      if (selectedImage==null){
+        error = "Please upload a profile photo";
+        return;
+      }
+      // lookupMimeType(selectedImage!.path);
       var extenstion = selectedImage!.path.split(".").last;
       SignUpRequest request = SignUpRequest(
           email: widget.email.trim(),
