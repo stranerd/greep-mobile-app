@@ -60,9 +60,7 @@ class _TransactionBalanceWidgetState extends State<TransactionBalanceWidget>
             }
             if (state is TransactionCrudStateSuccess) {
               success = "Balance recorded";
-
               setState(() {
-
                 debt = debt.abs() - num.parse(_amountController.text);
                 _amountController.text=debt.toString();
               });

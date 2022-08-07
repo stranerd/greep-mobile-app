@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dio/dio.dart';
 
 abstract class FcmClient {
@@ -9,7 +9,9 @@ abstract class FcmClient {
       required String body,
       required String type, Map<String,dynamic> data = const {}}) async {
     print("sending fcm token $token $title $body");
-    const String serverToken = "AAAAz4CCPNQ:APA91bGeNlhNkfMW8PDRracEx9siPP4MF15H3VyQgin_ZDpvvNT05Ow6aZKP86mmy5SBS9woKCuOO-DAk6QRsD_6EIWSPbAnS7ynjcaTaauW1YhYr93wyIpC6xZJ4W6vDy_FCGmYnm-M";
+    String serverToken = dotenv.env['FIREBASE_APIKEY']??"";
+    print("serverToken: $serverToken");
+
     Response response;
     try {
       response = await Dio().post(

@@ -27,9 +27,12 @@ import 'package:grip/commons/scaffold_messenger_service.dart';
 import 'package:grip/commons/themes.dart';
 import 'package:grip/ioc.dart';
 import 'package:grip/presentation/splash/splash.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await dotenv.load(fileName: ".env");
 
   var ioc = IoC();
   if (Platform.isIOS) {
