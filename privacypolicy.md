@@ -49,6 +49,7 @@ Want to learn more about what Greep does with any information we collect? Click 
 13. [HOW CAN YOU CONTACT US ABOUT THIS NOTICE?](#how-can-you-contact-us-about-this-notice)
 14. [HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?](#how-can-you-review-update-or-delete-the-data-we-collect-from-you)
 
+
 1. ### WHAT INFORMATION DO WE COLLECT?
 
 **Personal information you disclose to us**
