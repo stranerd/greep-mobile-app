@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/fcm/fcm_client.dart';
@@ -7,7 +10,19 @@ import 'package:grip/application/fcm/fcm_content.dart';
 import 'package:grip/application/local_notification/local_notification_service.dart';
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+  if (Platform.isIOS) {
+    String serverToken = dotenv.env['FIREBASEOPTIONS_APIKEY']??"";
+    await Firebase.initializeApp(
+      options: FirebaseOptions(
+        apiKey: serverToken,
+        appId: "1:891214249172:ios:39ebf6ee08f51418be0f41",
+        messagingSenderId: "891214249172",
+        projectId: "greepio",
+      ),
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
   LocalNotificationService localNotificationService =
       LocalNotificationService();
   var content = FcmContent.fromServer(message);

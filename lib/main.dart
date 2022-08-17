@@ -36,9 +36,10 @@ void main() async {
 
   var ioc = IoC();
   if (Platform.isIOS) {
+    String serverToken = dotenv.env['FIREBASEOPTIONS_APIKEY']??"";
     await Firebase.initializeApp(
-      options: const FirebaseOptions(
-        apiKey: "AIzaSyAij3Mzl2y_DxlZCC1mM9VXBk10fgHHwjE",
+      options: FirebaseOptions(
+        apiKey: serverToken,
         appId: "1:891214249172:ios:39ebf6ee08f51418be0f41",
         messagingSenderId: "891214249172",
         projectId: "greepio",
