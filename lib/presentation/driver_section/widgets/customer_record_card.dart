@@ -98,7 +98,7 @@ class CustomerRecordCard extends StatelessWidget {
       },
       child: Container(
         width: width ?? Get.width * 0.31,
-        height: 110.h,
+        height: 115.h,
         padding:  EdgeInsets.all((kDefaultSpacing * 0.95).r),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0.r),

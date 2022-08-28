@@ -108,7 +108,6 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
 
   CommissionSummary _calculateCommission(num commission,
       List<Transaction> transactions, DateTime from, DateTime to) {
-    print("calculating commission $commission ${transactions.length}");
     var expenses = transactions.where(
         (element) => element.data.transactionType == TransactionType.expense);
     num totalExpenses = expenses.isEmpty
@@ -116,14 +115,14 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
         : expenses
             .map((e) => e.amount)
             .reduce((value, element) => value + element);
-    var trips = transactions.where(
-        (element) => element.data.transactionType == TransactionType.trip);
+
+    var trips = transactions.where((element) => element.data.transactionType == TransactionType.trip);
+
     num totalIncome = trips.isEmpty
         ? 0
         : trips
             .map((e) => e.amount)
             .reduce((value, element) => value + element);
-    print("total Expenses: $totalExpenses Total Income: $totalIncome");
     return CommissionSummary(
         commission: totalExpenses > totalIncome
             ? 0
@@ -157,30 +156,31 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     var trips = trans.where(
         (element) => element.data.transactionType == TransactionType.trip);
 
-    return TransactionSummary(
-        income: trans
-            .map((e) => e.amount)
-            .reduce((value, element) => element + value),
-        tripCount: trans
-            .map((e) => e.data)
-            .where((element) => element.transactionType == TransactionType.trip)
-            .length,
-        expenseAmount: expenses.isEmpty
+
+    var expenseAmount = expenses.isEmpty
             ? 0
             : expenses
                 .map((e) => e.amount)
-                .reduce((value, element) => value + element),
+                .reduce((value, element) => value + element);
+    var tripIncome = trips.isEmpty
+        ? 0
+        : trips
+        .map((element) => element.amount)
+        .reduce((value, element) => value + element);
+
+    var income = tripIncome - expenseAmount;
+    return TransactionSummary(
+        income: income,
+        tripCount: trips.length,
+        expenseAmount: expenseAmount,
         tripAmount: trips.isEmpty
             ? 0
             : trips
                 .map((e) => e.amount)
                 .reduce((value, element) => element + value),
-        expenseCount: trans
-            .map((e) => e.data)
-            .where(
-                (element) => element.transactionType == TransactionType.expense)
-            .length,
-        transactions: trans);
+        expenseCount: expenses.length,
+        transactions: trans,
+    );
   }
 
   TransactionSummary calculateInterval(DateTime from, DateTime to) {
@@ -210,10 +210,19 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
         var trips = trans.where(
             (element) => element.data.transactionType == TransactionType.trip);
 
+        var totalIncome = trips.isEmpty
+            ? 0
+            : trips
+            .map((element) => element.amount)
+            .reduce((value, element) => value + element,
+        );
+
+        var totalExpenses = expenses.map((e) => e.amount).reduce((value, element) => value + element);
+        var income = totalIncome - totalExpenses;
+
+
         return TransactionSummary(
-            income: trans
-                .map((e) => e.amount)
-                .reduce((value, element) => element + value),
+            income: income,
             tripCount: trans
                 .map((e) => e.data)
                 .where((element) =>
@@ -262,7 +271,9 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
                 element.timeAdded.month == e.timeAdded.month &&
                 element.timeAdded.day == e.timeAdded.day)
             .toList();
-        Duration day = const Duration(days: 1);
+        Duration day = const Duration(
+          days: 1,
+        );
         return _calculateCommission(
             commission,
             trans,
@@ -290,12 +301,9 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     }
     Map<DateTime, CommissionSummary> map = {};
     for (var driver in driverCommissions) {
-      print(driver);
       List<Transaction> driverTransactions =
           _transactions[driver.driverId] ?? [];
-      print("driver transaction size: ${driverTransactions.length}");
       driverTransactions.forEach((element) {
-        print("looping driver transactions");
         var time = DateTime(element.timeAdded.year, element.timeAdded.month,
             element.timeAdded.day);
         var transactions2 = driverTransactions
@@ -419,36 +427,37 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
                 element.timeAdded.month == e.timeAdded.month)
             .toList();
 
-        var expenses = trans.where((element) =>
-            element.data.transactionType == TransactionType.expense);
+        var expenses = trans.where((element) {
+          return element.data.transactionType == TransactionType.expense;
+        });
+
+        num totalExpenses = expenses.isEmpty
+            ? 0
+            : expenses
+                .map((e) => e.amount)
+                .reduce((value, element) => value + element);
+
 
         var trips = trans.where(
             (element) => element.data.transactionType == TransactionType.trip);
+        num totalIncome = trans.isEmpty
+            ? 0
+            : trips
+                .map((e) => e.amount)
+                .reduce((value, element) => value + element);
+
+        var tripAmount = trips.isEmpty
+            ? 0
+            : trips
+                .map((e) => e.amount)
+                .reduce((value, element) => element + value);
 
         return TransactionSummary(
-            income: trans
-                .map((e) => e.amount)
-                .reduce((value, element) => element + value),
-            tripCount: trans
-                .map((e) => e.data)
-                .where((element) =>
-                    element.transactionType == TransactionType.trip)
-                .length,
-            expenseAmount: expenses.isEmpty
-                ? 0
-                : expenses
-                    .map((e) => e.amount)
-                    .reduce((value, element) => value + element),
-            tripAmount: trips.isEmpty
-                ? 0
-                : trips
-                    .map((e) => e.amount)
-                    .reduce((value, element) => element + value),
-            expenseCount: trans
-                .map((e) => e.data)
-                .where((element) =>
-                    element.transactionType == TransactionType.expense)
-                .length,
+            income: totalIncome - totalExpenses,
+            tripCount: trips.length,
+            expenseAmount: totalExpenses,
+            tripAmount: tripAmount,
+            expenseCount: expenses.length,
             transactions: trans);
       });
     }

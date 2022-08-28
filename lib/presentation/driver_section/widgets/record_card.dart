@@ -64,10 +64,10 @@ class _RecordCardState extends State<RecordCard> {
               children: [
                 Text(widget.initial,style: widget.titleStyle.copyWith(fontSize: 18),
                 ),
-                if (widget.withSymbol)  TurkishSymbol(width: (14), height: (14),color: widget.titleStyle.color,),
+                if (widget.withSymbol)  TurkishSymbol(width: (18.r), height: (18.r),color: widget.titleStyle.color,),
                 Text(
                   widget.title,
-                  style: widget.titleStyle.copyWith(fontSize: 18),
+                  style: widget.titleStyle.copyWith(fontSize: 18.sp),
                   overflow: TextOverflow.ellipsis,
                 ),
               ],

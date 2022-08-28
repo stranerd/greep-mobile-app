@@ -88,16 +88,6 @@ class _TransactionViewState extends State<TransactionView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // SizedBox(
-                  //   height: 30,
-                  //   child: Align(
-                  //     alignment: Alignment.center,
-                  //     child: Text("Greep",
-                  //       style: AppTextStyles.blackSizeBold16,
-                  //     ),
-                  //   ),
-                  // ),
-                  // kVerticalSpaceSmall,
                   const Align(
                       alignment: Alignment.centerLeft,
                       child: DriverSelectorRow()),

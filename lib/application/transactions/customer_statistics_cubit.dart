@@ -171,7 +171,7 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
       name: name,
       totalPaid: _custTransactions
           .map((e) => e.amount)
-          .reduce((value, element) => value + value),
+          .reduce((value, element) => value + element),
       toPay: toPayList.isEmpty ? 0 : toPayList.map((e) => e.debt).reduce((value, element) {
         value = value;
         element = element;

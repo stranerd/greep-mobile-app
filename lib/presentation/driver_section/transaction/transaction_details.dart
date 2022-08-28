@@ -58,7 +58,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                   setState(() {
                     transaction = state.transactions
                         .firstWhere((element) => element == transaction);
-                  });
+                  },
+                  );
                 }
               }
             },
@@ -159,7 +160,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                         return Row(
 
                                             children: [
-                                              Text("Not Balanced (${parentTransaction!.debt.abs() > 0 ? "to pay ": "to collect "}",style: AppTextStyles.blackSize16,),
+                                              Text("Not Balanced (${parentTransaction!.debt < 0 ? "to pay ": "to collect "}",style: AppTextStyles.blackSize16,),
                                               TurkishSymbol(width: 13, height: 13, color: AppTextStyles.blackSize16.color),
                                               Text("${parentTransaction!.debt.abs().toMoney})", style: AppTextStyles.blackSize16),]
                                         );
@@ -284,7 +285,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                         return Row(
 
                                             children: [
-                                              Text("Not Balanced (${transaction.debt.abs() > 0 ? "to pay ": "to collect "}",style: AppTextStyles.blackSize16,),
+                                              Text("Not Balanced (${transaction.debt < 0 ? "to pay ": "to collect "}",style: AppTextStyles.blackSize16,),
                                               TurkishSymbol(width: 13, height: 13, color: AppTextStyles.blackSize16.color),
                                               Text("${transaction.debt.abs().toMoney})", style: AppTextStyles.blackSize16),]
                                         );

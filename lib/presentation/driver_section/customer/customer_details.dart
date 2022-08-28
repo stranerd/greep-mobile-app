@@ -31,7 +31,6 @@ class CustomerDetails extends StatefulWidget {
 }
 
 class _CustomerDetailsState extends State<CustomerDetails> {
-
   List<String> paymentTypes = [];
   final formKey = GlobalKey<FormState>();
   late CustomerSummary _customerSummary;
@@ -42,126 +41,124 @@ class _CustomerDetailsState extends State<CustomerDetails> {
     _customerSummary =
         GetIt.I<CustomerStatisticsCubit>().getCustomerSummary(widget.name);
 
-    customer =
-        GetIt.I<UserCustomersCubit>().getCustomerByName(widget.name);
+    customer = GetIt.I<UserCustomersCubit>().getCustomerByName(widget.name);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    num debt = customer !=null ? customer!.debt : 0;
+    num debt = customer != null ? customer!.debt : 0;
 
     return BlocListener<UserCustomersCubit, UserCustomersState>(
-  listener: (context, state) {
-    if (state is UserCustomersStateFetched){
-      setState(() {
-        customer = GetIt.I<UserCustomersCubit>().getCustomerByName(widget.name);
-      });
-    }
-  },
-  child: Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+      listener: (context, state) {
+        if (state is UserCustomersStateFetched) {
+          setState(() {
+            customer =
+                GetIt.I<UserCustomersCubit>().getCustomerByName(widget.name);
+          });
+        }
+      },
+      child: Scaffold(
         backgroundColor: Colors.white,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              size: 16,
-            ),
-            color: AppColors.black),
-        title: Text(
-          'Customer Details',
-          style: AppTextStyles.blackSizeBold16,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                size: 16,
+              ),
+              color: AppColors.black),
+          title: Text(
+            'Customer Details',
+            style: AppTextStyles.blackSizeBold16,
+          ),
+          centerTitle: false,
+          elevation: 0.0,
         ),
-        centerTitle: false,
-        elevation: 0.0,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
-        child: SafeArea(
-          child: ListView(
-            shrinkWrap: true,
-            physics: const ScrollPhysics(),
-            children: [
-              Text(
-                _customerSummary.name.capitalize ?? "",
-                style: AppTextStyles.blackSizeBold16,
-              ),
-              const SizedBox(
-                height: 16.0,
-              ),
-              Text(
-                "Account",
-                style: AppTextStyles.blackSizeBold12,
-              ),
-              const SizedBox(
-                height: 8.0,
-              ),
-              LayoutBuilder(builder: (context, constraints) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RecordCard(
-                      initial: "",
-                        width: constraints.maxWidth * 0.31,
-                        title: _customerSummary.totalPaid.toMoney,
-                        subtitle: "Total paid",
-                        withSymbol: true,
-
-                        titleStyle: AppTextStyles.greenSize16,
-                        subtitleStyle: AppTextStyles.blackSize12),
-                    RecordCard(
-                      initial: "",
-                        withSymbol: true,
-                        width: constraints.maxWidth * 0.31,
-                        title: "${customer !=null ? debt > 0 ? debt.abs() : 0 : _customerSummary.toPay.abs().toMoney}",
-                        subtitle: "To collect",
-                        titleStyle: AppTextStyles.blueSize16,
-                        subtitleStyle: AppTextStyles.blackSize12),
-                    RecordCard(
-                      initial: "",
-                        withSymbol: true,
-
-                        width: constraints.maxWidth * 0.31,
-                        title: "${customer !=null ? debt < 0 ? debt : 0  : _customerSummary.toCollect.abs().toMoney}",
-                        subtitle: "To pay",
-                        titleStyle: AppTextStyles.redSize16,
-                        subtitleStyle: AppTextStyles.blackSize12),
-                  ],
-                );
-              }),
-
-              kVerticalSpaceRegular,
-              Text("Transaction history",
-                  style: AppTextStyles.blackSizeBold12),
-              const SizedBox(
-                height: 8.0,
-              ),
-              Column(
-                  children: _customerSummary.transactions
-                      .map(
-                        (e) => Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TransactionListCard(
-                              withColor: true,
-                              padding: kDefaultSpacing * 0.5,
-                              transaction: e,
-                              withBorder: true,
-                            ),
-                            kVerticalSpaceSmall,
-                          ],
-                        ),
-                      )
-                      .toList()),
-            ],
+        body: Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+          child: SafeArea(
+            child: ListView(
+              shrinkWrap: true,
+              physics: const ScrollPhysics(),
+              children: [
+                Text(
+                  _customerSummary.name.capitalize ?? "",
+                  style: AppTextStyles.blackSizeBold16,
+                ),
+                const SizedBox(
+                  height: 16.0,
+                ),
+                Text(
+                  "Account",
+                  style: AppTextStyles.blackSizeBold12,
+                ),
+                const SizedBox(
+                  height: 8.0,
+                ),
+                LayoutBuilder(builder: (context, constraints) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      RecordCard(
+                          initial: "",
+                          width: constraints.maxWidth * 0.31,
+                          title: _customerSummary.totalPaid.abs().toMoney,
+                          subtitle: "Total paid",
+                          withSymbol: true,
+                          titleStyle: AppTextStyles.greenSize16,
+                          subtitleStyle: AppTextStyles.blackSize12),
+                      RecordCard(
+                          initial: "",
+                          withSymbol: true,
+                          width: constraints.maxWidth * 0.31,
+                          title:
+                              "${customer != null ? debt > 0 ? debt.abs().toMoney : 0 : _customerSummary.toPay.abs().toMoney}",
+                          subtitle: "To collect",
+                          titleStyle: AppTextStyles.blueSize16,
+                          subtitleStyle: AppTextStyles.blackSize12),
+                      RecordCard(
+                          initial: "",
+                          withSymbol: true,
+                          width: constraints.maxWidth * 0.31,
+                          title:
+                              "${customer != null ? debt < 0 ? debt.abs().toMoney : 0 : _customerSummary.toCollect.abs().toMoney}",
+                          subtitle: "To pay",
+                          titleStyle: AppTextStyles.redSize16,
+                          subtitleStyle: AppTextStyles.blackSize12),
+                    ],
+                  );
+                }),
+                kVerticalSpaceRegular,
+                Text("Transaction history", style: AppTextStyles.blackSizeBold12),
+                const SizedBox(
+                  height: 8.0,
+                ),
+                Column(
+                    children: _customerSummary.transactions
+                        .map(
+                          (e) => Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TransactionListCard(
+                                withColor: true,
+                                padding: kDefaultSpacing * 0.5,
+                                transaction: e,
+                                withBorder: true,
+                              ),
+                              kVerticalSpaceSmall,
+                            ],
+                          ),
+                        )
+                        .toList()),
+              ],
+            ),
           ),
         ),
       ),
-    ),
-);
+    );
   }
 }

@@ -55,9 +55,7 @@ class TransactionListCard extends StatelessWidget {
     initial = type == TransactionType.trip ? "+" : "-";
     trailText = transaction.amount.abs().toMoney;
     trailStyle = type == TransactionType.trip
-        ? kDefaultTextStyle.copyWith(
-            color: kGreenColor,
-          )
+        ? kDefaultTextStyle.copyWith(color: kGreenColor,)
         : kErrorColorTextStyle.copyWith();
     return Container(
       decoration: BoxDecoration(
@@ -107,8 +105,8 @@ class TransactionListCard extends StatelessWidget {
               style: trailStyle,
             ),
             TurkishSymbol(
-              width: (12.r),
-              height: (12.r),
+              width: (14.r),
+              height: (14.r),
               color: trailStyle.color,
             ),
             Text(
