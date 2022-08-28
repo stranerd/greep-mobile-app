@@ -17,6 +17,7 @@ import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/presentation/widgets/driver_selector_widget.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
 import 'package:grip/presentation/widgets/submit_button.dart';
+import 'package:grip/presentation/widgets/turkish_symbol.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/constants/app_colors.dart';
@@ -171,17 +172,40 @@ class _TransactionViewState extends State<TransactionView> {
                                                 : e.transactions.first.timeAdded),
                                         style: AppTextStyles.blackSizeBold12,
                                       ),
-                                      Text(
-                                        "Income: N${e.income.toMoney}",
-                                        style: AppTextStyles.blackSize10,
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            "Income: ",
+                                            style: AppTextStyles.blackSize10,
+                                          ),
+                                          TurkishSymbol(width: 8,height: 8,color: AppTextStyles.blackSize10.color,),
+                                          Text(e.income.toMoney,style: AppTextStyles.blackSize10,)
+                                        ],
                                       ),
-                                      Text(
-                                        "Trips: ${e.tripAmount == 0 ? "":"+"}N${e.tripAmount.toMoney}",
-                                        style: AppTextStyles.greenSize10,
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            "Trips: ${e.tripAmount == 0 ? "":"+"}",
+                                            style: AppTextStyles.greenSize10,
+                                          ),
+                                          TurkishSymbol(width: 8,height: 8,color: AppTextStyles.greenSize10.color,),
+                                          Text(e.tripAmount.toMoney,style: AppTextStyles.greenSize10,)
+
+                                        ],
                                       ),
-                                      Text(
-                                        "Expenses: ${e.expenseAmount == 0 ? "":"-"}N${e.expenseAmount.toMoney}",
-                                        style: AppTextStyles.redSize10,
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            "Expenses: ${e.expenseAmount == 0 ? "":"-"}",
+                                            style: AppTextStyles.redSize10,
+                                          ),
+                                          TurkishSymbol(width: 8,height: 8,color: AppTextStyles.redSize10.color,),
+                                          Text(e.expenseAmount.toMoney,style: AppTextStyles.redSize10,)
+
+                                        ],
                                       ),
                                     ],
                                   ),

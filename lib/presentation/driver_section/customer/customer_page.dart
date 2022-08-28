@@ -188,6 +188,7 @@ class _CustomerViewState extends State<CustomerView> {
                             value: selectedDebtType,
                             items: debtTypes
                                 .map((e) => DropdownMenuItem(
+                                      value: e,
                                       child: Text(
                                         e == "collect"
                                             ? "To Collect"
@@ -199,7 +200,6 @@ class _CustomerViewState extends State<CustomerView> {
                                         style: kDefaultTextStyle.copyWith(
                                             fontSize: 14),
                                       ),
-                                      value: e,
                                     ))
                                 .toList(),
                             onChanged: (String? value) {

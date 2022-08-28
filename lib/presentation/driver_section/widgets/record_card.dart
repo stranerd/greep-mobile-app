@@ -8,20 +8,25 @@ import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
 import 'package:grip/presentation/driver_section/widgets/transactions_card.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
+import 'package:grip/presentation/widgets/turkish_symbol.dart';
 
 class RecordCard extends StatefulWidget {
   const RecordCard({
     Key? key,
     required this.title,
     required this.subtitle,
+    this.withSymbol = false,
     required this.titleStyle,
+    required this.initial,
     this.transactions,
     this.centerAlign = true,
     this.width,
     required this.subtitleStyle,
   }) : super(key: key);
 
+  final bool withSymbol;
   final String title;
+  final String initial;
   final String subtitle;
   final bool centerAlign;
   final List<Transaction>? transactions;
@@ -55,10 +60,17 @@ class _RecordCardState extends State<RecordCard> {
               ? CrossAxisAlignment.center
               : CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.title,
-              style: widget.titleStyle.copyWith(fontSize: 18),
-              overflow: TextOverflow.ellipsis,
+            Row(
+              children: [
+                Text(widget.initial,style: widget.titleStyle.copyWith(fontSize: 18),
+                ),
+                if (widget.withSymbol)  TurkishSymbol(width: (14), height: (14),color: widget.titleStyle.color,),
+                Text(
+                  widget.title,
+                  style: widget.titleStyle.copyWith(fontSize: 18),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
             const SizedBox(height: 8.0),
             Text(widget.subtitle,

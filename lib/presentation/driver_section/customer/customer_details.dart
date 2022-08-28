@@ -105,20 +105,28 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     RecordCard(
+                      initial: "",
                         width: constraints.maxWidth * 0.31,
-                        title: "N${_customerSummary.totalPaid.toMoney}",
+                        title: _customerSummary.totalPaid.toMoney,
                         subtitle: "Total paid",
+                        withSymbol: true,
+
                         titleStyle: AppTextStyles.greenSize16,
                         subtitleStyle: AppTextStyles.blackSize12),
                     RecordCard(
+                      initial: "",
+                        withSymbol: true,
                         width: constraints.maxWidth * 0.31,
-                        title: "N${customer !=null ? debt > 0 ? debt.abs() : 0 : _customerSummary.toPay.abs().toMoney}",
+                        title: "${customer !=null ? debt > 0 ? debt.abs() : 0 : _customerSummary.toPay.abs().toMoney}",
                         subtitle: "To collect",
                         titleStyle: AppTextStyles.blueSize16,
                         subtitleStyle: AppTextStyles.blackSize12),
                     RecordCard(
+                      initial: "",
+                        withSymbol: true,
+
                         width: constraints.maxWidth * 0.31,
-                        title: "N${customer !=null ? debt < 0 ? debt : 0  : _customerSummary.toCollect.abs().toMoney}",
+                        title: "${customer !=null ? debt < 0 ? debt : 0  : _customerSummary.toCollect.abs().toMoney}",
                         subtitle: "To pay",
                         titleStyle: AppTextStyles.redSize16,
                         subtitleStyle: AppTextStyles.blackSize12),

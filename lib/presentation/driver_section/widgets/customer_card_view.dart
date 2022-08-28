@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart' as g;
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/transactions/customer_statistics_cubit.dart';
@@ -9,6 +10,7 @@ import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/customer/customer_details.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
+import 'package:grip/presentation/widgets/turkish_symbol.dart';
 import 'package:grip/utils/constants/app_colors.dart';
 
 class CustomerCardView extends StatelessWidget {
@@ -23,20 +25,21 @@ class CustomerCardView extends StatelessWidget {
   Widget build(BuildContext context) {
     String text = "";
     String subText = "";
+    String initial = "";
     TextStyle subTextStyle = TextStyle();
     TransactionType type = transaction.data.transactionType;
     TransactionData data = transaction.data;
       subText =
-      "N${transaction.debt < 0 ? transaction.debt.abs().toMoney : transaction.debt.abs()
+      "${transaction.debt < 0 ? transaction.debt.abs().toMoney : transaction.debt.abs()
           .toMoney}";
      subTextStyle =
       type == TransactionType.trip && transaction.debt < 0
-          ? kDefaultTextStyle.copyWith(color: AppColors.blue, fontSize: 12)
+          ? kDefaultTextStyle.copyWith(color: AppColors.blue, fontSize: 12.sp)
           : transaction.debt > 0
-          ? kDefaultTextStyle.copyWith(color: AppColors.red, fontSize: 12)
+          ? kDefaultTextStyle.copyWith(color: AppColors.red, fontSize: 12.sp)
           : type == TransactionType.balance
-          ? kDefaultTextStyle.copyWith(fontSize: 12)
-          : kDefaultTextStyle.copyWith(fontSize: 12);
+          ? kDefaultTextStyle.copyWith(fontSize: 12.sp)
+          : kDefaultTextStyle.copyWith(fontSize: 12.sp);
 
     if (type == TransactionType.balance) {
       if (data.parentId == null || data.parentId!.isEmpty) {
@@ -81,9 +84,15 @@ class CustomerCardView extends StatelessWidget {
                   style: kDefaultTextStyle,
                 ),
                 const Spacer(),
-                Text(
-                  subText,
-                  style: subTextStyle,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TurkishSymbol(color: subTextStyle.color,height: 10,width: 10,),
+                    Text(
+                      subText,
+                      style: subTextStyle,
+                    ),
+                  ],
                 ),
               ],
             ),

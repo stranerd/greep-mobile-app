@@ -7,6 +7,7 @@ import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/transaction/transaction_details.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
+import 'package:grip/presentation/widgets/turkish_symbol.dart';
 import 'package:grip/utils/constants/app_colors.dart';
 import 'package:intl/intl.dart';
 
@@ -39,6 +40,7 @@ class TransactionCard extends StatelessWidget {
     TextStyle subStyle = subtitleStyle;
     TextStyle trailStyle = trailingStyle;
     String subTrailText = "";
+    String initial = "";
 
       var type = transaction.data.transactionType;
       text = (type == TransactionType.trip
@@ -47,8 +49,8 @@ class TransactionCard extends StatelessWidget {
           ? transaction.data.name! : "")!;
 
       subText = DateFormat("${DateFormat.ABBR_MONTH} ${DateFormat.DAY} . hh:${DateFormat.MINUTE} a").format(transaction.timeAdded);
-
-      trailText = "${type == TransactionType.trip ? "+":"-"}N${transaction.amount.abs().toMoney}";
+      initial = type == TransactionType.trip ? "+":"-";
+      trailText = transaction.amount.abs().toMoney;
       trailStyle = type == TransactionType.trip ? kDefaultTextStyle.copyWith(
           color: kGreenColor,
           fontSize: 12
@@ -96,12 +98,23 @@ class TransactionCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  trailText,
-                  style: trailStyle.copyWith(
-                    fontSize:withBigAmount ?  18 : 15,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(initial, style: trailStyle.copyWith(
+                      fontSize:withBigAmount ?  18 : 15,
+                    ),
+                    ),
+                    TurkishSymbol(width:withBigAmount ?  13 : 11 ,height: withBigAmount ?  13 : 11,color: trailStyle.color,),
+                    Text(
+                      trailText,
+                      style: trailStyle.copyWith(
+                        fontSize:withBigAmount ?  18 : 15,
 
-                  ),
+                      ),
+
+                    ),
+                  ],
                 ),
                 const SizedBox(
                   height: 4,

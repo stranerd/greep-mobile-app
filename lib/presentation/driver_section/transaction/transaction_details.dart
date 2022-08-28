@@ -12,6 +12,7 @@ import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/widgets/transaction_list_card.dart';
 import 'package:grip/presentation/widgets/transaction_balance_widget.dart';
+import 'package:grip/presentation/widgets/turkish_symbol.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/constants/app_colors.dart';
@@ -147,11 +148,24 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                 const SizedBox(
                                   height: 4.0,
                                 ),
-                                Text(
-                                  parentTransaction!.data.debt == 0
-                                      ? "Balanced"
-                                      : "Not Balanced (${parentTransaction!.debt.abs() > 0 ? "to pay N${parentTransaction!.debt.abs().toMoney}" : "to collect N${parentTransaction!.debt.abs().toMoney}"})",
-                                  style: AppTextStyles.blackSize16,
+                                Builder(
+                                    builder: (context) {
+                                      if (parentTransaction!.data.debt == 0){
+                                        return Text("Balanced",
+                                          style: AppTextStyles.blackSize16,
+                                        );
+                                      }
+                                      else {
+                                        return Row(
+
+                                            children: [
+                                              Text("Not Balanced (${parentTransaction!.debt.abs() > 0 ? "to pay ": "to collect "}",style: AppTextStyles.blackSize16,),
+                                              TurkishSymbol(width: 13, height: 13, color: AppTextStyles.blackSize16.color),
+                                              Text("${parentTransaction!.debt.abs().toMoney})", style: AppTextStyles.blackSize16),]
+                                        );
+
+
+                                      } }
                                 ),
                                 const SizedBox(
                                   height: 16.0,
@@ -216,9 +230,14 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                           const SizedBox(
                             height: 4.0,
                           ),
-                          Text(
-                            "N${transaction.amount.abs().toMoney}",
-                            style: AppTextStyles.blackSize16,
+                          Row(
+                            children: [
+                              TurkishSymbol(width: 14,height: 14,color: AppTextStyles.blackSize16.color,),
+                              Text(
+                                transaction.amount.abs().toMoney,
+                                style: AppTextStyles.blackSize16,
+                              ),
+                            ],
                           ),
                           const SizedBox(
                             height: 16.0,
@@ -235,9 +254,14 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                 const SizedBox(
                                   height: 4.0,
                                 ),
-                                Text(
-                                  "N${transaction.data.paidAmount!.toMoney}",
-                                  style: AppTextStyles.blackSize16,
+                                Row(
+                                  children: [
+                                    TurkishSymbol(width: 14,height: 14,color: AppTextStyles.blackSize16.color,),
+                                    Text(
+                                      transaction.data.paidAmount!.toMoney,
+                                      style: AppTextStyles.blackSize16,
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(
                                   height: 16.0,
@@ -249,11 +273,24 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                 const SizedBox(
                                   height: 4.0,
                                 ),
-                                Text(
-                                  transaction.data.debt == 0
-                                      ? "Balanced"
-                                      : "Not Balanced (${transaction.debt.abs() > 0 ? "to pay N${transaction.debt.abs().toMoney}" : "to collect N${transaction.debt.abs().toMoney}"})",
-                                  style: AppTextStyles.blackSize16,
+                                Builder(
+                                    builder: (context) {
+                                      if (transaction.data.debt == 0){
+                                        return Text("Balanced",
+                                          style: AppTextStyles.blackSize16,
+                                        );
+                                      }
+                                      else {
+                                        return Row(
+
+                                            children: [
+                                              Text("Not Balanced (${transaction.debt.abs() > 0 ? "to pay ": "to collect "}",style: AppTextStyles.blackSize16,),
+                                              TurkishSymbol(width: 13, height: 13, color: AppTextStyles.blackSize16.color),
+                                              Text("${transaction.debt.abs().toMoney})", style: AppTextStyles.blackSize16),]
+                                        );
+
+
+                                      } }
                                 ),
                                 const SizedBox(
                                   height: 16.0,

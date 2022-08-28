@@ -31,12 +31,17 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  debugPrint("Ensured widgets binding");
   await dotenv.load(fileName: ".env");
 
   var ioc = IoC();
+  debugPrint("initialized ioc");
+
   if (Platform.isIOS) {
+
     String serverToken = dotenv.env['FIREBASEOPTIONS_APIKEY']??"";
+    debugPrint("it is ios");
+
     await Firebase.initializeApp(
       options: FirebaseOptions(
         apiKey: serverToken,
@@ -46,9 +51,15 @@ void main() async {
       ),
     );
   } else {
+    debugPrint("it is not ios");
+
     await Firebase.initializeApp();
   }
-  await FirebaseMessaging.instance.getToken();
+  debugPrint("initialized firebase");
+
+  FirebaseMessaging.instance.getToken();
+  debugPrint("got token");
+
   GestureBinding.instance.resamplingEnabled = true;
 
   FCMNotificationService.initialize();

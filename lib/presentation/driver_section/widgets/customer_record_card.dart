@@ -12,6 +12,7 @@ import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/customer/customer_details.dart';
 import 'package:grip/presentation/driver_section/transaction/transaction_details.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
+import 'package:grip/presentation/widgets/turkish_symbol.dart';
 
 class CustomerRecordCard extends StatelessWidget {
   const CustomerRecordCard(
@@ -97,10 +98,10 @@ class CustomerRecordCard extends StatelessWidget {
       },
       child: Container(
         width: width ?? Get.width * 0.31,
-        height: 110,
-        padding: const EdgeInsets.all(kDefaultSpacing * 0.95),
+        height: 110.h,
+        padding:  EdgeInsets.all((kDefaultSpacing * 0.95).r),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(8.0.r),
           border: Border.all(
             color: const Color.fromRGBO(221, 226, 224, 1),
             width: 1.0,
@@ -109,7 +110,12 @@ class CustomerRecordCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("N$text", style: textStyle),
+            Row(
+              children: [
+                TurkishSymbol(width: (11.r), height: (11.r), color: textStyle.color,),
+                Text("$text", style: textStyle),
+              ],
+            ),
             const SizedBox(height: 8.0),
             Text(subText, style: kSubtitleTextStyle.copyWith(fontSize: 12)),
             const SizedBox(height: 8.0),

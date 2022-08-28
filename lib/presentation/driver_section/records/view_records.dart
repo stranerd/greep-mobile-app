@@ -13,6 +13,7 @@ import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dar
 import 'package:grip/presentation/driver_section/widgets/transactions_card.dart';
 import 'package:grip/presentation/widgets/driver_selector_widget.dart';
 import 'package:grip/presentation/widgets/transaction_summary_builder.dart';
+import 'package:grip/presentation/widgets/turkish_symbol.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/constants/app_colors.dart';
@@ -213,21 +214,45 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                                                     fontSize: 13),
                                               ),
                                               kHorizontalSpaceRegular,
-                                              Text(
-                                                "Income: N${transactions[date]!.income.toMoney}",
-                                                style: AppTextStyles.blackSize10,
+                                              Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    "Income: ",
+                                                    style: AppTextStyles.blackSize10,
+                                                  ),
+                                                  TurkishSymbol(width: 8,height: 8,color: AppTextStyles.blackSize10.color,),
+                                                  Text(transactions[date]!.income.toMoney,style: AppTextStyles.blackSize10,)
+                                                ],
                                               ),
                                               kHorizontalSpaceRegular,
 
-                                              Text(
-                                                "Trips: ${transactions[date]!.tripAmount == 0 ? "":"+"}N${transactions[date]!.tripAmount.toMoney}",
-                                                style: AppTextStyles.greenSize10,
+                                              Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(
+                                                    "Trips: ${transactions[date]!.tripAmount == 0 ? "":"+"}",
+                                                    style: AppTextStyles.greenSize10,
+                                                  ),
+                                                  TurkishSymbol(width: 8,height: 8,color: AppTextStyles.greenSize10.color,),
+                                                  Text(transactions[date]!.tripAmount.toMoney,style: AppTextStyles.greenSize10,)
+
+                                                ],
                                               ),
                                               kHorizontalSpaceRegular,
+                                              Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(
+                                                    "Expenses: ${transactions[date]!.expenseAmount == 0 ? "":"-"}",
+                                                    style: AppTextStyles.redSize10,
+                                                  ),
+                                                  TurkishSymbol(width: 8,height: 8,color: AppTextStyles.redSize10.color,),
+                                                  Text(transactions[date]!.expenseAmount.toMoney,style: AppTextStyles.redSize10,)
 
-                                              Text(
-                                                "Expenses: ${transactions[date]!.expenseAmount == 0 ? "":"-"}N${transactions[date]!.expenseAmount.toMoney}",
-                                                style: AppTextStyles.redSize10,
+                                                ],
                                               ),
                                             ],
                                           ),
@@ -261,6 +286,7 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             RecordCard(
+                              initial: "",
                               centerAlign: false,
                               title: "N${totalIncome.income.toMoney}",
                               subtitle: "Total Income",
@@ -271,8 +297,9 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                             ),
                             kVerticalSpaceSmall,
                             RecordCard(
+                              initial:totalIncome.tripAmount == 0?"": "+",
                               centerAlign: false,
-                              title: "${totalIncome.tripAmount == 0?"": "+"}N${totalIncome.tripAmount.toMoney}",
+                              title: totalIncome.tripAmount.toMoney,
                               subtitle: "Total Trips",
                               width: Get.width * 0.9,
                               titleStyle: AppTextStyles.greenSize16,
@@ -281,8 +308,9 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                             ),
                             kVerticalSpaceSmall,
                             RecordCard(
+                              initial: totalIncome.expenseAmount == 0?"": "-",
                               centerAlign: false,
-                              title: "${totalIncome.expenseAmount == 0?"": "-"}N${totalIncome.expenseAmount.toMoney}",
+                              title: totalIncome.expenseAmount.toMoney,
                               subtitle: "Total Expenses",
                               width: Get.width * 0.9,
                               titleStyle: AppTextStyles.redSize16,
