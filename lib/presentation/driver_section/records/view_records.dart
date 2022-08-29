@@ -283,12 +283,13 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                           },
                         ),
                         Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             RecordCard(
-                              initial: "",
-                              centerAlign: false,
-                              title: "N${totalIncome.income.toMoney}",
+                              initial: totalIncome.income < 0 ? "-":"",
+                              withSymbol: true,
+                              centerAlign: true,
+                              title: totalIncome.income.abs().toMoney,
                               subtitle: "Total Income",
                               width: Get.width * 0.9,
                               titleStyle: AppTextStyles.blackSize16,
@@ -298,7 +299,9 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                             kVerticalSpaceSmall,
                             RecordCard(
                               initial:totalIncome.tripAmount == 0?"": "+",
-                              centerAlign: false,
+                              centerAlign: true,
+                              withSymbol: true,
+
                               title: totalIncome.tripAmount.toMoney,
                               subtitle: "Total Trips",
                               width: Get.width * 0.9,
@@ -309,7 +312,9 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                             kVerticalSpaceSmall,
                             RecordCard(
                               initial: totalIncome.expenseAmount == 0?"": "-",
-                              centerAlign: false,
+                              centerAlign: true,
+                              withSymbol: true,
+
                               title: totalIncome.expenseAmount.toMoney,
                               subtitle: "Total Expenses",
                               width: Get.width * 0.9,

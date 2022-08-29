@@ -16,9 +16,9 @@ class TransactionSummaryBuilder extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           RecordCard(
-            initial: "",
+            initial: transactionSummary.income < 0 ? "-":"",
             width: constraints.maxWidth * 0.31,
-            title: transactionSummary.income.toMoney,
+            title: transactionSummary.income.abs().toMoney,
             subtitle: "Income",
             subtitleStyle: AppTextStyles.blackSize12,
             titleStyle: AppTextStyles.blackSize16,
