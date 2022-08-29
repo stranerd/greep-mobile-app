@@ -18,6 +18,7 @@ import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/firebase/Firebase_service.dart';
 import 'package:grip/domain/user/model/manager_request.dart';
 import 'package:stacked/stacked.dart';
+import 'package:upgrader/upgrader.dart';
 
 import '../../../../utils/constants/app_colors.dart';
 import '../../../../utils/constants/app_styles.dart';
@@ -26,8 +27,8 @@ import '../../customer/customer_page.dart';
 import '../../home_page.dart';
 import '../../transaction/view_transactions.dart';
 import '../settings/home_page.dart';
-import 'nav_bar_viewmodel.dart';import 'package:grip/application/user/utils/get_current_user.dart';
-
+import 'nav_bar_viewmodel.dart';
+import 'package:grip/application/user/utils/get_current_user.dart';
 
 class NavBarView extends StatefulWidget {
   const NavBarView({Key? key}) : super(key: key);
@@ -36,7 +37,7 @@ class NavBarView extends StatefulWidget {
   State<NavBarView> createState() => _NavBarViewState();
 }
 
-class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService{
+class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
   int _currNavIndex = 0;
 
   @override
@@ -87,11 +88,14 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService{
           selectedItemColor: kPrimaryColor,
           selectedIconTheme: const IconThemeData(color: kPrimaryColor),
         ),
-        body: SafeArea(
+        body: UpgradeAlert(
+          child: SafeArea(
             child: IndexedStack(
-          children: _children,
-          index: _currNavIndex,
-        )),
+              index: _currNavIndex,
+              children: _children,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -150,158 +154,156 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService{
   }
 
   void showManagerRequest(ManagerRequest request) async {
-     showDialog<bool?>(
-            barrierDismissible: false,
-            context: context,
-            builder: (context) {
-              UserCrudCubit userCrudCubit = GetIt.I<UserCrudCubit>();
-              return BlocProvider.value(
-                value: userCrudCubit,
-                child: Builder(builder: (context) {
-                  return BlocConsumer<UserCrudCubit, UserCrudState>(
-                    listener: (context, state) {
-                      if (state is UserCrudStateFailure){
-                        Get.back();
-                        error = state.errorMessage;
-                      }
-                     if (state is UserCrudStateSuccess){
-                       if (state.isManagerAdd){
-                         Get.back();
-                         success = "Manager accepted";
-                       }
-                       if (state.isManagerReject){
-                         Get.back();
-                         success = "Manager rejected";
-                       }
-                     }
+    showDialog<bool?>(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          UserCrudCubit userCrudCubit = GetIt.I<UserCrudCubit>();
+          return BlocProvider.value(
+            value: userCrudCubit,
+            child: Builder(builder: (context) {
+              return BlocConsumer<UserCrudCubit, UserCrudState>(
+                listener: (context, state) {
+                  if (state is UserCrudStateFailure) {
+                    Get.back();
+                    error = state.errorMessage;
+                  }
+                  if (state is UserCrudStateSuccess) {
+                    if (state.isManagerAdd) {
+                      Get.back();
+                      success = "Manager accepted";
+                    }
+                    if (state.isManagerReject) {
+                      Get.back();
+                      success = "Manager rejected";
+                    }
+                  }
+                },
+                builder: (context, state) {
+                  return WillPopScope(
+                    onWillPop: () {
+                      return Future.value(false);
                     },
-                    builder: (context, state) {
-                      return WillPopScope(
-                        onWillPop: () {
-                          return Future.value(false);
-                        },
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(
-                              sigmaX: 0.5,
-                              sigmaY: 0.5,
-                              tileMode: TileMode.mirror),
-                          child: Dialog(
-                            shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(kDefaultSpacing)),
-                            child: Container(
-                              height: 300,
-                              padding: const EdgeInsets.all(kDefaultSpacing),
-                              child: Column(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(
+                          sigmaX: 0.5, sigmaY: 0.5, tileMode: TileMode.mirror),
+                      child: Dialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(kDefaultSpacing)),
+                        child: Container(
+                          height: 300,
+                          padding: const EdgeInsets.all(kDefaultSpacing),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "New Manager Request",
+                                    style: kTitleTextStyle,
+                                  ),
+                                  kVerticalSpaceRegular,
+                                  Text.rich(
+                                    TextSpan(children: [
+                                      TextSpan(
+                                          text:
+                                              "Manager ${request.managerName} ",
+                                          style: kBoldTextStyle),
+                                      const TextSpan(
+                                        text: "with id ",
+                                      ),
+                                      TextSpan(
+                                          text: request.managerId,
+                                          style: kBoldTextStyle),
+                                      TextSpan(
+                                          text:
+                                              " has requested to access your list of transactions and gets a commission of ",
+                                          style: kDefaultTextStyle),
+                                      TextSpan(
+                                          text:
+                                              "${(request.commission * 100).toStringAsFixed(1)}% ",
+                                          style: kBoldTextStyle),
+                                      TextSpan(
+                                          text: "of every transactions made!",
+                                          style: kDefaultTextStyle)
+                                    ]),
+                                  ),
+                                  kVerticalSpaceRegular,
+                                ],
+                              ),
+                              Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "New Manager Request",
-                                        style: kTitleTextStyle,
-                                      ),
-                                      kVerticalSpaceRegular,
-                                      Text.rich(
-                                        TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                  text: "Manager ${request.managerName} ",
-                                                  style: kBoldTextStyle),
-                                              const TextSpan(
-                                                  text: "with id ",
-                                              ),
-
-                                              TextSpan(
-                                                  text: request.managerId,
-                                                  style: kBoldTextStyle),
-                                              TextSpan(
-                                                  text:
-                                                      " has requested to access your list of transactions and gets a commission of ",
-                                                  style: kDefaultTextStyle),
-                                              TextSpan(
-                                                  text:
-                                                      "${(request.commission * 100).toStringAsFixed(1)}% ",
-                                                  style: kBoldTextStyle),
-                                              TextSpan(
-                                                  text:
-                                                      "of every transactions made!",
-                                                  style: kDefaultTextStyle)
-                                            ]),
-                                      ),
-                                      kVerticalSpaceRegular,
-                                    ],
+                                  TextButton(
+                                    onPressed: () async {
+                                      bool shouldAccept =
+                                          await confirmRequest(true);
+                                      if (shouldAccept) {
+                                        userCrudCubit.acceptManager(
+                                            managerId: request.managerId,
+                                            driverId: request.driverId);
+                                      }
+                                    },
+                                    child: state is UserCrudStateLoading &&
+                                            state.isManagerAdd
+                                        ? const CircularProgressIndicator()
+                                        : Text(
+                                            "Accept",
+                                            style: kWhiteTextStyle.copyWith(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                    style: TextButton.styleFrom(
+                                      textStyle: kWhiteTextStyle.copyWith(
+                                          fontWeight: FontWeight.bold),
+                                      backgroundColor: kPrimaryColor,
+                                      padding: const EdgeInsets.all(
+                                          kDefaultSpacing * 0.5),
+                                      minimumSize: Size.zero,
+                                    ),
                                   ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () async {
-                                          bool shouldAccept =
-                                              await confirmRequest(true);
-                                          if (shouldAccept) {
-                                            userCrudCubit.acceptManager(
-                                              managerId: request.managerId,
-                                              driverId: request.driverId
-                                            );
-                                          }
-                                        },
-                                        child: state is UserCrudStateLoading && state.isManagerAdd ? const CircularProgressIndicator() : Text(
-                                          "Accept",
-                                          style: kWhiteTextStyle.copyWith(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        style: TextButton.styleFrom(
-                                          textStyle: kWhiteTextStyle.copyWith(
-                                              fontWeight: FontWeight.bold),
-                                          backgroundColor: kPrimaryColor,
-                                          padding: const EdgeInsets.all(
-                                              kDefaultSpacing * 0.5),
-                                          minimumSize: Size.zero,
-                                        ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () async {
-                                          bool shouldAccept =
-                                              await confirmRequest(false);
-                                          if (shouldAccept) {
-                                            userCrudCubit.rejectManager(
-                                              managerId: request.managerId,
-                                              driverId: request.driverId
-                                            );
-                                          }
-                                        },
-                                        child: state is UserCrudStateLoading && state.isManagerReject ? const CircularProgressIndicator() : Text(
-                                          "Reject",
-                                          style: kBoldTextStyle,
-                                        ),
-                                        style: TextButton.styleFrom(
-                                          textStyle: kBoldTextStyle,
-                                          tapTargetSize:
-                                              MaterialTapTargetSize.shrinkWrap,
-                                          padding: const EdgeInsets.all(
-                                              kDefaultSpacing * 0.5),
-                                          minimumSize: Size.zero,
-                                        ),
-                                      )
-                                    ],
+                                  TextButton(
+                                    onPressed: () async {
+                                      bool shouldAccept =
+                                          await confirmRequest(false);
+                                      if (shouldAccept) {
+                                        userCrudCubit.rejectManager(
+                                            managerId: request.managerId,
+                                            driverId: request.driverId);
+                                      }
+                                    },
+                                    child: state is UserCrudStateLoading &&
+                                            state.isManagerReject
+                                        ? const CircularProgressIndicator()
+                                        : Text(
+                                            "Reject",
+                                            style: kBoldTextStyle,
+                                          ),
+                                    style: TextButton.styleFrom(
+                                      textStyle: kBoldTextStyle,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      padding: const EdgeInsets.all(
+                                          kDefaultSpacing * 0.5),
+                                      minimumSize: Size.zero,
+                                    ),
                                   )
                                 ],
-                              ),
-                            ),
+                              )
+                            ],
                           ),
                         ),
-                      );
-                    },
+                      ),
+                    ),
                   );
-                }),
+                },
               );
-            });
+            }),
+          );
+        });
   }
 
   Future<bool> confirmRequest(bool shouldAccept) async {
@@ -327,14 +329,13 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService{
                       child: TextButton(
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.zero,
-
                             backgroundColor: kPrimaryColor,
                           ),
                           onPressed: () {
                             Get.back(result: true);
                           },
                           child: Text(
-                            shouldAccept ?"Accept": "Reject",
+                            shouldAccept ? "Accept" : "Reject",
                             style: kBoldTextStyle.copyWith(color: kWhiteColor),
                           )),
                     ),

@@ -86,8 +86,6 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
       });
     }
 
-
-
     else if (type.toLowerCase() == "balance"){
       filteredTransactions.removeWhere((element) {
         return element.debt != 0;
