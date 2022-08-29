@@ -76,7 +76,6 @@ class _CodeVerificationBottomSheetState
                     isError = false;
                   });
                 }
-                print(value);
               },
               length: 6,
               textStyle:

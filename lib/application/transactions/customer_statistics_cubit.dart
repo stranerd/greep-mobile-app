@@ -74,10 +74,10 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
 
     List<Transaction> filteredTransactions = [..._customerTransactions[userId]!];
     if (type.toLowerCase() == "collect") {
-      filteredTransactions.removeWhere((element) => element.debt >= 0);
+      filteredTransactions.removeWhere((element) => element.debt <= 0);
     }
     else if (type.toLowerCase() == "pay"){
-      filteredTransactions.removeWhere((element) => element.debt <= 0);
+      filteredTransactions.removeWhere((element) => element.debt >= 0);
     }
 
     else if (type.toLowerCase() == "not balanced"){

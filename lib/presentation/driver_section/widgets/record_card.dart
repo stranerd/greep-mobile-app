@@ -61,6 +61,8 @@ class _RecordCardState extends State<RecordCard> {
               : CrossAxisAlignment.start,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(widget.initial,style: widget.titleStyle.copyWith(fontSize: 18),
                 ),

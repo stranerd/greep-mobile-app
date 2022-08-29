@@ -217,7 +217,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
             .reduce((value, element) => value + element,
         );
 
-        var totalExpenses = expenses.map((e) => e.amount).reduce((value, element) => value + element);
+        var totalExpenses = expenses.isEmpty ? 0 : expenses.map((e) => e.amount).reduce((value, element) => value + element);
         var income = totalIncome - totalExpenses;
 
 
