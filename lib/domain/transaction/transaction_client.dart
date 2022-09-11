@@ -14,9 +14,9 @@ class TransactionClient {
   final Dio dio = dioClient();
 
   Future<ResponseEntity<List<Transaction>>> getUserTransactions(
-      String driverId) async {
+      String driverId,{Pagination? pagination}) async {
     Map<String, dynamic> queryParams = {
-      "limit": 1000,
+      "all": true,
       "where[]": {"field":"driverId", "value":driverId,},
 
     };
