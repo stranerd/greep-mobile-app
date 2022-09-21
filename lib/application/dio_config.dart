@@ -14,22 +14,12 @@ requestInterceptors(
   print("$baseApi${options.path}");
   var pref = AuthStore();
   var token = await pref.getAuthToken();
+  print("token $token");
   options.contentType = "application/json";
+  if (useRefreshToken){
+    options.headers["Refresh-Token"] = "${token["refreshToken"]??""}";
+  }
   options.headers["Access-Token"] = "${token["token"]??""}";
   options.headers["Accept"] = "*/*";
   handler.next(options);
 }
-//
-// responseInterceptor(
-//     Response options, ResponseInterceptorHandler handler) async {
-//   print("status code: ${options.statusCode}");
-//   print("request url: ${options.requestOptions.path}");
-//
-//   var pref = AuthStore();
-//   var token = await pref.getAuthToken();
-//   print("refresh token ${token["refreshToken"]}");
-//   print("token ${token["token"]}");
-//
-//
-//   handler.next(options);
-// }

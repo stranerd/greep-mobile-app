@@ -38,13 +38,16 @@ class IoC {
   late ManagerDriversCubit _managerDriversCubit;
   late CustomerService _customerService;
   late UserCustomersCubit _userCustomersCubit;
+  late AuthenticationClient _authenticationClient;
   late NewManagerAcceptsCubit _newManagerAcceptsCubit;
 
   var getIt = GetIt.instance;
 
   IoC() {
+    _authenticationClient = AuthenticationClient();
+    getIt.registerSingleton(_authenticationClient);
     _authenticationService =
-        AuthenticationService(authenticationClient: AuthenticationClient());
+        AuthenticationService(authenticationClient: getIt());
     _authenticationCubit = AuthenticationCubit(_authenticationService);
     _userService = UserService(UserClient());
     _userCubit = UserCubit(

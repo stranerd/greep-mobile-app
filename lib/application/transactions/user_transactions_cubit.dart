@@ -11,21 +11,23 @@ import 'package:grip/domain/transaction/transaction_service.dart';
 part 'user_transactions_state.dart';
 
 class UserTransactionsCubit extends Cubit<UserTransactionsState> {
-
-  UserTransactionsCubit({required this.transactionService,required this.driversCubit, required this.authenticationCubit}) : super(UserTransactionsInitial()){
+  UserTransactionsCubit(
+      {required this.transactionService,
+      required this.driversCubit,
+      required this.authenticationCubit})
+      : super(UserTransactionsInitial()) {
     _streamSubscription = authenticationCubit.stream.listen((event) {
-
-      if (event is AuthenticationStateNotAuthenticated){
+      if (event is AuthenticationStateNotAuthenticated) {
         destroy();
       }
     });
 
     _driverStream = driversCubit.stream.listen((event) {
-      if (event is DriversStateFetched){
-        if (event is DriversStateDriver){
-        fetchUserTransactions(requestId: event.selectedUser.id);
+      if (event is DriversStateFetched) {
+        if (event is DriversStateDriver) {
+          fetchUserTransactions(requestId: event.selectedUser.id);
         }
-        if (event is DriversStateManager){
+        if (event is DriversStateManager) {
           for (var element in event.drivers) {
             fetchUserTransactions(requestId: element.id);
           }
@@ -42,12 +44,11 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
   final DriversCubit driversCubit;
   late StreamSubscription _driverStream;
 
-
   Future<UserTransactionsState> fetchUserTransactions(
-      { String? requestId,
-        bool fullRefresh = false,
-        bool loadMore = false,
-        bool softUpdate = false}) async {
+      {String? requestId,
+      bool fullRefresh = false,
+      bool loadMore = false,
+      bool softUpdate = false}) async {
     requestId = requestId ?? driversCubit.selectedUser.id;
     // when there is no load more request or a full refresh, reset pagination to default pagination
     // and emit a loading state
@@ -60,9 +61,12 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
     if (!fullRefresh && !softUpdate) {
       // if there is an already loaded data plus when not a load more request, load cached data
       if (hasLoaded && transactions[requestId] != null && !loadMore) {
-        emit(UserTransactionsStateFetched(transactions: transactions[requestId]!.toList(),userId: requestId));
+        emit(UserTransactionsStateFetched(
+            transactions: transactions[requestId]!.toList(),
+            userId: requestId));
 
-        return UserTransactionsStateFetched(transactions: transactions[requestId]!.toList(),userId: requestId);
+        return UserTransactionsStateFetched(
+            transactions: transactions[requestId]!.toList(), userId: requestId);
       } else {
         // if there is no more data, just emit previous loaded data
         // else fetch new paginated data from server
@@ -81,7 +85,9 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
   }
 
   UserTransactionsState _checkResponse(
-      ResponseEntity<List<Transaction>> response, String requestId, bool loadMore) {
+      ResponseEntity<List<Transaction>> response,
+      String requestId,
+      bool loadMore) {
     if (response.isError) {
       var stateError = UserTransactionsStateError(
         response.errorMessage,
@@ -98,14 +104,18 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
       if (!loadMore) {
         hasLoaded = true;
         transactions[requestId] = Set.of(newServices);
-        var stateFetched = UserTransactionsStateFetched(transactions: newServices.toList(),userId: requestId);
+        var stateFetched = UserTransactionsStateFetched(
+            transactions: newServices.toList(), userId: requestId);
         emit(stateFetched);
         return stateFetched;
       } else {
         hasLoaded = true;
         transactions[requestId]!.addAll(newServices);
-        emit(UserTransactionsStateFetched(transactions: transactions[requestId]!.toList(),userId: requestId));
-        return UserTransactionsStateFetched(transactions: transactions[requestId]!.toList(),userId: requestId);
+        emit(UserTransactionsStateFetched(
+            transactions: transactions[requestId]!.toList(),
+            userId: requestId));
+        return UserTransactionsStateFetched(
+            transactions: transactions[requestId]!.toList(), userId: requestId);
       }
     }
   }
@@ -125,36 +135,30 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
   }
 
   List<Transaction> getLastUserTransactions() {
-   try {
-    String userId = driversCubit.selectedUser.id;
+    try {
+      String userId = driversCubit.selectedUser.id;
 
-    if (transactions[userId] == null || transactions[userId]!.isEmpty){
+      if (transactions[userId] == null || transactions[userId]!.isEmpty) {
+        return const [];
+      }
+      List<Transaction> userTransactions = transactions[userId]!.toList();
+      return userTransactions.take(5).toList();
+    } catch (_) {
       return const [];
     }
-    List<Transaction> userTransactions = transactions[userId]!.toList();
-    return userTransactions.take(5).toList();
-  }
-  catch (_){
-     return const [];
   }
 
+  List<Transaction> getCurrentUserTransactions() {
+    try {
+      String userId = driversCubit.selectedUser.id;
 
-}
-
-List<Transaction> getCurrentUserTransactions(){
-  try {
-    String userId = driversCubit.selectedUser.id;
-
-    if (transactions[userId] == null || transactions[userId]!.isEmpty){
+      if (transactions[userId] == null || transactions[userId]!.isEmpty) {
+        return const [];
+      }
+      List<Transaction> userTransactions = transactions[userId]!.toList();
+      return userTransactions.toList();
+    } catch (_) {
       return const [];
     }
-    List<Transaction> userTransactions = transactions[userId]!.toList();
-    return userTransactions.toList();
   }
-  catch (_){
-    return const [];
-  }
-
-}
-
 }

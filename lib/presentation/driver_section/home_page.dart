@@ -14,6 +14,7 @@ import 'package:grip/application/driver/drivers_cubit.dart';
 import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/domain/auth/AuthenticationClient.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/nav_pages/settings/account/view_profile.dart';
 import 'package:grip/presentation/driver_section/transaction/view_transactions.dart';
@@ -49,6 +50,10 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     _refreshController = RefreshController();
     _userTransactionsCubit = GetIt.I<UserTransactionsCubit>();
+    //
+    // GetIt.I<AuthenticationClient>().refreshToken().then((value) {
+    //   debugPrint(value.toString());
+    // });
     super.initState();
   }
 

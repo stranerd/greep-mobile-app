@@ -113,32 +113,42 @@ class AuthenticationService {
     return response;
   }
 
-  Future<ResponseEntity> refreshToken() async {
-    var pref = AuthStore();
-    var token = await pref.getAuthToken();
-    bool isGoogle = token["isGoogle"] ?? false;
-    if (!isGoogle) {
-      var response = await login(
-          LoginRequest(password: token["password"], email: token["email"]));
-      if (!response.isError) {
-        setToken(response.data!..putIfAbsent("isGoogle", () => false));
-      }
-      return response;
-    } else {
-      var response = await authenticationClient.googleLogin(GoogleSigninRequest(
-          accessToken: token["accessToken"] ?? "",
-          idToken: token["idToken"] ?? ""));
-      if (response.isError) {
-        return ResponseEntity.Error(
-            response.errorMessage ?? "An error occurred. Please try again");
-      }
+  // Future<ResponseEntity> refreshToken() async {
+  //   var pref = AuthStore();
+  //   var token = await pref.getAuthToken();
+  //   bool isGoogle = token["isGoogle"] ?? false;
+  //   if (!isGoogle) {
+  //     var response = await login(
+  //         LoginRequest(password: token["password"], email: token["email"]));
+  //     if (!response.isError) {
+  //       setToken(response.data!..putIfAbsent("isGoogle", () => false));
+  //     }
+  //     return response;
+  //   } else {
+  //     var response = await authenticationClient.googleLogin(GoogleSigninRequest(
+  //         accessToken: token["accessToken"] ?? "",
+  //         idToken: token["idToken"] ?? ""));
+  //     if (response.isError) {
+  //       return ResponseEntity.Error(
+  //           response.errorMessage ?? "An error occurred. Please try again");
+  //     }
+  //
+  //     setToken(response.data!
+  //       ..putIfAbsent("idToken", () => token["idToken"])
+  //       ..putIfAbsent("accessToken", () => token["accessToken"])
+  //       ..putIfAbsent("isGoogle", () => true));
+  //     return response;
+  //   }
+  // }
 
-      setToken(response.data!
-        ..putIfAbsent("idToken", () => token["idToken"])
-        ..putIfAbsent("accessToken", () => token["accessToken"])
-        ..putIfAbsent("isGoogle", () => true));
-      return response;
+  Future<ResponseEntity> refreshToken() async {
+    print("Refreshing token");
+    var response = await authenticationClient.refreshToken();
+    print("response from refreshing token ${response}");
+    if (!response.isError){
+      setToken(response.data);
     }
+    return response;
   }
 
   Future<ResponseEntity> testSignup(LoginRequest request) async {

@@ -19,9 +19,9 @@ class AuthStore {
   }
 
   void setToken(Map<String, dynamic> credentials) async {
-    var storage = FlutterSecureStorage();
+    var storage = const FlutterSecureStorage();
     await storage.write(key: prefName, value: jsonEncode(credentials));
-    this._token = credentials;
+    _token = credentials;
   }
 
   Future<Map<String, dynamic>> getAuthToken() async {
