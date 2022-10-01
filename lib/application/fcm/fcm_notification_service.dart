@@ -15,7 +15,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     await Firebase.initializeApp(
       options: FirebaseOptions(
         apiKey: serverToken,
-        appId: "1:891214249172:ios:39ebf6ee08f51418be0f41",
+        appId: "1:891214249172:ios:028e8f16aa47a69dbe0f41",
         messagingSenderId: "891214249172",
         projectId: "greepio",
       ),

@@ -30,34 +30,48 @@ import 'package:grip/presentation/splash/splash.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
+  debugPrint("Starting App");
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
 
   var ioc = IoC();
+  debugPrint("Initialized IOS");
 
   if (Platform.isIOS) {
 
     String serverToken = dotenv.env['FIREBASEOPTIONS_APIKEY']??"";
+    debugPrint("Got Server Token $serverToken");
 
     await Firebase.initializeApp(
+      name: "Greep",
       options: FirebaseOptions(
         apiKey: serverToken,
-        appId: "1:891214249172:ios:39ebf6ee08f51418be0f41",
+        appId: "1:891214249172:ios:028e8f16aa47a69dbe0f41",
         messagingSenderId: "891214249172",
         projectId: "greepio",
       ),
     );
-  } else {
+    // .then((value){
+
+      // print("firebase init value $value");
+    // });
+    debugPrint("Initialized Firebase Apple");
+
+  }
+  else {
 
     await Firebase.initializeApp();
   }
 
-  FirebaseMessaging.instance.getToken();
+  FirebaseMessaging.instance.getToken().then((value) {});
 
   GestureBinding.instance.resamplingEnabled = true;
 
   FCMNotificationService.initialize();
+
   LocalNotificationService.initialize();
+  debugPrint("Init Notifications");
+
   runApp(const MyApp());
 }
 

@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>891214249172-m1ussb27ut3d8ksl1p2l1dgsq7eneb7u.apps.googleusercontent.com</string>
+	<string>891214249172-t2mpmb5vdg6n1hqvh0qvbbva0iq2q7dd.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.891214249172-m1ussb27ut3d8ksl1p2l1dgsq7eneb7u</string>
+	<string>com.googleusercontent.apps.891214249172-t2mpmb5vdg6n1hqvh0qvbbva0iq2q7dd</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>891214249172-kt7fvdv1r0t3qel3kp38v2qp5epavr6p.apps.googleusercontent.com</string>
+	<string>891214249172-37jgfpo0hkmi355mek4psko5ll17s6la.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyAij3Mzl2y_DxlZCC1mM9VXBk10fgHHwjE</string>
 	<key>GCM_SENDER_ID</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.greepio.greep</string>
+	<string>com.greep.io</string>
 	<key>PROJECT_ID</key>
 	<string>greepio</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:891214249172:ios:39ebf6ee08f51418be0f41</string>
+	<string>1:891214249172:ios:028e8f16aa47a69dbe0f41</string>
 </dict>
 </plist>

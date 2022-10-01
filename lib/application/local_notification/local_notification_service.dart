@@ -50,18 +50,16 @@ class LocalNotificationService {
 
     const AndroidInitializationSettings initializationSettingsAndroid =
     AndroidInitializationSettings('app_icon');
-    final IOSInitializationSettings initializationSettingsIOS =
-    IOSInitializationSettings(
+    final DarwinInitializationSettings initializationSettingsIOS =
+    DarwinInitializationSettings(
         onDidReceiveLocalNotification: onDidReceiveLocalNotification);
-    final MacOSInitializationSettings initializationSettingsMacOS =
-    MacOSInitializationSettings();
     final InitializationSettings initializationSettings =
     InitializationSettings(
         android: initializationSettingsAndroid,
         iOS: initializationSettingsIOS,
-        macOS: initializationSettingsMacOS);
+    );
     await FlutterLocalNotificationsPlugin().initialize(initializationSettings,
-        onSelectNotification: selectNotification);
+        onDidReceiveNotificationResponse: selectNotification);
   }
 
   void show({required FcmNotification notification,}) async {
@@ -89,6 +87,6 @@ class LocalNotificationService {
             () => {print("Receive local notification: payload: $payload ")});
   }
 
-  static Future selectNotification(String? payload) async {
+  static Future selectNotification(_) async {
   }
 }
