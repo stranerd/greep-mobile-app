@@ -12,7 +12,7 @@ class CommissionSummaryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime date = commissionSummary.transactions.first.timeAdded;
+    DateTime date = commissionSummary.transactions.isEmpty ? DateTime.now() : commissionSummary.transactions.first.timeAdded;
     String day = "";
     if (isMonthly){
       day = DateFormat("${DateFormat.MONTH} ${DateFormat.YEAR}").format(date);
