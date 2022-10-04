@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/driver/drivers_cubit.dart';
@@ -82,8 +83,8 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
           currentIndex: _currNavIndex,
           onTap: setCurrNav,
           type: BottomNavigationBarType.fixed,
-          selectedFontSize: 11,
-          unselectedFontSize: 11,
+          selectedFontSize: 11.sp,
+          unselectedFontSize: 11.sp,
           items: getBottomIcons(),
           selectedItemColor: kPrimaryColor,
           selectedIconTheme: const IconThemeData(color: kPrimaryColor),
@@ -134,10 +135,12 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
         label: '',
         icon: SvgIcon(
           svgIcon: icons[i],
+          size: 25.r,
         ),
         activeIcon: SvgIcon(
           svgIcon: icon[i],
           color: AppColors.black,
+          size: 25.r,
         ),
       );
 

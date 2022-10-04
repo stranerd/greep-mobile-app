@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/user/user_crud_cubit.dart';
@@ -12,6 +13,7 @@ import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/presentation/widgets/form_input_bg_widget.dart';
 import 'package:grip/presentation/widgets/input_text_field.dart';
 import 'package:grip/presentation/widgets/submit_button.dart';
+import 'package:grip/presentation/widgets/text_widget.dart';
 import 'package:grip/utils/constants/app_colors.dart';
 import 'package:grip/utils/constants/app_styles.dart';
 
@@ -72,12 +74,12 @@ class _AddDriverScreenState extends State<AddDriverScreen> with ScaffoldMessenge
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      icon: const Icon(
+                      icon:  Icon(
                         Icons.arrow_back_ios,
-                        size: 16,
+                        size: 16.r,
                       ),
                       color: AppColors.black),
-                  title: Text(
+                  title: TextWidget(
                     'Add a Driver',
                     style: AppTextStyles.blackSizeBold14,
                   ),
@@ -92,11 +94,10 @@ class _AddDriverScreenState extends State<AddDriverScreen> with ScaffoldMessenge
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const TextWidget(
                             "Driver",
-                            style: AppTextStyles.blackSize14,
                           ),
-                          kVerticalSpaceSmall,
+                          SizedBox(height: 8.h,),
                           LoginTextField(
                             hintText: "Enter driver id",
                             customController: _driverIdController,
@@ -109,14 +110,17 @@ class _AddDriverScreenState extends State<AddDriverScreen> with ScaffoldMessenge
                             },
                             withTitle: false,
                           ),
-                          kVerticalSpaceRegular,
-                          Text(
+                          SizedBox(height: 16.h,),
+
+                          TextWidget(
                             "Percentage Commission",
                             style: AppTextStyles.blackSize14,
                           ),
-                          kVerticalSpaceSmall,
+                          SizedBox(height: 8.h,),
+
                           FormInputBgWidget(
                               child: Row(
+
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   GestureDetector(
@@ -131,23 +135,23 @@ class _AddDriverScreenState extends State<AddDriverScreen> with ScaffoldMessenge
                                       }
                                     },
                                     child: Container(
-                                      width: 50,
+                                      width: 50.w,
                                       padding: const EdgeInsets.all(kDefaultSpacing * 0.3),
                                       decoration: const BoxDecoration(
 
                                       ),
-                                      child: Text(
+                                      child: TextWidget(
                                         "-",
                                         style: kBoldTextStyle.copyWith(fontSize: 20),
                                       ),
                                     ),
                                   ),
                                   SizedBox(
-                                    width: 50,
-                                    height: 60,
+                                    width: 50.w,
+                                    height: 60.h,
                                     child: TextField(
                                       style: kBoldTextStyle.copyWith(
-                                          fontSize: 18
+                                          fontSize: 18.sp
                                       ),
                                       controller: _commissionController,
                                       onChanged: (String s) {
@@ -178,12 +182,12 @@ class _AddDriverScreenState extends State<AddDriverScreen> with ScaffoldMessenge
                                     },
                                     child: Container(
                                       alignment: Alignment.centerRight,
-                                      width: 50,
+                                      width: 50.w,
                                       padding: const EdgeInsets.all(kDefaultSpacing * 0.3),
                                       decoration: const BoxDecoration(),
                                       child: Text(
                                         "+",
-                                        style: kBoldTextStyle.copyWith(fontSize: 20),
+                                        style: kBoldTextStyle.copyWith(fontSize: 20.sp),
                                       ),
                                     ),
                                   ),

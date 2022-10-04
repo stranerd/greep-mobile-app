@@ -16,8 +16,8 @@ class TurkishSymbol extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       "assets/icons/turkish.svg",
-      width: (width ?? 13 * 0.75).w,
-      height: (height ?? 13 * 0.75).w,
+      width: (width ?? 13 * 0.75),
+      height: (height ?? 13 * 0.75),
       color: color ?? kBlackColor,
       fit: BoxFit.cover,
     );

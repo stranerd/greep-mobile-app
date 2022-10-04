@@ -8,6 +8,7 @@ import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/transaction/transaction_details.dart';
+import 'package:grip/presentation/widgets/text_widget.dart';
 import 'package:grip/presentation/widgets/turkish_symbol.dart';
 import 'package:grip/utils/constants/app_colors.dart';
 import 'package:grip/utils/constants/app_styles.dart';
@@ -66,11 +67,11 @@ class TransactionListCard extends StatelessWidget {
               : null,
           color: withColor ? AppColors.lightGray : null,
           borderRadius:
-              withBorder ? BorderRadius.circular(kDefaultSpacing * 0.5) : null),
+              withBorder ? BorderRadius.circular((kDefaultSpacing * 0.5).r) : null),
       child: ListTile(
         contentPadding: padding == null
             ? EdgeInsets.zero
-            : EdgeInsets.symmetric(horizontal: padding!),
+            : EdgeInsets.symmetric(horizontal: padding!.w),
         leading: withLeading
             ? Container(
                 width: 60,
@@ -84,7 +85,7 @@ class TransactionListCard extends StatelessWidget {
                 child:
                     transaction.data.transactionType == TransactionType.expense
                         ? Image.asset("assets/icons/expense.png",
-                            width: 25, height: 25)
+                            width: 25.w, height: 25.h)
                         : SvgPicture.asset("assets/icons/local_taxi.svg"),
               )
             : null,
@@ -92,24 +93,24 @@ class TransactionListCard extends StatelessWidget {
             ? () => g.Get.to(() => TransactionDetails(transaction: transaction),
                 transition: g.Transition.fadeIn)
             : null,
-        title: Text(text, style: AppTextStyles.blackSize14),
-        subtitle: Text(
+        title: TextWidget(text, style: AppTextStyles.blackSize14),
+        subtitle: TextWidget(
           subText,
           style: kDefaultTextStyle.copyWith(fontSize: 12),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
+            TextWidget(
               initial,
               style: trailStyle,
             ),
             TurkishSymbol(
-              width: (14.r),
-              height: (14.r),
+              width: (14.w),
+              height: (14.h),
               color: trailStyle.color,
             ),
-            Text(
+            TextWidget(
               trailText,
               style: trailStyle,
             ),

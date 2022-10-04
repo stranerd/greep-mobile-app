@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/presentation/widgets/text_widget.dart';
 import 'package:grip/utils/constants/app_colors.dart';
 import 'package:grip/utils/constants/app_styles.dart';
 
@@ -44,7 +45,7 @@ class AddRecord extends StatelessWidget {
         children: [
           svg,
           kHorizontalSpaceRegular,
-          Text(
+          TextWidget(
             title,
             style:kDefaultTextStyle.copyWith(
               fontSize: 16,

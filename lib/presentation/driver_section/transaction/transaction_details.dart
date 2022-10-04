@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart' as g;
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/driver/drivers_cubit.dart';
@@ -11,6 +12,7 @@ import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/widgets/transaction_list_card.dart';
+import 'package:grip/presentation/widgets/text_widget.dart';
 import 'package:grip/presentation/widgets/transaction_balance_widget.dart';
 import 'package:grip/presentation/widgets/turkish_symbol.dart';
 import 'package:intl/intl.dart';
@@ -71,12 +73,12 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    icon: const Icon(
+                    icon:  Icon(
                       Icons.arrow_back_ios,
-                      size: 16,
+                      size: 16.r,
                     ),
                     color: AppColors.black),
-                title: Text(
+                title: TextWidget(
                   'Transaction details',
                   style: AppTextStyles.blackSizeBold14,
                 ),
@@ -99,7 +101,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                               Stack(
                                 children: [
                                   TransactionListCard(
-                                    padding: kDefaultSpacing * 0.5,
+                                    padding: (kDefaultSpacing * 0.5).r,
                                     transaction: parentTransaction!,
                                     withColor: true,
                                     withBorder: true,
@@ -112,8 +114,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                       );
                                     },
                                     child: Container(
-                                      height: 80,
-                                      width: g.Get.width,
+                                      height: 80.h,
+                                      width: 1.sw,
                                       decoration: const BoxDecoration(
                                         color: Colors.transparent
                                       ),
@@ -127,8 +129,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                       ),
                     Container(
                       width: g.Get.width,
-                      margin: const EdgeInsets.all(kDefaultSpacing * 0.5),
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                      margin:  EdgeInsets.all((kDefaultSpacing * 0.5).r),
+                      padding:  EdgeInsets.fromLTRB(16.r, 0, 16.r, 0),
                       decoration: BoxDecoration(
                           border: Border.all(
                             color: AppColors.darkGray,
@@ -142,17 +144,19 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                TextWidget(
+
                                   "Balance status",
                                   style: AppTextStyles.blackSize12,
                                 ),
-                                const SizedBox(
-                                  height: 4.0,
+                                 SizedBox(
+                                  height: 4.0.h,
                                 ),
                                 Builder(
                                     builder: (context) {
                                       if (parentTransaction!.data.debt == 0){
-                                        return Text("Balanced",
+                                        return TextWidget(
+"Balanced",
                                           style: AppTextStyles.blackSize16,
                                         );
                                       }
@@ -160,16 +164,16 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                         return Row(
 
                                             children: [
-                                              Text("Not Balanced (${parentTransaction!.debt < 0 ? "to pay ": "to collect "}",style: AppTextStyles.blackSize16,),
-                                              TurkishSymbol(width: 13, height: 13, color: AppTextStyles.blackSize16.color),
-                                              Text("${parentTransaction!.debt.abs().toMoney})", style: AppTextStyles.blackSize16),]
+                                              TextWidget("Not Balanced (${parentTransaction!.debt < 0 ? "to pay ": "to collect "}",style: AppTextStyles.blackSize16,),
+                                              TurkishSymbol(width: 13.w, height: 13.h, color: AppTextStyles.blackSize16.color),
+                                              TextWidget("${parentTransaction!.debt.abs().toMoney})", style: AppTextStyles.blackSize16),]
                                         );
 
 
                                       } }
                                 ),
-                                const SizedBox(
-                                  height: 16.0,
+                                 SizedBox(
+                                  height: 16.0.h,
                                 ),
                               ],
                             ),
@@ -179,15 +183,15 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 kVerticalSpaceRegular,
-                                Text("Customer",
+                                TextWidget("Customer",
                                     style: AppTextStyles.blackSize12),
-                                const SizedBox(
-                                  height: 4.0,
+                                 SizedBox(
+                                  height: 4.0.h,
                                 ),
-                                Text(transaction.data.customerName ?? "",
+                                TextWidget(transaction.data.customerName ?? "",
                                     style: AppTextStyles.blackSize16),
-                                const SizedBox(
-                                  height: 16.0,
+                                 SizedBox(
+                                  height: 16.0.h,
                                 ),
                               ],
                             ),
@@ -196,88 +200,93 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Expense",
+                                TextWidget("Expense",
                                     style: AppTextStyles.blackSize12),
-                                const SizedBox(
-                                  height: 4.0,
+                                 SizedBox(
+                                  height: 4.0.h,
                                 ),
-                                Text(transaction.data.name ?? "",
+                                TextWidget(
+transaction.data.name ?? "",
                                     style: AppTextStyles.blackSize16),
-                                const SizedBox(
-                                  height: 16.0,
+                                 SizedBox(
+                                  height: 16.0.h,
                                 ),
                               ],
                             ),
-                          Text(
+                          TextWidget(
                             "Date/Time",
                             style: AppTextStyles.blackSize12,
                           ),
-                          const SizedBox(
-                            height: 4.0,
+                           SizedBox(
+                            height: 4.0.h,
                           ),
-                          Text(
+                          TextWidget(
                             DateFormat(
                                     "${DateFormat.ABBR_MONTH} ${DateFormat.DAY} . hh:mm a")
                                 .format(transaction.timeAdded),
                             style: AppTextStyles.blackSize16,
                           ),
-                          const SizedBox(
-                            height: 16.0,
+                           SizedBox(
+                            height: 16.0.h,
                           ),
-                          Text(
+                          TextWidget(
                             "Price",
                             style: AppTextStyles.blackSize12,
                           ),
-                          const SizedBox(
-                            height: 4.0,
+                           SizedBox(
+                            height: 4.0.h,
                           ),
                           Row(
                             children: [
-                              TurkishSymbol(width: 14,height: 14,color: AppTextStyles.blackSize16.color,),
-                              Text(
+                              TurkishSymbol(width: 14.w,height: 14.h,color: AppTextStyles.blackSize16.color,),
+                              TextWidget(
                                 transaction.amount.abs().toMoney,
                                 style: AppTextStyles.blackSize16,
                               ),
                             ],
                           ),
-                          const SizedBox(
-                            height: 16.0,
+                           SizedBox(
+                            height: 16.0.h,
                           ),
                           if (transaction.data.transactionType ==
                               TransactionType.trip)
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                TextWidget(
+
                                   "Paid",
                                   style: AppTextStyles.blackSize12,
                                 ),
-                                const SizedBox(
-                                  height: 4.0,
+                                SizedBox(
+                                  height: 4.0.h,
                                 ),
                                 Row(
                                   children: [
-                                    TurkishSymbol(width: 14,height: 14,color: AppTextStyles.blackSize16.color,),
-                                    Text(
+                                    TurkishSymbol(width: 14.w,height: 14.h,color: AppTextStyles.blackSize16.color,),
+                                    TextWidget(
+
                                       transaction.data.paidAmount!.toMoney,
                                       style: AppTextStyles.blackSize16,
                                     ),
                                   ],
                                 ),
-                                const SizedBox(
-                                  height: 16.0,
+                                SizedBox(
+                                  height: 16.0.h,
                                 ),
-                                Text(
+                                TextWidget(
+
                                   "Balance status",
                                   style: AppTextStyles.blackSize12,
                                 ),
-                                const SizedBox(
-                                  height: 4.0,
+                                SizedBox(
+                                  height: 4.0.h,
                                 ),
                                 Builder(
                                     builder: (context) {
                                       if (transaction.data.debt == 0){
-                                        return Text("Balanced",
+                                        return TextWidget(
+"Balanced",
                                           style: AppTextStyles.blackSize16,
                                         );
                                       }
@@ -285,16 +294,18 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                         return Row(
 
                                             children: [
-                                              Text("Not Balanced (${transaction.debt < 0 ? "to pay ": "to collect "}",style: AppTextStyles.blackSize16,),
-                                              TurkishSymbol(width: 13, height: 13, color: AppTextStyles.blackSize16.color),
-                                              Text("${transaction.debt.abs().toMoney})", style: AppTextStyles.blackSize16),]
+                                              TextWidget(
+"Not Balanced (${transaction.debt < 0 ? "to pay ": "to collect "}",style: AppTextStyles.blackSize16,),
+                                              TurkishSymbol(width: 13.w, height: 13.h, color: AppTextStyles.blackSize16.color),
+                                              TextWidget(
+"${transaction.debt.abs().toMoney})", style: AppTextStyles.blackSize16),]
                                         );
 
 
                                       } }
                                 ),
-                                const SizedBox(
-                                  height: 16.0,
+                                SizedBox(
+                                  height: 16.0.h,
                                 ),
                               ],
                             ),
@@ -303,31 +314,35 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                TextWidget(
+
                                   "Payment Type",
                                   style: AppTextStyles.blackSize12,
                                 ),
-                                const SizedBox(
-                                  height: 4.0,
+                                SizedBox(
+                                  height: 4.0.h,
                                 ),
-                                Text(
+                                TextWidget(
+
                                   transaction
                                       .data.paymentType!.name.capitalize!,
                                   style: AppTextStyles.blackSize16,
                                 ),
-                                const SizedBox(
-                                  height: 16.0,
+                                SizedBox(
+                                  height: 16.0.h,
                                 ),
                               ],
                             ),
-                          Text(
+                          TextWidget(
+
                             "Description",
                             style: AppTextStyles.blackSize12,
                           ),
-                          const SizedBox(
-                            height: 4.0,
+                          SizedBox(
+                            height: 4.0.h,
                           ),
-                          Text(
+                          TextWidget(
+
                             transaction.description,
                             style: AppTextStyles.blackSize16,
                           ),

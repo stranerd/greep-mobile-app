@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'colors.dart';
@@ -13,11 +14,11 @@ const Widget kHorizontalSpaceMedium = SizedBox(width: kDefaultSpacing * 1.5);
 const Widget kHorizontalSpaceLarge = SizedBox(width: kDefaultSpacing * 2.0);
 
 // vertical spacing
-const Widget kVerticalSpaceTiny = SizedBox(height: kDefaultSpacing * 0.333);
-const Widget kVerticalSpaceSmall = SizedBox(height: kDefaultSpacing * 0.5);
-const Widget kVerticalSpaceRegular = SizedBox(height: kDefaultSpacing);
-const Widget kVerticalSpaceMedium = SizedBox(height: kDefaultSpacing * 1.5);
-const Widget kVerticalSpaceLarge = SizedBox(height: kDefaultSpacing * 2.0);
+ Widget kVerticalSpaceTiny = SizedBox(height: (kDefaultSpacing * 0.333).h);
+ Widget kVerticalSpaceSmall = SizedBox(height: (kDefaultSpacing * 0.5).h);
+ Widget kVerticalSpaceRegular = SizedBox(height: kDefaultSpacing.h);
+ Widget kVerticalSpaceMedium = SizedBox(height: (kDefaultSpacing * 1.5).h);
+ Widget kVerticalSpaceLarge = SizedBox(height: (kDefaultSpacing * 2.0).h);
 
 var kDefaultTextStyle = GoogleFonts.poppins(
   fontSize: 15.18,

@@ -12,6 +12,7 @@ import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/customer/customer_details.dart';
 import 'package:grip/presentation/driver_section/transaction/transaction_details.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
+import 'package:grip/presentation/widgets/text_widget.dart';
 import 'package:grip/presentation/widgets/turkish_symbol.dart';
 
 class CustomerRecordCard extends StatelessWidget {
@@ -112,14 +113,14 @@ class CustomerRecordCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                TurkishSymbol(width: (11.r), height: (11.r), color: textStyle.color,),
-                Text("$text", style: textStyle),
+                TurkishSymbol(width: (11.w), height: (11.h), color: textStyle.color,),
+                TextWidget("$text", style: textStyle),
               ],
             ),
-            const SizedBox(height: 8.0),
-            Text(subText, style: kSubtitleTextStyle.copyWith(fontSize: 12)),
-            const SizedBox(height: 8.0),
-            Text(subText2,
+             SizedBox(height: 8.0.h),
+            TextWidget(subText, style: kSubtitleTextStyle.copyWith(fontSize: 12)),
+             SizedBox(height: 8.0.h),
+            TextWidget(subText2,
                 overflow: TextOverflow.ellipsis,
                 style: kDefaultTextStyle.copyWith(fontSize: 12)),
           ],

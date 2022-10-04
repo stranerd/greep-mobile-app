@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart' as g;
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/driver/drivers_cubit.dart';
@@ -36,7 +37,7 @@ class _DriverSelectorRowState extends State<DriverSelectorRow> {
       builder: (context, state) {
         if (state is DriversStateManager) {
           return SizedBox(
-              height: 90,
+              height: 90.h,
               child: ListView.separated(
                 itemCount: state.drivers.length + 1,
                 separatorBuilder: (_, __) => kHorizontalSpaceSmall,
@@ -53,18 +54,18 @@ class _DriverSelectorRowState extends State<DriverSelectorRow> {
                       child: Column(
                         children: [
                           Container(
-                            height: 60,
-                            width: 60,
+                            height: 60.h,
+                            width: 60.w,
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                    width: 2,
+                                    width: 2.w,
                                     color: widget.withWhiteText
                                         ? kWhiteColor
                                         : kBlackColor)),
                             child: Icon(
                               Icons.add,
-                              size: 30,
+                              size: 30.r,
                               color: widget.withWhiteText
                                   ? kWhiteColor
                                   : kBlackColor,

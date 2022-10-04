@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/presentation/widgets/text_widget.dart';
 
 class SubmitButton extends StatelessWidget {
   final String text;
@@ -35,15 +37,15 @@ class SubmitButton extends StatelessWidget {
         onTap: enabled ? onSubmit : null,
         child: Container(
           width: constraints.maxWidth,
-          padding: EdgeInsets.all(padding),
+          padding: EdgeInsets.all(padding.r),
           decoration: BoxDecoration(
-            borderRadius:  BorderRadius.all(Radius.circular(borderRadius)),
+            borderRadius:  BorderRadius.all(Radius.circular(borderRadius.r)),
             color: enabled ? bgcolor : bgcolor.withOpacity(0.3),
           ),
           child: Center(
             child: !isLoading
                 ? FittedBox(
-                    child: Text(
+                    child: TextWidget(
                       text,
                       style: textStyle!=null? textStyle! :kWhiteTextStyle,
                     ),

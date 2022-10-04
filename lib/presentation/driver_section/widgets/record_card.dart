@@ -8,6 +8,7 @@ import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
 import 'package:grip/presentation/driver_section/widgets/transactions_card.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
+import 'package:grip/presentation/widgets/text_widget.dart';
 import 'package:grip/presentation/widgets/turkish_symbol.dart';
 
 class RecordCard extends StatefulWidget {
@@ -44,15 +45,15 @@ class _RecordCardState extends State<RecordCard> {
     return SplashTap(
       onTap: _openDialog,
       child: Container(
-        padding: const EdgeInsets.all(kDefaultSpacing * 0.75),
-        height: 80,
-        width: widget.width ?? Get.width * 0.31,
+        padding:  EdgeInsets.all((kDefaultSpacing * 0.75).r),
+        height: 80.h,
+        width: widget.width ?? 0.31.sw,
         decoration: BoxDecoration(
           color: kLightGrayColor,
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(8.0.r),
           border: Border.all(
             color: kGreyColor2,
-            width: 0.5,
+            width: 0.5.w,
           ),
         ),
         child: Column(
@@ -64,18 +65,18 @@ class _RecordCardState extends State<RecordCard> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(widget.initial,style: widget.titleStyle.copyWith(fontSize: 18),
+                TextWidget(widget.initial,style: widget.titleStyle.copyWith(fontSize: 18),
                 ),
-                if (widget.withSymbol)  TurkishSymbol(width: (18.r), height: (18.r),color: widget.titleStyle.color,),
-                Text(
+                if (widget.withSymbol)  TurkishSymbol(width: (18.w), height: (18.h),color: widget.titleStyle.color,),
+                TextWidget(
                   widget.title,
-                  style: widget.titleStyle.copyWith(fontSize: 18.sp),
+                  style: widget.titleStyle.copyWith(fontSize: 18),
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
-            const SizedBox(height: 8.0),
-            Text(widget.subtitle,
+             SizedBox(height: 8.0.h),
+            TextWidget(widget.subtitle,
                 style: kDefaultTextStyle.copyWith(fontSize: 12)),
           ],
         ),
@@ -115,7 +116,7 @@ class _RecordCardState extends State<RecordCard> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        TextWidget(
                           widget.subtitle,
                           style: kTitleTextStyle,
                         ),

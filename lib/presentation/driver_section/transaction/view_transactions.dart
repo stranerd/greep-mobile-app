@@ -17,6 +17,7 @@ import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/presentation/widgets/driver_selector_widget.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
 import 'package:grip/presentation/widgets/submit_button.dart';
+import 'package:grip/presentation/widgets/text_widget.dart';
 import 'package:grip/presentation/widgets/turkish_symbol.dart';
 import 'package:intl/intl.dart';
 
@@ -99,11 +100,11 @@ class _TransactionViewState extends State<TransactionView> {
                         children: [
                           driverState is! DriversStateManager ? Align(
                             alignment:Alignment.center,
-                            child: Text(
+                            child: TextWidget(
                               'Transactions',
                               style: AppTextStyles.blackSizeBold16,
                             ),
-                          ): Text(
+                          ): TextWidget(
                             driverState.selectedUser == currentUser() ?'Your transactions': "${driverState.selectedUser.firstName} transactions",
                             style: AppTextStyles.blackSizeBold16,
                           ),
@@ -154,7 +155,7 @@ class _TransactionViewState extends State<TransactionView> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
+                                      TextWidget(
                                         DateFormat(
                                                 "${DateFormat.ABBR_MONTH} ${DateFormat.YEAR}")
                                             .format(e.transactions.isEmpty
@@ -165,35 +166,35 @@ class _TransactionViewState extends State<TransactionView> {
                                       Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Text(
+                                          TextWidget(
                                             "Income: ",
                                             style: AppTextStyles.blackSize10,
                                           ),
                                           TurkishSymbol(width: 8,height: 8,color: AppTextStyles.blackSize10.color,),
-                                          Text(e.income.toMoney,style: AppTextStyles.blackSize10,)
+                                          TextWidget(e.income.toMoney,style: AppTextStyles.blackSize10,)
                                         ],
                                       ),
                                       Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Text(
+                                          TextWidget(
                                             "Trips: ${e.tripAmount == 0 ? "":"+"}",
                                             style: AppTextStyles.greenSize10,
                                           ),
                                           TurkishSymbol(width: 8,height: 8,color: AppTextStyles.greenSize10.color,),
-                                          Text(e.tripAmount.toMoney,style: AppTextStyles.greenSize10,)
+                                          TextWidget(e.tripAmount.toMoney,style: AppTextStyles.greenSize10,)
 
                                         ],
                                       ),
                                       Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Text(
+                                          TextWidget(
                                             "Expenses: ${e.expenseAmount == 0 ? "":"-"}",
                                             style: AppTextStyles.redSize10,
                                           ),
                                           TurkishSymbol(width: 8,height: 8,color: AppTextStyles.redSize10.color,),
-                                          Text(e.expenseAmount.toMoney,style: AppTextStyles.redSize10,)
+                                          TextWidget(e.expenseAmount.toMoney,style: AppTextStyles.redSize10,)
 
                                         ],
                                       ),
@@ -227,7 +228,7 @@ class _TransactionViewState extends State<TransactionView> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(
+                                        TextWidget(
                                           "From",
                                           style: AppTextStyles.blackSize14,
                                         ),
@@ -243,7 +244,7 @@ class _TransactionViewState extends State<TransactionView> {
                                                   BorderRadius.circular(8),
                                               color: AppColors.lightGray,
                                             ),
-                                            child: Text(
+                                            child: TextWidget(
                                               from == null
                                                   ? "Select Date..."
                                                   : DateFormat(
@@ -263,7 +264,7 @@ class _TransactionViewState extends State<TransactionView> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(
+                                        TextWidget(
                                           "To",
                                           style: AppTextStyles.blackSize14,
                                         ),
@@ -279,7 +280,7 @@ class _TransactionViewState extends State<TransactionView> {
                                                   BorderRadius.circular(8),
                                               color: AppColors.lightGray,
                                             ),
-                                            child: Text(
+                                            child: TextWidget(
                                               to == null
                                                   ? "Select Date..."
                                                   : DateFormat(

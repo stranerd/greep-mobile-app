@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/presentation/widgets/text_widget.dart';
 
 import '../../../utils/constants/app_styles.dart';
 
@@ -24,11 +26,11 @@ class SettingsHomeItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          SvgPicture.asset(icon),
-          const SizedBox(width: 20.0),
-          Text(title, style: AppTextStyles.blackSize16),
+          SvgPicture.asset(icon, width: 18.w, height: 18.w,),
+           SizedBox(width: 20.0.w),
+          TextWidget(title, style: AppTextStyles.blackSize16),
           const Spacer(),
-          const Icon(Icons.arrow_forward_ios, size: 16),
+           Icon(Icons.arrow_forward_ios, size: 16.r),
         ],
       ),
     );

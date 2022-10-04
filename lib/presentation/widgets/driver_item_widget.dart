@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/presentation/widgets/text_widget.dart';
 
 class DriverItemWidget extends StatelessWidget {
   final String name;
@@ -20,24 +22,24 @@ class DriverItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: kDefaultSpacing * 0.25),
+      padding:  EdgeInsets.symmetric(horizontal: (kDefaultSpacing * 0.25).w),
       child: Column(
         children: [
           Container(
-            height: 55,
-            width: 55,
+            height: 55.h,
+            width: 55.w,
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: CachedNetworkImageProvider(asset),
                     fit: BoxFit.cover),
                 shape: BoxShape.circle,
                 // borderRadius: isSelected ? BorderRadius.circular(kDefaultSpacing): null,
-                border: isSelected ? Border.all(width: 2,color: textColor == kBlackColor ? kBlackColor : kGreenColor) : null),
+                border: isSelected ? Border.all(width: 2.w,color: textColor == kBlackColor ? kBlackColor : kGreenColor) : null),
           ),
-          const SizedBox(
-            height: 4.0,
+           SizedBox(
+            height: 4.0.h,
           ),
-          Text(
+          TextWidget(
             name,
             style: isSelected
                 ? kBoldTextStyle2.copyWith(

@@ -14,6 +14,7 @@ import 'package:grip/application/user/utils/get_current_user.dart';
 import 'package:grip/commons/money.dart';
 import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/customer/customer.dart';
+import 'package:grip/presentation/widgets/text_widget.dart';
 import 'package:grip/presentation/widgets/transaction_balance_widget.dart';
 
 import '../../../utils/constants/app_colors.dart';
@@ -71,7 +72,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                 size: 16,
               ),
               color: AppColors.black),
-          title: Text(
+          title: TextWidget(
             'Customer Details',
             style: AppTextStyles.blackSizeBold16,
           ),
@@ -79,25 +80,25 @@ class _CustomerDetailsState extends State<CustomerDetails> {
           elevation: 0.0,
         ),
         body: Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+          padding:  EdgeInsets.fromLTRB(16.0.r, 16.0.r, 16.0.r, 0.0),
           child: SafeArea(
             child: ListView(
               shrinkWrap: true,
               physics: const ScrollPhysics(),
               children: [
-                Text(
+                TextWidget(
                   _customerSummary.name.capitalize ?? "",
                   style: AppTextStyles.blackSizeBold16,
                 ),
-                const SizedBox(
-                  height: 16.0,
+                 SizedBox(
+                  height: 16.0.h,
                 ),
-                Text(
+                TextWidget(
                   "Account",
                   style: AppTextStyles.blackSizeBold12,
                 ),
-                const SizedBox(
-                  height: 8.0,
+                 SizedBox(
+                  height: 8.0.h,
                 ),
                 LayoutBuilder(builder: (context, constraints) {
                   return Row(
@@ -133,7 +134,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                   );
                 }),
                 kVerticalSpaceRegular,
-                Text("Transaction history", style: AppTextStyles.blackSizeBold12),
+                TextWidget("Transaction history", style: AppTextStyles.blackSizeBold12),
                 const SizedBox(
                   height: 8.0,
                 ),

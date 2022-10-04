@@ -303,9 +303,6 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     for (var driver in driverCommissions) {
       List<Transaction> driverTransactions =
           _transactions[driver.driverId] ?? [];
-      if (driverTransactions.isEmpty){
-        return {DateTime.now(): CommissionSummary.Zero()};
-      }
       driverTransactions.forEach((element) {
         var time = DateTime(element.timeAdded.year, element.timeAdded.month,
             element.timeAdded.day);
@@ -353,10 +350,6 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
       List<Transaction> driverTransactions =
           _transactions[driver.driverId] ?? [];
 
-      if (driverTransactions.isEmpty){
-        return {DateTime.now(): CommissionSummary.Zero()};
-
-      }
       driverTransactions.forEach((element) {
         var time = DateTime(
           element.timeAdded.year,

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart' as g;
 import 'package:get/get.dart';
@@ -23,6 +24,7 @@ import 'package:grip/presentation/driver_section/widgets/transaction_interval_su
 import 'package:grip/presentation/widgets/customer_transaction_list.dart';
 import 'package:grip/presentation/widgets/driver_selector_widget.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
+import 'package:grip/presentation/widgets/text_widget.dart';
 import 'package:grip/utils/constants/app_colors.dart';
 import 'package:grip/utils/constants/app_styles.dart';
 import 'package:intl/intl.dart';
@@ -102,7 +104,7 @@ class _HomePageState extends State<HomePage> {
                                     kVerticalSpaceMedium,
                                     ListTile(
                                       contentPadding: EdgeInsets.zero,
-                                      title: Text("Today",
+                                      title: TextWidget("Today",
                                           style: kDefaultTextStyle.copyWith(
                                             fontSize: 13,
                                             fontWeight: FontWeight.bold
@@ -112,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                                           g.Get.to(() => const ViewAllRecords(),
                                               transition: g.Transition.fadeIn);
                                         },
-                                        child: Text("view all",
+                                        child: TextWidget("view all",
                                             style: AppTextStyles.blackSize12),
                                       ),
                                     ),
@@ -127,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                                     ListTile(
                                       contentPadding:
                                           const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                      title: Text("Yesterday",
+                                      title: TextWidget("Yesterday",
                                           style: kDefaultTextStyle.copyWith(
                                               fontSize: 13,
                                               fontWeight: FontWeight.bold
@@ -137,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                                           g.Get.to(() => const ViewAllRecords(),
                                               transition: g.Transition.fadeIn);
                                         },
-                                        child: Text("view all",
+                                        child: TextWidget("view all",
                                             style: AppTextStyles.blackSize12),
                                       ),
                                     ),
@@ -164,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                                     ListTile(
                                       contentPadding:
                                           const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                      title: Text("Customers",
+                                      title: TextWidget("Customers",
                                           style: kDefaultTextStyle.copyWith(
                                               fontSize: 13,
                                               fontWeight: FontWeight.bold
@@ -178,7 +180,7 @@ class _HomePageState extends State<HomePage> {
                                                       const CustomerView(withBackButton: true)),
                                             );
                                           },
-                                          child: Text("view all",
+                                          child: TextWidget("view all",
                                               style:
                                                   AppTextStyles.blackSize12)),
                                     ),
@@ -187,7 +189,7 @@ class _HomePageState extends State<HomePage> {
                                     ListTile(
                                       contentPadding:
                                           const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                      title: Text("Transaction history",
+                                      title: TextWidget("Transaction history",
                                           style: kDefaultTextStyle.copyWith(
                                               fontSize: 13,
                                               fontWeight: FontWeight.bold
@@ -199,7 +201,7 @@ class _HomePageState extends State<HomePage> {
                                               arguments: {"showAppBar": true},
                                               transition: g.Transition.fadeIn);
                                         },
-                                        child: Text("view all",
+                                        child: TextWidget("view all",
                                             style: AppTextStyles.blackSize12),
                                       ),
                                     ),
@@ -215,12 +217,12 @@ class _HomePageState extends State<HomePage> {
                                         separatorBuilder: (_, __) => Row(
                                           children: [
                                             SizedBox(
-                                              width: 70,
+                                              width: 70.w,
                                             ),
                                             Expanded(
                                               child: Container(
                                                 width: Get.width * 0.7,
-                                                height: 4,
+                                                height: 4.h,
                                                 decoration: const BoxDecoration(
                                                     color: AppColors.lightGray),
                                               ),
@@ -250,11 +252,11 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Positioned(
                             top: 0,
-                            width: g.Get.width,
+                            width: 1.sw,
                             child: Container(
-                              width: g.Get.width,
-                              height: driverState is DriversStateDriver ? 215 : ((driverState is DriversStateFetched &&
-                                  driverState.selectedUser == currentUser()) ? 270: 180),
+                              width: 1.sw,
+                              height: driverState is DriversStateDriver ? 215.h : ((driverState is DriversStateFetched &&
+                                  driverState.selectedUser == currentUser()) ? 270.h: 180.h),
                               decoration: const BoxDecoration(
                                 color: kWhiteColor,
                               ),
@@ -266,10 +268,10 @@ class _HomePageState extends State<HomePage> {
                                     children: [
                                       Container(
                                         color: kBlackColor,
-                                        height: driverState is DriversStateDriver ? 190 : ((driverState is DriversStateFetched &&
-                                            driverState.selectedUser == currentUser()) ? 245: 180),
-                                        width: Get.width,
-                                        padding: const EdgeInsets.symmetric(horizontal: kDefaultSpacing,vertical: kDefaultSpacing * 0.5,),
+                                        height: driverState is DriversStateDriver ? 190.h : ((driverState is DriversStateFetched &&
+                                            driverState.selectedUser == currentUser()) ? 245.h: 180.h),
+                                        width: 1.sw,
+                                        padding:  EdgeInsets.symmetric(horizontal: kDefaultSpacing.w,vertical: (kDefaultSpacing * 0.5).h,),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -290,7 +292,7 @@ class _HomePageState extends State<HomePage> {
                                                             const EdgeInsets
                                                                     .fromLTRB(
                                                                 0, 0, 0, 0),
-                                                        title: Text(
+                                                        title: TextWidget(
                                                           DateFormat(
                                                                   "${DateFormat.ABBR_WEEKDAY}, ${DateFormat.ABBR_MONTH} ${DateFormat.DAY}")
                                                               .format(DateTime
@@ -298,7 +300,7 @@ class _HomePageState extends State<HomePage> {
                                                           style: AppTextStyles
                                                               .whiteSize12,
                                                         ),
-                                                        subtitle: Text(
+                                                        subtitle: TextWidget(
                                                             "Hi ${userState is UserStateFetched ? userState.user.firstName : "!"}",
                                                             style:
                                                                 kBoldWhiteTextStyle),
@@ -320,11 +322,11 @@ class _HomePageState extends State<HomePage> {
                                                                         .photoUrl
                                                                     : ""),
                                                             child:
-                                                                const Text(""),
+                                                                const TextWidget(""),
                                                           ),
                                                         ),
                                                       )
-                                                    : Text(
+                                                    : TextWidget(
                                                         driverState
                                                                 is DriversStateManager
                                                             ? driverState
@@ -344,7 +346,7 @@ class _HomePageState extends State<HomePage> {
                                                         is DriversStateFetched &&
                                                     driverState.selectedUser ==
                                                         currentUser())
-                                                  Text(
+                                                  TextWidget(
                                                         "Add a record",
                                                         style: kBoldWhiteTextStyle.copyWith(
                                                             fontSize:
@@ -356,7 +358,7 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       if ((driverState is DriversStateFetched &&
                                           driverState.selectedUser == currentUser()))Container(
-                                        height: 25,
+                                        height: 25.h,
                                         decoration: const BoxDecoration(
                                             color: kWhiteColor),
                                       )
@@ -368,9 +370,9 @@ class _HomePageState extends State<HomePage> {
                                       width: g.Get.width,
                                       bottom: 0,
                                       child: Container(
-                                        height: 50,
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: kDefaultSpacing),
+                                        height: 50.h,
+                                        padding:  EdgeInsets.symmetric(
+                                            horizontal: kDefaultSpacing.w),
                                         decoration: const BoxDecoration(),
                                         child: LayoutBuilder(
                                             builder: (context, constraints) {
@@ -390,8 +392,8 @@ class _HomePageState extends State<HomePage> {
                                                       0.48,
                                                   svg: SvgPicture.asset(
                                                       "assets/icons/local_taxi.svg",
-                                                      width: 25,
-                                                      height: 25,
+                                                      width: 25.r,
+                                                      height: 25.r,
 
                                                   ),
                                                   title: "Trip",
@@ -410,8 +412,8 @@ class _HomePageState extends State<HomePage> {
                                                       0.48,
                                                   svg: Image.asset(
                                                       "assets/icons/expense.png",
-                                                      width: 22,
-                                                      height: 22),
+                                                      width: 22.r,
+                                                      height: 22.r),
                                                   title: "Expense",
                                                 ),
                                               ),

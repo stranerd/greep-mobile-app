@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/customers/user_customers_cubit.dart';
@@ -12,6 +13,7 @@ import 'package:grip/commons/ui_helpers.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
 import 'package:grip/presentation/widgets/driver_selector_widget.dart';
+import 'package:grip/presentation/widgets/text_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../utils/constants/app_colors.dart';
@@ -71,7 +73,7 @@ class _CustomerViewState extends State<CustomerView> {
             ): null,
             body: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(kDefaultSpacing * 0.5),
+                padding:  EdgeInsets.all((kDefaultSpacing * 0.5).r),
                 child: SafeArea(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,12 +88,12 @@ class _CustomerViewState extends State<CustomerView> {
                               driverState is! DriversStateManager
                                   ? Align(
                                       alignment: Alignment.center,
-                                      child: Text(
+                                      child: TextWidget(
                                         'Customers',
                                         style: AppTextStyles.blackSizeBold16,
                                       ),
                                     )
-                                  : Text(
+                                  : TextWidget(
                                       driverState.selectedUser == currentUser()
                                           ? 'Your customers'
                                           : "${driverState.selectedUser.firstName} customers",
@@ -108,46 +110,46 @@ class _CustomerViewState extends State<CustomerView> {
                           Row(
                             children: [
                               Container(
-                                width: 16.0,
-                                height: 16.0,
+                                width: 16.0.w,
+                                height: 16.0.h,
                                 decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.blue,
                                 ),
                               ),
-                              const SizedBox(width: 8.0),
-                              Text("To collect",
+                               SizedBox(width: 8.0.w),
+                              TextWidget("To collect",
                                   style: AppTextStyles.blackSize12),
                             ],
                           ),
-                          const SizedBox(width: 48.0),
+                           SizedBox(width: 48.0.w),
                           Row(
                             children: [
                               Container(
-                                width: 16.0,
-                                height: 16.0,
+                                width: 16.0.w,
+                                height: 16.0.h,
                                 decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.red,
                                 ),
                               ),
-                              const SizedBox(width: 8.0),
-                              Text("To pay", style: AppTextStyles.blackSize12),
+                               SizedBox(width: 8.0.w),
+                              TextWidget("To pay", style: AppTextStyles.blackSize12),
                             ],
                           ),
-                          const SizedBox(width: 48.0),
+                           SizedBox(width: 48.0.w),
                           Row(
                             children: [
                               Container(
-                                width: 16.0,
-                                height: 16.0,
+                                width: 16.0.w,
+                                height: 16.0.h,
                                 decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.black,
                                 ),
                               ),
-                              const SizedBox(width: 8.0),
-                              Text("Balanced",
+                               SizedBox(width: 8.0.w),
+                              TextWidget("Balanced",
                                   style: AppTextStyles.blackSize12),
                             ],
                           ),
@@ -161,12 +163,12 @@ class _CustomerViewState extends State<CustomerView> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
+                            TextWidget(
                               "Filter",
                               style: kDefaultTextStyle,
                             ),
                             kHorizontalSpaceTiny,
-                            const Icon(Icons.sort),
+                             Icon(Icons.sort,size: 20.r,),
                           ],
                         ),
                       ),
@@ -189,7 +191,7 @@ class _CustomerViewState extends State<CustomerView> {
                             items: debtTypes
                                 .map((e) => DropdownMenuItem(
                                       value: e,
-                                      child: Text(
+                                      child: TextWidget(
                                         e == "collect"
                                             ? "To Collect"
                                             : e == "pay"

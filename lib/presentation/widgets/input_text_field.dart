@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/presentation/widgets/text_widget.dart';
 
 class LoginTextField extends StatefulWidget {
   final String title;
@@ -63,9 +65,8 @@ class _LoginTextFieldState extends State<LoginTextField> {
           if (widget.withTitle)
             Column(
               children: [
-                Text(
+                TextWidget(
                   widget.title,
-                  style: kDefaultTextStyle,
                 ),
                 kVerticalSpaceTiny,
               ],
@@ -74,6 +75,7 @@ class _LoginTextFieldState extends State<LoginTextField> {
             onChanged: widget.onChanged,
             minLines: widget.minLines ?? 1,
             maxLines: widget.minLines ?? 1,
+
             keyboardType: widget.inputType,
             controller: widget.customController ?? editingController,
             cursorColor: kPrimaryColor,
@@ -81,6 +83,9 @@ class _LoginTextFieldState extends State<LoginTextField> {
             // style: Theme.of(context).textTheme.bodyText1,
             obscureText: widget.isPassword && isObscure,
             decoration: InputDecoration(
+              hintStyle: kSubtitleTextStyle.copyWith(
+                fontSize: 17.sp
+              ),
                 suffixIcon: widget.isPassword
                     ? IconButton(
                         icon: Icon(
@@ -95,7 +100,7 @@ class _LoginTextFieldState extends State<LoginTextField> {
                 focusedBorder: !widget.withBorder
                     ? InputBorder.none
                     : OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(kDefaultSpacing * 0.75),
+                        borderRadius: BorderRadius.circular((kDefaultSpacing * 0.75).r),
                         borderSide:
                              const BorderSide(color: kGreyColor2, width: 1),
                       ),

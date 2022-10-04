@@ -10,6 +10,7 @@ import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/domain/transaction/transaction.dart';
 import 'package:grip/presentation/driver_section/customer/customer_details.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
+import 'package:grip/presentation/widgets/text_widget.dart';
 import 'package:grip/presentation/widgets/turkish_symbol.dart';
 import 'package:grip/utils/constants/app_colors.dart';
 
@@ -66,20 +67,20 @@ class CustomerCardView extends StatelessWidget {
         },
         child: Container(
           width: double.infinity,
-          height: 50.0,
+          height: 50.0.h,
           decoration: BoxDecoration(
             color: kLightGrayColor,
             border: Border.all(
               color: const Color.fromRGBO(221, 226, 224, 1),
               width: 1.0,
             ),
-            borderRadius: BorderRadius.circular(8.0),
+            borderRadius: BorderRadius.circular(8.0.r),
           ),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+            padding:  EdgeInsets.fromLTRB(16.0.r, 0, 16.0.r, 0),
             child: Row(
               children: [
-                Text(
+                TextWidget(
                   text,
                   style: kDefaultTextStyle,
                 ),
@@ -87,8 +88,8 @@ class CustomerCardView extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    TurkishSymbol(color: subTextStyle.color,height: 10,width: 10,),
-                    Text(
+                    TurkishSymbol(color: subTextStyle.color,height: 11.h,width: 11.w,),
+                    TextWidget(
                       subText,
                       style: subTextStyle,
                     ),

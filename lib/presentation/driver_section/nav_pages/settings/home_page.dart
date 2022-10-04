@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/auth/AuthenticationCubit.dart';
@@ -13,6 +14,7 @@ import 'package:grip/presentation/driver_section/nav_pages/settings/commission/t
 import 'package:grip/presentation/driver_section/widgets/settings_home_item.dart';
 import 'package:grip/presentation/splash/splash.dart';
 import 'package:grip/presentation/widgets/splash_tap.dart';
+import 'package:grip/presentation/widgets/text_widget.dart';
 import 'package:grip/utils/constants/app_styles.dart';
 
 import 'about/about_home.dart';
@@ -38,7 +40,7 @@ class SettingsHome extends StatelessWidget {
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
-          title: Text(
+          title: TextWidget(
             "Settings",
             style: AppTextStyles.blackSizeBold14,
           ),
@@ -46,7 +48,7 @@ class SettingsHome extends StatelessWidget {
           elevation: 0.0,
         ),
         body: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+          padding:  EdgeInsets.fromLTRB(16.r, 0, 16.r, 0),
           child: SafeArea(
             child: BlocBuilder<DriversCubit, DriversState>(
               builder: (context, state) {
@@ -73,7 +75,8 @@ class SettingsHome extends StatelessWidget {
                                   title: "Drivers",
                                   icon: "assets/icons/local_taxi.svg"),
                             ),
-                            kVerticalSpaceSmall,
+                                                           SizedBox(height: 8.h),
+
                           ],
                         );
                       },
@@ -92,7 +95,7 @@ class SettingsHome extends StatelessWidget {
                                     title: "Total Income",
                                     icon: "assets/icons/monetization_on.svg"),
                               ),
-                              const SizedBox(height: 8),
+                               SizedBox(height: 8.h),
                             ],
                           );
                         }
@@ -114,7 +117,7 @@ class SettingsHome extends StatelessWidget {
                                     title: "Commission",
                                     icon: "assets/icons/monetization_on.svg"),
                               ),
-                              const SizedBox(height: 8),
+                               SizedBox(height: 8.h),
                             ],
                           );
                         }
@@ -128,7 +131,7 @@ class SettingsHome extends StatelessWidget {
                       child: const SettingsHomeItem(
                           title: "About", icon: "assets/icons/info.svg"),
                     ),
-                    const SizedBox(height: 8),
+                     SizedBox(height: 8.h),
                     SplashTap(
                       onTap: () {
                         Get.to(() => const ContactUs());
@@ -142,7 +145,7 @@ class SettingsHome extends StatelessWidget {
                     kVerticalSpaceLarge,
                     TextButton(
                         onPressed: signout,
-                        child: Text(
+                        child: TextWidget(
                           "Sign Out",
                           style: kErrorColorTextStyle,
                         ))
