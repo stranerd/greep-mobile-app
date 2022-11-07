@@ -20,10 +20,8 @@ class UserClient {
     Response response;
     try {
       response = await dio.get("users/users/$userId");
-      return ResponseEntity.Data(
-          User.fromServer(response.data));
+      return ResponseEntity.Data(User.fromServer(response.data));
     } on DioError catch (e) {
-
       if (e.type == DioErrorType.connectTimeout) {
         return ResponseEntity.Timeout();
       }
@@ -38,7 +36,7 @@ class UserClient {
               .contains("access token")) {
             print("refreshing token");
             var response =
-            await GetIt.I<AuthenticationService>().refreshToken();
+                await GetIt.I<AuthenticationService>().refreshToken();
             if (response.isError) {
               return ResponseEntity.Error(
                   "An error occurred, please log in again");
@@ -55,8 +53,7 @@ class UserClient {
       } else {
         try {
           message = error["message"];
-        }
-        catch (e) {
+        } catch (e) {
           message = "an error occurred. Try again";
         }
       }
@@ -68,12 +65,14 @@ class UserClient {
     }
   }
 
-  Future<ResponseEntity<List<DriverCommission>>> fetchUserDriverCommissions(String userId) async {
+  Future<ResponseEntity<List<DriverCommission>>> fetchUserDriverCommissions(
+      String userId) async {
     Response response;
     try {
       response = await dio.get("users/users/$userId");
       List<DriverCommission> drivers = [];
-      if (response.data["drivers"]==null || response.data["drivers"].isEmpty){
+      if (response.data["drivers"] == null ||
+          response.data["drivers"].isEmpty) {
         return ResponseEntity.Data(const []);
       }
 
@@ -83,7 +82,6 @@ class UserClient {
 
       return ResponseEntity.Data(drivers);
     } on DioError catch (e) {
-
       if (e.type == DioErrorType.connectTimeout) {
         return ResponseEntity.Timeout();
       }
@@ -98,7 +96,7 @@ class UserClient {
               .contains("access token")) {
             print("refreshing token");
             var response =
-            await GetIt.I<AuthenticationService>().refreshToken();
+                await GetIt.I<AuthenticationService>().refreshToken();
             if (response.isError) {
               return ResponseEntity.Error(
                   "An error occurred, please log in again");
@@ -115,8 +113,7 @@ class UserClient {
       } else {
         try {
           message = error["message"];
-        }
-        catch (e) {
+        } catch (e) {
           message = "an error occurred. Try again";
         }
       }
@@ -130,21 +127,23 @@ class UserClient {
 
   Future<ResponseEntity<List<User>>> fetchUserDrivers(String userId) async {
     Map<String, dynamic> queryParams = {
-      "where[]": {"field":"manager.managerId", "value":userId,},
+      "where[]": {
+        "field": "manager.managerId",
+        "value": userId,
+      },
       "all": "true"
     };
     Response response;
     try {
-      response = await dio.get("users/users",queryParameters: queryParams);
+      response = await dio.get("users/users", queryParameters: queryParams);
       List<User> users = [];
       print(response.data["results"]);
-      response.data["results"].forEach((e){
+      response.data["results"].forEach((e) {
         print(e);
         users.add(User.fromServer(e));
       });
       return ResponseEntity.Data(users);
     } on DioError catch (e) {
-
       if (e.type == DioErrorType.connectTimeout) {
         return ResponseEntity.Timeout();
       }
@@ -159,7 +158,7 @@ class UserClient {
               .contains("access token")) {
             print("refreshing token");
             var response =
-            await GetIt.I<AuthenticationService>().refreshToken();
+                await GetIt.I<AuthenticationService>().refreshToken();
             if (response.isError) {
               return ResponseEntity.Error(
                   "An error occurred, please log in again");
@@ -176,8 +175,7 @@ class UserClient {
       } else {
         try {
           message = error["message"];
-        }
-        catch (e) {
+        } catch (e) {
           message = "an error occurred. Try again";
         }
       }
@@ -189,10 +187,12 @@ class UserClient {
     }
   }
 
-  Future<ResponseEntity> sendOrRemoveDriverRequest(AddDriverRequest request) async {
+  Future<ResponseEntity> sendOrRemoveDriverRequest(
+      AddDriverRequest request) async {
     Response response;
     try {
-      response = await dio.post("users/users/drivers/add", data: request.toJson());
+      response =
+          await dio.post("users/users/drivers/add", data: request.toJson());
       return ResponseEntity.Data(null);
     } on DioError catch (e) {
       if (e.type == DioErrorType.connectTimeout) {
@@ -210,10 +210,9 @@ class UserClient {
               .contains("access token")) {
             print("refreshing token");
             var response =
-            await GetIt.I<AuthenticationService>().refreshToken();
+                await GetIt.I<AuthenticationService>().refreshToken();
             if (response.isError) {
-              return ResponseEntity.Error(
-                  "An error occurred adding driver");
+              return ResponseEntity.Error("An error occurred adding driver");
             } else {
               return sendOrRemoveDriverRequest(request);
             }
@@ -226,7 +225,7 @@ class UserClient {
         message = "An error occurred adding driver. Try again";
       } else {
         try {
-          message = "${error[0]["field"]??""} ${error[0]["message"]}";
+          message = "${error[0]["field"] ?? ""} ${error[0]["message"]}";
         } catch (e) {
           message = "an error occurred. Try again";
         }
@@ -234,16 +233,17 @@ class UserClient {
       return ResponseEntity.Error(message);
     } catch (e) {
       print("Exception $e");
-      return ResponseEntity.Error(
-          "An error occurred adding driver. Try again");
+      return ResponseEntity.Error("An error occurred adding driver. Try again");
     }
   }
 
-  Future<ResponseEntity> acceptOrRejectManager(AcceptManagerRequest request) async {
+  Future<ResponseEntity> acceptOrRejectManager(
+      AcceptManagerRequest request) async {
     print("accept manager request");
     Response response;
     try {
-      response = await dio.post("users/users/managers/accept", data: request.toJson());
+      response =
+          await dio.post("users/users/managers/accept", data: request.toJson());
       return ResponseEntity.Data(null);
     } on DioError catch (e) {
       if (e.type == DioErrorType.connectTimeout) {
@@ -261,10 +261,9 @@ class UserClient {
               .contains("access token")) {
             print("refreshing token");
             var response =
-            await GetIt.I<AuthenticationService>().refreshToken();
+                await GetIt.I<AuthenticationService>().refreshToken();
             if (response.isError) {
-              return ResponseEntity.Error(
-                  "An error occurred adding driver");
+              return ResponseEntity.Error("An error occurred adding driver");
             } else {
               return acceptOrRejectManager(request);
             }
@@ -277,7 +276,7 @@ class UserClient {
         message = "An error occurred adding driver. Try again";
       } else {
         try {
-          message = "${error[0]["field"]??""} ${error[0]["message"]}";
+          message = "${error[0]["field"] ?? ""} ${error[0]["message"]}";
         } catch (e) {
           message = "an error occurred. Try again";
         }
@@ -285,8 +284,7 @@ class UserClient {
       return ResponseEntity.Error(message);
     } catch (e) {
       print("Exception $e");
-      return ResponseEntity.Error(
-          "An error occurred adding driver. Try again");
+      return ResponseEntity.Error("An error occurred adding driver. Try again");
     }
   }
 
@@ -294,7 +292,8 @@ class UserClient {
     print("delete driver request");
     Response response;
     try {
-      response = await dio.post("users/users/drivers/remove", data: jsonEncode({"driverId": driverId}));
+      response = await dio.post("users/users/drivers/remove",
+          data: jsonEncode({"driverId": driverId}));
       return ResponseEntity.Data(null);
     } on DioError catch (e) {
       if (e.type == DioErrorType.connectTimeout) {
@@ -312,10 +311,9 @@ class UserClient {
               .contains("access token")) {
             print("refreshing token");
             var response =
-            await GetIt.I<AuthenticationService>().refreshToken();
+                await GetIt.I<AuthenticationService>().refreshToken();
             if (response.isError) {
-              return ResponseEntity.Error(
-                  "An error occurred adding driver");
+              return ResponseEntity.Error("An error occurred adding driver");
             } else {
               return removeDriver(driverId);
             }
@@ -329,7 +327,7 @@ class UserClient {
         message = "An error occurred adding driver. Try again";
       } else {
         try {
-          message = "${error[0]["field"]??""} ${error[0]["message"]}";
+          message = "${error[0]["field"] ?? ""} ${error[0]["message"]}";
         } catch (e) {
           message = "an error occurred. Try again";
         }
@@ -337,23 +335,23 @@ class UserClient {
       return ResponseEntity.Error(message);
     } catch (e) {
       print("Exception $e");
-      return ResponseEntity.Error(
-          "An error occurred adding driver. Try again");
+      return ResponseEntity.Error("An error occurred adding driver. Try again");
     }
   }
 
-  Future<ResponseEntity<ManagerRequest>> fetchManagerRequests(String userId) async {
+  Future<ResponseEntity<ManagerRequest>> fetchManagerRequests(
+      String userId) async {
     Response response;
     try {
       response = await dio.get("users/users/$userId");
-      Map<String,dynamic> managerRequests = {};
-      if (response.data["managerRequests"]!=null || (response.data["managerRequests"] as List).isNotEmpty){
-        List list  = (response.data["managerRequests"] as List);
-   return ResponseEntity.Data(ManagerRequest.fromServer(list.first));
+      Map<String, dynamic> managerRequests = {};
+      if (response.data["managerRequests"] != null ||
+          (response.data["managerRequests"] as List).isNotEmpty) {
+        List list = (response.data["managerRequests"] as List);
+        return ResponseEntity.Data(ManagerRequest.fromServer(list.first));
       }
       return ResponseEntity.Error("No manager requests");
     } on DioError catch (e) {
-
       if (e.type == DioErrorType.connectTimeout) {
         return ResponseEntity.Timeout();
       }
@@ -368,7 +366,7 @@ class UserClient {
               .contains("access token")) {
             print("refreshing token");
             var response =
-            await GetIt.I<AuthenticationService>().refreshToken();
+                await GetIt.I<AuthenticationService>().refreshToken();
             if (response.isError) {
               return ResponseEntity.Error(
                   "An error occurred, please log in again");
@@ -385,8 +383,7 @@ class UserClient {
       } else {
         try {
           message = error["message"];
-        }
-        catch (e) {
+        } catch (e) {
           message = "an error occurred. Try again";
         }
       }
@@ -419,10 +416,9 @@ class UserClient {
               .contains("access token")) {
             print("refreshing token");
             var response =
-            await GetIt.I<AuthenticationService>().refreshToken();
+                await GetIt.I<AuthenticationService>().refreshToken();
             if (response.isError) {
-              return ResponseEntity.Error(
-                  "An error occurred adding driver");
+              return ResponseEntity.Error("An error occurred adding driver");
             } else {
               return editUser(request);
             }
@@ -436,7 +432,7 @@ class UserClient {
         message = "An error occurred editing fields. Try again";
       } else {
         try {
-          message = "${error[0]["field"]??""} ${error[0]["message"]}";
+          message = "${error[0]["field"] ?? ""} ${error[0]["message"]}";
         } catch (e) {
           message = "an error occurred. Try again";
         }
@@ -449,5 +445,53 @@ class UserClient {
     }
   }
 
+  Future<ResponseEntity> deleteUser() async {
+    Response response;
+    try {
+      response = await dio.delete("auth/user");
+      return ResponseEntity.Data(null);
+    } on DioError catch (e) {
+      if (e.type == DioErrorType.connectTimeout) {
+        return ResponseEntity.Timeout();
+      }
+      if (e.error is SocketException) {
+        return ResponseEntity.Socket();
+      }
 
+      if (e.type == DioErrorType.response) {
+        try {
+          if (e.response!.data[0]["message"]
+              .toString()
+              .toLowerCase()
+              .contains("access token")) {
+            print("refreshing token");
+            var response =
+                await GetIt.I<AuthenticationService>().refreshToken();
+            if (response.isError) {
+              return ResponseEntity.Error("An error occurred adding driver");
+            } else {
+              return deleteUser();
+            }
+          }
+        } catch (_) {}
+      }
+      dynamic error = e.response!.data;
+      print(error);
+      String message = "";
+      if (error == null) {
+        message = "An error occurred deleting your account. Try again";
+      } else {
+        try {
+          message = "${error[0]["field"] ?? ""} ${error[0]["message"]}";
+        } catch (e) {
+          message = "an error occurred. Try again";
+        }
+      }
+      return ResponseEntity.Error(message);
+    } catch (e) {
+      print("Exception $e");
+      return ResponseEntity.Error(
+          "An error occurred occurred deleting your account. Try again");
+    }
+  }
 }

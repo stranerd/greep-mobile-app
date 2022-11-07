@@ -50,6 +50,7 @@ class IoC {
         AuthenticationService(authenticationClient: getIt());
     _authenticationCubit = AuthenticationCubit(_authenticationService);
     _userService = UserService(UserClient());
+    getIt.registerSingleton(_userService);
     _userCubit = UserCubit(
         authenticationCubit: _authenticationCubit, userService: _userService);
     _customerService = CustomerService(CustomerClient());

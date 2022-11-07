@@ -50,4 +50,8 @@ class UserService {
     return await _client.editUser(request);
   }
 
+
+  Future<ResponseEntity> deleteUser() async {
+    return await _client.deleteUser();
+  }
 }
