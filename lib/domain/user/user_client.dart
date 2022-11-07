@@ -137,7 +137,9 @@ class UserClient {
     try {
       response = await dio.get("users/users",queryParameters: queryParams);
       List<User> users = [];
+      print(response.data["results"]);
       response.data["results"].forEach((e){
+        print(e);
         users.add(User.fromServer(e));
       });
       return ResponseEntity.Data(users);
@@ -219,7 +221,6 @@ class UserClient {
         } catch (_) {}
       }
       dynamic error = e.response!.data;
-      print(error);
       String message = "";
       if (error == null) {
         message = "An error occurred adding driver. Try again";
@@ -271,7 +272,6 @@ class UserClient {
         } catch (_) {}
       }
       dynamic error = e.response!.data;
-      print(error);
       String message = "";
       if (error == null) {
         message = "An error occurred adding driver. Try again";

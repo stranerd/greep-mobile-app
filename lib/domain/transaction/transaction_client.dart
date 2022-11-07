@@ -22,9 +22,12 @@ class TransactionClient {
     };
     Response response;
     try {
+      print("fetching transactions");
       response = await dio.get("users/transactions",queryParameters: queryParams);
       List<Transaction> transactions = [];
+      print("transactions ${response.data}");
       response.data["results"].forEach((e) {
+        print("transaction $e");
         transactions.add(Transaction.fromServer(e));
       });
 

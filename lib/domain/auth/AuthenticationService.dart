@@ -1,13 +1,18 @@
+import 'dart:math';
+
 import 'package:flutter/services.dart';
 import 'package:grip/application/auth/AuthStore.dart';
+import 'package:grip/application/auth/request/AppleSigninRequest.dart';
 import 'package:grip/application/auth/request/GoogleSigninRequest.dart';
 import 'package:grip/application/auth/request/LoginRequest.dart';
 
 import 'package:grip/application/auth/request/SignupRequest.dart';
+import 'package:grip/application/auth/response/apple_signin_response.dart';
 import 'package:grip/application/response.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import 'AuthenticationClient.dart';
 
@@ -83,6 +88,50 @@ class AuthenticationService {
     } catch (e) {
       return ResponseEntity.Error("");
     }
+  }
+
+
+  Future<ResponseEntity<AppleSigninResponse>> initiateAppleSignin() async {
+    try {
+      final credential = await SignInWithApple
+          .getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      if (credential.userIdentifier== null || credential.userIdentifier!.isEmpty){
+        return ResponseEntity.Error("Could not sign in with Apple");
+
+      }
+
+      print("state: ${credential.state}, identifier: ${credential
+          .userIdentifier}, email: ${credential.email}, idToken: ${credential
+          .identityToken}, ${credential.givenName}, ${credential
+          .authorizationCode} ");
+      return ResponseEntity.Data(AppleSigninResponse(firstName: credential.givenName??"User",lastName: credential.familyName??"u${Random().nextInt(234)}",email: credential.email ??"",identifier: credential.identityToken!));
+
+    }
+
+    catch (e){
+      return ResponseEntity.Error("Could not sign in with Apple");
+    }
+  }
+
+  Future<ResponseEntity<Map<String,dynamic>>> appleSignin(AppleSigninResponse signInResponse) async {
+    var response = await authenticationClient.appleSignin(AppleSigninRequest(
+        email: signInResponse.email,
+        idToken: signInResponse.identifier,
+        firstName: signInResponse.firstName,
+        lastName: signInResponse.lastName,
+    ));
+    if (response.isError) {
+      googleSignIn.signOut();
+    } else {
+      setToken(response.data);
+    }
+    return response;
   }
 
   Future<bool> logout() async {

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:grip/application/auth/request/AppleSigninRequest.dart';
 import 'package:grip/application/auth/request/GoogleSigninRequest.dart';
 import 'package:grip/application/auth/request/LoginRequest.dart';
 import 'package:grip/application/auth/request/SignupRequest.dart';
@@ -59,7 +60,7 @@ class AuthenticationClient {
         data: request.toJson(),
       );
 
-      print("response from google signin ${response.data}");
+      print("response from google sign in ${response.data}");
       return ResponseEntity.Data({
         "id": response.data["user"]["id"],
         "token": response.data["accessToken"],
@@ -84,6 +85,44 @@ class AuthenticationClient {
           "An error occurred logging you in. Try again");
     }
   }
+
+  Future<ResponseEntity<Map<String,dynamic>>> appleSignin(AppleSigninRequest request) async {
+    print("Apple sign in ${request.toMap()}");
+    final Dio dio = Dio();
+    Response response;
+    try {
+      response = await dio.post(
+          "${baseApi}auth/identities/apple",
+          data: FormData.fromMap(request.toMap()));
+
+
+      print("response from apple sign in ${response.data}");
+      return ResponseEntity.Data({
+        "id": response.data["user"]["id"],
+        "token": response.data["accessToken"],
+        "refreshToken": response.data["refreshToken"],
+      });
+    } on DioError catch (e) {
+      if (e.type == DioErrorType.connectTimeout) {
+        return ResponseEntity.Timeout();
+      }
+      if (e.error is SocketException) {
+        return ResponseEntity.Socket();
+      }
+
+      if (e.type == DioErrorType.response){
+        print("Apple sign in error ${e.response?.data}");
+        return ResponseEntity.Error("There was an error on the server");
+      }
+
+      return ResponseEntity.Error("An error occurred signing in with Apple");
+
+    } catch (e) {
+      print("Exception $e");
+      return ResponseEntity.Error("An error occurred. Please try again");
+    }
+  }
+
 
   Future<ResponseEntity<Map<String, dynamic>>> signup(
       SignUpRequest request) async {

@@ -78,7 +78,6 @@ class OnboardingSlidesStateController extends State<OnboardingSlides> {
       didChangeSlide(pageController.page!.toInt());
     } else
       {
-        debugPrint("end of slide");
       }
 
 

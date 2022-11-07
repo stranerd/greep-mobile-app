@@ -30,17 +30,14 @@ import 'package:grip/presentation/splash/splash.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
-  debugPrint("Starting App");
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
 
   var ioc = IoC();
-  debugPrint("Initialized IOS");
 
   if (Platform.isIOS) {
 
     String serverToken = dotenv.env['FIREBASEOPTIONS_APIKEY']??"";
-    debugPrint("Got Server Token $serverToken");
 
     await Firebase.initializeApp(
       name: "Greep",
@@ -51,12 +48,6 @@ void main() async {
         projectId: "greepio",
       ),
     );
-    // .then((value){
-
-      // print("firebase init value $value");
-    // });
-    debugPrint("Initialized Firebase Apple");
-
   }
   else {
 
@@ -70,7 +61,6 @@ void main() async {
   FCMNotificationService.initialize();
 
   LocalNotificationService.initialize();
-  debugPrint("Init Notifications");
 
   runApp(const MyApp());
 }

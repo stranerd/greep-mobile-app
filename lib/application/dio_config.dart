@@ -14,7 +14,6 @@ requestInterceptors(
   print("$baseApi${options.path}");
   var pref = AuthStore();
   var token = await pref.getAuthToken();
-  print("token $token");
   options.contentType = "application/json";
   if (useRefreshToken){
     options.headers["Refresh-Token"] = "${token["refreshToken"]??""}";

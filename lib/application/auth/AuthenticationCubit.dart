@@ -43,6 +43,27 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     }
   }
 
+  void loginWithApple() async {
+    var response = await authenticationService.initiateAppleSignin();
+    if (response.isError) {
+      print("initiation error");
+      emit(AuthenticationStateError(response.errorMessage!,
+          isConnectionTimeout: response.isConnectionTimeout,
+          isSocket: response.isSocket));
+    } else {
+      print("initiation success");
+      emit(AuthenticationStateLoading());
+      var response2 = await authenticationService.appleSignin(response.data!);
+      if (response2.isError) {
+        emit(AuthenticationStateError(response2.errorMessage!,
+            isConnectionTimeout: response.isConnectionTimeout,
+            isSocket: response.isSocket));
+      } else {
+        emit(AuthenticationStateAuthenticated(token: response2.data?['token']??"", userId: response2.data?["id"]??""));
+      }
+    }
+  }
+
   // Check if authentication is still valid on previous app usage
   Future<bool> checkAuth() async {
     Map<String, dynamic> token = await authStore.getAuthToken();

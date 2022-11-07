@@ -258,8 +258,17 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
                             onTap: () {
                               GetIt.I<AuthenticationCubit>().signinWithGoogle();
                             },
-                            text: "Google",
+                            text: "Continue with Google",
                             icon: "assets/icons/google.png",
+                          ),
+                          kVerticalSpaceRegular,
+                          SocialSigninWidget(
+                            onTap: () {
+
+                              GetIt.I<AuthenticationCubit>().loginWithApple();
+                            },
+                            text: "Continue with Apple",
+                            icon: "assets/icons/apple.png",
                           ),
                           kVerticalSpaceRegular,
                           Column(
