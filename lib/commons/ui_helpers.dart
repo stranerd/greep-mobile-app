@@ -7,11 +7,11 @@ import 'colors.dart';
 const kDefaultSpacing = 16.18;
 
 // horizontal spacing
-const Widget kHorizontalSpaceTiny = SizedBox(width: kDefaultSpacing * 0.333);
-const Widget kHorizontalSpaceSmall = SizedBox(width: kDefaultSpacing * 0.5);
-const Widget kHorizontalSpaceRegular = SizedBox(width: kDefaultSpacing);
-const Widget kHorizontalSpaceMedium = SizedBox(width: kDefaultSpacing * 1.5);
-const Widget kHorizontalSpaceLarge = SizedBox(width: kDefaultSpacing * 2.0);
+ Widget kHorizontalSpaceTiny = SizedBox(width: kDefaultSpacing * 0.333.w);
+ Widget kHorizontalSpaceSmall = SizedBox(width: kDefaultSpacing * 0.5.w);
+ Widget kHorizontalSpaceRegular = SizedBox(width: kDefaultSpacing.w);
+ Widget kHorizontalSpaceMedium = SizedBox(width: kDefaultSpacing * 1.5.w);
+ Widget kHorizontalSpaceLarge = SizedBox(width: kDefaultSpacing * 2.0.w);
 
 // vertical spacing
  Widget kVerticalSpaceTiny = SizedBox(height: (kDefaultSpacing * 0.333).h);

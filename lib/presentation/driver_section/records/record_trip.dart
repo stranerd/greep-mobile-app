@@ -14,6 +14,7 @@ import 'package:grip/domain/transaction/TransactionData.dart';
 import 'package:grip/presentation/widgets/form_input_bg_widget.dart';
 import 'package:grip/presentation/widgets/input_text_field.dart';
 import 'package:grip/presentation/widgets/submit_button.dart';
+import 'package:grip/presentation/widgets/text_widget.dart';
 import 'package:grip/utils/constants/app_colors.dart';
 import 'package:grip/utils/constants/app_styles.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -93,7 +94,7 @@ class _RecordTripState extends State<RecordTrip>
                     size: 16,
                   ),
                   color: AppColors.black),
-              title: Text(
+              title: TextWidget(
                 'Record a trip',
                 style: AppTextStyles.blackSizeBold14,
               ),
@@ -109,7 +110,7 @@ class _RecordTripState extends State<RecordTrip>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      TextWidget(
                         "Customer Name",
                         style: AppTextStyles.blackSize14,
                       ),
@@ -156,7 +157,7 @@ class _RecordTripState extends State<RecordTrip>
                         },
                         itemBuilder: (context, suggestion) {
                           return ListTile(
-                            title: Text(suggestion.toString()),
+                            title: TextWidget(suggestion.toString()),
                           );
                         },
                         onSuggestionSelected: (suggestion) {
@@ -168,7 +169,7 @@ class _RecordTripState extends State<RecordTrip>
                         Row(
                           children: [
                             kHorizontalSpaceSmall,
-                            Text(
+                            TextWidget(
                               "This cannot be empty",
                               style:
                                   kErrorColorTextStyle.copyWith(fontSize: 13),
@@ -177,7 +178,7 @@ class _RecordTripState extends State<RecordTrip>
                         ),
                       kVerticalSpaceRegular,
                       kVerticalSpaceRegular,
-                      Text(
+                      TextWidget(
                         "Date/Time",
                         style: AppTextStyles.blackSize14,
                       ),
@@ -193,7 +194,7 @@ class _RecordTripState extends State<RecordTrip>
                               child: Container(
                                 padding:
                                     const EdgeInsets.all(kDefaultSpacing * 0.5),
-                                height: 50,
+                                height: Get.mediaQuery.orientation == Orientation.landscape ? 120.h :50.h,
                                 alignment: Alignment.centerLeft,
                                 decoration: BoxDecoration(
                                   color: kBorderColor,
@@ -204,7 +205,7 @@ class _RecordTripState extends State<RecordTrip>
                                       : null,
                                   borderRadius: BorderRadius.circular(5),
                                 ),
-                                child: Text(
+                                child: TextWidget(
                                   recordDate == null
                                       ? "Select Date..."
                                       : DateFormat(
@@ -215,9 +216,7 @@ class _RecordTripState extends State<RecordTrip>
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            width: 16.0,
-                          ),
+                          kHorizontalSpaceRegular,
                           GestureDetector(
                             onTap: () {
                               dateError = false;
@@ -232,7 +231,7 @@ class _RecordTripState extends State<RecordTrip>
                                 borderRadius: BorderRadius.circular(8.0),
                                 color: AppColors.black,
                               ),
-                              child: Text(
+                              child: TextWidget(
                                 "Now",
                                 style: AppTextStyles.whiteSize14,
                               ),
@@ -244,17 +243,15 @@ class _RecordTripState extends State<RecordTrip>
                         Row(
                           children: [
                             kHorizontalSpaceSmall,
-                            Text(
+                            TextWidget(
                               "Date cannot be empty",
                               style:
                                   kErrorColorTextStyle.copyWith(fontSize: 13),
                             ),
                           ],
                         ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      Text(
+                      kVerticalSpaceRegular,
+                      TextWidget(
                         "Destination Count",
                         style: AppTextStyles.blackSize14,
                       ),
@@ -273,22 +270,23 @@ class _RecordTripState extends State<RecordTrip>
                               }
                             },
                             child: Container(
-                              width: 50,
+                              width: 50.w,
+                              height: 50.h,
                               padding:
                                   const EdgeInsets.all(kDefaultSpacing * 0.3),
                               decoration: const BoxDecoration(),
-                              child: Text(
+                              child: TextWidget(
                                 "-",
-                                style: kBoldTextStyle.copyWith(fontSize: 20),
+                                style: kBoldTextStyle.copyWith(fontSize: 20.sp),
                               ),
                             ),
                           ),
                           SizedBox(
-                            width: 50,
-                            height: 60,
+                            width: 50.w,
+                            height: 60.h,
                             child: TextField(
                               style: kBoldTextStyle.copyWith(
-                                fontSize: 18
+                                fontSize: 18.sp
                               ),
                               controller: _destinationController,
                               onChanged: (String s) {
@@ -315,13 +313,14 @@ class _RecordTripState extends State<RecordTrip>
                               }
                             },
                             child: Container(
-                              height: 50,
+                              height: 50.h,
+                              width: 50.w,
                               padding:
                                   const EdgeInsets.all(kDefaultSpacing * 0.3),
                               decoration: const BoxDecoration(),
-                              child: Text(
+                              child: TextWidget(
                                 "+",
-                                style: kBoldTextStyle.copyWith(fontSize: 20),
+                                style: kBoldTextStyle.copyWith(fontSize: 20.sp),
                               ),
                             ),
                           ),
@@ -337,7 +336,7 @@ class _RecordTripState extends State<RecordTrip>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Price", style: AppTextStyles.blackSize14),
+                                TextWidget("Price", style: AppTextStyles.blackSize14),
                                 kVerticalSpaceSmall,
                                 LoginTextField(
                                   customController: _priceController,
@@ -357,7 +356,7 @@ class _RecordTripState extends State<RecordTrip>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Paid", style: AppTextStyles.blackSize14),
+                                TextWidget("Paid", style: AppTextStyles.blackSize14),
                                 kVerticalSpaceSmall,
                                 LoginTextField(
                                   customController: _paidController,
@@ -374,16 +373,14 @@ class _RecordTripState extends State<RecordTrip>
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
+                      kVerticalSpaceRegular,
                       Row(
                         children: [
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Discount",
+                                TextWidget("Discount",
                                     style: AppTextStyles.blackSize14),
                                 kVerticalSpaceSmall,
                                 LoginTextField(
@@ -399,7 +396,7 @@ class _RecordTripState extends State<RecordTrip>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Payment Type",
+                                TextWidget("Payment Type",
                                     style: AppTextStyles.blackSize14),
                                 kVerticalSpaceSmall,
                                 FormInputBgWidget(
@@ -408,11 +405,11 @@ class _RecordTripState extends State<RecordTrip>
                                     isExpanded: true,
                                     items: paymentTypes.map((e) {
                                       return DropdownMenuItem<String>(
-                                        child: Text(
+                                        value: e,
+                                        child:  TextWidget(
                                           e,
                                           style: kBoldTextStyle,
                                         ),
-                                        value: e,
                                       );
                                     }).toList(),
                                     value: _paymentType,
@@ -430,10 +427,8 @@ class _RecordTripState extends State<RecordTrip>
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      Text(
+                     kVerticalSpaceRegular,
+                      TextWidget(
                         "Trip Description",
                         style: AppTextStyles.blackSize14,
                       ),
@@ -447,9 +442,7 @@ class _RecordTripState extends State<RecordTrip>
                         },
                         withTitle: false,
                       ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
+                      kVerticalSpaceRegular,
                       SubmitButton(
                           backgroundColor: kGreenColor,
                           isLoading: s is TransactionCrudStateLoading,

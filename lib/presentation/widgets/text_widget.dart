@@ -16,12 +16,12 @@ class TextWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(text, style: style == null ? kDefaultTextStyle.copyWith(
       color: color,
-      fontSize: fontSize == null ? kDefaultSpacing.sp : fontSize!.sp,
+      fontSize: fontSize == null ? kDefaultSpacing : fontSize!.sp,
 
 
     ) : style!.copyWith(
       color: color,
-      fontSize: style!.fontSize == null ? kDefaultSpacing.sp : style!.fontSize!.sp
+      fontSize: style!.fontSize == null ? kDefaultSpacing : style!.fontSize!
     ),
     textAlign: textAlign,
       overflow: overflow,

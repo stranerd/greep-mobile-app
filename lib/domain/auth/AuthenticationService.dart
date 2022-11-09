@@ -90,41 +90,39 @@ class AuthenticationService {
     }
   }
 
-
   Future<ResponseEntity<AppleSigninResponse>> initiateAppleSignin() async {
     try {
-      final credential = await SignInWithApple
-          .getAppleIDCredential(
+      final credential = await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
         ],
       );
 
-      if (credential.userIdentifier== null || credential.userIdentifier!.isEmpty){
+      if (credential.userIdentifier == null ||
+          credential.userIdentifier!.isEmpty) {
         return ResponseEntity.Error("Could not sign in with Apple");
-
       }
 
-      print("state: ${credential.state}, identifier: ${credential
-          .userIdentifier}, email: ${credential.email}, idToken: ${credential
-          .identityToken}, ${credential.givenName}, ${credential
-          .authorizationCode} ");
-      return ResponseEntity.Data(AppleSigninResponse(firstName: credential.givenName??"User",lastName: credential.familyName??"u${Random().nextInt(234)}",email: credential.email ??"",identifier: credential.identityToken!));
-
-    }
-
-    catch (e){
+      print(
+          "state: ${credential.state}, identifier: ${credential.userIdentifier}, email: ${credential.email}, idToken: ${credential.identityToken}, ${credential.givenName}, ${credential.authorizationCode} ");
+      return ResponseEntity.Data(AppleSigninResponse(
+          firstName: credential.givenName ?? "User",
+          lastName: credential.familyName ?? "u${Random().nextInt(234)}",
+          email: credential.email ?? "",
+          identifier: credential.identityToken!));
+    } catch (e) {
       return ResponseEntity.Error("Could not sign in with Apple");
     }
   }
 
-  Future<ResponseEntity<Map<String,dynamic>>> appleSignin(AppleSigninResponse signInResponse) async {
+  Future<ResponseEntity<Map<String, dynamic>>> appleSignin(
+      AppleSigninResponse signInResponse) async {
     var response = await authenticationClient.appleSignin(AppleSigninRequest(
-        email: signInResponse.email,
-        idToken: signInResponse.identifier,
-        firstName: signInResponse.firstName,
-        lastName: signInResponse.lastName,
+      email: signInResponse.email,
+      idToken: signInResponse.identifier,
+      firstName: signInResponse.firstName,
+      lastName: signInResponse.lastName,
     ));
     if (response.isError) {
       googleSignIn.signOut();
@@ -154,7 +152,8 @@ class AuthenticationService {
     var response = await authenticationClient.signup(request);
 
     if (!response.isError) {
-      setToken(response.data!..putIfAbsent("isGoogle", () => false)
+      setToken(response.data!
+        ..putIfAbsent("isGoogle", () => false)
         ..putIfAbsent("password", () => request.password)
         ..putIfAbsent("email", () => request.email));
     }
@@ -194,7 +193,7 @@ class AuthenticationService {
     print("Refreshing token");
     var response = await authenticationClient.refreshToken();
     print("response from refreshing token ${response}");
-    if (!response.isError){
+    if (!response.isError) {
       setToken(response.data);
     }
     return response;
@@ -212,7 +211,9 @@ class AuthenticationService {
     return await authenticationClient.sendResetPasswordCode(email);
   }
 
-  Future<ResponseEntity> confirmPasswordResetChange({required String password,required String token}) async {
-    return await authenticationClient.confirmPasswordResetChange(password: password, token: token);
+  Future<ResponseEntity> confirmPasswordResetChange(
+      {required String password, required String token}) async {
+    return await authenticationClient.confirmPasswordResetChange(
+        password: password, token: token);
   }
 }

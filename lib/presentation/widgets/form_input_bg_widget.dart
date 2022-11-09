@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/route_manager.dart';
 import 'package:grip/commons/colors.dart';
 import 'package:grip/commons/ui_helpers.dart';
 
@@ -11,7 +12,7 @@ class FormInputBgWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         padding: const EdgeInsets.symmetric(vertical: kDefaultSpacing * 0.5, horizontal: kDefaultSpacing),
-    height: 50.h,
+    height: Get.mediaQuery.orientation == Orientation.landscape ? 120.h :  50.h,
     alignment: Alignment.centerLeft,
     decoration: BoxDecoration(
     color: kBorderColor,
