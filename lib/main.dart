@@ -41,7 +41,6 @@ void main() async {
   var ioc = IoC();
 
   if (Platform.isIOS) {
-
     String serverToken = dotenv.env['FIREBASEOPTIONS_APIKEY']??"";
 
     await Firebase.initializeApp(
