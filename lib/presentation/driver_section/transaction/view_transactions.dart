@@ -303,7 +303,7 @@ class _TransactionViewState extends State<TransactionView> {
                                   backgroundColor: kGreenColor,
                                   enabled: from != null && to != null,
                                   onSubmit: (){
-                                g.Get.to(() => Range(
+                                g.Get.to(() => RangeTransactionsScreen(
                                   userId: currentUser().id,
                                   from: from!,
                                   to: to!,

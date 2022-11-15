@@ -45,7 +45,6 @@
 	<string>Greep requires permission to access your photos to allow you add or change a profile photo from your available photos</string>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

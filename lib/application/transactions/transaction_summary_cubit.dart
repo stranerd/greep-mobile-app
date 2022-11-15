@@ -467,6 +467,42 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     return map;
   }
 
+  TransactionSummary getIntervalSummary(List<Transaction> trans){
+    var expenses = trans.where((element) {
+      return element.data.transactionType == TransactionType.expense;
+    });
+
+    num totalExpenses = expenses.isEmpty
+        ? 0
+        : expenses
+        .map((e) => e.amount)
+        .reduce((value, element) => value + element);
+
+
+    var trips = trans.where(
+            (element) => element.data.transactionType == TransactionType.trip);
+    num totalIncome = trans.isEmpty
+        ? 0
+        : trips
+        .map((e) => e.amount)
+        .reduce((value, element) => value + element);
+
+    var tripAmount = trips.isEmpty
+        ? 0
+        : trips
+        .map((e) => e.amount)
+        .reduce((value, element) => element + value);
+
+    return TransactionSummary(
+        income: totalIncome - totalExpenses,
+        tripCount: trips.length,
+        expenseAmount: totalExpenses,
+        tripAmount: tripAmount,
+        expenseCount: expenses.length,
+        transactions: trans);
+
+  }
+
   List<Transaction> filterTransactions(DateTime from, DateTime to) {
     String userId = getSelectedUserId();
     if (_transactions[userId] == null || _transactions[userId]!.isEmpty) {
