@@ -23,16 +23,16 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
-    	<array>
-    		<dict>
-    			<key>CFBundleTypeRole</key>
-    			<string>Editor</string>
-    			<key>CFBundleURLSchemes</key>
-    			<array>
-    				<string>com.googleusercontent.apps.891214249172-t2mpmb5vdg6n1hqvh0qvbbva0iq2q7dd</string>
-    			</array>
-    		</dict>
-    	</array>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.891214249172-t2mpmb5vdg6n1hqvh0qvbbva0iq2q7dd</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -43,6 +43,11 @@
 	<string>Greep requires permission to access your microphone</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Greep requires permission to access your photos to allow you add or change a profile photo from your available photos</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>processing</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

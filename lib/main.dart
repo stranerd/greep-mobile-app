@@ -58,8 +58,12 @@ void main() async {
     await Firebase.initializeApp();
   }
 
-  FirebaseMessaging.instance.getToken().then((value) {});
+  try {
+    FirebaseMessaging.instance.requestPermission();
 
+    FirebaseMessaging.instance.getToken().then((value) {});
+  }
+  catch (_){}
   GestureBinding.instance.resamplingEnabled = true;
 
   FCMNotificationService.initialize();
