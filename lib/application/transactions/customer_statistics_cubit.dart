@@ -156,18 +156,17 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
         _customerTransactions[userId]!.isEmpty) {
       return CustomerSummary.Zero(name);
     }
-    List<Transaction> _transactions = _customerTransactions[userId]!;
-    List<Transaction> _custTransactions = _transactions
+    List<Transaction> custTransactions = _customerTransactions[userId]!
         .where((e) =>
             e.data.transactionType == TransactionType.trip &&
             e.data.customerName!.toLowerCase() == name.toLowerCase())
         .toList();
 
-    var toPayList = _custTransactions.where((element) => element.debt < 0);
-    var toCollectList = _custTransactions.where((element) => element.debt > 0);
+    var toPayList = custTransactions.where((element) => element.debt < 0);
+    var toCollectList = custTransactions.where((element) => element.debt > 0);
     return CustomerSummary(
       name: name,
-      totalPaid: _custTransactions
+      totalPaid: custTransactions
           .map((e) => e.amount)
           .reduce((value, element) => value + element),
       toPay: toPayList.isEmpty ? 0 : toPayList.map((e) => e.debt).reduce((value, element) {
@@ -175,7 +174,7 @@ class CustomerStatisticsCubit extends Cubit<CustomerStatisticsState> {
         element = element;
         return element + value;
       }),
-      transactions: _custTransactions,
+      transactions: custTransactions,
       toCollect:
           toCollectList.isEmpty ? 0 : toCollectList.map((e) => e.debt).reduce((value, element) {
         value = value;

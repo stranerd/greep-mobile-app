@@ -37,10 +37,13 @@ class _CustomerDetailsState extends State<CustomerDetails> {
   late CustomerSummary _customerSummary;
   Customer? customer;
 
+  String filter = "";
+
   @override
   void initState() {
     _customerSummary =
         GetIt.I<CustomerStatisticsCubit>().getCustomerSummary(widget.name);
+
 
     customer = GetIt.I<UserCustomersCubit>().getCustomerByName(widget.name);
     super.initState();
@@ -80,7 +83,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
           elevation: 0.0,
         ),
         body: Padding(
-          padding:  EdgeInsets.fromLTRB(16.0.r, 16.0.r, 16.0.r, 0.0),
+          padding: EdgeInsets.fromLTRB(16.0.r, 16.0.r, 16.0.r, 0.0),
           child: SafeArea(
             child: ListView(
               shrinkWrap: true,
@@ -90,17 +93,18 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                   _customerSummary.name.capitalize ?? "",
                   style: AppTextStyles.blackSizeBold16,
                 ),
-                 SizedBox(
+                SizedBox(
                   height: 16.0.h,
                 ),
                 TextWidget(
                   "Account",
                   style: AppTextStyles.blackSizeBold12,
                 ),
-                 SizedBox(
+                SizedBox(
                   height: 8.0.h,
                 ),
                 LayoutBuilder(builder: (context, constraints) {
+                  print(debt);
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -110,23 +114,29 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                           title: _customerSummary.totalPaid.abs().toMoney,
                           subtitle: "Total paid",
                           withSymbol: true,
+                          onTap: () => _setFilter("total"),
+                          isSelected: filter == "total",
                           titleStyle: AppTextStyles.greenSize16,
                           subtitleStyle: AppTextStyles.blackSize12),
                       RecordCard(
                           initial: "",
                           withSymbol: true,
+                          onTap: () => _setFilter("collect"),
+                          isSelected: filter == "collect",
                           width: constraints.maxWidth * 0.31,
                           title:
-                              "${customer != null ? debt > 0 ? debt.abs().toMoney : 0 : _customerSummary.toPay.abs().toMoney}",
+                              _customerSummary.toCollect.abs().toMoney,
                           subtitle: "To collect",
                           titleStyle: AppTextStyles.blueSize16,
                           subtitleStyle: AppTextStyles.blackSize12),
                       RecordCard(
                           initial: "",
                           withSymbol: true,
+                          onTap: () => _setFilter("pay"),
+                          isSelected: filter == "pay",
                           width: constraints.maxWidth * 0.31,
                           title:
-                              "${customer != null ? debt < 0 ? debt.abs().toMoney : 0 : _customerSummary.toCollect.abs().toMoney}",
+                              _customerSummary.toPay.abs().toMoney,
                           subtitle: "To pay",
                           titleStyle: AppTextStyles.redSize16,
                           subtitleStyle: AppTextStyles.blackSize12),
@@ -134,12 +144,27 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                   );
                 }),
                 kVerticalSpaceRegular,
-                TextWidget("Transaction history", style: AppTextStyles.blackSizeBold12),
-                const SizedBox(
-                  height: 8.0,
+                TextWidget("Transaction history",
+                    style: AppTextStyles.blackSizeBold12),
+                 SizedBox(
+                  height: 8.0.h,
                 ),
                 Column(
-                    children: _customerSummary.transactions
+                    children: _customerSummary.transactions.where((element) {
+                      if (filter.isEmpty || filter == "total"){
+                        return true;
+                      }
+
+                      else if (filter == "pay"){
+                        return element.debt < 0;
+                      }
+
+                      else if (filter == "collect"){
+                        return element.debt > 0;
+                      }
+
+                      return true;
+                    })
                         .map(
                           (e) => Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,5 +186,17 @@ class _CustomerDetailsState extends State<CustomerDetails> {
         ),
       ),
     );
+  }
+
+  _setFilter(String filter) {
+    if (filter == this.filter) {
+      setState(() {
+        this.filter = "";
+      });
+    } else {
+      setState(() {
+        this.filter = filter;
+      });
+    }
   }
 }

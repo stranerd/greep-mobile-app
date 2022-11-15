@@ -244,6 +244,7 @@ class _HomePageState extends State<HomePage> {
                                     }),
                                     kVerticalSpaceLarge,
                                     kVerticalSpaceLarge,
+                                    kVerticalSpaceLarge,
                                     kVerticalSpaceSmall,
                                   ],
                                 ),

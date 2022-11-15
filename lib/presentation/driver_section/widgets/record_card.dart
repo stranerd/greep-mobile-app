@@ -19,8 +19,10 @@ class RecordCard extends StatefulWidget {
     this.withSymbol = false,
     required this.titleStyle,
     required this.initial,
+    this.isSelected = false,
     this.transactions,
     this.centerAlign = true,
+    this.onTap,
     this.width,
     required this.subtitleStyle,
   }) : super(key: key);
@@ -34,6 +36,8 @@ class RecordCard extends StatefulWidget {
   final double? width;
   final TextStyle titleStyle;
   final TextStyle subtitleStyle;
+  final Function? onTap;
+  final bool isSelected;
 
   @override
   State<RecordCard> createState() => _RecordCardState();
@@ -45,12 +49,25 @@ class _RecordCardState extends State<RecordCard> {
     return SplashTap(
       onTap: _openDialog,
       child: Container(
-        padding:  EdgeInsets.all((kDefaultSpacing * 0.75).r),
+        padding: EdgeInsets.all((kDefaultSpacing * 0.75).r),
         height: 80.h,
         width: widget.width ?? 0.31.sw,
         decoration: BoxDecoration(
           color: kLightGrayColor,
           borderRadius: BorderRadius.circular(8.0.r),
+          boxShadow: widget.isSelected
+              ? [
+                  BoxShadow(
+                    color: Colors.grey.shade300,
+                    spreadRadius: 1,
+                    blurRadius: 0.5,
+                    offset: const Offset(
+                      0,
+                      4,
+                    ), // changes position of shadow
+                  ),
+                ]
+              : null,
           border: Border.all(
             color: kGreyColor2,
             width: 0.5.w,
@@ -65,9 +82,16 @@ class _RecordCardState extends State<RecordCard> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextWidget(widget.initial,style: widget.titleStyle.copyWith(fontSize: 18),
+                TextWidget(
+                  widget.initial,
+                  style: widget.titleStyle.copyWith(fontSize: 18),
                 ),
-                if (widget.withSymbol)  TurkishSymbol(width: (18.w), height: (18.h),color: widget.titleStyle.color,),
+                if (widget.withSymbol)
+                  TurkishSymbol(
+                    width: (18.w),
+                    height: (18.h),
+                    color: widget.titleStyle.color,
+                  ),
                 TextWidget(
                   widget.title,
                   style: widget.titleStyle.copyWith(fontSize: 18),
@@ -75,7 +99,7 @@ class _RecordCardState extends State<RecordCard> {
                 ),
               ],
             ),
-             SizedBox(height: 8.0.h),
+            SizedBox(height: 8.0.h),
             TextWidget(widget.subtitle,
                 style: kDefaultTextStyle.copyWith(fontSize: 12)),
           ],
@@ -85,6 +109,11 @@ class _RecordCardState extends State<RecordCard> {
   }
 
   void _openDialog() {
+    if (widget.onTap!=null){
+      widget.onTap!();
+      return;
+    }
+
     List<Transaction> trans = [];
     if (widget.transactions != null) {
       if (widget.subtitle.toLowerCase().contains("trip")) {
@@ -124,7 +153,7 @@ class _RecordCardState extends State<RecordCard> {
                           onTap: () {
                             Get.back();
                           },
-                          child:const Icon(
+                          child: const Icon(
                             Icons.close,
                           ),
                         )

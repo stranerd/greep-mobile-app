@@ -19,5 +19,8 @@ class CustomerSummary {
     return CustomerSummary(name: name, totalPaid: 0, toCollect: 0, toPay: 0, transactions: []);
   }
 
-
+  @override
+  String toString() {
+    return 'CustomerSummary{name: $name, totalPaid: $totalPaid, toCollect: $toCollect, toPay: $toPay}';
+  }
 }
