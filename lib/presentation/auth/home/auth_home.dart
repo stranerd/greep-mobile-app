@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -262,7 +264,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
                             icon: "assets/icons/google.png",
                           ),
                           kVerticalSpaceRegular,
-                          SocialSigninWidget(
+                         if (Platform.isIOS) SocialSigninWidget(
                             onTap: () {
 
                               GetIt.I<AuthenticationCubit>().loginWithApple();
