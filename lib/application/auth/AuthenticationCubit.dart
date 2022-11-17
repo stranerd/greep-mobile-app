@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grip/application/auth/AuthStore.dart';
-import 'package:grip/application/auth/AuthenticationState.dart';
-import 'package:grip/application/auth/request/LoginRequest.dart';
-import 'package:grip/application/auth/request/SignupRequest.dart';
-import 'package:grip/domain/auth/AuthenticationService.dart';
+import 'package:greep/application/auth/AuthStore.dart';
+import 'package:greep/application/auth/AuthenticationState.dart';
+import 'package:greep/application/auth/request/LoginRequest.dart';
+import 'package:greep/application/auth/request/SignupRequest.dart';
+import 'package:greep/domain/auth/AuthenticationService.dart';
 
 class AuthenticationCubit extends Cubit<AuthenticationState> {
   final AuthenticationService authenticationService;

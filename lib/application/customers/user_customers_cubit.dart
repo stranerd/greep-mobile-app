@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:get_it/get_it.dart';
-import 'package:grip/application/transactions/user_transactions_cubit.dart';
-import 'package:grip/application/user/user_cubit.dart';
-import 'package:grip/application/user/utils/get_current_user.dart';
-import 'package:grip/domain/customer/customer.dart';
-import 'package:grip/domain/customer/customer_service.dart';
+import 'package:greep/application/transactions/user_transactions_cubit.dart';
+import 'package:greep/application/user/user_cubit.dart';
+import 'package:greep/application/user/utils/get_current_user.dart';
+import 'package:greep/domain/customer/customer.dart';
+import 'package:greep/domain/customer/customer_service.dart';
 
 part 'user_customers_state.dart';
 class UserCustomersCubit extends Cubit<UserCustomersState> {

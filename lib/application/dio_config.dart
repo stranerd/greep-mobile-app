@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:grip/application/auth/AuthStore.dart';
-import 'package:grip/domain/api.dart';
+import 'package:greep/application/auth/AuthStore.dart';
+import 'package:greep/domain/api.dart';
 
 
 Dio dioClient({bool useRefreshToken = false}) => Dio(BaseOptions(baseUrl: baseApi, connectTimeout: 60000))

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:grip/commons/colors.dart';
-import 'package:grip/commons/ui_helpers.dart';
+import 'package:greep/commons/colors.dart';
+import 'package:greep/commons/ui_helpers.dart';
 
 mixin ScaffoldMessengerService<K extends StatefulWidget> on State<K> {
   static final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();

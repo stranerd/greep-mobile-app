@@ -3,14 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart' as g;
 import 'package:get_it/get_it.dart';
-import 'package:grip/application/driver/drivers_cubit.dart';
-import 'package:grip/commons/colors.dart';
-import 'package:grip/commons/ui_helpers.dart';
-import 'package:grip/domain/user/model/User.dart';
-import 'package:grip/presentation/driver_section/add_driver_screen.dart';
-import 'package:grip/presentation/widgets/driver_item_widget.dart';
-import 'package:grip/presentation/widgets/splash_tap.dart';
-import 'package:grip/utils/constants/app_styles.dart';
+import 'package:greep/application/driver/drivers_cubit.dart';
+import 'package:greep/commons/colors.dart';
+import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/domain/user/model/User.dart';
+import 'package:greep/presentation/driver_section/add_driver_screen.dart';
+import 'package:greep/presentation/widgets/driver_item_widget.dart';
+import 'package:greep/presentation/widgets/splash_tap.dart';
+import 'package:greep/utils/constants/app_styles.dart';
 
 class DriverSelectorRow extends StatefulWidget {
   final bool withWhiteText;

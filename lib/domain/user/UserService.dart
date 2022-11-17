@@ -1,11 +1,11 @@
-import 'package:grip/application/response.dart';
-import 'package:grip/application/driver/request/accept_manager_request.dart';
-import 'package:grip/application/driver/request/add_driver_request.dart';
-import 'package:grip/application/user/request/EditUserRequest.dart';
-import 'package:grip/domain/user/model/User.dart';
-import 'package:grip/domain/user/model/driver_commission.dart';
-import 'package:grip/domain/user/model/manager_request.dart';
-import 'package:grip/domain/user/user_client.dart';
+import 'package:greep/application/response.dart';
+import 'package:greep/application/driver/request/accept_manager_request.dart';
+import 'package:greep/application/driver/request/add_driver_request.dart';
+import 'package:greep/application/user/request/EditUserRequest.dart';
+import 'package:greep/domain/user/model/User.dart';
+import 'package:greep/domain/user/model/driver_commission.dart';
+import 'package:greep/domain/user/model/manager_request.dart';
+import 'package:greep/domain/user/user_client.dart';
 
 class UserService {
   final UserClient _client;

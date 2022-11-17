@@ -3,15 +3,15 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-import 'package:grip/application/dio_config.dart';
-import 'package:grip/application/response.dart';
-import 'package:grip/application/driver/request/accept_manager_request.dart';
-import 'package:grip/application/driver/request/add_driver_request.dart';
-import 'package:grip/application/user/request/EditUserRequest.dart';
-import 'package:grip/domain/auth/AuthenticationService.dart';
-import 'package:grip/domain/user/model/User.dart';
-import 'package:grip/domain/user/model/driver_commission.dart';
-import 'package:grip/domain/user/model/manager_request.dart';
+import 'package:greep/application/dio_config.dart';
+import 'package:greep/application/response.dart';
+import 'package:greep/application/driver/request/accept_manager_request.dart';
+import 'package:greep/application/driver/request/add_driver_request.dart';
+import 'package:greep/application/user/request/EditUserRequest.dart';
+import 'package:greep/domain/auth/AuthenticationService.dart';
+import 'package:greep/domain/user/model/User.dart';
+import 'package:greep/domain/user/model/driver_commission.dart';
+import 'package:greep/domain/user/model/manager_request.dart';
 
 class UserClient {
   final Dio dio = dioClient();

@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-import 'package:grip/application/dio_config.dart';
-import 'package:grip/application/response.dart';
-import 'package:grip/domain/auth/AuthenticationService.dart';
-import 'package:grip/domain/customer/customer.dart';
+import 'package:greep/application/dio_config.dart';
+import 'package:greep/application/response.dart';
+import 'package:greep/domain/auth/AuthenticationService.dart';
+import 'package:greep/domain/customer/customer.dart';
 
 class CustomerClient {
   final dio = dioClient();

@@ -1,9 +1,9 @@
-import 'package:grip/application/response.dart';
-import 'package:grip/application/transactions/request/add_balance_request.dart';
-import 'package:grip/application/transactions/request/add_expense_request.dart';
-import 'package:grip/application/transactions/request/add_trip_request.dart';
-import 'package:grip/domain/transaction/transaction.dart';
-import 'package:grip/domain/transaction/transaction_client.dart';
+import 'package:greep/application/response.dart';
+import 'package:greep/application/transactions/request/add_balance_request.dart';
+import 'package:greep/application/transactions/request/add_expense_request.dart';
+import 'package:greep/application/transactions/request/add_trip_request.dart';
+import 'package:greep/domain/transaction/transaction.dart';
+import 'package:greep/domain/transaction/transaction_client.dart';
 
 class TransactionService {
   final TransactionClient transactionClient;

@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:grip/application/auth/request/AppleSigninRequest.dart';
-import 'package:grip/application/auth/request/GoogleSigninRequest.dart';
-import 'package:grip/application/auth/request/LoginRequest.dart';
-import 'package:grip/application/auth/request/SignupRequest.dart';
-import 'package:grip/application/dio_config.dart';
-import 'package:grip/application/response.dart';
+import 'package:greep/application/auth/request/AppleSigninRequest.dart';
+import 'package:greep/application/auth/request/GoogleSigninRequest.dart';
+import 'package:greep/application/auth/request/LoginRequest.dart';
+import 'package:greep/application/auth/request/SignupRequest.dart';
+import 'package:greep/application/dio_config.dart';
+import 'package:greep/application/response.dart';
 import 'package:http/http.dart' as http;
-import 'package:grip/domain/api.dart';
+import 'package:greep/domain/api.dart';
 
 class AuthenticationClient {
   Future<ResponseEntity<Map<String, dynamic>>> login(

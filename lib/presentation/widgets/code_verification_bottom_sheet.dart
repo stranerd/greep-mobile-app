@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:grip/commons/colors.dart';
-import 'package:grip/commons/ui_helpers.dart';
+import 'package:greep/commons/colors.dart';
+import 'package:greep/commons/ui_helpers.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class CodeVerificationBottomSheet extends StatefulWidget {

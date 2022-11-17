@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:grip/application/auth/AuthenticationCubit.dart';
-import 'package:grip/application/auth/AuthenticationState.dart';
-import 'package:grip/application/user/user_cubit.dart';
-import 'package:grip/domain/user/UserService.dart';
-import 'package:grip/domain/user/model/User.dart';
+import 'package:greep/application/auth/AuthenticationCubit.dart';
+import 'package:greep/application/auth/AuthenticationState.dart';
+import 'package:greep/application/user/user_cubit.dart';
+import 'package:greep/domain/user/UserService.dart';
+import 'package:greep/domain/user/model/User.dart';
 import 'package:meta/meta.dart';
 
 part 'drivers_state.dart';

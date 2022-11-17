@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart' as g;
 import 'package:get_it/get_it.dart';
-import 'package:grip/application/transactions/customer_statistics_cubit.dart';
-import 'package:grip/commons/colors.dart';
-import 'package:grip/commons/money.dart';
-import 'package:grip/commons/ui_helpers.dart';
-import 'package:grip/domain/transaction/TransactionData.dart';
-import 'package:grip/domain/transaction/transaction.dart';
-import 'package:grip/presentation/driver_section/customer/customer_details.dart';
-import 'package:grip/presentation/widgets/splash_tap.dart';
-import 'package:grip/presentation/widgets/text_widget.dart';
-import 'package:grip/presentation/widgets/turkish_symbol.dart';
-import 'package:grip/utils/constants/app_colors.dart';
+import 'package:greep/application/transactions/customer_statistics_cubit.dart';
+import 'package:greep/commons/colors.dart';
+import 'package:greep/commons/money.dart';
+import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/domain/transaction/TransactionData.dart';
+import 'package:greep/domain/transaction/transaction.dart';
+import 'package:greep/presentation/driver_section/customer/customer_details.dart';
+import 'package:greep/presentation/widgets/splash_tap.dart';
+import 'package:greep/presentation/widgets/text_widget.dart';
+import 'package:greep/presentation/widgets/turkish_symbol.dart';
+import 'package:greep/utils/constants/app_colors.dart';
 
 class CustomerCardView extends StatelessWidget {
   const CustomerCardView({

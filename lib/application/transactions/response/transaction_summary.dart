@@ -1,4 +1,4 @@
-import 'package:grip/domain/transaction/transaction.dart';
+import 'package:greep/domain/transaction/transaction.dart';
 
 class TransactionSummary {
   num income;

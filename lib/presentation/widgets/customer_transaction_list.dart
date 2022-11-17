@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:grip/application/customers/user_customers_cubit.dart';
-import 'package:grip/application/transactions/customer_statistics_cubit.dart';
-import 'package:grip/domain/transaction/transaction.dart';
-import 'package:grip/presentation/driver_section/widgets/customer_record_card.dart';
-import 'package:grip/presentation/driver_section/widgets/empty_result_widget.dart';
-import 'package:grip/utils/constants/app_styles.dart';
+import 'package:greep/application/customers/user_customers_cubit.dart';
+import 'package:greep/application/transactions/customer_statistics_cubit.dart';
+import 'package:greep/domain/transaction/transaction.dart';
+import 'package:greep/presentation/driver_section/widgets/customer_record_card.dart';
+import 'package:greep/presentation/driver_section/widgets/empty_result_widget.dart';
+import 'package:greep/utils/constants/app_styles.dart';
 
 class CustomerTransactionListWidget extends StatelessWidget {
   const CustomerTransactionListWidget({Key? key}) : super(key: key);

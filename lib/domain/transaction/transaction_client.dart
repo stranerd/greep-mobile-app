@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-import 'package:grip/application/dio_config.dart';
-import 'package:grip/application/response.dart';
-import 'package:grip/application/transactions/request/add_balance_request.dart';
-import 'package:grip/application/transactions/request/add_expense_request.dart';
-import 'package:grip/application/transactions/request/add_trip_request.dart';
-import 'package:grip/domain/auth/AuthenticationService.dart';
-import 'package:grip/domain/transaction/transaction.dart';
+import 'package:greep/application/dio_config.dart';
+import 'package:greep/application/response.dart';
+import 'package:greep/application/transactions/request/add_balance_request.dart';
+import 'package:greep/application/transactions/request/add_expense_request.dart';
+import 'package:greep/application/transactions/request/add_trip_request.dart';
+import 'package:greep/domain/auth/AuthenticationService.dart';
+import 'package:greep/domain/transaction/transaction.dart';
 
 class TransactionClient {
   final Dio dio = dioClient();

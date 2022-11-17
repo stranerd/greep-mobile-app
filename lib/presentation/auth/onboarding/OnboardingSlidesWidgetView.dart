@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:grip/commons/colors.dart';
-import 'package:grip/commons/ui_helpers.dart';
-import 'package:grip/commons/widget_view_pattern/WidgetView.dart';
-import 'package:grip/presentation/widgets/submit_button.dart';
+import 'package:greep/commons/colors.dart';
+import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/commons/widget_view_pattern/WidgetView.dart';
+import 'package:greep/presentation/widgets/submit_button.dart';
 
 import 'OnboardingSlides.dart';
 

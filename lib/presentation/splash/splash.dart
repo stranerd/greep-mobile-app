@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:grip/application/auth/AuthenticationCubit.dart';
-import 'package:grip/commons/colors.dart';
-import 'package:grip/presentation/auth/home/auth_home.dart';
-import 'package:grip/presentation/auth/onboarding/OnboardingSlides.dart';
-import 'package:grip/presentation/driver_section/home_page.dart';
-import 'package:grip/presentation/driver_section/nav_pages/nav_bar/nav_bar_view.dart';
-import 'package:grip/presentation/splash/authentication_splash.dart';
+import 'package:greep/application/auth/AuthenticationCubit.dart';
+import 'package:greep/commons/colors.dart';
+import 'package:greep/presentation/auth/home/auth_home.dart';
+import 'package:greep/presentation/auth/onboarding/OnboardingSlides.dart';
+import 'package:greep/presentation/driver_section/home_page.dart';
+import 'package:greep/presentation/driver_section/nav_pages/nav_bar/nav_bar_view.dart';
+import 'package:greep/presentation/splash/authentication_splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {

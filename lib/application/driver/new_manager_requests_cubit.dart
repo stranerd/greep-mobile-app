@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grip/application/user/user_cubit.dart';
-import 'package:grip/domain/firebase/Firebase_service.dart';
-import 'package:grip/domain/user/model/manager_request.dart';
-import 'package:grip/domain/user/model/manager_request.dart';
+import 'package:greep/application/user/user_cubit.dart';
+import 'package:greep/domain/firebase/Firebase_service.dart';
+import 'package:greep/domain/user/model/manager_request.dart';
+import 'package:greep/domain/user/model/manager_request.dart';
 
 part 'new_manager_requests_state.dart';
 

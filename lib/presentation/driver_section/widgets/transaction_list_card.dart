@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart' as g;
-import 'package:grip/commons/colors.dart';
-import 'package:grip/commons/money.dart';
-import 'package:grip/commons/ui_helpers.dart';
-import 'package:grip/domain/transaction/TransactionData.dart';
-import 'package:grip/domain/transaction/transaction.dart';
-import 'package:grip/presentation/driver_section/transaction/transaction_details.dart';
-import 'package:grip/presentation/widgets/text_widget.dart';
-import 'package:grip/presentation/widgets/turkish_symbol.dart';
-import 'package:grip/utils/constants/app_colors.dart';
-import 'package:grip/utils/constants/app_styles.dart';
-import 'package:grip/utils/constants/svg_icon.dart';
+import 'package:greep/commons/colors.dart';
+import 'package:greep/commons/money.dart';
+import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/domain/transaction/TransactionData.dart';
+import 'package:greep/domain/transaction/transaction.dart';
+import 'package:greep/presentation/driver_section/transaction/transaction_details.dart';
+import 'package:greep/presentation/widgets/text_widget.dart';
+import 'package:greep/presentation/widgets/turkish_symbol.dart';
+import 'package:greep/utils/constants/app_colors.dart';
+import 'package:greep/utils/constants/app_styles.dart';
+import 'package:greep/utils/constants/svg_icon.dart';
 import 'package:intl/intl.dart';
 
 class TransactionListCard extends StatelessWidget {

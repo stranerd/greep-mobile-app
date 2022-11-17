@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:grip/domain/transaction/TransactionData.dart';
+import 'package:greep/domain/transaction/TransactionData.dart';
 
 class Transaction extends Equatable {
   final String driverId;

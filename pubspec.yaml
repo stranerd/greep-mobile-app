@@ -1,4 +1,4 @@
-name: grip
+name: greep
 description: A new Flutter project.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -50,6 +50,7 @@ dependencies:
   cloud_firestore: any
   equatable: ^2.0.3
   cupertino_icons: ^1.0.2
+  fl_chart: ^0.55.2
   flutter_dotenv: ^5.0.2
   flutter_typeahead: ^4.0.0
   firebase_core:

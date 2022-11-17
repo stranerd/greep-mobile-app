@@ -1,14 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/services.dart';
-import 'package:grip/application/auth/AuthStore.dart';
-import 'package:grip/application/auth/request/AppleSigninRequest.dart';
-import 'package:grip/application/auth/request/GoogleSigninRequest.dart';
-import 'package:grip/application/auth/request/LoginRequest.dart';
+import 'package:greep/application/auth/AuthStore.dart';
+import 'package:greep/application/auth/request/AppleSigninRequest.dart';
+import 'package:greep/application/auth/request/GoogleSigninRequest.dart';
+import 'package:greep/application/auth/request/LoginRequest.dart';
 
-import 'package:grip/application/auth/request/SignupRequest.dart';
-import 'package:grip/application/auth/response/apple_signin_response.dart';
-import 'package:grip/application/response.dart';
+import 'package:greep/application/auth/request/SignupRequest.dart';
+import 'package:greep/application/auth/response/apple_signin_response.dart';
+import 'package:greep/application/response.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';

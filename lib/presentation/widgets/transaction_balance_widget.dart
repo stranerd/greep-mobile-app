@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:grip/application/transactions/transaction_crud_cubit.dart';
-import 'package:grip/commons/Utils/input_validator.dart';
-import 'package:grip/commons/scaffold_messenger_service.dart';
-import 'package:grip/commons/ui_helpers.dart';
-import 'package:grip/domain/transaction/transaction.dart';
-import 'package:grip/presentation/widgets/input_text_field.dart';
-import 'package:grip/presentation/widgets/submit_button.dart';
-import 'package:grip/presentation/widgets/text_widget.dart';
-import 'package:grip/utils/constants/app_styles.dart';
+import 'package:greep/application/transactions/transaction_crud_cubit.dart';
+import 'package:greep/commons/Utils/input_validator.dart';
+import 'package:greep/commons/scaffold_messenger_service.dart';
+import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/domain/transaction/transaction.dart';
+import 'package:greep/presentation/widgets/input_text_field.dart';
+import 'package:greep/presentation/widgets/submit_button.dart';
+import 'package:greep/presentation/widgets/text_widget.dart';
+import 'package:greep/utils/constants/app_styles.dart';
 
 class TransactionBalanceWidget extends StatefulWidget {
   const TransactionBalanceWidget({Key? key, required this.transaction, this.isColumn = false})

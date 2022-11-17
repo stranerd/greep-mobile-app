@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:grip/domain/auth/AuthenticationService.dart';
+import 'package:greep/domain/auth/AuthenticationService.dart';
 import 'package:meta/meta.dart';
 
 part 'reset_password_state.dart';

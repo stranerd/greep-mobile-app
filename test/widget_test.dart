@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:grip/domain/user/UserService.dart';
-import 'package:grip/domain/user/user_client.dart';
+import 'package:greep/domain/user/UserService.dart';
+import 'package:greep/domain/user/user_client.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockUserService extends Mock implements UserService {

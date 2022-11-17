@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grip/commons/ui_helpers.dart';
+import 'package:greep/commons/ui_helpers.dart';
 
 class EmptyResultWidget extends StatelessWidget {
   final String text;

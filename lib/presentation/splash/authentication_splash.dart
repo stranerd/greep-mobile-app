@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart' as g;
-import 'package:grip/application/auth/AuthenticationCubit.dart';
-import 'package:grip/application/user/user_cubit.dart';
-import 'package:grip/commons/colors.dart';
-import 'package:grip/commons/scaffold_messenger_service.dart';
-import 'package:grip/presentation/driver_section/home_page.dart';
-import 'package:grip/presentation/driver_section/nav_pages/nav_bar/nav_bar_view.dart';
-import 'package:grip/presentation/splash/splash.dart';
+import 'package:greep/application/auth/AuthenticationCubit.dart';
+import 'package:greep/application/user/user_cubit.dart';
+import 'package:greep/commons/colors.dart';
+import 'package:greep/commons/scaffold_messenger_service.dart';
+import 'package:greep/presentation/driver_section/home_page.dart';
+import 'package:greep/presentation/driver_section/nav_pages/nav_bar/nav_bar_view.dart';
+import 'package:greep/presentation/splash/splash.dart';
 
 class AuthenticationSplashScreen extends StatefulWidget {
   const AuthenticationSplashScreen({Key? key}) : super(key: key);

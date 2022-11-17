@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:grip/application/transactions/response/commission_summary.dart';
-import 'package:grip/commons/Utils/utils.dart';
-import 'package:grip/commons/money.dart';
-import 'package:grip/presentation/widgets/text_widget.dart';
-import 'package:grip/presentation/widgets/turkish_symbol.dart';
-import 'package:grip/utils/constants/app_styles.dart';
+import 'package:greep/application/transactions/response/commission_summary.dart';
+import 'package:greep/commons/Utils/utils.dart';
+import 'package:greep/commons/money.dart';
+import 'package:greep/presentation/widgets/text_widget.dart';
+import 'package:greep/presentation/widgets/turkish_symbol.dart';
+import 'package:greep/utils/constants/app_styles.dart';
 import 'package:intl/intl.dart';
 
 class CommissionSummaryItem extends StatelessWidget {

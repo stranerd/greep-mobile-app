@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:grip/application/user/user_crud_cubit.dart';
-import 'package:grip/application/user/user_cubit.dart';
-import 'package:grip/domain/user/UserService.dart';
-import 'package:grip/domain/user/model/manager_request.dart';
+import 'package:greep/application/user/user_crud_cubit.dart';
+import 'package:greep/application/user/user_cubit.dart';
+import 'package:greep/domain/user/UserService.dart';
+import 'package:greep/domain/user/model/manager_request.dart';
 import 'package:meta/meta.dart';
 
 part 'manager_requests_state.dart';

@@ -5,9 +5,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
-import 'package:grip/application/fcm/fcm_client.dart';
-import 'package:grip/application/fcm/fcm_content.dart';
-import 'package:grip/application/local_notification/local_notification_service.dart';
+import 'package:greep/application/fcm/fcm_client.dart';
+import 'package:greep/application/fcm/fcm_content.dart';
+import 'package:greep/application/local_notification/local_notification_service.dart';
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   if (Platform.isIOS) {

@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grip/application/auth/AuthenticationCubit.dart';
-import 'package:grip/application/auth/AuthenticationState.dart';
-import 'package:grip/domain/user/UserService.dart';
-import 'package:grip/domain/user/model/User.dart';
+import 'package:greep/application/auth/AuthenticationCubit.dart';
+import 'package:greep/application/auth/AuthenticationState.dart';
+import 'package:greep/domain/user/UserService.dart';
+import 'package:greep/domain/user/model/User.dart';
 
 part 'user_state.dart';
 

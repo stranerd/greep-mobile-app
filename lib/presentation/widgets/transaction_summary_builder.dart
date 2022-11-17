@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:grip/application/transactions/response/transaction_summary.dart';
-import 'package:grip/commons/money.dart';
-import 'package:grip/commons/ui_helpers.dart';
-import 'package:grip/presentation/driver_section/widgets/record_card.dart';
-import 'package:grip/utils/constants/app_styles.dart';
+import 'package:greep/application/transactions/response/transaction_summary.dart';
+import 'package:greep/commons/money.dart';
+import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/presentation/driver_section/widgets/record_card.dart';
+import 'package:greep/utils/constants/app_styles.dart';
 
 class TransactionSummaryBuilder extends StatelessWidget {
   final TransactionSummary transactionSummary;

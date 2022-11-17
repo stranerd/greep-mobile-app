@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:grip/commons/ui_helpers.dart';
-import 'package:grip/utils/constants/app_styles.dart';
+import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/utils/constants/app_styles.dart';
 
 class TermsAndConditions extends StatelessWidget {
   const TermsAndConditions({Key? key}) : super(key: key);

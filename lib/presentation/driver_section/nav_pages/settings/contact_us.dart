@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:grip/commons/colors.dart';
-import 'package:grip/presentation/widgets/submit_button.dart';
+import 'package:greep/commons/colors.dart';
+import 'package:greep/presentation/widgets/submit_button.dart';
 
 import '../../../../utils/constants/app_colors.dart';
 import '../../../../utils/constants/app_styles.dart';

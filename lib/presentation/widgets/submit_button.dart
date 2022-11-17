@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grip/commons/colors.dart';
-import 'package:grip/commons/ui_helpers.dart';
-import 'package:grip/presentation/widgets/text_widget.dart';
+import 'package:greep/commons/colors.dart';
+import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/presentation/widgets/text_widget.dart';
 
 class SubmitButton extends StatelessWidget {
   final String text;

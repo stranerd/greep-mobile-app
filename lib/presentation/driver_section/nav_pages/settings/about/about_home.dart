@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:grip/commons/colors.dart';
+import 'package:greep/commons/colors.dart';
 
 import '../../../../../utils/constants/app_styles.dart';
 import 'privacy_policy.dart';

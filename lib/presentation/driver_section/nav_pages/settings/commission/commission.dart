@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
-import 'package:grip/application/transactions/response/commission_summary.dart';
-import 'package:grip/application/transactions/response/customer_summary.dart';
-import 'package:grip/application/transactions/transaction_summary_cubit.dart';
-import 'package:grip/application/user/user_cubit.dart';
-import 'package:grip/commons/Utils/utils.dart';
-import 'package:grip/commons/ui_helpers.dart';
-import 'package:grip/presentation/driver_section/widgets/commission_summary_item.dart';
-import 'package:grip/presentation/widgets/driver_selector_widget.dart';
+import 'package:greep/application/transactions/response/commission_summary.dart';
+import 'package:greep/application/transactions/response/customer_summary.dart';
+import 'package:greep/application/transactions/transaction_summary_cubit.dart';
+import 'package:greep/application/user/user_cubit.dart';
+import 'package:greep/commons/Utils/utils.dart';
+import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/presentation/driver_section/widgets/commission_summary_item.dart';
+import 'package:greep/presentation/widgets/driver_selector_widget.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../utils/constants/app_colors.dart';
 import '../../../../../utils/constants/app_styles.dart';
-import 'package:grip/application/user/utils/get_current_user.dart';
+import 'package:greep/application/user/utils/get_current_user.dart';
 
 class CommissionHome extends StatelessWidget {
   const CommissionHome({Key? key}) : super(key: key);

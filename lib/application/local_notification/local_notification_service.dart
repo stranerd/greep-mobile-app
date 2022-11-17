@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
-import 'package:grip/application/fcm/fcm_notification.dart';
+import 'package:greep/application/fcm/fcm_notification.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalNotificationService {

@@ -1,13 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:grip/application/customers/user_customers_cubit.dart';
-import 'package:grip/application/transactions/request/add_balance_request.dart';
-import 'package:grip/application/transactions/request/add_expense_request.dart';
-import 'package:grip/application/transactions/request/add_trip_request.dart';
-import 'package:grip/application/transactions/user_transactions_cubit.dart';
-import 'package:grip/application/user/user_cubit.dart';
-import 'package:grip/application/user/utils/get_current_user.dart';
-import 'package:grip/domain/transaction/transaction_service.dart';
+import 'package:greep/application/customers/user_customers_cubit.dart';
+import 'package:greep/application/transactions/request/add_balance_request.dart';
+import 'package:greep/application/transactions/request/add_expense_request.dart';
+import 'package:greep/application/transactions/request/add_trip_request.dart';
+import 'package:greep/application/transactions/user_transactions_cubit.dart';
+import 'package:greep/application/user/user_cubit.dart';
+import 'package:greep/application/user/utils/get_current_user.dart';
+import 'package:greep/domain/transaction/transaction_service.dart';
 import 'package:meta/meta.dart';
 
 part 'transaction_crud_state.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:grip/presentation/auth/home/auth_home.dart';
+import 'package:greep/presentation/auth/home/auth_home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'OnboardingSlidesWidgetView.dart';

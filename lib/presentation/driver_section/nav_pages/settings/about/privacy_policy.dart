@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:grip/commons/ui_helpers.dart';
+import 'package:greep/commons/ui_helpers.dart';
 
 import '../../../../../utils/constants/app_styles.dart';
 

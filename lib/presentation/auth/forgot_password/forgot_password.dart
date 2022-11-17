@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
-import 'package:grip/application/auth/password/reset_password_cubit.dart';
-import 'package:grip/commons/Utils/input_validator.dart';
-import 'package:grip/commons/scaffold_messenger_service.dart';
-import 'package:grip/commons/ui_helpers.dart';
-import 'package:grip/presentation/auth/forgot_password/change_forgot_password.dart';
-import 'package:grip/presentation/widgets/code_verification_bottom_sheet.dart';
-import 'package:grip/presentation/widgets/input_text_field.dart';
-import 'package:grip/presentation/widgets/submit_button.dart';
+import 'package:greep/application/auth/password/reset_password_cubit.dart';
+import 'package:greep/commons/Utils/input_validator.dart';
+import 'package:greep/commons/scaffold_messenger_service.dart';
+import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/presentation/auth/forgot_password/change_forgot_password.dart';
+import 'package:greep/presentation/widgets/code_verification_bottom_sheet.dart';
+import 'package:greep/presentation/widgets/input_text_field.dart';
+import 'package:greep/presentation/widgets/submit_button.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);

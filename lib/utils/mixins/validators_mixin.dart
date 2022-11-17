@@ -1,4 +1,4 @@
-import 'package:grip/utils/extensions/string_extension.dart';
+import 'package:greep/utils/extensions/string_extension.dart';
 
 mixin ValidatorMixin {
   static int inputLength = 6;

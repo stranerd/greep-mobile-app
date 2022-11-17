@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:grip/application/transactions/response/transaction_summary.dart';
-import 'package:grip/application/transactions/transaction_summary_cubit.dart';
-import 'package:grip/commons/money.dart';
-import 'package:grip/presentation/driver_section/widgets/record_card.dart';
-import 'package:grip/presentation/widgets/transaction_summary_builder.dart';
-import 'package:grip/utils/constants/app_styles.dart';
+import 'package:greep/application/transactions/response/transaction_summary.dart';
+import 'package:greep/application/transactions/transaction_summary_cubit.dart';
+import 'package:greep/commons/money.dart';
+import 'package:greep/presentation/driver_section/widgets/record_card.dart';
+import 'package:greep/presentation/widgets/transaction_summary_builder.dart';
+import 'package:greep/utils/constants/app_styles.dart';
 
 class TransactionIntervalSummaryWidget extends StatelessWidget {
   final String userId;
