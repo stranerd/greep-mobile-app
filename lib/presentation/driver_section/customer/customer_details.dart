@@ -104,7 +104,6 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                   height: 8.0.h,
                 ),
                 LayoutBuilder(builder: (context, constraints) {
-                  print(debt);
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

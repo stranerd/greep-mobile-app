@@ -177,7 +177,7 @@ class _HomePageState extends State<HomePage> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      const CustomerView(withBackButton: true)),
+                                                      const CustomerScreen(withBackButton: true)),
                                             );
                                           },
                                           child: TextWidget("view all",

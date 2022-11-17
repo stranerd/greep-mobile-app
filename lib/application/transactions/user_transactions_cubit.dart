@@ -100,6 +100,7 @@ class UserTransactionsCubit extends Cubit<UserTransactionsState> {
       return stateError;
     } else {
       var newServices = response.data!;
+      print("new services length ${newServices.length}");
 
       if (!loadMore) {
         hasLoaded = true;

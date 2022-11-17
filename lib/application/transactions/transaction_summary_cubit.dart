@@ -322,7 +322,6 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     }
 
 
-    int count = 1;
 
     listOfWeeks.reversed.forEach((dates) {
       // print("Working on week ");
@@ -396,7 +395,6 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
             .driverCommissions
             .where((element) => element.driverId == userId)
             .toList();
-    print("driver commissions $userId $driverCommissions");
     var userTransactions = _transactions[userId] ?? const [];
     if (userTransactions.isEmpty) {
       return {DateTime.now(): CommissionSummary.Zero()};
@@ -441,10 +439,12 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
 
   Map<DateTime, CommissionSummary> getManagerTotalMonthlyCommissions() {
     String userId = getSelectedUserId();
-    List<DriverCommission> driverCommissions = GetIt.I<ManagerDriversCubit>()
+    List<DriverCommission> driverCommissions = userId == currentUser().id
+        ? [DriverCommission(driverId: userId, commission: 1)]
+        : GetIt.I<ManagerDriversCubit>()
         .driverCommissions
-        .toList()
-      ..add(DriverCommission(driverId: userId, commission: 1));
+        .where((element) => element.driverId == userId)
+        .toList();
     var userTransactions = _transactions[userId] ?? const [];
     if (userTransactions.isEmpty) {
       return {DateTime.now(): CommissionSummary.Zero()};
@@ -487,6 +487,23 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     }
 
     return SplayTreeMap.from(map, (a, b) => b.compareTo(a));
+  }
+
+  CommissionSummary getManagerDriverTotalIncome(){
+    String userId = getSelectedUserId();
+    DriverCommission driverCommissions = userId == currentUser().id
+        ? DriverCommission(driverId: userId, commission: 1)
+        : GetIt.I<ManagerDriversCubit>()
+        .driverCommissions
+        .firstWhere((element) => element.driverId == userId)
+        ;
+    var userTransactions = _transactions[userId] ?? const [];
+    if (userTransactions.isEmpty) {
+      return CommissionSummary.Zero();
+    }
+
+    var commissionSummary = _calculateCommission(driverCommissions.commission, userTransactions, userTransactions.last.timeAdded, userTransactions.first.timeAdded);
+    return commissionSummary;
   }
 
   Map<DateTime, CommissionSummary> getManagedMonthlyCommissions() {

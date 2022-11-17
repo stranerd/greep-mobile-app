@@ -76,7 +76,6 @@ class TransactionClient {
   }
 
   Future<ResponseEntity<Transaction>> addTrip(AddTripRequest request) async {
-    print("add trip request");
     Response response;
     try {
       response = await dio.post("users/transactions", data: request.toJson());

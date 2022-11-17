@@ -48,7 +48,6 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
         BlocListener<TransactionSummaryCubit, TransactionSummaryState>(
           listener: (context, state) {
             if (state is TransactionSummaryStateDone) {
-              print("Setting summary state");
               setState(() {});
             }
           },
@@ -103,7 +102,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
 
   final List<Widget> _children = const [
     HomePage(),
-    CustomerView(),
+    CustomerScreen(),
     TransactionView(),
     SettingsHome(),
   ];

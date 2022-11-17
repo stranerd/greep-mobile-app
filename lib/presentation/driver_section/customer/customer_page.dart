@@ -20,15 +20,15 @@ import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_styles.dart';
 import '../widgets/customer_card_view.dart';
 
-class CustomerView extends StatefulWidget {
+class CustomerScreen extends StatefulWidget {
   final bool withBackButton;
-  const CustomerView({Key? key, this.withBackButton = false}) : super(key: key);
+  const CustomerScreen({Key? key, this.withBackButton = false}) : super(key: key);
 
   @override
-  State<CustomerView> createState() => _CustomerViewState();
+  State<CustomerScreen> createState() => _CustomerScreenState();
 }
 
-class _CustomerViewState extends State<CustomerView> {
+class _CustomerScreenState extends State<CustomerScreen> {
   late RefreshController refreshController;
 
   List<Transaction> transactions = [];
