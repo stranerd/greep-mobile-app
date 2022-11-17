@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:get/get.dart';
+import 'package:greep/application/transactions/user_transactions_cubit.dart';
 import 'package:greep/application/user/utils/get_current_user.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,8 +16,13 @@ import 'package:greep/application/driver/drivers_cubit.dart';
 import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/money.dart';
 import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/domain/transaction/transaction.dart';
+import 'package:greep/presentation/driver_section/records/view_records.dart';
 import 'package:greep/presentation/driver_section/statistics/statistics_card.dart';
 import 'package:greep/presentation/driver_section/statistics/top_customers.dart';
+import 'package:greep/presentation/driver_section/widgets/empty_result_widget.dart';
+import 'package:greep/presentation/driver_section/widgets/transaction_history.dart';
+import 'package:greep/presentation/driver_section/widgets/transaction_list_card.dart';
 import 'package:greep/presentation/widgets/driver_selector_widget.dart';
 import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/presentation/widgets/submit_button.dart';
@@ -135,9 +142,13 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         color: Colors.black,
                       ),
                       labelColor: Colors.white,
-                      labelStyle: AppTextStyles.whiteSize12,
+                      labelStyle: AppTextStyles.whiteSize12.copyWith(
+                        fontWeight: FontWeight.bold
+                      ),
                       unselectedLabelColor: Colors.black,
-                      unselectedLabelStyle: AppTextStyles.blackSize12,
+                      unselectedLabelStyle: AppTextStyles.blackSize12.copyWith(
+                        fontWeight: FontWeight.bold
+                      ),
                       tabs: const [
                         Tab(
                           height: 35,
@@ -274,15 +285,23 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           Builder(
                             builder: (context) {
                               TransactionSummary summary =   GetIt.I<TransactionSummaryCubit>().getManagerDriverTotalTransactionSummary();
-                              return Column(
-                                children: [
-                                  StatisticsCard(
-                                        transactionSummary:
-                                            summary,
-                                  ),
-                                  kVerticalSpaceRegular,
-                                  TopCustomersView(transactions: summary.transactions)
-                                ],
+                              return SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    StatisticsCard(
+                                          transactionSummary:
+                                              summary,
+                                    ),
+                                    kVerticalSpaceRegular,
+                                    TopCustomersView(transactions: summary.transactions),
+                                    kVerticalSpaceRegular,
+                                    const Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: TransactionHistorySection(),
+                                    )
+
+                                  ],
+                                ),
                               );
                             }
                           )

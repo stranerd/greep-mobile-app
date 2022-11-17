@@ -137,7 +137,7 @@ class _StatisticsCardState extends State<StatisticsCard> {
 
                     children: [
                         SizedBox(
-                          width: constr.maxWidth * 0.315,
+                          width: constr.maxWidth * 0.33,
                           child: Indicator(
                             icon: "assets/icons/income_green.svg",
                             color: kGreenColor,
@@ -149,7 +149,7 @@ class _StatisticsCardState extends State<StatisticsCard> {
                           ),
                         ),
                       SizedBox(
-                        width: constr.maxWidth * 0.315,
+                        width: constr.maxWidth * 0.33,
                         child: Indicator(
                           color:  AppColors.blue,
                           text: "Total Trip",
@@ -162,13 +162,13 @@ class _StatisticsCardState extends State<StatisticsCard> {
                         ),
                       ),
                       SizedBox(
-                        width: constr.maxWidth * 0.315,
+                        width: constr.maxWidth * 0.33,
                         child: Indicator(
                           color:  AppColors.red,
                           backgroundColor: const Color(0xffECC2C2),
                           icon: "assets/icons/expense_red.svg",
                           amount: widget.transactionSummary.expenseAmount.toMoney,
-                          text: "Total Expense",
+                          text: "Total Expenses",
                           isSelected:
                           touchedIndex == "expense",
                         ),
@@ -220,7 +220,7 @@ class Indicator extends StatelessWidget {
           ),
           child: SvgPicture.asset(icon, height: 15.h,),
         ),
-        kHorizontalSpaceRegular,
+        kHorizontalSpaceSmall,
         Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -228,7 +228,7 @@ class Indicator extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TurkishSymbol(width: isSelected ? 18.r : 17.r,height: isSelected ? 18.r : 17.r,color: color,),
-                TextWidget(amount,color: color, fontSize: isSelected ? 20: 18,weight: FontWeight.bold,),
+                TextWidget(amount,color: color, fontSize: isSelected ? 19: 17,weight: FontWeight.bold,),
               ],
             ),
             TextWidget(

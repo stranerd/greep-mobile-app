@@ -44,9 +44,9 @@ class DriverItemWidget extends StatelessWidget {
             style: isSelected
                 ? kBoldTextStyle2.copyWith(
               color: textColor,
-              fontSize: 13
+              fontSize: 18.sp
             )
-                : kDefaultTextStyle.copyWith(fontSize: 12,color: textColor),
+                : kDefaultTextStyle.copyWith(fontSize: 16.sp,color: textColor),
           ),
         ],
       ),

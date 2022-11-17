@@ -19,6 +19,7 @@ class TopCustomersView extends StatefulWidget {
 
 class _TopCustomersViewState extends State<TopCustomersView> {
   List<String> topCustomers = [];
+
   @override
   void initState() {
     print("initialized");
@@ -28,58 +29,40 @@ class _TopCustomersViewState extends State<TopCustomersView> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    print("All transactions ${widget.transactions.length}");
 
-    if (widget.transactions.isNotEmpty){
+    if (widget.transactions.isNotEmpty) {
+      var validCustomers = widget.transactions
+          .where((element) => element.data.customerName != null);
 
-      print("transactions not empty");
+      if (validCustomers.isNotEmpty) {
+        var customers = validCustomers
+            .map((e) => e.data.customerName!.toLowerCase())
+            .toList();
 
-    var validCustomers = widget.transactions
-        .where((element) => element.data.customerName != null);
+        Map<String, int> counts = {};
+        customers.forEach((element) {
+          if (counts[element] == null) {
+            counts[element] = 1;
+          } else {
+            counts[element] = counts[element]! + 1;
+          }
+        });
 
-    print("valid customers ${validCustomers}");
-    if (validCustomers.isNotEmpty){
-      print("Valid customers not empty");
-    var customers = validCustomers
-        .map((e) => e.data.customerName!.toLowerCase())
-        .toList();
-
-    print("customer names ${customers}");
-    Map<String, int> counts = {};
-    customers.forEach((element) {
-      print("checking customers $element");
-      print("counts $counts");
-      if (counts[element] == null) {
-        print("count is null");
-        counts[element] = 1;
-      } else {
-        print("count is not null ${counts[element]}");
-
-        counts[element] = counts[element]! + 1;
+        var treeMap = SplayTreeMap<String, int>.from(
+            counts, (a, b) => counts[b]?.compareTo(counts[a] ?? 0) ?? 1);
+        treeMap.keys.forEach((element) {
+          topCustomers.add(element);
+        });
       }
-    });
-
-    print("customer counts ${counts}");
-
-    var treeMap = SplayTreeMap<String, int>.from(
-        counts, (a, b) => counts[b]?.compareTo(counts[a] ?? 0) ?? 1);
-    print("Top customers ${treeMap}");
-    treeMap.keys.forEach((element) {
-      topCustomers.add(element);
-    });
     }
-
-    print("Top customers $topCustomers");
-    }
-
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(kDefaultSpacing),
+      padding: const EdgeInsets.all(kDefaultSpacing),
       decoration: BoxDecoration(
-        color: Color.fromRGBO(24, 93, 231, 0.1),
+        color: const Color.fromRGBO(24, 93, 231, 0.1),
         borderRadius: BorderRadius.circular(kDefaultSpacing * 0.5),
       ),
       child: Column(
@@ -93,12 +76,11 @@ class _TopCustomersViewState extends State<TopCustomersView> {
                   kHorizontalSpaceTiny,
                   SvgPicture.asset("assets/icons/star.svg"),
                   kHorizontalSpaceTiny,
-
                   SvgPicture.asset("assets/icons/star.svg"),
                 ],
               ),
               kHorizontalSpaceRegular,
-              TextWidget(
+              const TextWidget(
                 "Top Customers",
                 fontSize: 20,
                 weight: FontWeight.bold,
@@ -111,17 +93,24 @@ class _TopCustomersViewState extends State<TopCustomersView> {
                   "No top customers",
                 )
               : Wrap(
-            spacing: 20.w,
-            children: List.generate(topCustomers.length > 2 ? 3 : topCustomers.length, (index) => Row(
-              mainAxisSize: MainAxisSize.min,
-
-              children: [
-                TextWidget("${index+1}.",fontSize: 16,),
-                kHorizontalSpaceTiny,
-                TextWidget(topCustomers[index].capitalizeFirst!,fontSize: 16,),
-              ],
-            )),
-          )
+                  spacing: 20.w,
+                  children: List.generate(
+                      topCustomers.length > 2 ? 3 : topCustomers.length,
+                      (index) => Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextWidget(
+                                "${index + 1}.",
+                                fontSize: 16,
+                              ),
+                              kHorizontalSpaceTiny,
+                              TextWidget(
+                                topCustomers[index].capitalizeFirst!,
+                                fontSize: 16,
+                              ),
+                            ],
+                          )),
+                )
         ],
       ),
     );
