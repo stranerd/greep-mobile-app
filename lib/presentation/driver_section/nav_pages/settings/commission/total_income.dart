@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:grip/application/driver/drivers_cubit.dart';
+import 'package:grip/application/driver/manager_drivers_cubit.dart';
 import 'package:grip/application/transactions/response/commission_summary.dart';
 import 'package:grip/application/transactions/response/customer_summary.dart';
 import 'package:grip/application/transactions/transaction_summary_cubit.dart';
@@ -11,6 +12,7 @@ import 'package:grip/application/user/user_cubit.dart';
 import 'package:grip/commons/Utils/utils.dart';
 import 'package:grip/commons/money.dart';
 import 'package:grip/commons/ui_helpers.dart';
+import 'package:grip/domain/user/model/driver_commission.dart';
 import 'package:grip/presentation/driver_section/widgets/commission_summary_item.dart';
 import 'package:grip/presentation/widgets/driver_selector_widget.dart';
 import 'package:grip/presentation/widgets/text_widget.dart';
@@ -29,15 +31,38 @@ class TotalIncome extends StatefulWidget {
 }
 
 class _TotalIncomeState extends State<TotalIncome> {
+
+  String userId = currentUser().id;
+  num commission = 100;
+
   @override
   Widget build(BuildContext context) {
-    return BlocListener<DriversCubit, DriversState>(
+    return MultiBlocListener(
+  listeners: [
+    BlocListener<DriversCubit, DriversState>(
       listener: (context, state) {
         if (state is DriversStateFetched) {
-          setState(() {});
+          
+          setState(() {
+            userId = state.selectedUser.id;
+          });
         }
       },
-      child: DefaultTabController(
+),
+    BlocListener<ManagerDriversCubit, ManagerDriversState>(
+      listener: (context, state) {
+        if (state is ManagerDriversStateFetched){
+          print(state.drivers);
+        setState(() {
+
+          commission = state.drivers.isEmpty ? 100 : state.drivers.firstWhere((element) => element.driverId == userId, orElse: () =>DriverCommission(driverId: currentUser().id, commission: 1)).commission * 100;
+
+        });
+        }
+      },
+    ),
+  ],
+  child: DefaultTabController(
         length: 4,
         child: Scaffold(
           backgroundColor: Colors.white,
@@ -118,116 +143,145 @@ class _TotalIncomeState extends State<TotalIncome> {
                           MediaQuery.of(context).padding.bottom -
                           AppBar().preferredSize.height -
                           MediaQuery.of(context).padding.top,
-                      child: TabBarView(
+                      child: Column(
                         children: [
-                          Builder(builder: (context) {
-                            Map<DateTime, CommissionSummary> commissions =
-                                GetIt.I<TransactionSummaryCubit>()
-                                    .getManagerTotalDailyCommissions();
-                            return ListView.separated(
-                                separatorBuilder: (_, __) =>
-                                    kVerticalSpaceRegular,
-                                itemCount: commissions.length,
-                                physics: const ScrollPhysics(),
-                                itemBuilder: (c, i) {
-                                  CommissionSummary summary = commissions[
-                                      commissions.keys.toList()[i]]!;
-                                  return CommissionSummaryItem(
-                                      alignment: Alignment.center,
-                                      backgroundColor: const Color(0xffF3F6F8),
-                                      commissionSummary: summary);
-                                });
-                          }),
-                          Builder(builder: (context) {
-                            Map<DateTime, CommissionSummary> commissions =
-                                GetIt.I<TransactionSummaryCubit>()
-                                    .getManagerTotalWeeklyCommissions();
-                            return ListView.separated(
-                                separatorBuilder: (_, __) =>
-                                    kVerticalSpaceRegular,
-                                itemCount: commissions.length,
-                                physics: const ScrollPhysics(),
-                                itemBuilder: (c, i) {
-                                  CommissionSummary summary = commissions[
-                                      commissions.keys.toList()[i]]!;
-                                  return CommissionSummaryItem(
-                                    alignment: Alignment.center,
-                                    isWeekly: true,
-                                    backgroundColor: const Color(0xffF3F6F8),
-                                    commissionSummary: summary,
-                                  );
-                                });
-                          }),
-                          Builder(builder: (context) {
-                            Map<DateTime, CommissionSummary> commissions =
-                                GetIt.I<TransactionSummaryCubit>()
-                                    .getManagerTotalMonthlyCommissions();
-                            return ListView.separated(
-                                separatorBuilder: (_, __) =>
-                                    kVerticalSpaceRegular,
-                                itemCount: commissions.length,
-                                shrinkWrap: true,
-                                physics: const BouncingScrollPhysics(),
-                                itemBuilder: (c, i) {
-                                  CommissionSummary summary = commissions[
-                                      commissions.keys.toList()[i]]!;
-                                  return CommissionSummaryItem(
-                                      commissionSummary: summary,
-                                      alignment: Alignment.center,
-                                      backgroundColor: const Color(0xffF3F6F8),
-                                      isMonthly: true);
-                                });
-                          }),
-                          Container(
-                            alignment: Alignment.center,
-                            child: Column(
-                              children: [
-                                const Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: TextWidget(
-                                    "All-Time Income",
-                                    weight: FontWeight.bold,
-                                    fontSize: 20,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextWidget("Commission (%)", style: AppTextStyles.blackSizeBold16),
+                              const SizedBox(height: 8),
+                              Container(
+                                width: double.infinity,
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Color(0xffF3F6F8),
+                                  border: Border.all(
+                                    color: const Color.fromRGBO(221, 226, 224, 1),
+                                    width: 1.0,
                                   ),
                                 ),
-                                kVerticalSpaceLarge,
+                                child: TextWidget("${commission}%",
+                                    style: AppTextStyles.blackSizeBold16),
+                              ),
+                            ],
+                          ),
+                          kVerticalSpaceRegular,
+                          Expanded(
+                            child: TabBarView(
+                              children: [
+                                Builder(builder: (context) {
+                                  Map<DateTime, CommissionSummary> commissions =
+                                      GetIt.I<TransactionSummaryCubit>()
+                                          .getManagerTotalDailyCommissions();
+                                  return ListView.separated(
+                                      separatorBuilder: (_, __) =>
+                                          kVerticalSpaceRegular,
+                                      itemCount: commissions.length,
+                                      physics: const ScrollPhysics(),
+                                      itemBuilder: (c, i) {
+                                        CommissionSummary summary = commissions[
+                                            commissions.keys.toList()[i]]!;
+                                        return CommissionSummaryItem(
+                                            alignment: Alignment.center,
+                                            backgroundColor: const Color(0xffF3F6F8),
+                                            commissionSummary: summary);
+                                      });
+                                }),
+                                Builder(builder: (context) {
+                                  Map<DateTime, CommissionSummary> commissions =
+                                      GetIt.I<TransactionSummaryCubit>()
+                                          .getManagerTotalWeeklyCommissions();
+                                  return ListView.separated(
+                                      separatorBuilder: (_, __) =>
+                                          kVerticalSpaceRegular,
+                                      itemCount: commissions.length,
+                                      physics: const ScrollPhysics(),
+                                      itemBuilder: (c, i) {
+                                        CommissionSummary summary = commissions[
+                                            commissions.keys.toList()[i]]!;
+                                        return CommissionSummaryItem(
+                                          alignment: Alignment.center,
+                                          isWeekly: true,
+                                          backgroundColor: const Color(0xffF3F6F8),
+                                          commissionSummary: summary,
+                                        );
+                                      });
+                                }),
+                                Builder(builder: (context) {
+                                  Map<DateTime, CommissionSummary> commissions =
+                                      GetIt.I<TransactionSummaryCubit>()
+                                          .getManagerTotalMonthlyCommissions();
+                                  return ListView.separated(
+                                      separatorBuilder: (_, __) =>
+                                          kVerticalSpaceRegular,
+                                      itemCount: commissions.length,
+                                      shrinkWrap: true,
+                                      physics: const BouncingScrollPhysics(),
+                                      itemBuilder: (c, i) {
+                                        CommissionSummary summary = commissions[
+                                            commissions.keys.toList()[i]]!;
+                                        return CommissionSummaryItem(
+                                            commissionSummary: summary,
+                                            alignment: Alignment.center,
+                                            backgroundColor: const Color(0xffF3F6F8),
+                                            isMonthly: true);
+                                      });
+                                }),
                                 Container(
                                   alignment: Alignment.center,
-                                  width: 300.w,
-                                  height: 300.w,
-                                  decoration: BoxDecoration(
-                                      color: const Color(0xffDBE5EE),
-                                      border: Border.all(
-                                          width: 5,
-                                          color: const Color(0xff04D28C)),
-                                      shape: BoxShape.circle),
-                                  child: Builder(builder: (context) {
-                                    var totalIncome =
-                                        GetIt.I<TransactionSummaryCubit>()
-                                            .getManagerDriverTotalIncome();
-
-                                    return Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        TurkishSymbol(
-                                          width: 48.sp,
-                                          height: 48.sp,
-                                          color: const Color(0xff04D28C),
-                                        ),
-                                        TextWidget(
-                                          totalIncome.commission.toMoney,
-                                          fontSize: 48,
-                                          color: const Color(0xff04D28C),
+                                  child: Column(
+                                    children: [
+                                      const Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: TextWidget(
+                                          "All-Time Income",
                                           weight: FontWeight.bold,
+                                          fontSize: 20,
                                         ),
-                                      ],
-                                    );
-                                  }),
+                                      ),
+                                      kVerticalSpaceLarge,
+                                      Container(
+                                        alignment: Alignment.center,
+                                        width: 300.w,
+                                        height: 300.w,
+                                        decoration: BoxDecoration(
+                                            color: const Color(0xffDBE5EE),
+                                            border: Border.all(
+                                                width: 5,
+                                                color: const Color(0xff04D28C)),
+                                            shape: BoxShape.circle),
+                                        child: Builder(builder: (context) {
+                                          var totalIncome =
+                                              GetIt.I<TransactionSummaryCubit>()
+                                                  .getManagerDriverTotalIncome();
+
+                                          return Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              TurkishSymbol(
+                                                width: 48.sp,
+                                                height: 48.sp,
+                                                color: const Color(0xff04D28C),
+                                              ),
+                                              TextWidget(
+                                                totalIncome.commission.toMoney,
+                                                fontSize: 48,
+                                                color: const Color(0xff04D28C),
+                                                weight: FontWeight.bold,
+                                              ),
+                                            ],
+                                          );
+                                        }),
+                                      )
+                                    ],
+                                  ),
                                 )
                               ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                     );
@@ -238,6 +292,6 @@ class _TotalIncomeState extends State<TotalIncome> {
           ),
         ),
       ),
-    );
+);
   }
 }
