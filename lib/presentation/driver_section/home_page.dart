@@ -197,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                                       trailing: SplashTap(
                                         onTap: () {
                                           g.Get.to(
-                                              () => const TransactionView(),
+                                              () => const TransactionsScreen(),
                                               arguments: {"showAppBar": true},
                                               transition: g.Transition.fadeIn);
                                         },

@@ -103,7 +103,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
   final List<Widget> _children = const [
     HomePage(),
     CustomerScreen(),
-    TransactionView(),
+    TransactionsScreen(),
     SettingsHome(),
   ];
 

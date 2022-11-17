@@ -653,6 +653,59 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     _streamSubscription.cancel();
     return super.close();
   }
+
+  TransactionSummary getManagerDriverTotalTransactionSummary() {
+    String userId = getSelectedUserId();
+    var trans = _transactions[userId] ?? const [];
+    if (trans.isEmpty) {
+      return TransactionSummary.Zero();
+    }
+
+    var expenses = trans.where((element) =>
+    element.data.transactionType == TransactionType.expense);
+
+    var trips = trans.where(
+            (element) => element.data.transactionType == TransactionType.trip);
+
+    var totalIncome = trips.isEmpty
+        ? 0
+        : trips.map((element) => element.amount).reduce(
+          (value, element) => value + element,
+    );
+
+    var totalExpenses = expenses.isEmpty
+        ? 0
+        : expenses
+        .map((e) => e.amount)
+        .reduce((value, element) => value + element);
+    var income = totalIncome - totalExpenses;
+
+    return TransactionSummary(
+        income: income,
+        tripCount: trans
+            .map((e) => e.data)
+            .where((element) =>
+        element.transactionType == TransactionType.trip)
+            .length,
+        expenseAmount: expenses.isEmpty
+            ? 0
+            : expenses
+            .map((e) => e.amount)
+            .reduce((value, element) => value + element),
+        tripAmount: trips.isEmpty
+            ? 0
+            : trips
+            .map((e) => e.amount)
+            .reduce((value, element) => element + value),
+        expenseCount: trans
+            .map((e) => e.data)
+            .where((element) =>
+        element.transactionType == TransactionType.expense)
+            .length,
+        transactions: trans);
+
+
+  }
 }
 
 extension listEx on List<DateTime> {
