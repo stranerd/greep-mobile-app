@@ -489,7 +489,10 @@ class _RecordTripState extends State<RecordTrip>
   }
 
   void _pickDate() {
-    DatePicker.showDatePicker(context, theme: DatePickerTheme()).then((value) {
+    DatePicker.showDatePicker(context,
+        maxTime: DateTime.now(),
+
+        theme: DatePickerTheme()).then((value) {
       if (value == null) return;
       DateTime selectedDate = value;
       DatePicker.showTime12hPicker(
