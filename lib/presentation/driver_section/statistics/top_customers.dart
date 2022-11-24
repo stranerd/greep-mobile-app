@@ -18,17 +18,10 @@ class TopCustomersView extends StatefulWidget {
 }
 
 class _TopCustomersViewState extends State<TopCustomersView> {
-  List<String> topCustomers = [];
 
   @override
-  void initState() {
-    print("initialized");
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  Widget build(BuildContext context) {
+    List<String> topCustomers = [];
 
     if (widget.transactions.isNotEmpty) {
       var validCustomers = widget.transactions
@@ -55,10 +48,7 @@ class _TopCustomersViewState extends State<TopCustomersView> {
         });
       }
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(kDefaultSpacing),
       decoration: BoxDecoration(

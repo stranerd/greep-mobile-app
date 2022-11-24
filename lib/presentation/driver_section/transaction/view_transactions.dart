@@ -18,7 +18,8 @@ import 'package:greep/commons/money.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/transaction/transaction.dart';
 import 'package:greep/presentation/driver_section/records/view_records.dart';
-import 'package:greep/presentation/driver_section/statistics/statistics_card.dart';
+import 'package:greep/presentation/driver_section/statistics/all_transactions_statistics_card.dart';
+import 'package:greep/presentation/driver_section/statistics/interval_transactions_statistics_card.dart';
 import 'package:greep/presentation/driver_section/statistics/top_customers.dart';
 import 'package:greep/presentation/driver_section/widgets/empty_result_widget.dart';
 import 'package:greep/presentation/driver_section/widgets/transaction_history.dart';
@@ -142,13 +143,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         color: Colors.black,
                       ),
                       labelColor: Colors.white,
-                      labelStyle: AppTextStyles.whiteSize12.copyWith(
-                        fontWeight: FontWeight.bold
-                      ),
+                      labelStyle: AppTextStyles.whiteSize12
+                          .copyWith(fontWeight: FontWeight.bold),
                       unselectedLabelColor: Colors.black,
-                      unselectedLabelStyle: AppTextStyles.blackSize12.copyWith(
-                        fontWeight: FontWeight.bold
-                      ),
+                      unselectedLabelStyle: AppTextStyles.blackSize12
+                          .copyWith(fontWeight: FontWeight.bold),
                       tabs: const [
                         Tab(
                           height: 35,
@@ -280,31 +279,47 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           ),
                           Container(),
                           Container(
-                            child: TextWidget("monthly"),
-                          ),
-                          Builder(
-                            builder: (context) {
-                              TransactionSummary summary =   GetIt.I<TransactionSummaryCubit>().getManagerDriverTotalTransactionSummary();
-                              return SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    StatisticsCard(
-                                          transactionSummary:
-                                              summary,
-                                    ),
-                                    kVerticalSpaceRegular,
-                                    TopCustomersView(transactions: summary.transactions),
-                                    kVerticalSpaceRegular,
-                                    const Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                                      child: TransactionHistorySection(),
-                                    )
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  Builder(builder: (context) {
+                                    Map<DateTime,TransactionSummary> summary = GetIt.I<
+                                            TransactionSummaryCubit>()
+                                        .getMonthlyTransactions();
+                                    return IntervalTransactionsStatisticsCard(
+                                        summary: summary);
+                                  }),
+                                  kVerticalSpaceRegular,
 
-                                  ],
-                                ),
-                              );
-                            }
-                          )
+                                  const Padding(
+                                    padding:
+                                    EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: TransactionHistorySection(),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Builder(builder: (context) {
+                            TransactionSummary summary =
+                                GetIt.I<TransactionSummaryCubit>()
+                                    .getManagerDriverTotalTransactionSummary();
+                            return SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  AllTransactionsStatisticsCard(
+                                    transactionSummary: summary,
+                                  ),
+                                  kVerticalSpaceRegular,
+                                  const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: TransactionHistorySection(),
+                                  )
+                                ],
+                              ),
+                            );
+                          })
                         ],
                       ),
                     ),
@@ -317,5 +332,4 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       );
     });
   }
-
 }

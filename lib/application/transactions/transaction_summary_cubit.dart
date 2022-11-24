@@ -565,11 +565,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
 
         var trips = trans.where(
             (element) => element.data.transactionType == TransactionType.trip);
-        num totalIncome = trans.isEmpty
-            ? 0
-            : trips
-                .map((e) => e.amount)
-                .reduce((value, element) => value + element);
+
 
         var tripAmount = trips.isEmpty
             ? 0
@@ -578,7 +574,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
                 .reduce((value, element) => element + value);
 
         return TransactionSummary(
-            income: totalIncome - totalExpenses,
+            income:  tripAmount - totalExpenses,
             tripCount: trips.length,
             expenseAmount: totalExpenses,
             tripAmount: tripAmount,

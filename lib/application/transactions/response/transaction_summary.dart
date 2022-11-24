@@ -29,6 +29,6 @@ class TransactionSummary {
 
   @override
   String toString() {
-    return 'TransactionSummary{income: $income, tripCount: $tripCount, expenseCount: $expenseCount, tripAmount: $tripAmount, expenseAmount: $expenseAmount, transactions: $transactions}';
+    return 'TransactionSummary{income: $income, tripCount: $tripCount, expenseCount: $expenseCount, tripAmount: $tripAmount, expenseAmount: $expenseAmount, transactions: ${transactions.length}';
   }
 }
