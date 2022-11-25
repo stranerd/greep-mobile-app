@@ -242,39 +242,41 @@ class _TotalIncomeState extends State<TotalIncome> {
                                         ),
                                       ),
                                       kVerticalSpaceLarge,
-                                      Container(
-                                        alignment: Alignment.center,
-                                        width: 300.w,
-                                        height: 300.w,
-                                        decoration: BoxDecoration(
-                                            color: const Color(0xffDBE5EE),
-                                            border: Border.all(
-                                                width: 5,
-                                                color: const Color(0xff04D28C)),
-                                            shape: BoxShape.circle),
-                                        child: Builder(builder: (context) {
-                                          var totalIncome =
-                                              GetIt.I<TransactionSummaryCubit>()
-                                                  .getManagerDriverTotalIncome();
+                                      Expanded(
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          width: 300.w,
+                                          height: 300.w,
+                                          decoration: BoxDecoration(
+                                              color: const Color(0xffDBE5EE),
+                                              border: Border.all(
+                                                  width: 5,
+                                                  color: const Color(0xff04D28C)),
+                                              shape: BoxShape.circle),
+                                          child: Builder(builder: (context) {
+                                            var totalIncome =
+                                                GetIt.I<TransactionSummaryCubit>()
+                                                    .getManagerDriverTotalIncome();
 
-                                          return Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              TurkishSymbol(
-                                                width: 48.sp,
-                                                height: 48.sp,
-                                                color: const Color(0xff04D28C),
-                                              ),
-                                              TextWidget(
-                                                totalIncome.commission.toMoney,
-                                                fontSize: 48,
-                                                color: const Color(0xff04D28C),
-                                                weight: FontWeight.bold,
-                                              ),
-                                            ],
-                                          );
-                                        }),
+                                            return Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                TurkishSymbol(
+                                                  width: 48.sp,
+                                                  height: 48.sp,
+                                                  color: const Color(0xff04D28C),
+                                                ),
+                                                TextWidget(
+                                                  totalIncome.commission.toMoney,
+                                                  fontSize: 48,
+                                                  color: const Color(0xff04D28C),
+                                                  weight: FontWeight.bold,
+                                                ),
+                                              ],
+                                            );
+                                          }),
+                                        ),
                                       )
                                     ],
                                   ),

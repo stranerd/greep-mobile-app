@@ -13,19 +13,19 @@ import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 import 'package:intl/intl.dart';
 
-class IntervalTransactionsStatisticsCard extends StatefulWidget {
+class MonthlyTransactionsStatisticsCard extends StatefulWidget {
   final Map<DateTime, TransactionSummary> summary;
 
-  const IntervalTransactionsStatisticsCard({Key? key, required this.summary})
+  const MonthlyTransactionsStatisticsCard({Key? key, required this.summary})
       : super(key: key);
 
   @override
-  State<IntervalTransactionsStatisticsCard> createState() =>
-      _IntervalTransactionsStatisticsCardState();
+  State<MonthlyTransactionsStatisticsCard> createState() =>
+      _MonthlyTransactionsStatisticsCardState();
 }
 
-class _IntervalTransactionsStatisticsCardState
-    extends State<IntervalTransactionsStatisticsCard> {
+class _MonthlyTransactionsStatisticsCardState
+    extends State<MonthlyTransactionsStatisticsCard> {
   late PageController _controller;
   bool isTouched = false;
   int touchedIndex = -1;

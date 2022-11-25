@@ -19,8 +19,10 @@ import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/transaction/transaction.dart';
 import 'package:greep/presentation/driver_section/records/view_records.dart';
 import 'package:greep/presentation/driver_section/statistics/all_transactions_statistics_card.dart';
-import 'package:greep/presentation/driver_section/statistics/interval_transactions_statistics_card.dart';
+import 'package:greep/presentation/driver_section/statistics/daily_transactions_statistics_card.dart';
+import 'package:greep/presentation/driver_section/statistics/monthly_transactions_statistics_card.dart';
 import 'package:greep/presentation/driver_section/statistics/top_customers.dart';
+import 'package:greep/presentation/driver_section/statistics/weekly_transactions_statistics_card.dart';
 import 'package:greep/presentation/driver_section/widgets/empty_result_widget.dart';
 import 'package:greep/presentation/driver_section/widgets/transaction_history.dart';
 import 'package:greep/presentation/driver_section/widgets/transaction_list_card.dart';
@@ -174,130 +176,65 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       child: TabBarView(
                         physics: const NeverScrollableScrollPhysics(),
                         children: [
-                          ListView(
-                            shrinkWrap: true,
-                            physics: const BouncingScrollPhysics(),
-                            children: transactions.values.map((e) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      TextWidget(
-                                        DateFormat(
-                                                "${DateFormat.ABBR_MONTH} ${DateFormat.YEAR}")
-                                            .format(e.transactions.isEmpty
-                                                ? DateTime.now()
-                                                : e.transactions.first
-                                                    .timeAdded),
-                                        style: AppTextStyles.blackSizeBold12,
-                                      ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          TextWidget(
-                                            "Income: ",
-                                            style: AppTextStyles.blackSize10,
-                                          ),
-                                          TurkishSymbol(
-                                            width: 8,
-                                            height: 8,
-                                            color:
-                                                AppTextStyles.blackSize10.color,
-                                          ),
-                                          TextWidget(
-                                            e.income.toMoney,
-                                            style: AppTextStyles.blackSize10,
-                                          )
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          TextWidget(
-                                            "Trips: ${e.tripAmount == 0 ? "" : "+"}",
-                                            style: AppTextStyles.greenSize10,
-                                          ),
-                                          TurkishSymbol(
-                                            width: 8,
-                                            height: 8,
-                                            color:
-                                                AppTextStyles.greenSize10.color,
-                                          ),
-                                          TextWidget(
-                                            e.tripAmount.toMoney,
-                                            style: AppTextStyles.greenSize10,
-                                          )
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          TextWidget(
-                                            "Expenses: ${e.expenseAmount == 0 ? "" : "-"}",
-                                            style: AppTextStyles.redSize10,
-                                          ),
-                                          TurkishSymbol(
-                                            width: 8,
-                                            height: 8,
-                                            color:
-                                                AppTextStyles.redSize10.color,
-                                          ),
-                                          TextWidget(
-                                            e.expenseAmount.toMoney,
-                                            style: AppTextStyles.redSize10,
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10.0),
-                                  ListView(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    children: e.transactions.map((e) {
-                                      return TransactionCard(
-                                        transaction: e,
-                                        withBigAmount: false,
-                                        subTrailingStyle:
-                                            AppTextStyles.blackSize12,
-                                        titleStyle: AppTextStyles.blackSize14,
-                                        subtitleStyle:
-                                            AppTextStyles.blackSize12,
-                                        trailingStyle:
-                                            AppTextStyles.greenSize14,
-                                      );
-                                    }).toList(),
-                                  ),
-                                  kVerticalSpaceLarge
-                                ],
-                              );
-                            }).toList(),
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Builder(builder: (context) {
+                                  Map<DateTime,TransactionSummary> summary = GetIt.I<
+                                      TransactionSummaryCubit>()
+                                      .getDailyTransactions();
+                                  return DailyTransactionsStatisticsCard(
+                                      summary: summary);
+                                }),
+                                kVerticalSpaceRegular,
+                                const Padding(
+                                  padding:
+                                  EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: TransactionHistorySection(),
+                                ),
+                              ],
+                            ),
                           ),
-                          Container(),
-                          Container(
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  Builder(builder: (context) {
-                                    Map<DateTime,TransactionSummary> summary = GetIt.I<
-                                            TransactionSummaryCubit>()
-                                        .getMonthlyTransactions();
-                                    return IntervalTransactionsStatisticsCard(
-                                        summary: summary);
-                                  }),
-                                  kVerticalSpaceRegular,
 
-                                  const Padding(
-                                    padding:
-                                    EdgeInsets.symmetric(horizontal: 8.0),
-                                    child: TransactionHistorySection(),
-                                  )
-                                ],
-                              ),
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Builder(builder: (context) {
+                                  Map<DateTime,TransactionSummary> summary = GetIt.I<
+                                      TransactionSummaryCubit>()
+                                      .getWeeklyTransactions();
+                                  return WeeklyTransactionsStatisticsCard(
+                                      summary: summary);
+                                }),
+                                kVerticalSpaceRegular,
+
+                                const Padding(
+                                  padding:
+                                  EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: TransactionHistorySection(),
+                                )
+                              ],
+                            ),
+                          ),
+
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Builder(builder: (context) {
+                                  Map<DateTime,TransactionSummary> summary = GetIt.I<
+                                          TransactionSummaryCubit>()
+                                      .getMonthlyTransactions();
+                                  return MonthlyTransactionsStatisticsCard(
+                                      summary: summary);
+                                }),
+                                kVerticalSpaceRegular,
+
+                                const Padding(
+                                  padding:
+                                  EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: TransactionHistorySection(),
+                                )
+                              ],
                             ),
                           ),
                           Builder(builder: (context) {

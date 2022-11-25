@@ -102,7 +102,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
           : expenses
               .map((e) => e.amount)
               .reduce((value, element) => value + element),
-      transactions: filteredTrans,
+      transactions: filteredTrans, dateRange: [],
     );
     return transactionSummary;
   }
@@ -182,7 +182,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
               .map((e) => e.amount)
               .reduce((value, element) => element + value),
       expenseCount: expenses.length,
-      transactions: trans,
+      transactions: trans, dateRange: [],
     );
   }
 
@@ -248,7 +248,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
                 .where((element) =>
                     element.transactionType == TransactionType.expense)
                 .length,
-            transactions: trans);
+            transactions: trans, dateRange: []);
       });
     }
 
@@ -312,7 +312,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     //   print(element.timeAdded);
     // });
 
-    var listOfWeeks = _getWeeksForRange(
+    var listOfWeeks = getWeeksForRange(
         userTransactions.last.timeAdded, userTransactions.first.timeAdded);
     // debugPrint(listOfWeeks.last.toString());
 
@@ -351,7 +351,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     return map;
   }
 
-  List<List<DateTime>> _getWeeksForRange(DateTime start, DateTime end) {
+  static List<List<DateTime>> getWeeksForRange(DateTime start, DateTime end) {
     // print("Getting weeks range $start $end");
     var result = <List<DateTime>>[];
 
@@ -579,9 +579,48 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
             expenseAmount: totalExpenses,
             tripAmount: tripAmount,
             expenseCount: expenses.length,
-            transactions: trans);
+            transactions: trans, dateRange: []);
       });
     }
+
+    return map;
+  }
+
+  Map<DateTime, TransactionSummary> getWeeklyTransactions() {
+    String userId = getSelectedUserId();
+    var userTransactions = _transactions[userId] ?? const [];
+
+    if (userTransactions.isEmpty) {
+      return {DateTime.now(): TransactionSummary.Zero()};
+    }
+
+    var listOfWeeks = getWeeksForRange(
+        userTransactions.last.timeAdded, userTransactions.first.timeAdded);
+
+
+    Map<DateTime, TransactionSummary> map = {};
+    if (listOfWeeks.isEmpty){
+      return map;
+    }
+
+    listOfWeeks.reversed.forEach((dates) {
+      // print("Working on week ");
+      List<Transaction> transactions = [];
+
+      userTransactions.forEach((e) {
+        if (dates.hasDate(e.timeAdded)) {
+          // print("transaction is in list of weeks ${e.timeAdded}");
+          transactions.add(e);
+        }
+      });
+      TransactionSummary transactionSummary = _calculateTransaction(
+          transactions, dates.first, dates.last);
+
+
+      map[dates.first] = transactionSummary;
+
+      // print("Current summary state ${map}");
+    });
 
     return map;
   }
@@ -617,7 +656,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
         expenseAmount: totalExpenses,
         tripAmount: tripAmount,
         expenseCount: expenses.length,
-        transactions: trans);
+        transactions: trans, dateRange: []);
   }
 
   List<Transaction> filterTransactions(DateTime from, DateTime to) {
@@ -627,6 +666,53 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     }
 
     return _calculate(userId, from, to).transactions;
+  }
+
+  TransactionSummary _calculateTransaction(List<Transaction> trans, DateTime from, DateTime to){
+
+    var expenses = trans.where((element) =>
+    element.data.transactionType == TransactionType.expense);
+
+    var trips = trans.where(
+            (element) => element.data.transactionType == TransactionType.trip);
+
+    var totalIncome = trips.isEmpty
+        ? 0
+        : trips.map((element) => element.amount).reduce(
+          (value, element) => value + element,
+    );
+
+    var totalExpenses = expenses.isEmpty
+        ? 0
+        : expenses
+        .map((e) => e.amount)
+        .reduce((value, element) => value + element);
+    var income = totalIncome - totalExpenses;
+
+    return TransactionSummary(
+        income: income,
+        tripCount: trans
+            .map((e) => e.data)
+            .where((element) =>
+        element.transactionType == TransactionType.trip)
+            .length,
+        expenseAmount: expenses.isEmpty
+            ? 0
+            : expenses
+            .map((e) => e.amount)
+            .reduce((value, element) => value + element),
+        tripAmount: trips.isEmpty
+            ? 0
+            : trips
+            .map((e) => e.amount)
+            .reduce((value, element) => element + value),
+        expenseCount: trans
+            .map((e) => e.data)
+            .where((element) =>
+        element.transactionType == TransactionType.expense)
+            .length,
+        transactions: trans, dateRange: [from,to]);
+
   }
 
   List<String> expensesList() {
@@ -698,7 +784,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
             .where((element) =>
         element.transactionType == TransactionType.expense)
             .length,
-        transactions: trans);
+        transactions: trans, dateRange: []);
 
 
   }

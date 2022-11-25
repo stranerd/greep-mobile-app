@@ -7,10 +7,13 @@ class TransactionSummary {
   num tripAmount;
   num expenseAmount;
   List<Transaction> transactions;
+  final List<DateTime> dateRange;
+
 
   TransactionSummary({
     required this.income,
     required this.expenseAmount,
+    required this.dateRange,
     required this.tripAmount,
     required this.tripCount,
     this.transactions = const [],
@@ -22,6 +25,7 @@ class TransactionSummary {
       income: 0,
       tripCount: 0,
       expenseCount: 0,
+      dateRange: [DateTime.now(),DateTime.now()],
       tripAmount: 0,
       expenseAmount: 0,
     );
@@ -29,6 +33,6 @@ class TransactionSummary {
 
   @override
   String toString() {
-    return 'TransactionSummary{income: $income, tripCount: $tripCount, expenseCount: $expenseCount, tripAmount: $tripAmount, expenseAmount: $expenseAmount, transactions: ${transactions.length}';
+    return 'TransactionSummary{income: $income, tripCount: $tripCount, expenseCount: $expenseCount, tripAmount: $tripAmount, expenseAmount: $expenseAmount, transactions: ${transactions.length}, date range: $dateRange';
   }
 }
