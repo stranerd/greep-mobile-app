@@ -10,6 +10,7 @@ import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/transaction/transaction.dart';
 import 'package:greep/presentation/driver_section/statistics/top_customers.dart';
 import 'package:greep/presentation/driver_section/widgets/chart_transaction_indicator.dart';
+import 'package:greep/presentation/driver_section/widgets/transaction_history.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 import 'package:intl/intl.dart';
@@ -47,24 +48,26 @@ class _WeeklyTransactionsStatisticsCardState
 
   @override
   void initState() {
-    _controller = PageController(initialPage: pageIndex)
-      ..addListener(() {
-        setState(() {
-          pageIndex = _controller.page?.toInt() ?? pageIndex;
-          selectedWeek =
-              "${DateFormat(DateFormat.ABBR_MONTH).format(availableWeeks[pageIndex * 7]["from"]!)} - Week ${_weekNumber(availableWeeks[pageIndex * 7]["to"]!)}";
-        });
-      });
+
 
     years = widget.summary.keys.map((e) => e.year).toSet().toList();
     selectedYear = years.first;
     generateAvailableWeeks();
     selectedWeek =
         "${DateFormat(DateFormat.ABBR_MONTH).format(widget.summary.keys.first)} - Week ${_weekNumber(widget.summary.keys.first)}";
-    touchedIndex = widget.summary.keys.first.month - 1;
+    touchedIndex = ((widget.summary.keys.first.difference(DateTime(selectedYear)).inDays/7).floor());
     if (touchedIndex > 6) {
       pageIndex = (touchedIndex / 7).floor();
     }
+
+    _controller = PageController(initialPage: pageIndex)
+      ..addListener(() {
+        setState(() {
+          pageIndex = _controller.page?.toInt() ?? pageIndex;
+          selectedWeek =
+          "${DateFormat(DateFormat.ABBR_MONTH).format(availableWeeks[pageIndex * 7]["from"]!)} - Week ${_weekNumber(availableWeeks[pageIndex * 7]["to"]!)}";
+        });
+      });
     super.initState();
   }
 
@@ -337,10 +340,22 @@ class _WeeklyTransactionsStatisticsCardState
                 : weeklySummaries[weeklySummaries.keys.toList()[touchedIndex]]
                         ?.transactions ??
                     [];
-            return TopCustomersView(
-              transactions: transactions2,
+            return Column(
+              children: [
+                TopCustomersView(
+                  transactions: transactions2,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: TransactionHistorySection(
+                    transactions: transactions2,
+                    withTransaction: true,
+                  ),
+                )
+              ],
             );
-          })
+          }),
+
         ],
       ),
     );

@@ -9,6 +9,7 @@ import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/transaction/transaction.dart';
 import 'package:greep/presentation/driver_section/statistics/top_customers.dart';
 import 'package:greep/presentation/driver_section/widgets/chart_transaction_indicator.dart';
+import 'package:greep/presentation/driver_section/widgets/transaction_history.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 import 'package:intl/intl.dart';
@@ -342,8 +343,20 @@ class _MonthlyTransactionsStatisticsCardState
           Builder(
             builder: (context) {
               List<Transaction> transactions2 = touchedIndex == -1 ? [] : monthlySummaries[monthlySummaries.keys.toList()[touchedIndex]]?.transactions??[];
-              return TopCustomersView(
-                  transactions:transactions2,);
+              return Column(
+                children: [
+                  TopCustomersView(
+                    transactions: transactions2,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: TransactionHistorySection(
+                      transactions: transactions2,
+                      withTransaction: true,
+                    ),
+                  )
+                ],
+              );
             }
           )
         ],

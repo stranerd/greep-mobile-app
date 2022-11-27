@@ -186,12 +186,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                   return DailyTransactionsStatisticsCard(
                                       summary: summary);
                                 }),
-                                kVerticalSpaceRegular,
-                                const Padding(
-                                  padding:
-                                  EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: TransactionHistorySection(),
-                                ),
+
                               ],
                             ),
                           ),
@@ -206,13 +201,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                   return WeeklyTransactionsStatisticsCard(
                                       summary: summary);
                                 }),
-                                kVerticalSpaceRegular,
-
-                                const Padding(
-                                  padding:
-                                  EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: TransactionHistorySection(),
-                                )
                               ],
                             ),
                           ),
@@ -227,13 +215,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                   return MonthlyTransactionsStatisticsCard(
                                       summary: summary);
                                 }),
-                                kVerticalSpaceRegular,
 
-                                const Padding(
-                                  padding:
-                                  EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: TransactionHistorySection(),
-                                )
                               ],
                             ),
                           ),

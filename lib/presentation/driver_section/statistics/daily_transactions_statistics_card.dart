@@ -4,11 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:greep/Commons/colors.dart';
 import 'package:greep/application/transactions/response/transaction_summary.dart';
+import 'package:greep/application/transactions/transaction_summary_cubit.dart';
 import 'package:greep/commons/money.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/transaction/transaction.dart';
 import 'package:greep/presentation/driver_section/statistics/top_customers.dart';
 import 'package:greep/presentation/driver_section/widgets/chart_transaction_indicator.dart';
+import 'package:greep/presentation/driver_section/widgets/transaction_history.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 import 'package:intl/intl.dart';
@@ -39,13 +41,9 @@ class _DailyTransactionsStatisticsCardState
 
   List<int> years = [];
 
-  List<DateTime> availableMonths = [];
-
   List<DateTime> availableDays = [];
 
   Map<DateTime, TransactionSummary> dailySummaries = {};
-
-  Map<DateTime, TransactionSummary> monthlySummaries = {};
 
   int pageIndex = 0;
 
@@ -53,14 +51,6 @@ class _DailyTransactionsStatisticsCardState
 
   @override
   void initState() {
-    _controller = PageController(initialPage: pageIndex)
-      ..addListener(() {
-        setState(() {
-          pageIndex = _controller.page?.toInt() ?? pageIndex;
-          selectedDay =
-          "${DateFormat(DateFormat.ABBR_MONTH).format(availableDays[pageIndex * 7])} - Week ${_weekNumber(availableDays[pageIndex * 7])}";
-        });
-      });
 
 
     years = widget.summary.keys.map((e) => e.year).toSet().toList();
@@ -80,13 +70,24 @@ class _DailyTransactionsStatisticsCardState
     ];
 
     selectedYear = years.first;
-    selectedMonth = widget.summary.keys.first.month -1;
+    selectedMonth = widget.summary.keys.first.month - 1;
     generateAvailableDays();
     selectedDay =
-    "${DateFormat(DateFormat.ABBR_MONTH).format(widget.summary.keys.first)} - Week ${_weekNumber(widget.summary.keys.first)}";
+        "${DateFormat(DateFormat.ABBR_MONTH).format(widget.summary.keys.first)} - Week ${_weekNumber(widget.summary.keys.first)}";
+    touchedIndex = widget.summary.keys.first.difference(DateTime(selectedYear)).inDays.abs();
     if (touchedIndex > 6) {
       pageIndex = (touchedIndex / 7).floor();
+      // _controller.animateToPage(pageIndex, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
     }
+    _controller = PageController(initialPage: pageIndex)
+      ..addListener(() {
+        setState(() {
+          pageIndex = _controller.page?.toInt() ?? pageIndex;
+          selectedDay =
+          "${DateFormat(DateFormat.ABBR_MONTH).format(availableDays[pageIndex * 7])} - Week ${_weekNumber(availableDays[pageIndex * 7])}";
+        });
+
+      });
     super.initState();
   }
 
@@ -96,7 +97,9 @@ class _DailyTransactionsStatisticsCardState
       child: Column(
         children: [
           Container(
-            decoration: BoxDecoration(color: kWhiteColor),
+            decoration: const BoxDecoration(
+              color: kWhiteColor,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -109,15 +112,18 @@ class _DailyTransactionsStatisticsCardState
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: kDefaultSpacing * 0.6,
-                          vertical: kDefaultSpacing * 0.3),
+                        horizontal: kDefaultSpacing * 0.6,
+                        vertical: kDefaultSpacing * 0.3,
+                      ),
                       decoration: BoxDecoration(
                           color: AppColors.lightGray,
-                          borderRadius: BorderRadius.circular(kDefaultSpacing)),
+                          borderRadius: BorderRadius.circular(
+                            kDefaultSpacing,
+                          )),
                       child: DropdownButton<String>(
                           isDense: true,
                           value: months[selectedMonth],
-                          underline: SizedBox(),
+                          underline: const SizedBox(),
                           icon: const Icon(
                             Icons.keyboard_arrow_down_rounded,
                             size: 16,
@@ -125,19 +131,26 @@ class _DailyTransactionsStatisticsCardState
                           items: months
                               .map(
                                 (e) => DropdownMenuItem<String>(
-                              value: e,
-                              child: TextWidget(
-                                e.toString(),
-                                fontSize: 16,
-                                weight: FontWeight.bold,
-                              ),
-                            ),
-                          )
+                                  value: e,
+                                  child: TextWidget(
+                                    e.toString(),
+                                    fontSize: 16,
+                                    weight: FontWeight.bold,
+                                  ),
+                                ),
+                              )
                               .toList(),
                           onChanged: (value) {
-                            selectedMonth = months.indexOf(value??"");
-                            touchedIndex = DateTime(selectedYear,selectedMonth+1).difference(DateTime(selectedYear)).inDays.abs();
-                            _controller.animateToPage((touchedIndex / 7).floor(), duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+                            selectedMonth = months.indexOf(value ?? "");
+                            touchedIndex =
+                                DateTime(selectedYear, selectedMonth + 1)
+                                    .difference(DateTime(selectedYear))
+                                    .inDays
+                                    .abs();
+                            _controller.animateToPage(
+                                (touchedIndex / 7).floor(),
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeIn);
                             print(touchedIndex);
                             // generateAvailableDays();
                             setState(() {});
@@ -154,7 +167,7 @@ class _DailyTransactionsStatisticsCardState
                       child: DropdownButton<int>(
                           isDense: true,
                           value: selectedYear,
-                          underline: SizedBox(),
+                          underline: const SizedBox(),
                           icon: const Icon(
                             Icons.keyboard_arrow_down_rounded,
                             size: 16,
@@ -172,7 +185,8 @@ class _DailyTransactionsStatisticsCardState
                               )
                               .toList(),
                           onChanged: (value) {
-                            selectedYear = value ?? DateTime.now().year;
+                            selectedYear = value ?? selectedYear;
+                            setState(() {});
                             generateAvailableDays();
                             setState(() {});
                           }),
@@ -263,9 +277,21 @@ class _DailyTransactionsStatisticsCardState
                       touchedIndex =
                           barTouchResponse.spot!.touchedBarGroupIndex +
                               (pageIndex * 7);
-                      String abrr = _getDayAbbr(DateFormat("${DateFormat.DAY}").format(dailySummaries[dailySummaries.keys.toList()[touchedIndex]]?.transactions.first.timeAdded??DateTime.now()));
-                      selectedDay =
-                          DateFormat("${DateFormat.DAY}'${abrr}' ${DateFormat.WEEKDAY} ${DateFormat.MONTH}").format(dailySummaries[dailySummaries.keys.toList()[touchedIndex]]?.transactions.first.timeAdded??DateTime.now());
+                      String abrr = _getDayAbbr(DateFormat(DateFormat.DAY)
+                          .format(dailySummaries[dailySummaries.keys
+                                      .toList()[touchedIndex]]
+                                  ?.transactions
+                                  .first
+                                  .timeAdded ??
+                              DateTime.now()));
+                      selectedDay = DateFormat(
+                              "${DateFormat.DAY}'$abrr' ${DateFormat.WEEKDAY} ${DateFormat.MONTH}")
+                          .format(dailySummaries[dailySummaries.keys
+                                      .toList()[touchedIndex]]
+                                  ?.transactions
+                                  .first
+                                  .timeAdded ??
+                              DateTime.now());
                     });
                   }
                 },
@@ -279,7 +305,7 @@ class _DailyTransactionsStatisticsCardState
                           String day =
                               DateFormat(DateFormat.ABBR_WEEKDAY).format(
                             DateTime(selectedYear).add(
-                              Duration(days: n.toInt() + 1),
+                              Duration(days: n.toInt()),
                             ),
                           );
                           return TextWidget(
@@ -383,31 +409,42 @@ class _DailyTransactionsStatisticsCardState
                 : dailySummaries[dailySummaries.keys.toList()[touchedIndex]]
                         ?.transactions ??
                     [];
-            return TopCustomersView(
-              transactions: transactions2,
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TopCustomersView(
+                  transactions: transactions2,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: TransactionHistorySection(
+                    transactions: transactions2,
+                    withTransaction: true,
+                  ),
+                )
+              ],
             );
-          })
+          }),
         ],
       ),
     );
   }
 
   void generateAvailableDays() {
-    availableMonths = List.generate(12, (index) {
-      return DateTime(selectedYear, index + 1);
-    });
+    List<List<DateTime>> dates = TransactionSummaryCubit.getWeeksForRange(
+        DateTime(selectedYear, 1, 1), DateTime(selectedYear, 12, 31));
 
     availableDays = List.generate(
-        _isLeapYear(selectedYear) ? 366 : 365,
+        dates.mapMany((item) => item).toList().length,
         (index) => DateTime(
               selectedYear,
             ).add(Duration(days: index)));
 
+    print("available days ${availableDays.length}");
     calculateSummaries();
   }
 
   void calculateSummaries() {
-    monthlySummaries.clear();
     dailySummaries.clear();
 
     availableDays.forEach((element) {
@@ -432,28 +469,6 @@ class _DailyTransactionsStatisticsCardState
         dailySummaries.putIfAbsent(element, () => TransactionSummary.Zero());
       }
     });
-
-
-    availableMonths.forEach((element) {
-      if (widget.summary.keys
-          .any((e) => element.month == e.month && element.year == e.year)) {
-        monthlySummaries.putIfAbsent(element, () {
-          var transactionSummary = widget.summary[widget.summary.keys
-              .firstWhere(
-                  (e) => element.month == e.month && element.year == e.year)]!;
-          highestAmount = (transactionSummary.tripAmount +
-                      transactionSummary.expenseAmount) >
-                  highestAmount
-              ? transactionSummary.tripAmount
-              : highestAmount;
-          return transactionSummary;
-        });
-      } else {
-        monthlySummaries.putIfAbsent(element, () => TransactionSummary.Zero());
-      }
-    });
-
-    // print("monthly Summaries ${monthlySummaries}");
   }
 
   bool _isLeapYear(int year) {
@@ -468,15 +483,13 @@ class _DailyTransactionsStatisticsCardState
     }
   }
 
-  String _getDayAbbr(String day){
+  String _getDayAbbr(String day) {
     var last = int.parse(day.split("").last);
-    if (last == 1){
+    if (last == 1) {
       return "st";
-    }
-    else if (last==2){
+    } else if (last == 2) {
       return "nd";
-    }
-    else if (last==3){
+    } else if (last == 3) {
       return "rd";
     }
     return "th";
