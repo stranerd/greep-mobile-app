@@ -14,7 +14,10 @@ import 'package:greep/utils/constants/app_colors.dart';
 import 'package:greep/utils/constants/app_styles.dart';
 
 class TransactionHistorySection extends StatelessWidget {
-  const TransactionHistorySection({Key? key}) : super(key: key);
+  final List<Transaction> transactions;
+  final bool withTransaction;
+
+  const TransactionHistorySection({Key? key, this.transactions = const [], this.withTransaction = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,7 @@ class TransactionHistorySection extends StatelessWidget {
         ListTile(
           contentPadding:
           const EdgeInsets.fromLTRB(0, 0, 0, 0),
-          title: TextWidget("Transaction history",
+          title: const TextWidget("Transaction history",
               weight: FontWeight.bold,
             fontSize: 16,
           ),
@@ -40,7 +43,7 @@ class TransactionHistorySection extends StatelessWidget {
           ),
         ),
         Builder(builder: (context) {
-          List<Transaction> transactions =
+          List<Transaction> transactions = withTransaction ? this.transactions :
           GetIt.I<UserTransactionsCubit>()
               .getLastUserTransactions();
           if (transactions.isEmpty) {

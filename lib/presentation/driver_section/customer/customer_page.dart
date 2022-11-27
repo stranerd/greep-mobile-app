@@ -22,7 +22,9 @@ import '../widgets/customer_card_view.dart';
 
 class CustomerScreen extends StatefulWidget {
   final bool withBackButton;
-  const CustomerScreen({Key? key, this.withBackButton = false}) : super(key: key);
+
+  const CustomerScreen({Key? key, this.withBackButton = false})
+      : super(key: key);
 
   @override
   State<CustomerScreen> createState() => _CustomerScreenState();
@@ -33,8 +35,18 @@ class _CustomerScreenState extends State<CustomerScreen> {
 
   List<Transaction> transactions = [];
 
-  List<String> debtTypes = ["none", "collect","not balanced","pay", "balance"];
+  List<String> debtTypes = [
+    "none",
+    "collect",
+    "not balanced",
+    "pay",
+    "balance"
+  ];
   var selectedDebtType = "none";
+
+  String search = "";
+
+  List<Transaction> filteredTransactions = [];
 
   @override
   void initState() {
@@ -52,6 +64,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
               setState(() {
                 transactions = GetIt.I<CustomerStatisticsCubit>()
                     .getCustomerTransactions(type: selectedDebtType);
+                filteredTransactions = [...transactions];
               });
             }
           },
@@ -68,12 +81,14 @@ class _CustomerScreenState extends State<CustomerScreen> {
         builder: (context, state) {
           return Scaffold(
             backgroundColor: Colors.white,
-            appBar: widget.withBackButton ? AppBar(
-              automaticallyImplyLeading: true,
-            ): null,
+            appBar: widget.withBackButton
+                ? AppBar(
+                    automaticallyImplyLeading: true,
+                  )
+                : null,
             body: SafeArea(
               child: Padding(
-                padding:  EdgeInsets.all((kDefaultSpacing * 0.5).r),
+                padding: EdgeInsets.all((kDefaultSpacing * 0.5).r),
                 child: SafeArea(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,12 +132,12 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                   color: AppColors.blue,
                                 ),
                               ),
-                               SizedBox(width: 8.0.w),
+                              SizedBox(width: 8.0.w),
                               TextWidget("To collect",
                                   style: AppTextStyles.blackSize12),
                             ],
                           ),
-                           SizedBox(width: 48.0.w),
+                          SizedBox(width: 48.0.w),
                           Row(
                             children: [
                               Container(
@@ -133,11 +148,12 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                   color: AppColors.red,
                                 ),
                               ),
-                               SizedBox(width: 8.0.w),
-                              TextWidget("To pay", style: AppTextStyles.blackSize12),
+                              SizedBox(width: 8.0.w),
+                              TextWidget("To pay",
+                                  style: AppTextStyles.blackSize12),
                             ],
                           ),
-                           SizedBox(width: 48.0.w),
+                          SizedBox(width: 48.0.w),
                           Row(
                             children: [
                               Container(
@@ -148,7 +164,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                   color: AppColors.black,
                                 ),
                               ),
-                               SizedBox(width: 8.0.w),
+                              SizedBox(width: 8.0.w),
                               TextWidget("Balanced",
                                   style: AppTextStyles.blackSize12),
                             ],
@@ -168,7 +184,10 @@ class _CustomerScreenState extends State<CustomerScreen> {
                               style: kDefaultTextStyle,
                             ),
                             kHorizontalSpaceTiny,
-                             Icon(Icons.sort,size: 20.r,),
+                            Icon(
+                              Icons.sort,
+                              size: 20.r,
+                            ),
                           ],
                         ),
                       ),
@@ -197,8 +216,10 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                             : e == "pay"
                                                 ? "To Pay"
                                                 : e == "balance"
-                                                    ? "Balanced" : e == "not balanced"? "Not Balanced"
-                                                    : "None",
+                                                    ? "Balanced"
+                                                    : e == "not balanced"
+                                                        ? "Not Balanced"
+                                                        : "None",
                                         style: kDefaultTextStyle.copyWith(
                                             fontSize: 14),
                                       ),
@@ -206,13 +227,45 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                 .toList(),
                             onChanged: (String? value) {
                               selectedDebtType = value ?? selectedDebtType;
-                                transactions =
-                                    GetIt.I<CustomerStatisticsCubit>()
-                                        .getCustomerTransactions(
-                                            type: selectedDebtType);
+                              transactions = GetIt.I<CustomerStatisticsCubit>()
+                                  .getCustomerTransactions(
+                                      type: selectedDebtType);
+                              filteredTransactions = [...transactions];
                               setState(() {});
                             },
                           ),
+                        ),
+                      ),
+                      kVerticalSpaceRegular,
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade200),
+                            borderRadius:
+                                BorderRadius.circular(kDefaultSpacing * 0.5)),
+                        height: 60.h,
+                        child: TextField(
+                          onChanged: (s) {
+                            print("On changed ${s}");
+                            if (s.isNotEmpty) {
+
+                              filteredTransactions = transactions
+                                  .where((element) {
+                                    var customerName = element.data.customerName
+                                          ?.trim().toLowerCase();
+                                    return customerName?.contains(s.trim().toLowerCase())??false;
+                                  })
+                                  .toList();
+                            } else {
+                              filteredTransactions = [...transactions];
+                            }
+                            setState(() {});
+                          },
+                          style: kDefaultTextStyle.copyWith(fontSize: 15.sp),
+                          decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: kDefaultSpacing),
+                              hintText: "Search customer",
+                              border: InputBorder.none),
                         ),
                       ),
                       kVerticalSpaceMedium,
@@ -241,10 +294,10 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                         kVerticalSpaceSmall,
                                     shrinkWrap: true,
                                     physics: const ScrollPhysics(),
-                                    itemCount: transactions.length,
+                                    itemCount: filteredTransactions.length,
                                     itemBuilder: (c, i) {
                                       return CustomerCardView(
-                                        transaction: transactions[i],
+                                        transaction: filteredTransactions[i],
                                       );
                                     });
                               }),
