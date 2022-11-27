@@ -216,4 +216,14 @@ class AuthenticationService {
     return await authenticationClient.confirmPasswordResetChange(
         password: password, token: token);
   }
+
+  Future<ResponseEntity> sendEmailVerificationCode(String email) async{
+    return await authenticationClient.sendEmailVerificationCode(email);
+  }
+
+  Future<ResponseEntity> confirmEmailVerificationCode({required String token}) async{
+    return await authenticationClient.confirmEmailVerificationCode(token: token);
+  }
+
+
 }

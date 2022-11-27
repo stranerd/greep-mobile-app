@@ -62,7 +62,7 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
           error = state.errorMessage ?? "Sign up failed";
         }
         if (state is SignupStateSuccess) {
-          g.Get.to(() => const AuthenticationSplashScreen(),transition: g.Transition.fadeIn);
+          g.Get.to(() => const AuthenticationSplashScreen(isNewUser: true,),transition: g.Transition.fadeIn);
         }
       },
       builder: (context, state) {

@@ -303,4 +303,71 @@ class AuthenticationClient {
           "An error occurred sending code. Try again");
     }
   }
+
+  Future<ResponseEntity> sendEmailVerificationCode(
+      String email,
+      ) async {
+    final Dio dio = Dio();
+    Response response;
+    try {
+      response = await dio.post(
+          "${baseApi}auth/emails/verify/mail",
+          data: {
+            "email": email
+          }
+      );
+
+      return ResponseEntity.Data(null);
+    } on DioError catch (e) {
+      if (e.type == DioErrorType.connectTimeout) {
+        return ResponseEntity.Timeout();
+      }
+      if (e.error is SocketException) {
+        return ResponseEntity.Socket();
+      }
+      if (e.type == DioErrorType.response) {
+        return ResponseEntity.Error(
+            e.response!.data[0]["message"] ?? "Email Verification failed");
+      }
+
+      return ResponseEntity.Error("Email Verification  failed");
+    } catch (e) {
+      print("Exception $e");
+      return ResponseEntity.Error(
+          "An error occurred sending code. Try again");
+    }
+  }
+
+  Future<ResponseEntity> confirmEmailVerificationCode({required String token})async {
+    final Dio dio = Dio();
+    Response response;
+    try {
+      response = await dio.post(
+          "${baseApi}auth/emails/verify",
+          data: jsonEncode({
+            "token": "\"${token}\""
+          })
+      );
+
+      return ResponseEntity.Data(null);
+    } on DioError catch (e) {
+      if (e.type == DioErrorType.connectTimeout) {
+        return ResponseEntity.Timeout();
+      }
+      if (e.error is SocketException) {
+        return ResponseEntity.Socket();
+      }
+      if (e.type == DioErrorType.response) {
+        print("Error ${e.response!.data}");
+        return ResponseEntity.Error(
+            e.response!.data[0]["message"] ?? "Email Verification failed");
+      }
+
+      return ResponseEntity.Error("Email Verification failed");
+    } catch (e) {
+      print("Exception $e");
+      return ResponseEntity.Error(
+          "An error occurred verifying code. Try again");
+    }
+  }
 }

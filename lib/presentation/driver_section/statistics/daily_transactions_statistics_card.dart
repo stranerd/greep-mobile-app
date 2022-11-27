@@ -88,10 +88,8 @@ class _DailyTransactionsStatisticsCardState
         setState(() {
           pageIndex = _controller.page?.toInt() ?? pageIndex;
           selectedDay =
-              "${DateFormat(DateFormat.ABBR_MONTH).format(((pageIndex * 7) + 7) > availableDays.length
-                  ? availableDays[pageIndex * 7] : availableDays[(pageIndex * 7) + 7])}"
-                  " - Week ${_weekNumber(((pageIndex * 7) + 7) > availableDays.length
-                  ? availableDays[pageIndex * 7] : availableDays[(pageIndex * 7) + 7])}";
+              "${DateFormat(DateFormat.ABBR_MONTH).format(((pageIndex * 7) + 7) > availableDays.length ? availableDays[pageIndex * 7] : availableDays[(pageIndex * 7) + 7])}"
+              " - Week ${_weekNumber(((pageIndex * 7) + 7) > availableDays.length ? availableDays[pageIndex * 7] : availableDays[(pageIndex * 7) + 7])}";
         });
       });
     super.initState();
@@ -112,7 +110,7 @@ class _DailyTransactionsStatisticsCardState
                 TextWidget(
                   selectedDay,
                   weight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
                 Row(
                   children: [
@@ -293,7 +291,7 @@ class _DailyTransactionsStatisticsCardState
                                   .timeAdded ??
                               DateTime.now()));
                       selectedDay = DateFormat(
-                              "${DateFormat.DAY}'$abrr' ${DateFormat.WEEKDAY} ${DateFormat.MONTH}")
+                              "${DateFormat.DAY}'$abrr' ${DateFormat.ABBR_WEEKDAY} ${DateFormat.ABBR_MONTH}")
                           .format(dailySummaries[dailySummaries.keys
                                       .toList()[touchedIndex]]
                                   ?.transactions

@@ -20,6 +20,7 @@ class UserClient {
     Response response;
     try {
       response = await dio.get("users/users/$userId");
+      print("user data ${response.data}");
       return ResponseEntity.Data(User.fromServer(response.data));
     } on DioError catch (e) {
       if (e.type == DioErrorType.connectTimeout) {

@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:greep/application/auth/AuthenticationCubit.dart';
 import 'package:greep/application/auth/SignupCubit.dart';
+import 'package:greep/application/auth/email_verification/email_verification_cubit.dart';
 import 'package:greep/application/auth/password/reset_password_cubit.dart';
 import 'package:greep/application/customers/user_customers_cubit.dart';
 import 'package:greep/application/driver/manager_drivers_cubit.dart';
@@ -22,6 +23,8 @@ import 'package:greep/domain/transaction/transaction_client.dart';
 import 'package:greep/domain/transaction/transaction_service.dart';
 import 'package:greep/domain/user/UserService.dart';
 import 'package:greep/domain/user/user_client.dart';
+var getIt = GetIt.instance;
+
 
 class IoC {
   late AuthenticationCubit _authenticationCubit;
@@ -41,7 +44,6 @@ class IoC {
   late AuthenticationClient _authenticationClient;
   late NewManagerAcceptsCubit _newManagerAcceptsCubit;
 
-  var getIt = GetIt.instance;
 
   IoC() {
     _authenticationClient = AuthenticationClient();
@@ -111,6 +113,9 @@ class IoC {
 
     getIt.registerFactory(() => ResetPasswordCubit(
       authenticationService: _authenticationService,
+    ));
+    getIt.registerFactory(() => EmailVerificationCubit(
+      authenticationService: getIt(),
     ));
     getIt.registerFactory(() => UserCrudCubit(
           userService: _userService,

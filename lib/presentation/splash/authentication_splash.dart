@@ -8,9 +8,11 @@ import 'package:greep/commons/scaffold_messenger_service.dart';
 import 'package:greep/presentation/driver_section/home_page.dart';
 import 'package:greep/presentation/driver_section/nav_pages/nav_bar/nav_bar_view.dart';
 import 'package:greep/presentation/splash/splash.dart';
+import 'package:greep/presentation/widgets/email_verification_bottom_sheet.dart';
 
 class AuthenticationSplashScreen extends StatefulWidget {
-  const AuthenticationSplashScreen({Key? key}) : super(key: key);
+  final bool isNewUser;
+  const AuthenticationSplashScreen({Key? key, this.isNewUser = false}) : super(key: key);
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -28,8 +30,15 @@ class _SplashScreenState extends State<AuthenticationSplashScreen>
     return BlocListener<UserCubit, UserState>(
       listener: (context, state) {
         if (state is UserStateFetched) {
+          if (widget.isNewUser){
+            g.Get.offAll(const EmailVerificationBottomSheet(),
+                transition: g.Transition.cupertino);
+          }
+          else {
             g.Get.offAll(() => const NavBarView(),
                 transition: g.Transition.fadeIn);
+          }
+
         }
         if (state is UserStateError) {
           if (state.isSocket || state.isConnectionTimeout) {

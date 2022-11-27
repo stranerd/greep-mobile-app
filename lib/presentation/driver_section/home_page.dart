@@ -21,8 +21,10 @@ import 'package:greep/presentation/driver_section/nav_pages/settings/account/vie
 import 'package:greep/presentation/driver_section/transaction/view_transactions.dart';
 import 'package:greep/presentation/driver_section/widgets/empty_result_widget.dart';
 import 'package:greep/presentation/driver_section/widgets/transaction_interval_summary.dart';
+import 'package:greep/presentation/widgets/code_verification_bottom_sheet.dart';
 import 'package:greep/presentation/widgets/customer_transaction_list.dart';
 import 'package:greep/presentation/widgets/driver_selector_widget.dart';
+import 'package:greep/presentation/widgets/email_verification_bottom_sheet.dart';
 import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/utils/constants/app_colors.dart';

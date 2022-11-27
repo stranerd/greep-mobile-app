@@ -18,7 +18,7 @@ class TextWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(text, style: style == null ? kDefaultTextStyle.copyWith(
       color: color,
-      fontSize: fontSize == null ? kDefaultSpacing : fontSize!.sp,
+      // fontSize: fontSize == null ? kDefaultTextStyle.fontSize : fontSize!.sp,
       fontWeight: weight,
       letterSpacing: letterSpacing
 
