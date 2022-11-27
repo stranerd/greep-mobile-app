@@ -51,8 +51,6 @@ class _DailyTransactionsStatisticsCardState
 
   @override
   void initState() {
-
-
     years = widget.summary.keys.map((e) => e.year).toSet().toList();
     months = [
       "January",
@@ -74,7 +72,13 @@ class _DailyTransactionsStatisticsCardState
     generateAvailableDays();
     selectedDay =
         "${DateFormat(DateFormat.ABBR_MONTH).format(widget.summary.keys.first)} - Week ${_weekNumber(widget.summary.keys.first)}";
-    touchedIndex = widget.summary.keys.first.difference(DateTime(selectedYear)).inDays.abs();
+    touchedIndex = widget.summary.keys.first
+            .difference(DateTime(selectedYear))
+            .inDays
+            .abs() +
+        (_isLeapYear(widget.summary.keys.first.year)
+            ? (availableDays.length - 366)
+            : (availableDays.length - 365));
     if (touchedIndex > 6) {
       pageIndex = (touchedIndex / 7).floor();
       // _controller.animateToPage(pageIndex, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
@@ -84,9 +88,11 @@ class _DailyTransactionsStatisticsCardState
         setState(() {
           pageIndex = _controller.page?.toInt() ?? pageIndex;
           selectedDay =
-          "${DateFormat(DateFormat.ABBR_MONTH).format(availableDays[pageIndex * 7])} - Week ${_weekNumber(availableDays[pageIndex * 7])}";
+              "${DateFormat(DateFormat.ABBR_MONTH).format(((pageIndex * 7) + 7) > availableDays.length
+                  ? availableDays[pageIndex * 7] : availableDays[(pageIndex * 7) + 7])}"
+                  " - Week ${_weekNumber(((pageIndex * 7) + 7) > availableDays.length
+                  ? availableDays[pageIndex * 7] : availableDays[(pageIndex * 7) + 7])}";
         });
-
       });
     super.initState();
   }
@@ -144,14 +150,16 @@ class _DailyTransactionsStatisticsCardState
                             selectedMonth = months.indexOf(value ?? "");
                             touchedIndex =
                                 DateTime(selectedYear, selectedMonth + 1)
-                                    .difference(DateTime(selectedYear))
-                                    .inDays
-                                    .abs();
+                                        .difference(DateTime(selectedYear))
+                                        .inDays
+                                        .abs() +
+                                    (_isLeapYear(selectedYear)
+                                        ? (availableDays.length - 366)
+                                        : (availableDays.length - 365));
                             _controller.animateToPage(
                                 (touchedIndex / 7).floor(),
                                 duration: const Duration(milliseconds: 500),
                                 curve: Curves.easeIn);
-                            print(touchedIndex);
                             // generateAvailableDays();
                             setState(() {});
                           }),
@@ -304,7 +312,7 @@ class _DailyTransactionsStatisticsCardState
                         getTitlesWidget: (n, medata) {
                           String day =
                               DateFormat(DateFormat.ABBR_WEEKDAY).format(
-                            DateTime(selectedYear).add(
+                            availableDays.first.add(
                               Duration(days: n.toInt()),
                             ),
                           );
@@ -434,13 +442,11 @@ class _DailyTransactionsStatisticsCardState
     List<List<DateTime>> dates = TransactionSummaryCubit.getWeeksForRange(
         DateTime(selectedYear, 1, 1), DateTime(selectedYear, 12, 31));
 
-    availableDays = List.generate(
-        dates.mapMany((item) => item).toList().length,
-        (index) => DateTime(
-              selectedYear,
-            ).add(Duration(days: index)));
+    availableDays = List.generate(dates.mapMany((item) => item).toList().length,
+        (index) => dates.first.first.add(Duration(days: index)));
 
-    print("available days ${availableDays.length}");
+    print(
+        "available days ${availableDays.length} ${DateFormat(DateFormat.ABBR_WEEKDAY).format(availableDays.first)}");
     calculateSummaries();
   }
 
