@@ -96,6 +96,43 @@ class _DailyTransactionsStatisticsCardState
   }
 
   @override
+  void didUpdateWidget(covariant DailyTransactionsStatisticsCard oldWidget) {
+    years = widget.summary.keys.map((e) => e.year).toSet().toList();
+    months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
+
+    selectedYear = years.first;
+    selectedMonth = widget.summary.keys.first.month - 1;
+    generateAvailableDays();
+    selectedDay =
+    "${DateFormat(DateFormat.ABBR_MONTH).format(widget.summary.keys.first)} - Week ${_weekNumber(widget.summary.keys.first)}";
+    touchedIndex = widget.summary.keys.first
+        .difference(DateTime(selectedYear))
+        .inDays
+        .abs() +
+        (_isLeapYear(widget.summary.keys.first.year)
+            ? (availableDays.length - 366)
+            : (availableDays.length - 365));
+    if (touchedIndex > 6) {
+      pageIndex = (touchedIndex / 7).floor();
+      // _controller.animateToPage(pageIndex, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
@@ -301,6 +338,20 @@ class _DailyTransactionsStatisticsCardState
                     });
                   }
                 },
+                touchTooltipData: BarTouchTooltipData(
+                  tooltipBgColor: Colors.transparent,
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    return BarTooltipItem(
+                      ' ',
+                      const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    );
+                  },
+                ),
+
               ),
               titlesData: FlTitlesData(
                 show: true,

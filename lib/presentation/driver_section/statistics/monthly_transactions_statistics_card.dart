@@ -48,6 +48,7 @@ class _MonthlyTransactionsStatisticsCardState
 
   num highestAmount = 0;
 
+
   @override
   void initState() {
     _controller = PageController(initialPage: pageIndex)..addListener(() {
@@ -57,6 +58,12 @@ class _MonthlyTransactionsStatisticsCardState
       });
     });
 
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(MonthlyTransactionsStatisticsCard oldWidget) {
+    print("did update widget");
     years = widget.summary.keys.map((e) => e.year).toSet().toList();
     selectedYear = years.first;
     generateAvailableMonths();
@@ -66,11 +73,28 @@ class _MonthlyTransactionsStatisticsCardState
     if (touchedIndex > 6){
       pageIndex = 1;
     }
-    super.initState();
+    super.didUpdateWidget(oldWidget);
+  }
+
+
+  @override
+  void didChangeDependencies() {
+    print("Did change dependencies");
+    years = widget.summary.keys.map((e) => e.year).toSet().toList();
+    selectedYear = years.first;
+    generateAvailableMonths();
+    selectedMonth =
+        DateFormat(DateFormat.MONTH).format(widget.summary.keys.first);
+    touchedIndex = widget.summary.keys.first.month -1;
+    if (touchedIndex > 6){
+      pageIndex = 1;
+    }
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
+    print("Rebuild UI ${widget.summary.length}");
     return Container(
       child: Column(
         children: [

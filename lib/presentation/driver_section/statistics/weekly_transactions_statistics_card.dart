@@ -70,6 +70,20 @@ class _WeeklyTransactionsStatisticsCardState
   }
 
   @override
+  void didUpdateWidget(covariant WeeklyTransactionsStatisticsCard oldWidget) {
+    years = widget.summary.keys.map((e) => e.year).toSet().toList();
+    selectedYear = years.first;
+    generateAvailableWeeks();
+    selectedWeek =
+    "${DateFormat(DateFormat.ABBR_MONTH).format(widget.summary.keys.first)} - Week ${_weekNumber(widget.summary.keys.first)}";
+    touchedIndex = ((widget.summary.keys.first.difference(DateTime(selectedYear)).inDays/7).floor());
+    if (touchedIndex > 6) {
+      pageIndex = (touchedIndex / 7).floor();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -222,6 +236,20 @@ class _WeeklyTransactionsStatisticsCardState
                   });
                 }
               },
+              touchTooltipData: BarTouchTooltipData(
+                tooltipBgColor: Colors.transparent,
+                getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                  return BarTooltipItem(
+                    ' ',
+                    const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  );
+                },
+              ),
+
             ),
             titlesData: FlTitlesData(
               show: true,

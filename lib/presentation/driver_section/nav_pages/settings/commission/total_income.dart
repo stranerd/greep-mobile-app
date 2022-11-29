@@ -263,13 +263,13 @@ class _TotalIncomeState extends State<TotalIncome> {
                                                   MainAxisAlignment.center,
                                               children: [
                                                 TurkishSymbol(
-                                                  width: 48.sp,
-                                                  height: 48.sp,
+                                                  width: 25.sp,
+                                                  height: 25.sp,
                                                   color: const Color(0xff04D28C),
                                                 ),
                                                 TextWidget(
                                                   totalIncome.commission.toMoney,
-                                                  fontSize: 48,
+                                                  fontSize: 25,
                                                   color: const Color(0xff04D28C),
                                                   weight: FontWeight.bold,
                                                 ),
