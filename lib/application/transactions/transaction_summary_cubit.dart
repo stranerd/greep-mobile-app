@@ -613,7 +613,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
           transactions.add(e);
         }
       });
-      TransactionSummary transactionSummary = _calculateTransaction(
+      TransactionSummary transactionSummary = calculateTransaction(
           transactions, dates.first, dates.last);
 
 
@@ -668,7 +668,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     return _calculate(userId, from, to).transactions;
   }
 
-  TransactionSummary _calculateTransaction(List<Transaction> trans, DateTime from, DateTime to){
+  static TransactionSummary calculateTransaction(List<Transaction> trans, DateTime from, DateTime to){
 
     var expenses = trans.where((element) =>
     element.data.transactionType == TransactionType.expense);

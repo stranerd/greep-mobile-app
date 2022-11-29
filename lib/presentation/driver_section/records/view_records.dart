@@ -109,65 +109,7 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                   ),
                 ),
                 kVerticalSpaceSmall,
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: kDefaultSpacing * 0.5),
-                  alignment: Alignment.centerRight,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "Filter",
-                        style: kDefaultTextStyle,
-                      ),
-                      kHorizontalSpaceTiny,
-                      const Icon(Icons.sort),
-                    ],
-                  ),
-                ),
-                kVerticalSpaceSmall,
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: kDefaultSpacing),
-                  width: g.Get.width,
-                  padding: const EdgeInsets.all(kDefaultSpacing * 0.75),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: kLightGrayColor,
-                    ),
-                    borderRadius: BorderRadius.circular(kDefaultSpacing * 0.5),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      isDense: true,
-                      isExpanded: true,
-                      value: selectedInterval,
-                      items: timeIntervals
-                          .map((e) => DropdownMenuItem(
-                                child: Text(
-                                  e,
-                                  style:
-                                      kDefaultTextStyle.copyWith(fontSize: 14),
-                                ),
-                                value: e,
-                              ))
-                          .toList(),
-                      onChanged: (String? value) {
-                        selectedInterval = value ?? selectedInterval;
-                        if (selectedInterval.toLowerCase() == "daily") {
-                          transactions = GetIt.I<TransactionSummaryCubit>()
-                              .getDailyTransactions();
-                        } else if (selectedInterval.toLowerCase() ==
-                            "monthly") {
-                          transactions = GetIt.I<TransactionSummaryCubit>()
-                              .getMonthlyTransactions();
-                        }
 
-                        setState(() {});
-                      },
-                    ),
-                  ),
-                ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(kDefaultSpacing),
@@ -187,156 +129,222 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                                 text: 'No transactions',
                               );
                             } else {
-                              return ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: const ScrollPhysics(),
-                                  itemBuilder: (c, i) {
-                                    DateTime date =
-                                        transactions.keys.toList()[i];
-                                    String day = "";
-                                    if (selectedInterval.toLowerCase() ==
-                                        "daily") {
-                                      if (areDatesEqual(DateTime.now(), date)) {
-                                        day = "Today";
-                                      } else if (areDatesEqual(
-                                          DateTime.now().subtract(
-                                              const Duration(days: 1)),
-                                          date)) {
-                                        day = "Yesterday";
-                                      } else {
-                                        day = DateFormat(
-                                                "${DateFormat.ABBR_WEEKDAY}, ${DateFormat.DAY} ${DateFormat.MONTH} ${DateFormat.YEAR}")
-                                            .format(date);
-                                      }
-                                    } else if (selectedInterval.toLowerCase() ==
-                                        "monthly") {
-                                      day = DateFormat(
-                                              "${DateFormat.ABBR_MONTH} ${DateFormat.YEAR}")
-                                          .format(date);
-                                    }
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                              return Column(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: kDefaultSpacing * 0.5),
+                                    alignment: Alignment.centerRight,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        SizedBox(
-                                          height: 30,
-                                          child: ListView(
-                                            scrollDirection: Axis.horizontal,
-                                            physics: const ScrollPhysics(),
-                                            shrinkWrap: true,
+                                        Text(
+                                          "Filter",
+                                          style: kDefaultTextStyle,
+                                        ),
+                                        kHorizontalSpaceTiny,
+                                        const Icon(Icons.sort),
+                                      ],
+                                    ),
+                                  ),
+                                  kVerticalSpaceSmall,
+                                  Container(
+                                    margin:
+                                    const EdgeInsets.symmetric(horizontal: kDefaultSpacing),
+                                    width: g.Get.width,
+                                    padding: const EdgeInsets.all(kDefaultSpacing * 0.75),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: kLightGrayColor,
+                                      ),
+                                      borderRadius: BorderRadius.circular(kDefaultSpacing * 0.5),
+                                    ),
+                                    child: DropdownButtonHideUnderline(
+                                      child: DropdownButton<String>(
+                                        isDense: true,
+                                        isExpanded: true,
+                                        value: selectedInterval,
+                                        items: timeIntervals
+                                            .map((e) => DropdownMenuItem(
+                                          child: Text(
+                                            e,
+                                            style:
+                                            kDefaultTextStyle.copyWith(fontSize: 14),
+                                          ),
+                                          value: e,
+                                        ))
+                                            .toList(),
+                                        onChanged: (String? value) {
+                                          selectedInterval = value ?? selectedInterval;
+                                          if (selectedInterval.toLowerCase() == "daily") {
+                                            transactions = GetIt.I<TransactionSummaryCubit>()
+                                                .getDailyTransactions();
+                                          } else if (selectedInterval.toLowerCase() ==
+                                              "monthly") {
+                                            transactions = GetIt.I<TransactionSummaryCubit>()
+                                                .getMonthlyTransactions();
+                                          }
+
+                                          setState(() {});
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  kVerticalSpaceRegular,
+                                  Expanded(
+                                    child: ListView.separated(
+                                        shrinkWrap: false,
+                                        physics: const ScrollPhysics(),
+                                        itemBuilder: (c, i) {
+                                          DateTime date =
+                                              transactions.keys.toList()[i];
+                                          String day = "";
+                                          if (selectedInterval.toLowerCase() ==
+                                              "daily") {
+                                            if (areDatesEqual(DateTime.now(), date)) {
+                                              day = "Today";
+                                            } else if (areDatesEqual(
+                                                DateTime.now().subtract(
+                                                    const Duration(days: 1)),
+                                                date)) {
+                                              day = "Yesterday";
+                                            } else {
+                                              day = DateFormat(
+                                                      "${DateFormat.ABBR_WEEKDAY}, ${DateFormat.DAY} ${DateFormat.MONTH} ${DateFormat.YEAR}")
+                                                  .format(date);
+                                            }
+                                          } else if (selectedInterval.toLowerCase() ==
+                                              "monthly") {
+                                            day = DateFormat(
+                                                    "${DateFormat.ABBR_MONTH} ${DateFormat.YEAR}")
+                                                .format(date);
+                                          }
+                                          return Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                day,
-                                                style: kBoldTextStyle2.copyWith(
-                                                    fontSize: 13),
+                                              SizedBox(
+                                                height: 30,
+                                                child: ListView(
+                                                  scrollDirection: Axis.horizontal,
+                                                  physics: const ScrollPhysics(),
+                                                  shrinkWrap: true,
+                                                  children: [
+                                                    Text(
+                                                      day,
+                                                      style: kBoldTextStyle2.copyWith(
+                                                          fontSize: 13),
+                                                    ),
+                                                    kHorizontalSpaceRegular,
+                                                    Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment.center,
+                                                      children: [
+                                                        Text(
+                                                          "Income: ",
+                                                          style: AppTextStyles
+                                                              .blackSize10,
+                                                        ),
+                                                        TurkishSymbol(
+                                                          width: 8,
+                                                          height: 8,
+                                                          color: AppTextStyles
+                                                              .blackSize10.color,
+                                                        ),
+                                                        Text(
+                                                          transactions[date]!
+                                                              .income
+                                                              .toMoney,
+                                                          style: AppTextStyles
+                                                              .blackSize10,
+                                                        )
+                                                      ],
+                                                    ),
+                                                    kHorizontalSpaceRegular,
+                                                    Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        Text(
+                                                          "Trips: ${transactions[date]!.tripAmount == 0 ? "" : "+"}",
+                                                          style: AppTextStyles
+                                                              .greenSize10,
+                                                        ),
+                                                        TurkishSymbol(
+                                                          width: 8,
+                                                          height: 8,
+                                                          color: AppTextStyles
+                                                              .greenSize10.color,
+                                                        ),
+                                                        Text(
+                                                          transactions[date]!
+                                                              .tripAmount
+                                                              .toMoney,
+                                                          style: AppTextStyles
+                                                              .greenSize10,
+                                                        )
+                                                      ],
+                                                    ),
+                                                    kHorizontalSpaceRegular,
+                                                    Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        Text(
+                                                          "Expenses: ${transactions[date]!.expenseAmount == 0 ? "" : "-"}",
+                                                          style:
+                                                              AppTextStyles.redSize10,
+                                                        ),
+                                                        TurkishSymbol(
+                                                          width: 8,
+                                                          height: 8,
+                                                          color: AppTextStyles
+                                                              .redSize10.color,
+                                                        ),
+                                                        Text(
+                                                          transactions[date]!
+                                                              .expenseAmount
+                                                              .toMoney,
+                                                          style:
+                                                              AppTextStyles.redSize10,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                              kHorizontalSpaceRegular,
-                                              Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    "Income: ",
-                                                    style: AppTextStyles
-                                                        .blackSize10,
-                                                  ),
-                                                  TurkishSymbol(
-                                                    width: 8,
-                                                    height: 8,
-                                                    color: AppTextStyles
-                                                        .blackSize10.color,
-                                                  ),
-                                                  Text(
-                                                    transactions[date]!
-                                                        .income
-                                                        .toMoney,
-                                                    style: AppTextStyles
-                                                        .blackSize10,
-                                                  )
-                                                ],
-                                              ),
-                                              kHorizontalSpaceRegular,
-                                              Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Text(
-                                                    "Trips: ${transactions[date]!.tripAmount == 0 ? "" : "+"}",
-                                                    style: AppTextStyles
-                                                        .greenSize10,
-                                                  ),
-                                                  TurkishSymbol(
-                                                    width: 8,
-                                                    height: 8,
-                                                    color: AppTextStyles
-                                                        .greenSize10.color,
-                                                  ),
-                                                  Text(
-                                                    transactions[date]!
-                                                        .tripAmount
-                                                        .toMoney,
-                                                    style: AppTextStyles
-                                                        .greenSize10,
-                                                  )
-                                                ],
-                                              ),
-                                              kHorizontalSpaceRegular,
-                                              Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Text(
-                                                    "Expenses: ${transactions[date]!.expenseAmount == 0 ? "" : "-"}",
-                                                    style:
-                                                        AppTextStyles.redSize10,
-                                                  ),
-                                                  TurkishSymbol(
-                                                    width: 8,
-                                                    height: 8,
-                                                    color: AppTextStyles
-                                                        .redSize10.color,
-                                                  ),
-                                                  Text(
-                                                    transactions[date]!
-                                                        .expenseAmount
-                                                        .toMoney,
-                                                    style:
-                                                        AppTextStyles.redSize10,
-                                                  )
-                                                ],
+                                              kVerticalSpaceSmall,
+                                              ListView(
+                                                shrinkWrap: true,
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                children: transactions[date]!
+                                                    .transactions
+                                                    .map((e) {
+                                                  return TransactionCard(
+                                                    transaction: e,
+                                                    withBigAmount: false,
+                                                    subTrailingStyle:
+                                                        AppTextStyles.blackSize12,
+                                                    titleStyle:
+                                                        AppTextStyles.blackSize14,
+                                                    subtitleStyle:
+                                                        AppTextStyles.blackSize12,
+                                                    trailingStyle:
+                                                        AppTextStyles.greenSize14,
+                                                  );
+                                                }).toList(),
                                               ),
                                             ],
-                                          ),
-                                        ),
-                                        kVerticalSpaceSmall,
-                                        ListView(
-                                          shrinkWrap: true,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          children: transactions[date]!
-                                              .transactions
-                                              .map((e) {
-                                            return TransactionCard(
-                                              transaction: e,
-                                              withBigAmount: false,
-                                              subTrailingStyle:
-                                                  AppTextStyles.blackSize12,
-                                              titleStyle:
-                                                  AppTextStyles.blackSize14,
-                                              subtitleStyle:
-                                                  AppTextStyles.blackSize12,
-                                              trailingStyle:
-                                                  AppTextStyles.greenSize14,
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                  separatorBuilder: (_, __) =>
-                                      kVerticalSpaceRegular,
-                                  itemCount: transactions.length);
+                                          );
+                                        },
+                                        separatorBuilder: (_, __) =>
+                                            kVerticalSpaceRegular,
+                                        itemCount: transactions.length),
+                                  ),
+                                ],
+                              );
                             }
                           },
                         ),

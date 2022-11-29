@@ -1,10 +1,8 @@
-import 'dart:math';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:greep/application/transactions/response/transaction_summary.dart';
+import 'package:greep/application/transactions/transaction_summary_cubit.dart';
 import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/money.dart';
 import 'package:greep/commons/ui_helpers.dart';
@@ -12,7 +10,6 @@ import 'package:greep/domain/transaction/transaction.dart';
 import 'package:greep/presentation/driver_section/statistics/top_customers.dart';
 import 'package:greep/presentation/driver_section/widgets/chart_transaction_indicator.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
-import 'package:greep/presentation/widgets/turkish_symbol.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 
 class AllTransactionsStatisticsCard extends StatefulWidget {
@@ -29,6 +26,35 @@ class AllTransactionsStatisticsCard extends StatefulWidget {
 class _AllTransactionsStatisticsCardState
     extends State<AllTransactionsStatisticsCard> {
   String touchedIndex = "";
+  int selectedYear = DateTime.now().year;
+
+  String touchedType = "";
+
+  List<int> years = [];
+
+  late TransactionSummary selectedTransactionSummary;
+
+  @override
+  void didChangeDependencies() {
+    years = widget.transactionSummary.transactions.map((e) => e.timeAdded.year).toSet().toList();
+    selectedYear = years.first;
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didUpdateWidget(covariant AllTransactionsStatisticsCard oldWidget) {
+    years = widget.transactionSummary.transactions.map((e) => e.timeAdded.year).toSet().toList();
+    selectedYear = years.first;
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void calculateYears(){
+    List<Transaction> trans = widget.transactionSummary.transactions.where((element) => element.timeAdded.year == selectedYear).toList();
+    selectedTransactionSummary = TransactionSummaryCubit.calculateTransaction(trans, DateTime(selectedYear), DateTime(selectedYear,12,31));
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +66,52 @@ class _AllTransactionsStatisticsCardState
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           kVerticalSpaceRegular,
+          Container(
+            decoration: BoxDecoration(color: kWhiteColor),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: kDefaultSpacing * 0.6,
+                      vertical: kDefaultSpacing * 0.3),
+                  decoration: BoxDecoration(
+                      color: AppColors.lightGray,
+                      borderRadius: BorderRadius.circular(kDefaultSpacing)),
+                  child: DropdownButton<int>(
+                      isDense: true,
+                      value: selectedYear,
+                      underline: SizedBox(),
+                      icon: const Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        size: 16,
+                      ),
+                      items: years
+                          .map(
+                            (e) => DropdownMenuItem<int>(
+                          value: e,
+                          child: TextWidget(
+                            e.toString(),
+                            fontSize: 16,
+                            weight: FontWeight.bold,
+                          ),
+                        ),
+                      )
+                          .toList(),
+                      onChanged: (value) {
+                        selectedYear = value ?? DateTime.now().year;
+                        calculateYears();
+                        setState(() {});
+                      }),
+                )
+              ],
+            ),
+          ),
+
+          kVerticalSpaceRegular,
           Builder(builder: (context) {
-            int index = 0;
-            double indexValue = 0;
-            double expense = widget.transactionSummary.expenseAmount.toDouble();
-            double income = widget.transactionSummary.income.toDouble();
+            double expense = selectedTransactionSummary.expenseAmount.toDouble();
+            double income = selectedTransactionSummary.income.toDouble();
 
             List<PieChartSectionData> sectionData = [
               PieChartSectionData(
@@ -134,7 +201,7 @@ class _AllTransactionsStatisticsCardState
                     backgroundColor: const Color.fromRGBO(4, 210, 140, 0.1),
                     text: "Total Income",
                     isSelected: touchedIndex == "income",
-                    amount: widget.transactionSummary.income.toMoney,
+                    amount: selectedTransactionSummary.income.toMoney,
                   ),
                 ),
                 SizedBox(
@@ -143,7 +210,7 @@ class _AllTransactionsStatisticsCardState
                     color: AppColors.blue,
                     text: "Total Trip",
                     icon: "assets/icons/trip_amount_blue.svg",
-                    amount: widget.transactionSummary.tripAmount.toMoney,
+                    amount: selectedTransactionSummary.tripAmount.toMoney,
                     backgroundColor: const Color.fromRGBO(2, 80, 198, 0.1),
                     isSelected: touchedIndex == "trip",
                   ),
@@ -154,7 +221,7 @@ class _AllTransactionsStatisticsCardState
                     color: AppColors.red,
                     backgroundColor: const Color(0xffECC2C2),
                     icon: "assets/icons/expense_red.svg",
-                    amount: widget.transactionSummary.expenseAmount.toMoney,
+                    amount: selectedTransactionSummary.expenseAmount.toMoney,
                     text: "Total Expenses",
                     isSelected: touchedIndex == "expense",
                   ),
@@ -164,7 +231,7 @@ class _AllTransactionsStatisticsCardState
           }),
           kVerticalSpaceRegular,
           TopCustomersView(
-              transactions: widget.transactionSummary.transactions),
+              transactions: selectedTransactionSummary.transactions),
         ],
       ),
     );
