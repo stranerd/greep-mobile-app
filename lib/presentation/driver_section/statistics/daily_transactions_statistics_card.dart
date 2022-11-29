@@ -427,7 +427,7 @@ class _DailyTransactionsStatisticsCardState
                     isSelected: touchedType == "income",
                     amount: touchedIndex == -1
                         ? "0"
-                        : "${dailySummaries[dailySummaries.keys.toList()[touchedIndex]]?.income ?? 0}",
+                        : "${dailySummaries[dailySummaries.keys.toList()[touchedIndex]]?.income.toMoney ?? 0}",
                   ),
                 ),
                 SizedBox(
@@ -438,7 +438,7 @@ class _DailyTransactionsStatisticsCardState
                     icon: "assets/icons/trip_amount_blue.svg",
                     amount: touchedIndex == -1
                         ? "0"
-                        : "${dailySummaries[dailySummaries.keys.toList()[touchedIndex]]?.tripAmount ?? 0}",
+                        : "${dailySummaries[dailySummaries.keys.toList()[touchedIndex]]?.tripAmount.toMoney ?? 0}",
                     backgroundColor: const Color.fromRGBO(2, 80, 198, 0.1),
                     isSelected: touchedType == "trip",
                   ),
@@ -451,7 +451,7 @@ class _DailyTransactionsStatisticsCardState
                     icon: "assets/icons/expense_red.svg",
                     amount: touchedIndex == -1
                         ? "0"
-                        : "${dailySummaries[dailySummaries.keys.toList()[touchedIndex]]?.expenseAmount ?? 0}",
+                        : "${dailySummaries[dailySummaries.keys.toList()[touchedIndex]]?.expenseAmount.toMoney ?? 0}",
                     text: "Total Expenses",
                     isSelected: touchedType == "expense",
                   ),

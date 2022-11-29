@@ -326,7 +326,7 @@ class _WeeklyTransactionsStatisticsCardState
                   isSelected: touchedType == "income",
                   amount: touchedIndex == -1
                       ? "0"
-                      : "${weeklySummaries[weeklySummaries.keys.toList()[touchedIndex]]?.income ?? 0}",
+                      : "${weeklySummaries[weeklySummaries.keys.toList()[touchedIndex]]?.income.toMoney ?? 0}",
                 ),
               ),
               SizedBox(
@@ -337,7 +337,7 @@ class _WeeklyTransactionsStatisticsCardState
                   icon: "assets/icons/trip_amount_blue.svg",
                   amount: touchedIndex == -1
                       ? "0"
-                      : "${weeklySummaries[weeklySummaries.keys.toList()[touchedIndex]]?.tripAmount ?? 0}",
+                      : "${weeklySummaries[weeklySummaries.keys.toList()[touchedIndex]]?.tripAmount.toMoney ?? 0}",
                   backgroundColor: const Color.fromRGBO(2, 80, 198, 0.1),
                   isSelected: touchedType == "trip",
                 ),
@@ -350,7 +350,7 @@ class _WeeklyTransactionsStatisticsCardState
                   icon: "assets/icons/expense_red.svg",
                   amount: touchedIndex == -1
                       ? "0"
-                      : "${weeklySummaries[weeklySummaries.keys.toList()[touchedIndex]]?.expenseAmount ?? 0}",
+                      : "${weeklySummaries[weeklySummaries.keys.toList()[touchedIndex]]?.expenseAmount.toMoney ?? 0}",
                   text: "Total Expenses",
                   isSelected: touchedType == "expense",
                 ),

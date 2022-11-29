@@ -37,15 +37,21 @@ class _AllTransactionsStatisticsCardState
   @override
   void didChangeDependencies() {
     years = widget.transactionSummary.transactions.map((e) => e.timeAdded.year).toSet().toList();
+    if (years.isEmpty){
+      years = [DateTime.now().year];}
     selectedYear = years.first;
+
+    calculateYears();
     super.didChangeDependencies();
   }
 
   @override
   void didUpdateWidget(covariant AllTransactionsStatisticsCard oldWidget) {
     years = widget.transactionSummary.transactions.map((e) => e.timeAdded.year).toSet().toList();
+    if (years.isEmpty){
+      years = [DateTime.now().year];}
     selectedYear = years.first;
-
+    calculateYears();
     super.didUpdateWidget(oldWidget);
   }
 
