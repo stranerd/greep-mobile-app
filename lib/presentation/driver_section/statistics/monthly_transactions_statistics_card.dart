@@ -174,6 +174,7 @@ class _MonthlyTransactionsStatisticsCardState
             BarChartData sectionData = BarChartData(
               barGroups: selectedBarGroups,
               alignment: BarChartAlignment.spaceBetween,
+
               barTouchData: BarTouchData(
                 enabled: true,
                 allowTouchBarBackDraw: false,
@@ -195,9 +196,24 @@ class _MonthlyTransactionsStatisticsCardState
                   }
 
                 },
+
+                touchTooltipData: BarTouchTooltipData(
+                  tooltipBgColor: Colors.transparent,
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    return BarTooltipItem(
+                      ' ',
+                      const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    );
+                  },
+                ),
               ),
               titlesData: FlTitlesData(
                 show: true,
+
                 bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                         showTitles: true,
@@ -271,6 +287,7 @@ class _MonthlyTransactionsStatisticsCardState
               borderData: FlBorderData(
                 show: false,
               ),
+
             );
             return Container(
               alignment: Alignment.center,

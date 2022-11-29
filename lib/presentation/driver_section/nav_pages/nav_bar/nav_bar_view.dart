@@ -18,6 +18,7 @@ import 'package:greep/commons/scaffold_messenger_service.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/firebase/Firebase_service.dart';
 import 'package:greep/domain/user/model/manager_request.dart';
+import 'package:greep/presentation/driver_section/map/map_screen.dart';
 import 'package:stacked/stacked.dart';
 import 'package:upgrader/upgrader.dart';
 
@@ -104,6 +105,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
     HomePage(),
     CustomerScreen(),
     TransactionsScreen(),
+    MapScreen(),
     SettingsHome(),
   ];
 
@@ -112,6 +114,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
       SvgAssets.home,
       SvgAssets.people,
       SvgAssets.history,
+      SvgAssets.map,
       SvgAssets.settings,
     ];
 
@@ -119,6 +122,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
       SvgAssets.homeActive,
       SvgAssets.peopleActive,
       SvgAssets.historyActive,
+      SvgAssets.mapActive,
       SvgAssets.settingsActive,
     ];
 
@@ -126,10 +130,11 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
       'Home',
       'People',
       'History',
+      'Map'
       'Settings',
     ];
 
-    List<BottomNavigationBarItem> bottomNavList = List.generate(4, (i) {
+    List<BottomNavigationBarItem> bottomNavList = List.generate(5, (i) {
       var item = BottomNavigationBarItem(
         label: '',
         icon: SvgIcon(

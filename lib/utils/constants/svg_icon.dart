@@ -6,6 +6,7 @@ class SvgAssets {
   static final SvgData people = SvgData('assets/icons/people.svg');
   static final SvgData history = SvgData('assets/icons/history.svg');
   static final SvgData settings = SvgData('assets/icons/settings.svg');
+  static final SvgData map = SvgData("assets/icons/map.svg");
 
   static final SvgData homeActive = SvgData('assets/icons/home-active.svg');
   static final SvgData peopleActive = SvgData('assets/icons/people-active.svg');
@@ -13,6 +14,9 @@ class SvgAssets {
       SvgData('assets/icons/history-active.svg');
   static final SvgData settingsActive =
       SvgData('assets/icons/settings-active.svg');
+
+  static final SvgData mapActive = SvgData("assets/icons/map.svg");
+
 }
 
 class SvgData {
