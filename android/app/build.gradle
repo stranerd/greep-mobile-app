@@ -11,6 +11,7 @@ if (flutterRoot == null) {
     throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
+
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
     flutterVersionCode = '1'
@@ -19,6 +20,11 @@ if (flutterVersionCode == null) {
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
+}
+
+def googleMapKey = localProperties.getProperty('GM_KEY')
+if (googleMapKey == null) {
+    googleMapKey = 'dfgfd'
 }
 
 apply plugin: 'com.android.application'
@@ -60,6 +66,9 @@ android {
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        manifestPlaceholders = [googleMapKey: googleMapKey,applicationName2: "Greep"]
+
+
     }
 
     signingConfigs {

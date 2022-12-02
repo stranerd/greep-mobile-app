@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> loadApp() async {
-    print("isfirst time: $isFirstTime");
+    // print("isfirst time: $isFirstTime");
     if (isFirstTime) {
       Get.offAll(() => const OnboardingSlides());
       return;

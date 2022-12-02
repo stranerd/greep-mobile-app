@@ -117,11 +117,11 @@ class _DailyTransactionsStatisticsCardState
     selectedMonth = widget.summary.keys.first.month - 1;
     generateAvailableDays();
     selectedDay =
-    "${DateFormat(DateFormat.ABBR_MONTH).format(widget.summary.keys.first)} - Week ${_weekNumber(widget.summary.keys.first)}";
+        "${DateFormat(DateFormat.ABBR_MONTH).format(widget.summary.keys.first)} - Week ${_weekNumber(widget.summary.keys.first)}";
     touchedIndex = widget.summary.keys.first
-        .difference(DateTime(selectedYear))
-        .inDays
-        .abs() +
+            .difference(DateTime(selectedYear))
+            .inDays
+            .abs() +
         (_isLeapYear(widget.summary.keys.first.year)
             ? (availableDays.length - 366)
             : (availableDays.length - 365));
@@ -351,7 +351,6 @@ class _DailyTransactionsStatisticsCardState
                     );
                   },
                 ),
-
               ),
               titlesData: FlTitlesData(
                 show: true,

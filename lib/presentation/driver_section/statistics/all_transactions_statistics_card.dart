@@ -36,9 +36,13 @@ class _AllTransactionsStatisticsCardState
 
   @override
   void didChangeDependencies() {
-    years = widget.transactionSummary.transactions.map((e) => e.timeAdded.year).toSet().toList();
-    if (years.isEmpty){
-      years = [DateTime.now().year];}
+    years = widget.transactionSummary.transactions
+        .map((e) => e.timeAdded.year)
+        .toSet()
+        .toList();
+    if (years.isEmpty) {
+      years = [DateTime.now().year];
+    }
     selectedYear = years.first;
 
     calculateYears();
@@ -47,20 +51,25 @@ class _AllTransactionsStatisticsCardState
 
   @override
   void didUpdateWidget(covariant AllTransactionsStatisticsCard oldWidget) {
-    years = widget.transactionSummary.transactions.map((e) => e.timeAdded.year).toSet().toList();
-    if (years.isEmpty){
-      years = [DateTime.now().year];}
+    years = widget.transactionSummary.transactions
+        .map((e) => e.timeAdded.year)
+        .toSet()
+        .toList();
+    if (years.isEmpty) {
+      years = [DateTime.now().year];
+    }
     selectedYear = years.first;
     calculateYears();
     super.didUpdateWidget(oldWidget);
   }
 
-  void calculateYears(){
-    List<Transaction> trans = widget.transactionSummary.transactions.where((element) => element.timeAdded.year == selectedYear).toList();
-    selectedTransactionSummary = TransactionSummaryCubit.calculateTransaction(trans, DateTime(selectedYear), DateTime(selectedYear,12,31));
-
+  void calculateYears() {
+    List<Transaction> trans = widget.transactionSummary.transactions
+        .where((element) => element.timeAdded.year == selectedYear)
+        .toList();
+    selectedTransactionSummary = TransactionSummaryCubit.calculateTransaction(
+        trans, DateTime(selectedYear), DateTime(selectedYear, 12, 31));
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -95,14 +104,14 @@ class _AllTransactionsStatisticsCardState
                       items: years
                           .map(
                             (e) => DropdownMenuItem<int>(
-                          value: e,
-                          child: TextWidget(
-                            e.toString(),
-                            fontSize: 16,
-                            weight: FontWeight.bold,
-                          ),
-                        ),
-                      )
+                              value: e,
+                              child: TextWidget(
+                                e.toString(),
+                                fontSize: 16,
+                                weight: FontWeight.bold,
+                              ),
+                            ),
+                          )
                           .toList(),
                       onChanged: (value) {
                         selectedYear = value ?? DateTime.now().year;
@@ -113,10 +122,10 @@ class _AllTransactionsStatisticsCardState
               ],
             ),
           ),
-
           kVerticalSpaceRegular,
           Builder(builder: (context) {
-            double expense = selectedTransactionSummary.expenseAmount.toDouble();
+            double expense =
+                selectedTransactionSummary.expenseAmount.toDouble();
             double income = selectedTransactionSummary.income.toDouble();
 
             List<PieChartSectionData> sectionData = [
