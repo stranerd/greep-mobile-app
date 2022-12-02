@@ -33,7 +33,7 @@ class _MapScreenState extends State<MapScreen> {
       9.064246972613308,
       7.424030426684654,
     ),
-    zoom: 10,
+    zoom: 15,
   );
 
   @override
@@ -106,10 +106,29 @@ class _MapScreenState extends State<MapScreen> {
                       child: Container(
                         decoration: const BoxDecoration(color: kWhiteColor),
                         child: GoogleMap(
+                          myLocationEnabled: true,
+                          compassEnabled: true,
+                          tiltGesturesEnabled: false,
+                          zoomControlsEnabled: false,
                           mapType: MapType.normal,
                           initialCameraPosition: _grandCubana,
                           onMapCreated: (c) {
                             _controller.complete(c);
+                          },
+                          markers: {
+                            Marker(
+                              markerId: const MarkerId("driver"),
+                              position: const LatLng(
+                                9.064246972613308,
+                                7.424030426684654,
+                              ),
+                              infoWindow: const InfoWindow(
+                                title: "driver",
+                              ),
+                              icon: BitmapDescriptor.defaultMarkerWithHue(
+                                BitmapDescriptor.hueBlue,
+                              ),
+                            )
                           },
                         ),
                       ),

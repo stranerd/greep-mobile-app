@@ -10,6 +10,7 @@ import 'package:greep/application/auth/AuthenticationState.dart';
 import 'package:greep/application/auth/SignupCubit.dart';
 import 'package:greep/application/auth/SignupState.dart';
 import 'package:greep/application/auth/request/LoginRequest.dart';
+import 'package:greep/application/location/location_cubit.dart';
 import 'package:greep/commons/Utils/input_validator.dart';
 import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/scaffold_messenger_service.dart';
@@ -43,6 +44,8 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
 
   @override
   void initState() {
+    BlocProvider.of<LocationCubit>(context).requestLocation();
+
     _tapGestureRecognizer = TapGestureRecognizer()
       ..onTap = () {
         setState(() {

@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:greep/application/location/location.dart';
+import 'package:greep/domain/user/model/ride_status.dart';
 
 class FirebaseApi {
   static Stream<QuerySnapshot<Map<String, dynamic>>> managerRequestsStream(
@@ -73,4 +75,36 @@ class FirebaseApi {
       'createdAt': DateTime.now(),
     });
   }
+
+
+  static Future updateDriverLocation({
+    required String driverId,
+    required Location location,
+
+  }
+      ) async {
+    final collection = FirebaseFirestore.instance.collection('DriverLocation');
+    var future = collection.where("driverId", isEqualTo: driverId).get();
+    future.then((value) async {
+      if (value.docs.isEmpty) {
+        await collection.doc().set({
+          'driverId': driverId,
+          'rideStatus': RideStatus.ended.name,
+          'latitude': location.latitude,
+          'longitude': location.longitude,
+          'updatedAt': DateTime.now(),
+        });
+      } else {
+        value.docs.forEach((element) {
+          element.reference.update({
+            'latitude': location.latitude,
+            'longitude': location.longitude,
+            'updatedAt': DateTime.now(),
+          });
+        });
+      }
+    });
+  }
+
+
 }

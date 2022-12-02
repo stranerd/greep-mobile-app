@@ -19,6 +19,7 @@ import 'package:greep/application/driver/new_manager_accepts_cubit.dart';
 import 'package:greep/application/driver/new_manager_requests_cubit.dart';
 import 'package:greep/application/fcm/fcm_notification_service.dart';
 import 'package:greep/application/local_notification/local_notification_service.dart';
+import 'package:greep/application/location/location_cubit.dart';
 import 'package:greep/application/transactions/customer_statistics_cubit.dart';
 import 'package:greep/application/transactions/transaction_summary_cubit.dart';
 import 'package:greep/application/transactions/user_transactions_cubit.dart';
@@ -83,6 +84,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider.value(
           value: GetIt.I<AuthenticationCubit>(),
+        ),
+        BlocProvider.value(
+          value: (GetIt.instance.get<LocationCubit>()),
         ),
         BlocProvider.value(
           value: GetIt.I<UserCubit>(),
