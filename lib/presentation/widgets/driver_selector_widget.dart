@@ -84,6 +84,7 @@ class _DriverSelectorRowState extends State<DriverSelectorRow> {
                         });
                       },
                       child: DriverItemWidget(
+                        id: user.id,
                         textColor: widget.withWhiteText ? kWhiteColor: kBlackColor,
                           name: i == 0 ? "You" : user.firstName,
                           isSelected: _driversCubit.selectedUser == user,
