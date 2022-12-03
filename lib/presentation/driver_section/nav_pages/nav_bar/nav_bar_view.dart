@@ -97,6 +97,14 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
             ),
           ),
         ),
+        floatingActionButton: Container(
+          height: 70.h,
+          width: 70.w,
+          child: FloatingActionButton(
+            onPressed: () {},
+            child: Image.asset("assets/icons/map_navigator.png",scale: 2,),
+          ),
+        ),
       ),
     );
   }
@@ -131,7 +139,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
       'People',
       'History',
       'Map'
-      'Settings',
+          'Settings',
     ];
 
     List<BottomNavigationBarItem> bottomNavList = List.generate(5, (i) {

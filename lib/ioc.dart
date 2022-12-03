@@ -11,6 +11,7 @@ import 'package:greep/application/location/location_cubit.dart';
 import 'package:greep/application/transactions/customer_statistics_cubit.dart';
 import 'package:greep/application/transactions/transaction_crud_cubit.dart';
 import 'package:greep/application/transactions/transaction_summary_cubit.dart';
+import 'package:greep/application/transactions/trip_direction_builder_cubit.dart';
 import 'package:greep/application/transactions/user_transactions_cubit.dart';
 import 'package:greep/application/driver/drivers_cubit.dart';
 import 'package:greep/application/driver/manager_requests_cubit.dart';
@@ -24,8 +25,8 @@ import 'package:greep/domain/transaction/transaction_client.dart';
 import 'package:greep/domain/transaction/transaction_service.dart';
 import 'package:greep/domain/user/UserService.dart';
 import 'package:greep/domain/user/user_client.dart';
-var getIt = GetIt.instance;
 
+var getIt = GetIt.instance;
 
 class IoC {
   late AuthenticationCubit _authenticationCubit;
@@ -44,7 +45,6 @@ class IoC {
   late UserCustomersCubit _userCustomersCubit;
   late AuthenticationClient _authenticationClient;
   late NewManagerAcceptsCubit _newManagerAcceptsCubit;
-
 
   IoC() {
     getIt.registerLazySingleton(() => LocationCubit());
@@ -71,6 +71,12 @@ class IoC {
       authenticationService: _authenticationService,
     );
 
+    getIt.registerLazySingleton(
+      () => TripDirectionBuilderCubit(
+        locationCubit: getIt(),
+      ),
+    );
+
     _managerRequestsCubit = ManagerRequestsCubit(
       userCubit: _userCubit,
       userService: _userService,
@@ -79,13 +85,14 @@ class IoC {
     _newManagerRequestsCubit = NewManagerRequestsCubit(userCubit: _userCubit);
     _newManagerAcceptsCubit = NewManagerAcceptsCubit(userCubit: _userCubit);
 
-
     _managerDriversCubit = ManagerDriversCubit(
       driversCubit: _driversCubit,
       userService: _userService,
     );
 
-    _userCustomersCubit = UserCustomersCubit(customerService: _customerService, transactionsCubit: _userTransactionsCubit);
+    _userCustomersCubit = UserCustomersCubit(
+        customerService: _customerService,
+        transactionsCubit: _userTransactionsCubit);
 
     getIt.registerLazySingleton(() => _authenticationCubit);
     getIt.registerSingleton(_authenticationService);
@@ -114,11 +121,11 @@ class IoC {
     getIt.registerSingleton(_userCustomersCubit);
 
     getIt.registerFactory(() => ResetPasswordCubit(
-      authenticationService: _authenticationService,
-    ));
+          authenticationService: _authenticationService,
+        ));
     getIt.registerFactory(() => EmailVerificationCubit(
-      authenticationService: getIt(),
-    ));
+          authenticationService: getIt(),
+        ));
     getIt.registerFactory(() => UserCrudCubit(
           userService: _userService,
         ));

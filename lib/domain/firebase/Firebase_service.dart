@@ -80,6 +80,8 @@ class FirebaseApi {
   static Future updateDriverLocation({
     required String driverId,
     required Location location,
+    RideStatus rideStatus = RideStatus.ended
+
 
   }
       ) async {
@@ -99,6 +101,7 @@ class FirebaseApi {
           element.reference.update({
             'latitude': location.latitude.toString(),
             'longitude': location.longitude.toString(),
+            'rideStatus': rideStatus.name,
             'updatedAt': DateTime.now(),
           });
         });
