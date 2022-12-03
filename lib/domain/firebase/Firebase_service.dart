@@ -90,21 +90,31 @@ class FirebaseApi {
         await collection.doc().set({
           'driverId': driverId,
           'rideStatus': RideStatus.ended.name,
-          'latitude': location.latitude,
-          'longitude': location.longitude,
+          'latitude': location.latitude.toString(),
+          'longitude': location.longitude.toString(),
           'updatedAt': DateTime.now(),
         });
       } else {
         value.docs.forEach((element) {
           element.reference.update({
-            'latitude': location.latitude,
-            'longitude': location.longitude,
+            'latitude': location.latitude.toString(),
+            'longitude': location.longitude.toString(),
             'updatedAt': DateTime.now(),
           });
         });
       }
     });
   }
+
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getDriverLocation(
+      String userId) {
+    var data = FirebaseFirestore.instance
+        .collection('DriverLocation')
+        .where('driverId', isEqualTo: userId);
+    return data.snapshots();
+  }
+
 
 
 }

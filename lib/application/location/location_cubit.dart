@@ -31,7 +31,7 @@ class LocationCubit extends Cubit<LocationState> {
 
   LocationCubit() : super(LocationStateUninitialized()) {
     subscribe();
-    timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+    timer = Timer.periodic(const Duration(hours: 10), (timer) {
       User user = GetIt.I<UserCubit>().user;
       updateUserLocation(user.id);
 
