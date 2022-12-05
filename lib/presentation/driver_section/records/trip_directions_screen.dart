@@ -13,7 +13,6 @@ import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-
 class TripDirectionsScreen extends StatefulWidget {
   const TripDirectionsScreen({Key? key}) : super(key: key);
 
@@ -51,7 +50,6 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
       },
       builder: (context, state) {
         return Container(
-
           height: 0.7.sh,
           margin: const EdgeInsets.symmetric(horizontal: kDefaultSpacing * 2),
           decoration: const BoxDecoration(),
@@ -80,7 +78,7 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
                 child: Stepper(
                   physics: const ScrollPhysics(),
                   currentStep: currStep,
-                  onStepTapped: (int intt){
+                  onStepTapped: (int intt) {
                     setState(() {
                       currStep = intt;
                     });
@@ -125,10 +123,13 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
                                   kVerticalSpaceRegular,
                                   Row(
                                     mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       TextWidget(
-                                          "${state.directionProgress.speed.toString()} km/h",fontSize: 12,),
+                                        "${state.directionProgress.speed.toString()} km/h",
+                                        fontSize: 12,
+                                      ),
                                       kHorizontalSpaceSmall,
                                       Container(
                                         height: 5.r,
@@ -139,7 +140,9 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
                                       ),
                                       kHorizontalSpaceSmall,
                                       TextWidget(
-                                          "${state.directionProgress.distance.toString()} km",fontSize: 12, ),
+                                        "${state.directionProgress.distance.toString()} km",
+                                        fontSize: 12,
+                                      ),
                                       kHorizontalSpaceSmall,
                                       Container(
                                         height: 5.r,
@@ -150,7 +153,9 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
                                       ),
                                       kHorizontalSpaceSmall,
                                       TextWidget(
-                                          "${state.directionProgress.duration.inMinutes} m", fontSize: 12,),
+                                        "${state.directionProgress.duration.inMinutes} m",
+                                        fontSize: 12,
+                                      ),
                                     ],
                                   )
                                 ])
@@ -165,66 +170,74 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
                       isActive: state is TripDirectionBuilderStateStartTrip,
                       content: state is TripDirectionBuilderStateStartTrip
                           ? Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            BlocProvider.value(
-                              value: getIt<GeoCoderCubit>()
-                                ..fetchAddressFromLongAndLat(
-                                    longitude: state.directionProgress
-                                        .location.longitude,
-                                    latitude: state.directionProgress
-                                        .location.latitude),
-                              child: BlocBuilder<GeoCoderCubit,
-                                  GeoCoderState>(
-                                builder: (context, geoState) {
-                                  print("Getting geo locate for start trip ${state.directionProgress}");
-                                  return TextWidget(
-                                    geoState is GeoCoderStateFetched
-                                        ? geoState.address.isEmpty
-                                        ? 'Loading address...'
-                                        : geoState.address
-                                        : 'Loading address...',
-                                    softWrap: true,
-                                    maxLines: 2,
-                                    fontSize: 13,
-                                    color: AppColors.black,
-                                  );
-                                },
-                              ),
-                            ),
-                            kVerticalSpaceRegular,
-                            Row(
                               mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                TextWidget(
-                                  "${state.directionProgress.speed.toString()} km/h",fontSize: 12,),
-                                kHorizontalSpaceSmall,
-                                Container(
-                                  height: 5.r,
-                                  width: 5.r,
-                                  decoration: const BoxDecoration(
-                                      color: Colors.black,
-                                      shape: BoxShape.circle),
-                                ),
-                                kHorizontalSpaceSmall,
-                                TextWidget(
-                                  "${state.directionProgress.distance.toString()} km",fontSize: 12, ),
-                                kHorizontalSpaceSmall,
-                                Container(
-                                  height: 5.r,
-                                  width: 5.r,
-                                  decoration: const BoxDecoration(
-                                      color: Colors.black,
-                                      shape: BoxShape.circle),
-                                ),
-                                kHorizontalSpaceSmall,
-                                TextWidget(
-                                  "${state.directionProgress.duration.inMinutes} m", fontSize: 12,),
-                              ],
-                            )
-                          ])
+                                  BlocProvider.value(
+                                    value: getIt<GeoCoderCubit>()
+                                      ..fetchAddressFromLongAndLat(
+                                          longitude: state.directionProgress
+                                              .location.longitude,
+                                          latitude: state.directionProgress
+                                              .location.latitude),
+                                    child: BlocBuilder<GeoCoderCubit,
+                                        GeoCoderState>(
+                                      builder: (context, geoState) {
+                                        print(
+                                            "Getting geo locate for start trip ${state.directionProgress}");
+                                        return TextWidget(
+                                          geoState is GeoCoderStateFetched
+                                              ? geoState.address.isEmpty
+                                                  ? 'Loading address...'
+                                                  : geoState.address
+                                              : 'Loading address...',
+                                          softWrap: true,
+                                          maxLines: 2,
+                                          fontSize: 13,
+                                          color: AppColors.black,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  kVerticalSpaceRegular,
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      TextWidget(
+                                        "${state.directionProgress.speed.toString()} km/h",
+                                        fontSize: 12,
+                                      ),
+                                      kHorizontalSpaceSmall,
+                                      Container(
+                                        height: 5.r,
+                                        width: 5.r,
+                                        decoration: const BoxDecoration(
+                                            color: Colors.black,
+                                            shape: BoxShape.circle),
+                                      ),
+                                      kHorizontalSpaceSmall,
+                                      TextWidget(
+                                        "${state.directionProgress.distance.toString()} km",
+                                        fontSize: 12,
+                                      ),
+                                      kHorizontalSpaceSmall,
+                                      Container(
+                                        height: 5.r,
+                                        width: 5.r,
+                                        decoration: const BoxDecoration(
+                                            color: Colors.black,
+                                            shape: BoxShape.circle),
+                                      ),
+                                      kHorizontalSpaceSmall,
+                                      TextWidget(
+                                        "${state.directionProgress.duration.inMinutes} m",
+                                        fontSize: 12,
+                                      ),
+                                    ],
+                                  )
+                                ])
                           : Container(),
                       state: StepState.indexed,
                     ),
@@ -236,72 +249,81 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
                       isActive: state is TripDirectionBuilderStateEndTrip,
                       content: state is TripDirectionBuilderStateEndTrip
                           ? Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            BlocProvider.value(
-                              value: getIt<GeoCoderCubit>()
-                                ..fetchAddressFromLongAndLat(
-                                    longitude: state.directionProgress
-                                        .location.longitude,
-                                    latitude: state.directionProgress
-                                        .location.latitude),
-                              child: BlocBuilder<GeoCoderCubit,
-                                  GeoCoderState>(
-                                builder: (context, geoState) {
-                                  print("Getting geo locate for end trip ${state.directionProgress}");
-
-                                  return TextWidget(
-                                    geoState is GeoCoderStateFetched
-                                        ? geoState.address.isEmpty
-                                        ? 'Loading address...'
-                                        : geoState.address
-                                        : 'Loading address...',
-                                    softWrap: true,
-                                    maxLines: 2,
-                                    fontSize: 13,
-
-                                    color: AppColors.black,
-                                  );
-                                },
-                              ),
-                            ),
-                            kVerticalSpaceRegular,
-                            Wrap(
-                              // mainAxisSize: MainAxisSize.min,
-                              // crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                TextWidget(
-                                  "${state.directionProgress.speed.toString()} km/h",fontSize: 12,),
-                                kHorizontalSpaceSmall,
-                                Container(
-                                  height: 5.r,
-                                  width: 5.r,
-                                  decoration: const BoxDecoration(
-                                      color: Colors.black,
-                                      shape: BoxShape.circle),
-                                ),
-                                kHorizontalSpaceSmall,
-                                TextWidget(
-                                  "${state.directionProgress.distance.toString()} km",fontSize: 12, ),
-                                kHorizontalSpaceSmall,
-                                Container(
-                                  height: 5.r,
-                                  width: 5.r,
-                                  decoration: const BoxDecoration(
-                                      color: Colors.black,
-                                      shape: BoxShape.circle),
-                                ),
-                                kHorizontalSpaceSmall,
-                                TextWidget(
-                                  timeago.format(DateTime.now().add(Duration(seconds: 10)).subtract(state.directionProgress.duration),allowFromNow: true, locale: 'en_short'), fontSize: 12,),
-                              ],
-                            )
-                          ])
+                                  BlocProvider.value(
+                                    value: getIt<GeoCoderCubit>()
+                                      ..fetchAddressFromLongAndLat(
+                                          longitude: state.directionProgress
+                                              .location.longitude,
+                                          latitude: state.directionProgress
+                                              .location.latitude),
+                                    child: BlocBuilder<GeoCoderCubit,
+                                        GeoCoderState>(
+                                      builder: (context, geoState) {
+                                        print(
+                                            "Getting geo locate for end trip ${state.directionProgress}");
+
+                                        return TextWidget(
+                                          geoState is GeoCoderStateFetched
+                                              ? geoState.address.isEmpty
+                                                  ? 'Loading address...'
+                                                  : geoState.address
+                                              : 'Loading address...',
+                                          softWrap: true,
+                                          maxLines: 2,
+                                          fontSize: 13,
+                                          color: AppColors.black,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  kVerticalSpaceRegular,
+                                  Wrap(
+                                    // mainAxisSize: MainAxisSize.min,
+                                    // crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      TextWidget(
+                                        "${state.directionProgress.speed.toString()} km/h",
+                                        fontSize: 12,
+                                      ),
+                                      kHorizontalSpaceSmall,
+                                      Container(
+                                        height: 5.r,
+                                        width: 5.r,
+                                        decoration: const BoxDecoration(
+                                            color: Colors.black,
+                                            shape: BoxShape.circle),
+                                      ),
+                                      kHorizontalSpaceSmall,
+                                      TextWidget(
+                                        "${state.directionProgress.distance.toString()} km",
+                                        fontSize: 12,
+                                      ),
+                                      kHorizontalSpaceSmall,
+                                      Container(
+                                        height: 5.r,
+                                        width: 5.r,
+                                        decoration: const BoxDecoration(
+                                            color: Colors.black,
+                                            shape: BoxShape.circle),
+                                      ),
+                                      kHorizontalSpaceSmall,
+                                      TextWidget(
+                                        timeago.format(
+                                            DateTime.now().subtract(state
+                                                .directionProgress.duration),
+                                            allowFromNow: true,
+                                            locale: 'en_short'),
+                                        fontSize: 12,
+                                      ),
+                                    ],
+                                  )
+                                ])
                           : Container(),
                       state: StepState.indexed,
                     ),
-
                   ],
                   controlsBuilder:
                       (BuildContext context, ControlsDetails? controlsDetails) {

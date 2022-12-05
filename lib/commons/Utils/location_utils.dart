@@ -17,10 +17,11 @@ class LocationUtils {
     return (12742 * asin(sqrt(a)));
   }
 
-  static final double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
+  static const double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
 
   static double calculateDistanceInKilometer(
       {required Location user, required Location venue}) {
+    print("user ${user}, venue ${venue}");
     double latDistance = radians(user.latitude - venue.latitude);
     double lngDistance = radians(user.longitude - venue.longitude);
 

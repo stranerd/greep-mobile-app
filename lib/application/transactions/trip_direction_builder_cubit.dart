@@ -68,11 +68,15 @@ class TripDirectionBuilderCubit extends Cubit<TripDirectionBuilderState> {
           driverId: getUser().id,
           location: locationCubit.currLocation,
           rideStatus: RideStatus.inProgress);
-      var distance2 = num.parse(LocationUtils.getDistanceBetweenLocations(
-              from:
-                  _directions[RideStatus.pending]?.location ?? Location.Zero(),
-              to: locationCubit.currLocation)
-          .toStringAsFixed(2));
+      var distance2 = num.parse(
+        LocationUtils.calculateDistanceInKilometer(
+                user: _directions[RideStatus.pending]?.location ??
+                    Location.Zero(),
+                venue: locationCubit.currLocation)
+            .toStringAsFixed(
+          2,
+        ),
+      );
       var difference = DateTime.now()
           .difference(_directions[RideStatus.pending]?.date ?? DateTime.now())
           .abs();
@@ -100,13 +104,12 @@ class TripDirectionBuilderCubit extends Cubit<TripDirectionBuilderState> {
         rideStatus: RideStatus.ended,
       );
       var distance2 = num.parse(LocationUtils.calculateDistanceInKilometer(
-              user: _directions[RideStatus.inProgress]?.location ??
-                  Location.Zero(),
+              user:
+                  _directions[RideStatus.pending]?.location ?? Location.Zero(),
               venue: locationCubit.currLocation)
           .toStringAsFixed(2));
       var difference = DateTime.now()
-          .difference(
-              _directions[RideStatus.inProgress]?.date ?? DateTime.now())
+          .difference(_directions[RideStatus.pending]?.date ?? DateTime.now())
           .abs();
       DirectionProgress directionProgress = DirectionProgress(
         distance: distance2,

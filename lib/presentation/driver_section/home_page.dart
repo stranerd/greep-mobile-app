@@ -258,8 +258,9 @@ class _HomePageState extends State<HomePage> {
                             width: 1.sw,
                             child: Container(
                               width: 1.sw,
-                              height: driverState is DriversStateDriver ? 215.h : ((driverState is DriversStateFetched &&
-                                  driverState.selectedUser == currentUser()) ? 270.h: 180.h),
+                              height: driverState is DriversStateDriver ? 215.h
+                                  : ((driverState is DriversStateFetched && driverState.selectedUser == currentUser())
+                                  ? 270.h: 180.h),
                               decoration: const BoxDecoration(
                                 color: kWhiteColor,
                               ),
@@ -397,7 +398,6 @@ class _HomePageState extends State<HomePage> {
                                                       "assets/icons/local_taxi.svg",
                                                       width: 25.r,
                                                       height: 25.r,
-
                                                   ),
                                                   title: "Trip",
                                                 ),
