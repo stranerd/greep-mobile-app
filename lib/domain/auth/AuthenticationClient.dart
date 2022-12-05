@@ -216,7 +216,6 @@ class AuthenticationClient {
         "refreshToken": response.data["refreshToken"]
       });
     } on DioError catch (e) {
-      print(e.type);
       if (e.type == DioErrorType.connectTimeout) {
         return ResponseEntity.Timeout();
       }
@@ -224,7 +223,6 @@ class AuthenticationClient {
         return ResponseEntity.Socket();
       }
       if (e.type == DioErrorType.response) {
-        print(e.response!.data);
         return ResponseEntity.Error(
             e.response!.data[0]["message"] ?? "Incorrect Credentials");
       }
@@ -358,7 +356,6 @@ class AuthenticationClient {
         return ResponseEntity.Socket();
       }
       if (e.type == DioErrorType.response) {
-        print("Error ${e.response!.data}");
         return ResponseEntity.Error(
             e.response!.data[0]["message"] ?? "Email Verification failed");
       }

@@ -139,7 +139,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     ),
                     child: TabBar(
                       onTap: (int e) {
-                        print(e);
                       },
                       indicator: BoxDecoration(
                         borderRadius: BorderRadius.circular(kDefaultSpacing),

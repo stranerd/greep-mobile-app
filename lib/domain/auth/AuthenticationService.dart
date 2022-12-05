@@ -104,8 +104,8 @@ class AuthenticationService {
         return ResponseEntity.Error("Could not sign in with Apple");
       }
 
-      print(
-          "state: ${credential.state}, identifier: ${credential.userIdentifier}, email: ${credential.email}, idToken: ${credential.identityToken}, ${credential.givenName}, ${credential.authorizationCode} ");
+      // print(
+      //     "state: ${credential.state}, identifier: ${credential.userIdentifier}, email: ${credential.email}, idToken: ${credential.identityToken}, ${credential.givenName}, ${credential.authorizationCode} ");
       return ResponseEntity.Data(AppleSigninResponse(
           firstName: credential.givenName ?? "User",
           lastName: credential.familyName ?? "u${Random().nextInt(234)}",

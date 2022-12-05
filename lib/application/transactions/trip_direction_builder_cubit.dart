@@ -6,6 +6,7 @@ import 'package:greep/commons/Utils/location_utils.dart';
 import 'package:greep/domain/firebase/Firebase_service.dart';
 import 'package:greep/domain/user/model/driver_location_status.dart';
 import 'package:greep/domain/user/model/ride_status.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 part 'trip_direction_builder_state.dart';
 
@@ -22,6 +23,11 @@ class DirectionProgress {
       required this.duration,
       required this.speed,
       required this.location});
+
+  @override
+  String toString() {
+    return 'DirectionProgress{distance: $distance, date: $date, speed: $speed, location: $location, duration: $duration}';
+  }
 }
 
 class TripDirectionBuilderCubit extends Cubit<TripDirectionBuilderState> {
@@ -62,21 +68,26 @@ class TripDirectionBuilderCubit extends Cubit<TripDirectionBuilderState> {
           driverId: getUser().id,
           location: locationCubit.currLocation,
           rideStatus: RideStatus.inProgress);
-      var distance2 = LocationUtils.getDistanceBetweenLocations(
-            from: _directions[RideStatus.pending]?.location ?? Location.Zero(),
-            to: locationCubit.currLocation);
-      var difference = DateTime.now().difference(_directions[RideStatus.pending]?.date??DateTime.now()).abs();
+      var distance2 = num.parse(LocationUtils.getDistanceBetweenLocations(
+              from:
+                  _directions[RideStatus.pending]?.location ?? Location.Zero(),
+              to: locationCubit.currLocation)
+          .toStringAsFixed(2));
+      var difference = DateTime.now()
+          .difference(_directions[RideStatus.pending]?.date ?? DateTime.now())
+          .abs();
+
       DirectionProgress directionProgress = DirectionProgress(
         distance: distance2,
         date: DateTime.now(),
         duration: difference,
-        speed: distance2 / difference.inSeconds,
+        speed: difference.inSeconds == 0 ? 0 : distance2 / difference.inSeconds,
         location: locationCubit.currLocation,
       );
 
       _rideStatus = RideStatus.inProgress;
       _directions[RideStatus.ended] = directionProgress;
-      emit(TripDirectionBuilderStateGotTrip(
+      emit(TripDirectionBuilderStateStartTrip(
           directionProgress: directionProgress, directions: _directions));
     }
   }
@@ -84,24 +95,30 @@ class TripDirectionBuilderCubit extends Cubit<TripDirectionBuilderState> {
   void endTrip() {
     if (_rideStatus == RideStatus.inProgress) {
       FirebaseApi.updateDriverLocation(
-          driverId: getUser().id,
-          location: locationCubit.currLocation,
-          rideStatus: RideStatus.ended);
-      var distance2 = LocationUtils.getDistanceBetweenLocations(
-          from: _directions[RideStatus.inProgress]?.location ?? Location.Zero(),
-          to: locationCubit.currLocation);
-      var difference = DateTime.now().difference(_directions[RideStatus.inProgress]?.date??DateTime.now()).abs();
+        driverId: getUser().id,
+        location: locationCubit.currLocation,
+        rideStatus: RideStatus.ended,
+      );
+      var distance2 = num.parse(LocationUtils.calculateDistanceInKilometer(
+              user: _directions[RideStatus.inProgress]?.location ??
+                  Location.Zero(),
+              venue: locationCubit.currLocation)
+          .toStringAsFixed(2));
+      var difference = DateTime.now()
+          .difference(
+              _directions[RideStatus.inProgress]?.date ?? DateTime.now())
+          .abs();
       DirectionProgress directionProgress = DirectionProgress(
         distance: distance2,
         date: DateTime.now(),
         duration: difference,
-        speed: distance2 / difference.inSeconds,
+        speed: difference.inSeconds == 0 ? 0 : distance2 / difference.inSeconds,
         location: locationCubit.currLocation,
       );
 
       _rideStatus = RideStatus.ended;
       _directions[RideStatus.ended] = directionProgress;
-      emit(TripDirectionBuilderStateGotTrip(
+      emit(TripDirectionBuilderStateEndTrip(
           directionProgress: directionProgress, directions: _directions));
     }
   }

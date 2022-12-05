@@ -19,6 +19,7 @@ import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/firebase/Firebase_service.dart';
 import 'package:greep/domain/user/model/manager_request.dart';
 import 'package:greep/presentation/driver_section/map/map_screen.dart';
+import 'package:greep/presentation/driver_section/records/trip_directions_screen.dart';
 import 'package:stacked/stacked.dart';
 import 'package:upgrader/upgrader.dart';
 
@@ -101,8 +102,21 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
           height: 70.h,
           width: 70.w,
           child: FloatingActionButton(
-            onPressed: () {},
-            child: Image.asset("assets/icons/map_navigator.png",scale: 2,),
+            onPressed: () {
+              showModalBottomSheet(
+                  context: context,
+                  enableDrag: true,
+                  // backgroundColor: Colors.transparent,
+                  isDismissible: true,
+                  isScrollControlled: true,
+                  builder: (context) {
+                    return TripDirectionsScreen();
+                  });
+            },
+            child: Image.asset(
+              "assets/icons/map_navigator.png",
+              scale: 2,
+            ),
           ),
         ),
       ),

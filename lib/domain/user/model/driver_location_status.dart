@@ -19,12 +19,13 @@ class DriverLocation {
   factory DriverLocation.fromServer(dynamic data) {
     return DriverLocation(
         rideStatus: getType(
-          data["status"] ?? "ended",
+          data["rideStatus"] ?? "ended",
         ),
         updatedAt: TimeUtil.toDateTime(data["updatedAt"]),
-        latitude: data["latitude"] ?? "",
-        longitude: data["longitude"] ?? "",
-        driverId: data["driverId"] ?? "",
+        latitude: data["latitude"] is num ? data["latitude"].toString() : data["latitude"] is String ? data["latitude"]: "",
+      longitude: data["longitude"] is num ? data["longitude"].toString() : data["longitude"] is String ? data["longitude"]: "",
+
+      driverId: data["driverId"] ?? "",
     );
   }
 
@@ -32,12 +33,17 @@ class DriverLocation {
     switch (status.toLowerCase()) {
       case "pending":
         return RideStatus.pending;
-      case "inProgress":
+      case "inprogress":
         return RideStatus.inProgress;
       case "ended":
         return RideStatus.ended;
       default:
         return RideStatus.ended;
     }
+  }
+
+  @override
+  String toString() {
+    return 'DriverLocation{rideStatus: $rideStatus, latitude: $latitude, driverId: $driverId, longitude: $longitude, updatedAt: $updatedAt}';
   }
 }

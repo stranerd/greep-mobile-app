@@ -6,6 +6,11 @@ class DriverLocationStatusStateFetched extends DriverLocationStatusState {
   final DriverLocation status;
 
   DriverLocationStatusStateFetched({required this.status});
+
+  @override
+  String toString() {
+    return 'DriverLocationStatusStateFetched{status: $status}';
+  }
 }
 
 class DriverLocationStatusStateLoading extends DriverLocationStatusState {}

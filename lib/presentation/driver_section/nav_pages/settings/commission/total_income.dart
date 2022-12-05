@@ -52,7 +52,6 @@ class _TotalIncomeState extends State<TotalIncome> {
     BlocListener<ManagerDriversCubit, ManagerDriversState>(
       listener: (context, state) {
         if (state is ManagerDriversStateFetched){
-          print(state.drivers);
         setState(() {
 
           commission = state.drivers.isEmpty ? 100 : state.drivers.firstWhere((element) => element.driverId == userId, orElse: () =>DriverCommission(driverId: currentUser().id, commission: 1)).commission * 100;

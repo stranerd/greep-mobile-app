@@ -50,24 +50,23 @@ class _DriverLocationStatusWidgetState extends State<DriverLocationStatusWidget>
           return BlocBuilder<DriverLocationStatusCubit,
               DriverLocationStatusState>(
             builder: (c, oS) {
+              // print(oS);
               if (oS is DriverLocationStatusStateFetched) {
-                return CircleAvatar(
-                  radius: 7.r,
-                  backgroundColor: kWhiteColor,
-                  child: CircleAvatar(
-                    radius: 5.r,
-                    backgroundColor: oS.status.rideStatus == RideStatus.pending
-                        ? AppColors.blue
-                        : oS.status.rideStatus == RideStatus.ended
-                            ? AppColors.red
-                            : AppColors.green,
-                  ),
+                return Container(
+                  height: 14.r,
+                  width: 14.r,
+                  decoration:  BoxDecoration(
+                      color: oS.status.rideStatus == RideStatus.pending
+                          ? AppColors.blue
+                          : oS.status.rideStatus == RideStatus.ended
+                          ? AppColors.red
+                          : AppColors.green, shape: BoxShape.circle),
                 );
               }
 
               return Container(
-                height: 17,
-                width: 17,
+                height: 14.r,
+                width: 14.r,
                 decoration: const BoxDecoration(
                     color: AppColors.red, shape: BoxShape.circle),
               );

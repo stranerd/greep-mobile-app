@@ -7,6 +7,8 @@ import 'package:greep/application/customers/user_customers_cubit.dart';
 import 'package:greep/application/driver/manager_drivers_cubit.dart';
 import 'package:greep/application/driver/new_manager_accepts_cubit.dart';
 import 'package:greep/application/driver/new_manager_requests_cubit.dart';
+import 'package:greep/application/geocoder/geocoder_cubit.dart';
+import 'package:greep/application/location/driver_location_status_cubit.dart';
 import 'package:greep/application/location/location_cubit.dart';
 import 'package:greep/application/transactions/customer_statistics_cubit.dart';
 import 'package:greep/application/transactions/transaction_crud_cubit.dart';
@@ -129,5 +131,10 @@ class IoC {
     getIt.registerFactory(() => UserCrudCubit(
           userService: _userService,
         ));
+    getIt.registerFactory(() => GeoCoderCubit());
+
+
+    getIt.registerFactory(() => DriverLocationStatusCubit());
+
   }
 }
