@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:greep/application/location/location.dart';
 import 'package:greep/domain/firebase/Firebase_service.dart';

@@ -41,6 +41,8 @@ class TripDirectionBuilderCubit extends Cubit<TripDirectionBuilderState> {
 
   Map<RideStatus, DirectionProgress> _directions = {};
 
+  Map<RideStatus, DirectionProgress> get directions => _directions;
+
   void gotTrip() {
     if (_rideStatus == RideStatus.ended) {
       FirebaseApi.updateDriverLocation(
@@ -70,10 +72,9 @@ class TripDirectionBuilderCubit extends Cubit<TripDirectionBuilderState> {
           rideStatus: RideStatus.inProgress);
       var distance2 = num.parse(
         LocationUtils.calculateDistanceInKilometer(
-                user: _directions[RideStatus.pending]?.location ??
-                    Location.Zero(),
-                venue: locationCubit.currLocation)
-            .toStringAsFixed(
+          user: _directions[RideStatus.pending]?.location ?? Location.Zero(),
+          venue: locationCubit.currLocation,
+        ).toStringAsFixed(
           2,
         ),
       );
@@ -90,7 +91,7 @@ class TripDirectionBuilderCubit extends Cubit<TripDirectionBuilderState> {
       );
 
       _rideStatus = RideStatus.inProgress;
-      _directions[RideStatus.ended] = directionProgress;
+      _directions[RideStatus.inProgress] = directionProgress;
       emit(TripDirectionBuilderStateStartTrip(
           directionProgress: directionProgress, directions: _directions));
     }

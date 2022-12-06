@@ -4,15 +4,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart' as g;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:greep/Commons/colors.dart';
 import 'package:greep/application/driver/drivers_cubit.dart';
-import 'package:greep/application/driver/manager_drivers_cubit.dart';
 import 'package:greep/application/location/driver_location_status_cubit.dart';
-import 'package:greep/application/transactions/user_transactions_cubit.dart';
 import 'package:greep/application/user/user_cubit.dart';
 import 'package:greep/application/user/user_util.dart';
-import 'package:greep/application/user/utils/get_current_user.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/ioc.dart';
 import 'package:greep/presentation/driver_section/nav_pages/settings/account/view_profile.dart';
@@ -21,7 +19,6 @@ import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/utils/constants/app_styles.dart';
 import 'package:intl/intl.dart';
-import 'package:get/get.dart' as g;
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);

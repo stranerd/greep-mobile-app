@@ -61,6 +61,7 @@ dependencies:
   stacked_themes: 
   shared_preferences:
   timeago: ^3.3.0
+  timeline_tile: ^2.0.0
   upgrader: ^4.6.1
   uuid: ^3.0.5
   vector_math: ^2.1.2
