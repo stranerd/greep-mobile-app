@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:greep/Commons/colors.dart';
 import 'package:greep/application/geocoder/geocoder_cubit.dart';
 import 'package:greep/application/geocoder/geocoder_state.dart';
@@ -84,23 +85,21 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        if (!isEndTrip)Container(
-                          width: 20,
-                          height: 20,
-                          decoration: BoxDecoration(
-                            color: AppColors.red,
-                            shape: BoxShape.circle
+                        if (state is TripDirectionBuilderStateStartTrip)
+                          Container(
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(
+                                color: AppColors.red, shape: BoxShape.circle),
                           ),
-                        ),
                         kHorizontalSpaceSmall,
-                        if (!isEndTrip)Container(
-                          width: 5,
-                          height: 5,
-                          decoration: BoxDecoration(
-                              color: AppColors.red,
-                              shape: BoxShape.circle
+                        if (state is TripDirectionBuilderStateStartTrip)
+                          Container(
+                            width: 5,
+                            height: 5,
+                            decoration: BoxDecoration(
+                                color: AppColors.red, shape: BoxShape.circle),
                           ),
-                        ),
                         kHorizontalSpaceSmall,
                         TextWidget(
                           state is TripDirectionBuilderStateStartTrip
@@ -183,8 +182,12 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
                                     kDefaultSpacing * 0.2,
                                   ),
                                   height: 30,
-                                  decoration:  BoxDecoration(
-                                    color: state is TripDirectionBuilderStateEndTrip || isEndTrip ?  kErrorColor : AppColors.lightBlack,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        state is TripDirectionBuilderStateEndTrip ||
+                                                isEndTrip
+                                            ? kErrorColor
+                                            : AppColors.lightBlack,
                                     shape: BoxShape.circle,
                                   ),
                                   child: Image.asset(
@@ -354,9 +357,12 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
                                   padding: const EdgeInsets.all(
                                       kDefaultSpacing * 0.2),
                                   height: 30,
-                                  decoration:  BoxDecoration(
-                                      color: state is TripDirectionBuilderStateStartTrip || isStartTrip ?  AppColors.green : AppColors.lightBlack,
-
+                                  decoration: BoxDecoration(
+                                      color:
+                                          state is TripDirectionBuilderStateStartTrip ||
+                                                  isStartTrip
+                                              ? AppColors.green
+                                              : AppColors.lightBlack,
                                       shape: BoxShape.circle),
                                   child: Image.asset(
                                     "assets/icons/map_navigator.png",
@@ -529,9 +535,12 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
                                   padding: const EdgeInsets.all(
                                       kDefaultSpacing * 0.2),
                                   height: 30,
-                                  decoration:  BoxDecoration(
-                                      color: state is TripDirectionBuilderStateGotTrip || isGotTrip ?  AppColors.blue : AppColors.lightBlack,
-
+                                  decoration: BoxDecoration(
+                                      color:
+                                          state is TripDirectionBuilderStateGotTrip ||
+                                                  isGotTrip
+                                              ? AppColors.blue
+                                              : AppColors.lightBlack,
                                       shape: BoxShape.circle),
                                   child: Image.asset(
                                     "assets/icons/map_navigator.png",
@@ -704,26 +713,31 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(kDefaultSpacing),
-                          decoration: BoxDecoration(
-                              color: AppColors.red,
-                              borderRadius:
-                                  BorderRadius.circular(kDefaultSpacing * 0.5)),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.arrow_back_ios,
-                                color: kWhiteColor,
-                                size: 18.r,
-                              ),
-                              kHorizontalSpaceTiny,
-                              const TextWidget(
-                                "Back",
-                                weight: FontWeight.bold,
-                                color: kWhiteColor,
-                              ),
-                            ],
+                        GestureDetector(
+                          onTap: () {
+                              Get.back();
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(kDefaultSpacing),
+                            decoration: BoxDecoration(
+                                color: AppColors.red,
+                                borderRadius: BorderRadius.circular(
+                                    kDefaultSpacing * 0.5)),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.arrow_back_ios,
+                                  color: kWhiteColor,
+                                  size: 18.r,
+                                ),
+                                kHorizontalSpaceTiny,
+                                 TextWidget(
+                                  isGotTrip ? "Cancel": "Back",
+                                  weight: FontWeight.bold,
+                                  color: kWhiteColor,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         if (state is TripDirectionBuilderStateEndTrip ||

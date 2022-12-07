@@ -61,7 +61,6 @@ class _MapScreenState extends State<MapScreen> {
                   userId = driverState.selectedUser.id;
 
                   setState(() {});
-                  print("userId $userId");
                 }
               },
               builder: (context, driverState) {

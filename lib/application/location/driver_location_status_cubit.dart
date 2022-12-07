@@ -13,7 +13,6 @@ class DriverLocationStatusCubit extends Cubit<DriverLocationStatusState> {
   StreamSubscription? _streamSubscription;
 
   void checkOnlineStatus(String userId) {
-    print("checking online statsu $userId ");
     var statusStream = FirebaseApi.getDriverLocation(userId);
     var status = statusStream.asyncMap((event) =>
         event.docs.map((e) => DriverLocation.fromServer(e.data())).toList());

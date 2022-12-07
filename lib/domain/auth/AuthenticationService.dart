@@ -192,7 +192,6 @@ class AuthenticationService {
   Future<ResponseEntity> refreshToken() async {
     print("Refreshing token");
     var response = await authenticationClient.refreshToken();
-    print("response from refreshing token ${response}");
     if (!response.isError) {
       setToken(response.data);
     }

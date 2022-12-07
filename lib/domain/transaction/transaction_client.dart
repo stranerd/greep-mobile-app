@@ -22,7 +22,6 @@ class TransactionClient {
     };
     Response response;
     try {
-      print("fetching transactions");
       response = await dio.get("users/transactions",queryParameters: queryParams);
       List<Transaction> transactions = [];
       response.data["results"].forEach((e) {
