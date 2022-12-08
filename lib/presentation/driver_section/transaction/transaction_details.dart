@@ -13,10 +13,12 @@ import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/transaction/TransactionData.dart';
 import 'package:greep/domain/transaction/transaction.dart';
 import 'package:greep/presentation/driver_section/widgets/transaction_list_card.dart';
+import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/presentation/widgets/transaction_balance_widget.dart';
 import 'package:greep/presentation/widgets/turkish_symbol.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_styles.dart';
@@ -71,6 +73,25 @@ class _TransactionDetailsState extends State<TransactionDetails> {
             },
             child: Scaffold(
               backgroundColor: Colors.white,
+              floatingActionButton: SafeArea(
+                child: SplashTap(
+                  onTap: (){
+                    Share.share('''
+                    I will love to share this transaction to you
+                    at Greep.
+                    
+                    You can check it out at Greep
+                    
+                    ''');
+                  },
+                  child: Container(
+                    margin: EdgeInsets.all(kDefaultSpacing * 0.5),
+                    decoration: BoxDecoration(),
+                    child: Icon(Icons.ios_share),
+
+                  ),
+                ),
+              ),
               body: SafeArea(
                 child: SingleChildScrollView(
                   child: Column(
@@ -107,13 +128,13 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     TextWidget(
-                                      "${DateFormat("${DateFormat.ABBR_WEEKDAY}, ${DateFormat.ABBR_MONTH} ${DateFormat.DAY}, ${DateFormat.YEAR}").format(widget.transaction.timeAdded)}",
+                                      DateFormat("${DateFormat.ABBR_WEEKDAY}, ${DateFormat.ABBR_MONTH} ${DateFormat.DAY}, ${DateFormat.YEAR}").format(widget.transaction.timeAdded),
                                       fontSize: 12,
                                       weight: FontWeight.bold,
                                       letterSpacing: 1.3,
                                     ),
                                     TextWidget(
-                                      "${DateFormat("hh:${DateFormat.MINUTE} a").format(widget.transaction.timeAdded)}",
+                                      DateFormat("hh:${DateFormat.MINUTE} a").format(widget.transaction.timeAdded),
                                       fontSize: 12,
                                       weight: FontWeight.bold,
                                       letterSpacing: 1.3,
@@ -131,14 +152,14 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                            Positioned(
+                            if (widget.transaction.data.transactionType != TransactionType.expense)Positioned(
                               bottom: 0,
                               left: 0,
                               child: Container(
                                 width: 230.w,
                                 height: 40.h,
-                                padding: EdgeInsets.only(left: 10.w),
-                                // alignment: Alignment.centerLeft,
+                                padding: EdgeInsets.only(left: 20.w),
+                                alignment: Alignment.centerLeft,
                                 decoration: const BoxDecoration(
                                   image: DecorationImage(
                                       image: AssetImage(
@@ -155,6 +176,11 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                   ),
                                 ),
                               ),
+                            ),
+                            Positioned(
+                              top: 5.h,
+                              left: 5.w,
+                              child: BackButton(),
                             )
                           ],
                         ),
@@ -233,8 +259,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                         Row(
                                           children: [
                                             TurkishSymbol(
-                                              width: 23.w,
-                                              height: 23.h,
+                                              width: 22.w,
+                                              height: 22.h,
                                               color: AppTextStyles
                                                   .blackSize16.color,
                                             ),
@@ -246,7 +272,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                             ),
                                           ],
                                         ),
-                                        Row(
+                                        if (widget.transaction.data.transactionType == TransactionType.trip)Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             SvgPicture.asset(
@@ -278,7 +304,41 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                                       : AppColors.blue,
                                             )
                                           ],
+                                        ),
+                                        if (widget.transaction.data.transactionType == TransactionType.balance)Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            SvgPicture.asset(
+                                              "assets/icons/transaction_status_tick.svg",
+                                              color: parentTransaction?.data.debt == 0
+                                                  ? kBlackColor
+                                                  : (parentTransaction?.data.debt ??
+                                                  0) <
+                                                  0
+                                                  ? AppColors.red
+                                                  : AppColors.blue,
+                                            ),
+                                            kHorizontalSpaceTiny,
+                                            TextWidget(
+                                              parentTransaction?.data.debt == 0
+                                                  ? "Balanced"
+                                                  : (parentTransaction?.data.debt ??
+                                                  0) <
+                                                  0
+                                                  ? "To Pay"
+                                                  : "To Collect",
+                                              fontSize: 16,
+                                              color: parentTransaction?.data.debt == 0
+                                                  ? kBlackColor
+                                                  : (parentTransaction?.data.debt ??
+                                                  0) <
+                                                  0
+                                                  ? AppColors.red
+                                                  : AppColors.blue,
+                                            )
+                                          ],
                                         )
+
                                       ],
                                     )
                                   ],
@@ -297,8 +357,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                     Row(
                                       children: [
                                         TurkishSymbol(
-                                          width: 20.w,
-                                          height: 20.h,
+                                          width: 19.w,
+                                          height: 19.h,
                                           color:
                                               AppTextStyles.blackSize16.color,
                                         ),
@@ -317,189 +377,201 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                   color: AppColors.lightBlue,
                                 ),
                                 kVerticalSpaceRegular,
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                if (widget.transaction.data.transactionType == TransactionType.trip)Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const TextWidget(
-                                      "Trip Information",
-                                      weight: FontWeight.bold,
-                                      fontSize: 22,
-                                    ),
-                                    GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            showTrips = !showTrips;
-                                          });
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.only(
-                                            left: 40.w,
-                                          ),
-                                          child: Icon(!showTrips
-                                              ? Icons.arrow_drop_up
-                                              : Icons.arrow_drop_down),
-                                        ))
-                                  ],
-                                ),
-                                kVerticalSpaceMedium,
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
                                     Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Container(
-                                          width: 25.w,
-                                          alignment: Alignment.center,
-                                          padding: const EdgeInsets.all(
-                                            kDefaultSpacing * 0.2,
-                                          ),
-                                          height: 25.w,
-                                          decoration: const BoxDecoration(
-                                            color: AppColors.blue,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Image.asset(
-                                            "assets/icons/map_navigator.png",
-                                            color: kWhiteColor,
-                                            scale: 4.5,
-                                          ),
+                                        const TextWidget(
+                                          "Trip Information",
+                                          weight: FontWeight.bold,
+                                          fontSize: 22,
                                         ),
-                                        kHorizontalSpaceSmall,
-                                        const TextWidget("Got a trip")
+                                        GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                showTrips = !showTrips;
+                                              });
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.only(
+                                                left: 40.w,
+                                              ),
+                                              child: Icon(!showTrips
+                                                  ? Icons.arrow_drop_up
+                                                  : Icons.arrow_drop_down),
+                                            ))
                                       ],
                                     ),
-                                    const TextWidget(
-                                      "No Data",
-                                    )
-                                  ],
-                                ),
-                                kVerticalSpaceRegular,
-                                const Divider(
-                                  color: AppColors.lightBlue,
-                                ),
-                                kVerticalSpaceRegular,
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
+                                    if (!showTrips)Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Container(
-                                          width: 25.w,
-                                          alignment: Alignment.center,
-                                          padding: const EdgeInsets.all(
-                                            kDefaultSpacing * 0.2,
-                                          ),
-                                          height: 25.w,
-                                          decoration: const BoxDecoration(
-                                            color: AppColors.green,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Image.asset(
-                                            "assets/icons/map_navigator.png",
-                                            color: kWhiteColor,
-                                            scale: 4.5,
-                                          ),
+                                        kVerticalSpaceMedium,
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  width: 25.w,
+                                                  alignment: Alignment.center,
+                                                  padding: const EdgeInsets.all(
+                                                    kDefaultSpacing * 0.2,
+                                                  ),
+                                                  height: 25.w,
+                                                  decoration: const BoxDecoration(
+                                                    color: AppColors.blue,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Image.asset(
+                                                    "assets/icons/map_navigator.png",
+                                                    color: kWhiteColor,
+                                                    scale: 4.5,
+                                                  ),
+                                                ),
+                                                kHorizontalSpaceSmall,
+                                                const TextWidget("Got a trip")
+                                              ],
+                                            ),
+                                            const TextWidget(
+                                              "No Data",
+                                            )
+                                          ],
                                         ),
-                                        kHorizontalSpaceSmall,
-                                        const TextWidget("Start trip")
+                                        kVerticalSpaceRegular,
+                                        const Divider(
+                                          color: AppColors.lightBlue,
+                                        ),
+                                        kVerticalSpaceRegular,
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  width: 25.w,
+                                                  alignment: Alignment.center,
+                                                  padding: const EdgeInsets.all(
+                                                    kDefaultSpacing * 0.2,
+                                                  ),
+                                                  height: 25.w,
+                                                  decoration: const BoxDecoration(
+                                                    color: AppColors.green,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Image.asset(
+                                                    "assets/icons/map_navigator.png",
+                                                    color: kWhiteColor,
+                                                    scale: 4.5,
+                                                  ),
+                                                ),
+                                                kHorizontalSpaceSmall,
+                                                const TextWidget("Start trip")
+                                              ],
+                                            ),
+                                            const TextWidget(
+                                              "No Data",
+                                            )
+                                          ],
+                                        ),
+                                        kVerticalSpaceRegular,
+                                        const Divider(
+                                          color: AppColors.lightBlue,
+                                        ),
+                                        kVerticalSpaceRegular,
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  width: 25.w,
+                                                  alignment: Alignment.center,
+                                                  padding: const EdgeInsets.all(
+                                                    kDefaultSpacing * 0.2,
+                                                  ),
+                                                  height: 25.w,
+                                                  decoration: const BoxDecoration(
+                                                    color: AppColors.red,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Image.asset(
+                                                    "assets/icons/map_navigator.png",
+                                                    color: kWhiteColor,
+                                                    scale: 4.5,
+                                                  ),
+                                                ),
+                                                kHorizontalSpaceSmall,
+                                                const TextWidget("End trip")
+                                              ],
+                                            ),
+                                            const TextWidget(
+                                              "No Data",
+                                            )
+                                          ],
+                                        ),
+                                        kVerticalSpaceRegular,
+                                        const Divider(
+                                          color: AppColors.lightBlue,
+                                        ),
+                                        kVerticalSpaceRegular,
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          children: const [
+                                            TextWidget("Distance covered",color: AppColors.lightBlack,),
+                                            TextWidget(
+                                              "12km",
+                                              color: AppColors.veryLightGray,
+                                              fontSize: 18,
+                                            )
+                                          ],
+                                        ),
+                                        kVerticalSpaceRegular,
+                                        const Divider(
+                                          color: AppColors.lightBlue,
+                                        ),
+                                        kVerticalSpaceRegular,
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          children: const [
+                                            TextWidget("Trip duration",color: AppColors.lightBlack,),
+                                            TextWidget(
+                                              "15 minutes",
+                                              color: AppColors.veryLightGray,
+                                              fontSize: 18,
+                                            )
+                                          ],
+                                        ),
+                                        kVerticalSpaceRegular,
+                                        const Divider(
+                                          color: AppColors.lightBlue,
+                                        ),
+
                                       ],
                                     ),
-                                    const TextWidget(
-                                      "No Data",
-                                    )
                                   ],
                                 ),
-                                kVerticalSpaceRegular,
-                                const Divider(
-                                  color: AppColors.lightBlue,
-                                ),
-                                kVerticalSpaceRegular,
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          width: 25.w,
-                                          alignment: Alignment.center,
-                                          padding: const EdgeInsets.all(
-                                            kDefaultSpacing * 0.2,
-                                          ),
-                                          height: 25.w,
-                                          decoration: const BoxDecoration(
-                                            color: AppColors.red,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Image.asset(
-                                            "assets/icons/map_navigator.png",
-                                            color: kWhiteColor,
-                                            scale: 4.5,
-                                          ),
-                                        ),
-                                        kHorizontalSpaceSmall,
-                                        const TextWidget("End trip")
-                                      ],
-                                    ),
-                                    const TextWidget(
-                                      "No Data",
-                                    )
-                                  ],
-                                ),
-                                kVerticalSpaceRegular,
-                                const Divider(
-                                  color: AppColors.lightBlue,
-                                ),
-                                kVerticalSpaceRegular,
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: const [
-                                    TextWidget("Distance covered",color: AppColors.lightBlack,),
-                                    TextWidget(
-                                      "12km",
-                                      color: AppColors.veryLightGray,
-                                      fontSize: 18,
-                                    )
-                                  ],
-                                ),
-                                kVerticalSpaceRegular,
-                                const Divider(
-                                  color: AppColors.lightBlue,
-                                ),
-                                kVerticalSpaceRegular,
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: const [
-                                    TextWidget("Trip duration",color: AppColors.lightBlack,),
-                                    TextWidget(
-                                      "15 minutes",
-                                      color: AppColors.veryLightGray,
-                                      fontSize: 18,
-                                    )
-                                  ],
-                                ),
-                                kVerticalSpaceRegular,
-                                const Divider(
-                                  color: AppColors.lightBlue,
-                                ),
+
                                 kVerticalSpaceRegular,
                                 Row(
                                   mainAxisAlignment:
                                   MainAxisAlignment.spaceBetween,
                                   children:  [
-                                    TextWidget("Description",color: AppColors.lightBlack,),
+                                    const TextWidget("Description",color: AppColors.lightBlack,),
                                     TextWidget(
                                       widget.transaction.description,
                                       color: AppColors.veryLightGray,
                                       fontSize: 18,
                                       style: kDefaultTextStyle.copyWith(
-                                        fontStyle: FontStyle.italic
+                                          fontStyle: FontStyle.italic
                                       ),
                                     )
                                   ],
@@ -508,68 +580,6 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                                 const Divider(
                                   color: AppColors.lightBlue,
                                 ),
-                                kVerticalSpaceRegular,
-                                if (parentTransaction != null)
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextWidget(
-                                        "Balance status",
-                                        style: AppTextStyles.blackSize12,
-                                      ),
-                                      SizedBox(
-                                        height: 4.0.h,
-                                      ),
-                                      Builder(builder: (context) {
-                                        if (parentTransaction!.data.debt == 0) {
-                                          return TextWidget(
-                                            "Balanced",
-                                            style: AppTextStyles.blackSize16,
-                                          );
-                                        } else {
-                                          return Row(children: [
-                                            TextWidget(
-                                              "Not Balanced (${parentTransaction!.debt < 0 ? "to pay " : "to collect "}",
-                                              style: AppTextStyles.blackSize16,
-                                            ),
-                                            TurkishSymbol(
-                                                width: 13.w,
-                                                height: 13.h,
-                                                color: AppTextStyles
-                                                    .blackSize16.color),
-                                            TextWidget(
-                                                "${parentTransaction!.debt.abs().toMoney})",
-                                                style:
-                                                    AppTextStyles.blackSize16),
-                                          ]);
-                                        }
-                                      }),
-                                      SizedBox(
-                                        height: 16.0.h,
-                                      ),
-                                    ],
-                                  ),
-                                // if (transaction.data.transactionType ==
-                                //     TransactionType.trip)
-                                // if (transaction.data.transactionType ==
-                                //     TransactionType.expense)
-                                //   Column(
-                                //     crossAxisAlignment:
-                                //         CrossAxisAlignment.start,
-                                //     children: [
-                                //       TextWidget("Expense",
-                                //           style: AppTextStyles.blackSize12),
-                                //       SizedBox(
-                                //         height: 4.0.h,
-                                //       ),
-                                //       TextWidget(transaction.data.name ?? "",
-                                //           style: AppTextStyles.blackSize16),
-                                //       SizedBox(
-                                //         height: 16.0.h,
-                                //       ),
-                                //     ],
-                                //   ),
                                 kVerticalSpaceRegular,
                                 if (GetIt.I<DriversCubit>().selectedUser ==
                                         currentUser() &&

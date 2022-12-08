@@ -98,7 +98,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
             ),
           ),
         ),
-        floatingActionButton: Container(
+        floatingActionButton: _currNavIndex!=0 ? null: Container(
           height: 70.h,
           width: 70.w,
           child: FloatingActionButton(
