@@ -39,14 +39,14 @@ import 'records/view_records.dart';
 import 'widgets/add_record_card.dart';
 import 'widgets/transaction_list_card.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeScreenState extends State<HomeScreen> {
   late RefreshController _refreshController;
   late UserTransactionsCubit _userTransactionsCubit;
 
@@ -86,14 +86,14 @@ class _HomePageState extends State<HomePage> {
                         clipBehavior: Clip.none,
                         children: [
                           Positioned(
-                            top: driverState is DriversStateDriver ? 215 :(driverState is DriversStateFetched &&
-                                driverState.selectedUser == currentUser()) ? 270 : 190,
+                            top: driverState is DriversStateDriver ? 215.h :(driverState is DriversStateFetched &&
+                                driverState.selectedUser == currentUser()) ? 270.h : 190.h,
                             width: g.Get.width,
-                            height: g.Get.height - (driverState is DriversStateDriver ? 250 :(driverState is DriversStateFetched &&
-                                driverState.selectedUser == currentUser()) ? 300: 230),
+                            height: g.Get.height - (driverState is DriversStateDriver ? 250.h :(driverState is DriversStateFetched &&
+                                driverState.selectedUser == currentUser()) ? 300.h: 230.h),
                             child: SizedBox(
-                              height: g.Get.height - (driverState is DriversStateDriver ? 250 :(driverState is DriversStateFetched &&
-                                  driverState.selectedUser == currentUser()) ? 300: 230),
+                              height: g.Get.height - (driverState is DriversStateDriver ? 250.h :(driverState is DriversStateFetched &&
+                                  driverState.selectedUser == currentUser()) ? 300.h: 230.h),
                               child: SmartRefresher(
                                 controller: _refreshController,
                                 onRefresh: _onRefresh,

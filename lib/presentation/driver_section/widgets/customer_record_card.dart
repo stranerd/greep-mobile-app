@@ -38,69 +38,75 @@ class CustomerRecordCard extends StatelessWidget {
     TextStyle textStyle = titleStyle;
     String subText2 = "";
 
-      TransactionType type = transaction.data.transactionType;
-      TransactionData data = transaction.data;
-      text = transaction.amount.toString();
+    TransactionType type = transaction.data.transactionType;
+    TransactionData data = transaction.data;
+    text = transaction.amount.toString();
 
-    Customer? customer = GetIt.I<UserCustomersCubit>().getCustomerByName(transaction.data.customerName!);
+    Customer? customer = GetIt.I<UserCustomersCubit>()
+        .getCustomerByName(transaction.data.customerName!);
 
     if (customer == null) {
-    var paymentType = type == TransactionType.trip && transaction.debt < 0
+      var paymentType = type == TransactionType.trip && transaction.debt < 0
           ? "to pay"
           : transaction.debt > 0
               ? "to collect"
               : type == TransactionType.balance
                   ? "balanced"
                   : "balanced";
-      if (paymentType.contains("collect")){
+      if (paymentType.contains("collect")) {
         text = transaction.debt.toString();
       }
-      if (paymentType.contains("pay")){
+      if (paymentType.contains("pay")) {
         text = transaction.debt.toString();
       }
       subText = paymentType;
 
       textStyle = type == TransactionType.trip && transaction.debt < 0
-          ? kDefaultTextStyle.copyWith(color: kErrorColor, fontSize: 12) :
-          transaction.debt > 0 ? kDefaultTextStyle.copyWith(color: kBlueColor, fontSize: 12)
+          ? kDefaultTextStyle.copyWith(color: kErrorColor, fontSize: 12)
+          : transaction.debt > 0
+              ? kDefaultTextStyle.copyWith(color: kBlueColor, fontSize: 12)
               : type == TransactionType.balance
-              ? kDefaultTextStyle.copyWith(fontSize: 12)
-              : kDefaultTextStyle.copyWith(fontSize: 12);
-    }
-    else {
+                  ? kDefaultTextStyle.copyWith(fontSize: 12)
+                  : kDefaultTextStyle.copyWith(fontSize: 12);
+    } else {
       textStyle = customer.debt < 0
-          ? kDefaultTextStyle.copyWith(color: kErrorColor, fontSize: 12) :
-      customer.debt > 0 ? kDefaultTextStyle.copyWith(color: kBlueColor, fontSize: 12)
-          : kDefaultTextStyle.copyWith(fontSize: 12);
-      var paymentType = customer.debt < 0 ?"to pay": customer.debt > 0 ? "to collect" : "balanced";
+          ? kDefaultTextStyle.copyWith(color: kErrorColor, fontSize: 12)
+          : customer.debt > 0
+              ? kDefaultTextStyle.copyWith(color: kBlueColor, fontSize: 12)
+              : kDefaultTextStyle.copyWith(fontSize: 12);
+      var paymentType = customer.debt < 0
+          ? "to pay"
+          : customer.debt > 0
+              ? "to collect"
+              : "balanced";
       text = customer.debt.abs().toString();
       subText = paymentType;
     }
-      if (type == TransactionType.balance) {
-        if (data.parentId == null || data.parentId!.isEmpty) {
-          subText2 = "Customer";
-        }
-        var transaction = GetIt.I<CustomerStatisticsCubit>()
-            .getByParentBalance(data.parentId!);
-        if (transaction == null || transaction.data.customerName == null) {
-          subText2 = "Customer";
-        } else {
-          subText2 = transaction.data.customerName!;
-        }
-      } else {
-        subText2 = data.customerName!;
+    if (type == TransactionType.balance) {
+      if (data.parentId == null || data.parentId!.isEmpty) {
+        subText2 = "Customer";
       }
+      var transaction =
+          GetIt.I<CustomerStatisticsCubit>().getByParentBalance(data.parentId!);
+      if (transaction == null || transaction.data.customerName == null) {
+        subText2 = "Customer";
+      } else {
+        subText2 = transaction.data.customerName!;
+      }
+    } else {
+      subText2 = data.customerName!;
+    }
 
     return SplashTap(
       onTap: () {
-          Get.to(() {
-            return CustomerDetails(name: transaction.data.customerName!);
-          },transition: Transition.fadeIn);
+        Get.to(() {
+          return CustomerDetails(name: transaction.data.customerName!);
+        }, transition: Transition.fadeIn);
       },
       child: Container(
         width: width ?? Get.width * 0.31,
         height: 115.h,
-        padding:  EdgeInsets.all((kDefaultSpacing * 0.95).r),
+        padding: EdgeInsets.all((kDefaultSpacing * 0.95).r),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0.r),
           border: Border.all(
@@ -113,16 +119,30 @@ class CustomerRecordCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                TurkishSymbol(width: (11.w), height: (11.h), color: textStyle.color,),
-                TextWidget("$text", style: textStyle),
+                TurkishSymbol(
+                  width: (11.w),
+                  height: (11.h),
+                  color: textStyle.color,
+                ),
+                TextWidget(
+                  text,
+                  style: textStyle,
+                ),
               ],
             ),
-             SizedBox(height: 8.0.h),
-            TextWidget(subText, style: kSubtitleTextStyle.copyWith(fontSize: 12)),
-             SizedBox(height: 8.0.h),
-            TextWidget(subText2,
-                overflow: TextOverflow.ellipsis,
-                style: kDefaultTextStyle.copyWith(fontSize: 12)),
+            SizedBox(height: 8.0.h),
+            TextWidget(
+              subText,
+              fontSize: 13,
+              style: kSubtitleTextStyle,
+            ),
+            SizedBox(height: 8.0.h),
+            TextWidget(
+              subText2,
+              fontSize: 13,
+              overflow: TextOverflow.ellipsis,
+              style: kDefaultTextStyle,
+            ),
           ],
         ),
       ),

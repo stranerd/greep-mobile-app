@@ -84,24 +84,26 @@ class _RecordCardState extends State<RecordCard> {
               children: [
                 TextWidget(
                   widget.initial,
-                  style: widget.titleStyle.copyWith(fontSize: 18),
+                  fontSize: 15,
+                  style: widget.titleStyle,
                 ),
                 if (widget.withSymbol)
                   TurkishSymbol(
-                    width: (18.w),
-                    height: (18.h),
+                    width: (16.w),
+                    height: (16.h),
                     color: widget.titleStyle.color,
                   ),
                 TextWidget(
                   widget.title,
-                  style: widget.titleStyle.copyWith(fontSize: 18),
+                  fontSize: 16,
+                  style: widget.titleStyle,
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
             SizedBox(height: 8.0.h),
             TextWidget(widget.subtitle,
-                style: kDefaultTextStyle.copyWith(fontSize: 12)),
+                style: kDefaultTextStyle.copyWith(fontSize: 10)),
           ],
         ),
       ),
