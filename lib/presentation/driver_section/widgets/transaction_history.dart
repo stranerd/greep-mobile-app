@@ -17,7 +17,9 @@ class TransactionHistorySection extends StatelessWidget {
   final List<Transaction> transactions;
   final bool withTransaction;
 
-  const TransactionHistorySection({Key? key, this.transactions = const [], this.withTransaction = false}) : super(key: key);
+  const TransactionHistorySection(
+      {Key? key, this.transactions = const [], this.withTransaction = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,30 +27,34 @@ class TransactionHistorySection extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         ListTile(
-          contentPadding:
-          const EdgeInsets.fromLTRB(0, 0, 0, 0),
-          title: const TextWidget("Transaction history",
-              weight: FontWeight.bold,
+          dense: true,
+          contentPadding: EdgeInsets.zero,
+          horizontalTitleGap: 0,
+          title: const TextWidget(
+            "Transaction history",
+            weight: FontWeight.bold,
             fontSize: 16,
           ),
+          minVerticalPadding: 0,
           trailing: SplashTap(
             onTap: () {
               g.Get.to(
-                      () => const ViewAllRecords(),
-                  arguments: {"showAppBar": true},
-                  transition: g.Transition.fadeIn);
+                () => const ViewAllRecords(),
+                arguments: {
+                  "showAppBar": true,
+                },
+                transition: g.Transition.fadeIn,
+              );
             },
-            child: TextWidget("view all",
-                style: AppTextStyles.blackSize14),
+            child: TextWidget("view all", style: AppTextStyles.blackSize14),
           ),
         ),
         Builder(builder: (context) {
-          List<Transaction> transactions = withTransaction ? this.transactions :
-          GetIt.I<UserTransactionsCubit>()
-              .getLastUserTransactions();
+          List<Transaction> transactions = withTransaction
+              ? this.transactions
+              : GetIt.I<UserTransactionsCubit>().getLastUserTransactions();
           if (transactions.isEmpty) {
-            return const EmptyResultWidget(
-                text: "No recent transactions");
+            return const EmptyResultWidget(text: "No recent transactions");
           }
           return ListView.separated(
             separatorBuilder: (_, __) => Row(
@@ -60,15 +66,13 @@ class TransactionHistorySection extends StatelessWidget {
                   child: Container(
                     width: Get.width * 0.7,
                     height: 4.h,
-                    decoration: const BoxDecoration(
-                        color: AppColors.lightGray),
+                    decoration: const BoxDecoration(color: AppColors.lightGray),
                   ),
                 ),
               ],
             ),
             itemCount: transactions.length,
-            physics:
-            const NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             padding: EdgeInsets.zero,
             itemBuilder: (c, i) {

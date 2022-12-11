@@ -80,130 +80,155 @@ class _AllTransactionsStatisticsCardState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          kVerticalSpaceRegular,
-          Container(
-            decoration: BoxDecoration(color: kWhiteColor),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+          kVerticalSpaceSmall,
+          SizedBox(
+            height: 0.25.sh,
+            child: Stack(
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: kDefaultSpacing * 0.6,
-                      vertical: kDefaultSpacing * 0.3),
-                  decoration: BoxDecoration(
-                      color: AppColors.lightGray,
-                      borderRadius: BorderRadius.circular(kDefaultSpacing)),
-                  child: DropdownButton<int>(
-                      isDense: true,
-                      value: selectedYear,
-                      underline: SizedBox(),
-                      icon: const Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        size: 16,
-                      ),
-                      items: years
-                          .map(
-                            (e) => DropdownMenuItem<int>(
-                              value: e,
-                              child: TextWidget(
-                                e.toString(),
-                                fontSize: 16,
-                                weight: FontWeight.bold,
+                Positioned(
+                  right: kDefaultSpacing * 0.5,
+
+                  child: Container(
+                    decoration: const BoxDecoration(color: kWhiteColor),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: kDefaultSpacing * 0.6,
+                              vertical: kDefaultSpacing * 0.3),
+                          decoration: BoxDecoration(
+                              color: AppColors.lightGray,
+                              borderRadius: BorderRadius.circular(kDefaultSpacing)),
+                          child: DropdownButton<int>(
+                              isDense: true,
+                              value: selectedYear,
+                              underline: const SizedBox(),
+                              icon: const Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                size: 16,
                               ),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (value) {
-                        selectedYear = value ?? DateTime.now().year;
-                        calculateYears();
-                        setState(() {});
-                      }),
-                )
+                              items: years
+                                  .map(
+                                    (e) => DropdownMenuItem<int>(
+                                      value: e,
+                                      child: TextWidget(
+                                        e.toString(),
+                                        fontSize: 16,
+                                        weight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (value) {
+                                selectedYear = value ?? DateTime.now().year;
+                                calculateYears();
+                                setState(() {});
+                              }),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned.fill(
+                  child: Builder(builder: (context) {
+                    double expense =
+                        selectedTransactionSummary.expenseAmount.toDouble();
+                    double income = selectedTransactionSummary.income.toDouble();
+
+                    List<PieChartSectionData> sectionData = [
+                      PieChartSectionData(
+                        titleStyle: kWhiteTextStyle.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        value: income == 0 && expense == 0 ? 0 : income,
+                        title: "income",
+                        showTitle: false,
+                        color: kGreenColor,
+                        radius: touchedIndex == "income" ? 55.r : 50.r,
+                      ),
+                      PieChartSectionData(
+                        titleStyle: kWhiteTextStyle.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        value: income == 0 && expense == 0 ? 0 : expense,
+                        title: "expense",
+                        showTitle: false,
+                        color: AppColors.red,
+                        radius: touchedIndex == "expense" ? 55.r : 50.r,
+                      ),
+                    ];
+
+                    return LayoutBuilder(
+                      builder: (c, cs) => GestureDetector(
+                        onTap: () {
+                          print("on tap");
+                          touchedIndex = "";
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(top: 5.h),
+                          alignment: Alignment.center,
+                          height: 0.25.sh,
+                          width: 1.sw,
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: PieChart(
+                                  PieChartData(
+                                      pieTouchData: PieTouchData(touchCallback:
+                                          (FlTouchEvent event, pieTouchResponse) {
+                                        setState(() {
+                                          if (!event.isInterestedForInteractions ||
+                                              pieTouchResponse == null ||
+                                              pieTouchResponse.touchedSection == null) {
+                                            return;
+                                          }
+                                          if (pieTouchResponse.touchedSection == null ||
+                                              pieTouchResponse
+                                                      .touchedSection!.touchedSection ==
+                                                  null) {
+                                            touchedIndex = "";
+                                          } else {
+                                            touchedIndex = pieTouchResponse
+                                                .touchedSection!.touchedSection!.title;
+                                          }
+                                        });
+                                      }),
+                                      startDegreeOffset: 90,
+                                      borderData: FlBorderData(
+                                          show: true,
+                                          border: const Border(
+                                            bottom: BorderSide(
+                                                color: kGreenColor, width: 5),
+                                          )),
+                                      sectionsSpace: 0,
+
+                                      centerSpaceRadius: double.infinity,
+                                      sections: sectionData,),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Container(
+                                  height: 110.h,
+                                  width: 110.w,
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(2, 80, 198, 0.66),
+                                    shape: BoxShape.circle
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                ),
               ],
             ),
           ),
           kVerticalSpaceRegular,
-          Builder(builder: (context) {
-            double expense =
-                selectedTransactionSummary.expenseAmount.toDouble();
-            double income = selectedTransactionSummary.income.toDouble();
-
-            List<PieChartSectionData> sectionData = [
-              PieChartSectionData(
-                titleStyle: kWhiteTextStyle.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-                value: income == 0 && expense == 0 ? 0 : income,
-                title: "income",
-                showTitle: false,
-                color: kGreenColor,
-                radius: touchedIndex == "income" ? 40 : 38,
-              ),
-              PieChartSectionData(
-                titleStyle: kWhiteTextStyle.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-                value: income == 0 && expense == 0 ? 0 : expense,
-                title: "expense",
-                showTitle: false,
-                color: AppColors.red,
-                radius: touchedIndex == "expense" ? 40 : 38,
-              ),
-            ];
-
-            return LayoutBuilder(
-              builder: (c, cs) => GestureDetector(
-                onTap: () {
-                  print("on tap");
-                  touchedIndex = "";
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 250.h,
-                  width: 1.sw,
-                  child: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: PieChart(
-                          PieChartData(
-                              pieTouchData: PieTouchData(touchCallback:
-                                  (FlTouchEvent event, pieTouchResponse) {
-                                setState(() {
-                                  if (!event.isInterestedForInteractions ||
-                                      pieTouchResponse == null ||
-                                      pieTouchResponse.touchedSection == null) {
-                                    return;
-                                  }
-                                  if (pieTouchResponse.touchedSection == null ||
-                                      pieTouchResponse
-                                              .touchedSection!.touchedSection ==
-                                          null) {
-                                    touchedIndex = "";
-                                  } else {
-                                    touchedIndex = pieTouchResponse
-                                        .touchedSection!.touchedSection!.title;
-                                  }
-                                });
-                              }),
-                              startDegreeOffset: 90,
-                              borderData: FlBorderData(
-                                  show: true,
-                                  border: Border(
-                                    bottom: BorderSide(
-                                        color: kGreenColor, width: 5),
-                                  )),
-                              sectionsSpace: 0,
-                              centerSpaceRadius: double.infinity,
-                              sections: sectionData),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }),
-          kVerticalSpaceLarge,
           LayoutBuilder(builder: (context, constr) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

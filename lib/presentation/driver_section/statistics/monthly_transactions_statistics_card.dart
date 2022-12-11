@@ -63,7 +63,7 @@ class _MonthlyTransactionsStatisticsCardState
 
   @override
   void didUpdateWidget(MonthlyTransactionsStatisticsCard oldWidget) {
-    print("did update widget");
+    // print("did update widget");
     years = widget.summary.keys.map((e) => e.year).toSet().toList();
     selectedYear = years.first;
     generateAvailableMonths();
@@ -79,7 +79,7 @@ class _MonthlyTransactionsStatisticsCardState
 
   @override
   void didChangeDependencies() {
-    print("Did change dependencies");
+    // print("Did change dependencies");
     years = widget.summary.keys.map((e) => e.year).toSet().toList();
     selectedYear = years.first;
     generateAvailableMonths();
@@ -316,7 +316,7 @@ class _MonthlyTransactionsStatisticsCardState
           );
           return Container(
             alignment: Alignment.center,
-            height: 220.h,
+            height: 0.25.sh,
             width: 1.sw,
             child: PageView(
               controller: _controller,
@@ -339,8 +339,10 @@ class _MonthlyTransactionsStatisticsCardState
             ),
           );
         }),
-        kVerticalSpaceLarge,
+        kVerticalSpaceRegular,
         LayoutBuilder(builder: (context, constr) {
+
+          var income2 = monthlySummaries[monthlySummaries.keys.toList()[touchedIndex]]?.income ?? 0;
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -352,7 +354,8 @@ class _MonthlyTransactionsStatisticsCardState
                   backgroundColor: const Color.fromRGBO(4, 210, 140, 0.1),
                   text: "Total Income",
                   isSelected: touchedType == "income",
-                  amount:touchedIndex == -1 ? "0": "${monthlySummaries[monthlySummaries.keys.toList()[touchedIndex]]?.income.toMoney??0}",
+                  isNegative: income2 < 0,
+                  amount:touchedIndex == -1 ? "0": income2.abs().toMoney,
                 ),
               ),
               SizedBox(

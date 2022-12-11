@@ -9,6 +9,7 @@ class ChartTransactionIndicator extends StatelessWidget {
   final Color color;
   final Color backgroundColor;
   final String text;
+  final bool isNegative;
   final String amount;
   final String icon;
   final bool isSelected;
@@ -17,6 +18,7 @@ class ChartTransactionIndicator extends StatelessWidget {
     Key? key,
     required this.color,
     required this.text,
+     this.isNegative = false,
     required this.amount,
     required this.icon,
     required this.backgroundColor,
@@ -48,9 +50,15 @@ class ChartTransactionIndicator extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                if (isNegative)TextWidget(
+                  "-",
+                  color: color,
+                  fontSize: isSelected ? 19 : 17,
+                  weight: FontWeight.bold,
+                ),
                 TurkishSymbol(
-                  width: isSelected ? 18.r : 17.r,
-                  height: isSelected ? 18.r : 17.r,
+                  width: isSelected ? 17.r : 16.r,
+                  height: isSelected ? 17.r : 16.r,
                   color: color,
                 ),
                 TextWidget(
@@ -63,9 +71,8 @@ class ChartTransactionIndicator extends StatelessWidget {
             ),
             TextWidget(
               text,
-              style: kDefaultTextStyle.copyWith(
-                  fontSize: 12,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal),
+              fontSize: 12.8,
+              weight: isSelected ? FontWeight.bold : FontWeight.normal ,
             ),
           ],
         )

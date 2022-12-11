@@ -50,7 +50,7 @@ class _TopCustomersViewState extends State<TopCustomersView> {
     }
 
     return Container(
-      padding: const EdgeInsets.all(kDefaultSpacing),
+      padding: const EdgeInsets.symmetric(vertical: kDefaultSpacing * 0.5),
       decoration: BoxDecoration(
         color: const Color.fromRGBO(24, 93, 231, 0.1),
         borderRadius: BorderRadius.circular(kDefaultSpacing * 0.5),
@@ -62,7 +62,7 @@ class _TopCustomersViewState extends State<TopCustomersView> {
             children: [
               Row(
                 children: [
-                  SvgPicture.asset("assets/icons/star.svg"),
+                  SvgPicture.asset("assets/icons/star.svg",),
                   kHorizontalSpaceTiny,
                   SvgPicture.asset("assets/icons/star.svg"),
                   kHorizontalSpaceTiny,
@@ -72,12 +72,12 @@ class _TopCustomersViewState extends State<TopCustomersView> {
               kHorizontalSpaceRegular,
               const TextWidget(
                 "Top Customers",
-                fontSize: 20,
+                fontSize: 18,
                 weight: FontWeight.bold,
               ),
             ],
           ),
-          kVerticalSpaceRegular,
+          kVerticalSpaceSmall,
           topCustomers.isEmpty
               ? const TextWidget(
                   "No top customers",
