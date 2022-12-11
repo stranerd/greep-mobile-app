@@ -152,95 +152,93 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           .copyWith(fontWeight: FontWeight.bold),
                       tabs: const [
                         Tab(
-                          height: 35,
+                          height: 30,
                           text: 'Daily',
                         ),
                         Tab(
-                          height: 35,
+                          height: 30,
                           text: 'Weekly',
                         ),
                         Tab(
-                          height: 35,
+                          height: 30,
                           text: 'Monthly',
                         ),
                         Tab(
-                          height: 35,
+                          height: 30,
                           text: 'All',
                         ),
                       ],
                     ),
                   ),
-                  kVerticalSpaceRegular,
+                  kVerticalSpaceSmall,
                   Expanded(
-                    child: Container(
-                      child: TabBarView(
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: [
-                          SingleChildScrollView(
+                    child: TabBarView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Builder(builder: (context) {
+                                Map<DateTime,TransactionSummary> summary = GetIt.I<
+                                    TransactionSummaryCubit>()
+                                    .getDailyTransactions();
+                                return DailyTransactionsStatisticsCard(
+                                    summary: summary);
+                              }),
+
+                            ],
+                          ),
+                        ),
+
+                        SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Builder(builder: (context) {
+                                Map<DateTime,TransactionSummary> summary = GetIt.I<
+                                    TransactionSummaryCubit>()
+                                    .getWeeklyTransactions();
+                                return WeeklyTransactionsStatisticsCard(
+                                    summary: summary);
+                              }),
+                            ],
+                          ),
+                        ),
+
+                        SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Builder(builder: (context) {
+                                Map<DateTime,TransactionSummary> summary = GetIt.I<
+                                        TransactionSummaryCubit>()
+                                    .getMonthlyTransactions();
+                                return MonthlyTransactionsStatisticsCard(
+                                    summary: summary);
+                              }),
+
+                            ],
+                          ),
+                        ),
+                        Builder(builder: (context) {
+                          TransactionSummary summary =
+                              GetIt.I<TransactionSummaryCubit>()
+                                  .getManagerDriverTotalTransactionSummary();
+                          return SingleChildScrollView(
                             child: Column(
                               children: [
-                                Builder(builder: (context) {
-                                  Map<DateTime,TransactionSummary> summary = GetIt.I<
-                                      TransactionSummaryCubit>()
-                                      .getDailyTransactions();
-                                  return DailyTransactionsStatisticsCard(
-                                      summary: summary);
-                                }),
-
+                                AllTransactionsStatisticsCard(
+                                  transactionSummary: summary,
+                                ),
+                                kVerticalSpaceRegular,
+                                const Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: TransactionHistorySection(),
+                                )
                               ],
                             ),
-                          ),
-
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                Builder(builder: (context) {
-                                  Map<DateTime,TransactionSummary> summary = GetIt.I<
-                                      TransactionSummaryCubit>()
-                                      .getWeeklyTransactions();
-                                  return WeeklyTransactionsStatisticsCard(
-                                      summary: summary);
-                                }),
-                              ],
-                            ),
-                          ),
-
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                Builder(builder: (context) {
-                                  Map<DateTime,TransactionSummary> summary = GetIt.I<
-                                          TransactionSummaryCubit>()
-                                      .getMonthlyTransactions();
-                                  return MonthlyTransactionsStatisticsCard(
-                                      summary: summary);
-                                }),
-
-                              ],
-                            ),
-                          ),
-                          Builder(builder: (context) {
-                            TransactionSummary summary =
-                                GetIt.I<TransactionSummaryCubit>()
-                                    .getManagerDriverTotalTransactionSummary();
-                            return SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  AllTransactionsStatisticsCard(
-                                    transactionSummary: summary,
-                                  ),
-                                  kVerticalSpaceRegular,
-                                  const Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8.0),
-                                    child: TransactionHistorySection(),
-                                  )
-                                ],
-                              ),
-                            );
-                          })
-                        ],
-                      ),
+                          );
+                        })
+                      ],
                     ),
                   ),
                 ],

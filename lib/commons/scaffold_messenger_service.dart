@@ -45,7 +45,9 @@ mixin ScaffoldMessengerService<K extends StatefulWidget> on State<K> {
 
   set success(String? message) {
     if (message != null && message != "") {
-      scaffoldMessengerKey.currentState!
+      if (scaffoldMessengerKey.currentState!=null) {
+        try {
+        scaffoldMessengerKey.currentState!
         ..clearSnackBars()
         ..showSnackBar(SnackBar(
           width: 250,
@@ -73,6 +75,12 @@ mixin ScaffoldMessengerService<K extends StatefulWidget> on State<K> {
             ),
           ),
         ));
+        }
+        catch(e)
+    {
+      print(e.toString());
+    }
+    }
     }
   }
 

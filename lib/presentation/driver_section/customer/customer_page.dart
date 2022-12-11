@@ -180,7 +180,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextWidget(
-                              "Filter",
+                              "filter",
+                              fontSize: 15,
                               style: kDefaultTextStyle,
                             ),
                             kHorizontalSpaceTiny,
@@ -221,7 +222,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                                         ? "Not Balanced"
                                                         : "None",
                                         style: kDefaultTextStyle.copyWith(
-                                            fontSize: 14),
+                                            fontSize: 14.sp),
                                       ),
                                     ))
                                 .toList(),
@@ -238,34 +239,52 @@ class _CustomerScreenState extends State<CustomerScreen> {
                       ),
                       kVerticalSpaceRegular,
                       Container(
+                        padding: EdgeInsets.symmetric(horizontal: kDefaultSpacing),
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey.shade200),
                             borderRadius:
                                 BorderRadius.circular(kDefaultSpacing * 0.5)),
                         height: 60.h,
-                        child: TextField(
-                          onChanged: (s) {
-                            print("On changed ${s}");
-                            if (s.isNotEmpty) {
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.search_outlined,
+                              size: 20.r,
+                              color: Colors.grey.shade600,
+                            ),
+                            kHorizontalSpaceSmall,
+                            Expanded(
+                              child: TextField(
+                                onChanged: (s) {
+                                  print("On changed ${s}");
+                                  if (s.isNotEmpty) {
+                                    filteredTransactions =
+                                        transactions.where((element) {
+                                      var customerName = element.data.customerName
+                                          ?.trim()
+                                          .toLowerCase();
+                                      return customerName
+                                              ?.contains(s.trim().toLowerCase()) ??
+                                          false;
+                                    }).toList();
+                                  } else {
+                                    filteredTransactions = [...transactions];
+                                  }
+                                  setState(() {});
+                                },
+                                style: kDefaultTextStyle.copyWith(fontSize: 15.sp),
+                                decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.only(
+                                      left: kDefaultSpacing * 0.5,
+                                      top: kDefaultSpacing * 0.5,
+                                      bottom: kDefaultSpacing * 0.5,
+                                    ),
 
-                              filteredTransactions = transactions
-                                  .where((element) {
-                                    var customerName = element.data.customerName
-                                          ?.trim().toLowerCase();
-                                    return customerName?.contains(s.trim().toLowerCase())??false;
-                                  })
-                                  .toList();
-                            } else {
-                              filteredTransactions = [...transactions];
-                            }
-                            setState(() {});
-                          },
-                          style: kDefaultTextStyle.copyWith(fontSize: 15.sp),
-                          decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: kDefaultSpacing),
-                              hintText: "Search customer",
-                              border: InputBorder.none),
+                                    hintText: "Search customer",
+                                    border: InputBorder.none),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       kVerticalSpaceMedium,

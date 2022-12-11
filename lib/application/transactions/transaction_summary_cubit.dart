@@ -579,7 +579,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
             expenseAmount: totalExpenses,
             tripAmount: tripAmount,
             expenseCount: expenses.length,
-            transactions: trans, dateRange: []);
+            transactions: trans, dateRange: [DateTime(element.timeAdded.year,element.timeAdded.month),DateTime(element.timeAdded.year,element.timeAdded.month + 1,0)]);
       });
     }
 

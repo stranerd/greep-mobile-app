@@ -94,314 +94,313 @@ class _MonthlyTransactionsStatisticsCardState
 
   @override
   Widget build(BuildContext context) {
-    print("Rebuild UI ${widget.summary.length}");
-    return Container(
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(color: kWhiteColor),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextWidget(
-                  selectedMonth,
-                  weight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: kDefaultSpacing * 0.6,
-                      vertical: kDefaultSpacing * 0.3),
-                  decoration: BoxDecoration(
-                      color: AppColors.lightGray,
-                      borderRadius: BorderRadius.circular(kDefaultSpacing)),
-                  child: DropdownButton<int>(
-                      isDense: true,
-                      value: selectedYear,
-                      underline: SizedBox(),
-                      icon: const Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        size: 16,
-                      ),
-                      items: years
-                          .map(
-                            (e) => DropdownMenuItem<int>(
-                              value: e,
-                              child: TextWidget(
-                                e.toString(),
-                                fontSize: 16,
-                                weight: FontWeight.bold,
-                              ),
+    return Column(
+      children: [
+        Container(
+          decoration: const BoxDecoration(color: kWhiteColor),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextWidget(
+                selectedMonth,
+                weight: FontWeight.bold,
+                fontSize: 18,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: kDefaultSpacing * 0.6,
+                    vertical: kDefaultSpacing * 0.3),
+                decoration: BoxDecoration(
+                    color: AppColors.lightGray,
+                    borderRadius: BorderRadius.circular(kDefaultSpacing)),
+                child: DropdownButton<int>(
+                    isDense: true,
+                    value: selectedYear,
+                    underline: const SizedBox(),
+                    icon: const Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      size: 16,
+                    ),
+                    items: years
+                        .map(
+                          (e) => DropdownMenuItem<int>(
+                            value: e,
+                            child: TextWidget(
+                              e.toString(),
+                              fontSize: 16,
+                              weight: FontWeight.bold,
                             ),
-                          )
-                          .toList(),
-                      onChanged: (value) {
-                        selectedYear = value ?? DateTime.now().year;
-                        generateAvailableMonths();
-                        setState(() {});
-                      }),
-                )
-              ],
-            ),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (value) {
+                      selectedYear = value ?? DateTime.now().year;
+                      generateAvailableMonths();
+                      setState(() {});
+                    }),
+              )
+            ],
           ),
-          kVerticalSpaceRegular,
-          LayoutBuilder(builder: (context, constraints) {
-            List<BarChartGroupData> barGroups = [];
+        ),
+        kVerticalSpaceRegular,
+        LayoutBuilder(builder: (context, constraints) {
+          List<BarChartGroupData> barGroups = [];
 
-            for (int i = 0; i < monthlySummaries.length; i++) {
-              TransactionSummary summary =
-              monthlySummaries[monthlySummaries.keys.toList()[i]]!;
-              num sum = summary.tripAmount.abs() + summary.expenseAmount.abs();
-              double total = ((highestAmount == 0 ? 0 : (sum) / highestAmount) * 100);
-              double expense = ((sum == 0 ? 0 : summary.expenseAmount.abs() / sum) *
-                  100 * (total / 100));
-              double income = ((sum == 0 ? 0 : summary.income.abs() / (total)) *
-                  100 * (total / 100));
+          for (int i = 0; i < monthlySummaries.length; i++) {
+            TransactionSummary summary =
+            monthlySummaries[monthlySummaries.keys.toList()[i]]!;
+            num sum = summary.tripAmount.abs() + summary.expenseAmount.abs();
+            double total = ((highestAmount == 0 ? 0 : (sum) / highestAmount) * 100);
+            double trip = ((sum == 0 ? 0: (summary.tripAmount.abs() - (summary.income <=0 ? 0 : summary.income))/sum) * 100 *(total/100));
+            double expense = ((sum == 0 ? 0 : summary.expenseAmount.abs() / sum) *
+                100 * (total / 100));
+            double income = ((sum == 0 ? 0 : summary.income <= 0 ? 0 : summary.income.abs() / (sum)) *
+                100 * (total / 100));
 
-              // print(""
-              //     "summary: $summary \n"
-              //     "highest: $highestAmount, \n"
-              //     "summaryAmount: ${summary.tripAmount.abs()}  \n"
-              //     "total: $total,  \n"
-              //     "expense: $expense,  \n"
-              //     "income: $income"
-              //     "tochedIndex: $touchedIndex $i \n");
-              barGroups.add(
-                BarChartGroupData(
-                  x: i,
-                  barRods: [
-                    BarChartRodData(
+            // print("Date: "
+            //     "summary: $summary\n"
+            //     "highest: $highestAmount,\n"
+            //     "summaryAmount: ${summary.tripAmount.abs()}\n"
+            //     "total: $total,\n"
+            //     "expense: $expense,\n"
+            //     "income: $income,\n"
+            //     "trip: $trip,\n"
+            //     "tochedIndex: $touchedIndex $i \n");
+            barGroups.add(
+              BarChartGroupData(
+                x: i,
+                barRods: [
+                  BarChartRodData(
+                    toY: total,
+                    color: const Color(0xffDDDFE2),
+                    width: Get.width * 0.135,
+                    rodStackItems: touchedIndex == i
+                        ? [
+                      BarChartRodStackItem(income, total, AppColors.blue),
+                      BarChartRodStackItem(expense, income, AppColors.green),
+                      BarChartRodStackItem(0, expense, AppColors.red)
+                    ]
+                        : [],
+                    borderRadius: BorderRadius.circular(kDefaultSpacing * 0.2),
+                    backDrawRodData: BackgroundBarChartRodData(
+                      show: true,
                       toY: total,
                       color: const Color(0xffDDDFE2),
-                      width: Get.width * 0.11,
-                      rodStackItems: touchedIndex == i
-                          ? [
-                        BarChartRodStackItem(expense, income, AppColors.green),
-                        BarChartRodStackItem(0, expense, AppColors.red)
-                      ]
-                          : [],
-                      borderRadius: BorderRadius.circular(kDefaultSpacing * 0.2),
-                      backDrawRodData: BackgroundBarChartRodData(
-                        show: true,
-                        toY: total,
-                        color: const Color(0xffDDDFE2),
-                      ),
+                    ),
+                  ),
+                ],
+                showingTooltipIndicators: [],
+              ),
+            );
+          }
+
+          var selectedBarGroups = pageIndex == 0 ? barGroups.take(6).toList() : barGroups.sublist(6,barGroups.length);
+          // print("Selected Bar Groups ${selectedBarGroups}");
+          BarChartData sectionData = BarChartData(
+            barGroups: selectedBarGroups,
+            alignment: BarChartAlignment.spaceBetween,
+
+            barTouchData: BarTouchData(
+              enabled: true,
+              allowTouchBarBackDraw: false,
+              touchCallback: (FlTouchEvent event, barTouchResponse) {
+                if (!event.isInterestedForInteractions ||
+                    barTouchResponse == null ||
+                    barTouchResponse.spot == null) {
+                  // touchedIndex = -1;
+                  return;
+                }
+                else {
+                  setState(() {
+
+                    touchedIndex =
+                        barTouchResponse.spot!.touchedBarGroupIndex + (pageIndex == 0 ? 0 : 6);
+                    selectedMonth =
+                        DateFormat(DateFormat.MONTH).format(monthlySummaries[monthlySummaries.keys.toList()[touchedIndex]]?.transactions.first.timeAdded??DateTime.now());
+                  });
+                }
+
+              },
+
+              touchTooltipData: BarTouchTooltipData(
+                tooltipBgColor: Colors.transparent,
+                getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                  return BarTooltipItem(
+                    ' ',
+                    const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  );
+                },
+              ),
+            ),
+            titlesData: FlTitlesData(
+              show: true,
+
+              bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (n, medata) {
+                        String month = "";
+                        switch (n.toInt()) {
+                          case 0:
+                            month = "Jan";
+                            break;
+                          case 1:
+                            month = "Feb";
+                            break;
+                          case 2:
+                            month = "Mar";
+                            break;
+                          case 3:
+                            month = "Apr";
+                            break;
+                          case 4:
+                            month = "May";
+                            break;
+                          case 5:
+                            month = "June";
+                            break;
+                          case 6:
+                            month = "Jul";
+                            break;
+                          case 7:
+                            month = "Aug";
+                            break;
+                          case 8:
+                            month = "Sep";
+                            break;
+                          case 9:
+                            month = "Oct";
+                            break;
+                          case 10:
+                            month = "Nov";
+                            break;
+                          case 11:
+                            month = "Dec";
+                            break;
+                          default:
+                            month = "Jan";
+                        }
+
+                        return TextWidget(
+                          month,
+                          fontSize: 16,
+                        );
+                      })),
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: false,
+                ),
+              ),
+              topTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: false,
+                ),
+              ),
+              rightTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: false,
+                ),
+              ),
+            ),
+            gridData: FlGridData(
+              show: false,
+            ),
+            borderData: FlBorderData(
+              show: false,
+            ),
+
+          );
+          return Container(
+            alignment: Alignment.center,
+            height: 220.h,
+            width: 1.sw,
+            child: PageView(
+              controller: _controller,
+              children: [
+                Stack(
+                  children: [
+                    Positioned.fill(
+                      child: BarChart(sectionData),
                     ),
                   ],
-                  showingTooltipIndicators: [],
                 ),
-              );
-            }
-
-            var selectedBarGroups = pageIndex == 0 ? barGroups.take(7).toList() : barGroups.sublist(6,barGroups.length);
-            // print("Selected Bar Groups ${selectedBarGroups}");
-            BarChartData sectionData = BarChartData(
-              barGroups: selectedBarGroups,
-              alignment: BarChartAlignment.spaceBetween,
-
-              barTouchData: BarTouchData(
-                enabled: true,
-                allowTouchBarBackDraw: false,
-                touchCallback: (FlTouchEvent event, barTouchResponse) {
-                  if (!event.isInterestedForInteractions ||
-                      barTouchResponse == null ||
-                      barTouchResponse.spot == null) {
-                    // touchedIndex = -1;
-                    return;
-                  }
-                  else {
-                    setState(() {
-
-                      touchedIndex =
-                          barTouchResponse.spot!.touchedBarGroupIndex + (pageIndex == 0 ? 0 : 6);
-                      selectedMonth =
-                          DateFormat(DateFormat.MONTH).format(monthlySummaries[monthlySummaries.keys.toList()[touchedIndex]]?.transactions.first.timeAdded??DateTime.now());
-                    });
-                  }
-
-                },
-
-                touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: Colors.transparent,
-                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                    return BarTooltipItem(
-                      ' ',
-                      const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    );
-                  },
-                ),
-              ),
-              titlesData: FlTitlesData(
-                show: true,
-
-                bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (n, medata) {
-                          String month = "";
-                          switch (n.toInt()) {
-                            case 0:
-                              month = "Jan";
-                              break;
-                            case 1:
-                              month = "Feb";
-                              break;
-                            case 2:
-                              month = "Mar";
-                              break;
-                            case 3:
-                              month = "Apr";
-                              break;
-                            case 4:
-                              month = "May";
-                              break;
-                            case 5:
-                              month = "June";
-                              break;
-                            case 6:
-                              month = "Jul";
-                              break;
-                            case 7:
-                              month = "Aug";
-                              break;
-                            case 8:
-                              month = "Sep";
-                              break;
-                            case 9:
-                              month = "Oct";
-                              break;
-                            case 10:
-                              month = "Nov";
-                              break;
-                            case 11:
-                              month = "Dec";
-                              break;
-                            default:
-                              month = "Jan";
-                          }
-
-                          return TextWidget(
-                            month,
-                            fontSize: 16,
-                          );
-                        })),
-                leftTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: false,
-                  ),
-                ),
-                topTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: false,
-                  ),
-                ),
-                rightTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: false,
-                  ),
-                ),
-              ),
-              gridData: FlGridData(
-                show: false,
-              ),
-              borderData: FlBorderData(
-                show: false,
-              ),
-
-            );
-            return Container(
-              alignment: Alignment.center,
-              height: 250.h,
-              width: 1.sw,
-              child: PageView(
-
-                controller: _controller,
-                children: [
-                  Stack(
-                    children: [
-                      Positioned.fill(
-                        child: BarChart(sectionData),
-                      ),
-                    ],
-                  ),
-                  Stack(
-                    children: [
-                      Positioned.fill(
-                        child: BarChart(sectionData),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          }),
-          kVerticalSpaceLarge,
-          LayoutBuilder(builder: (context, constr) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SizedBox(
-                  width: constr.maxWidth * 0.33,
-                  child: ChartTransactionIndicator(
-                    icon: "assets/icons/income_green.svg",
-                    color: kGreenColor,
-                    backgroundColor: const Color.fromRGBO(4, 210, 140, 0.1),
-                    text: "Total Income",
-                    isSelected: touchedType == "income",
-                    amount:touchedIndex == -1 ? "0": "${monthlySummaries[monthlySummaries.keys.toList()[touchedIndex]]?.income.toMoney??0}",
-                  ),
-                ),
-                SizedBox(
-                  width: constr.maxWidth * 0.33,
-                  child: ChartTransactionIndicator(
-                    color: AppColors.blue,
-                    text: "Total Trip",
-                    icon: "assets/icons/trip_amount_blue.svg",
-                    amount: touchedIndex == -1 ? "0":  "${monthlySummaries[monthlySummaries.keys.toList()[touchedIndex]]?.tripAmount.toMoney??0}",
-                    backgroundColor: const Color.fromRGBO(2, 80, 198, 0.1),
-                    isSelected: touchedType == "trip",
-                  ),
-                ),
-                SizedBox(
-                  width: constr.maxWidth * 0.33,
-                  child: ChartTransactionIndicator(
-                    color: AppColors.red,
-                    backgroundColor: const Color(0xffECC2C2),
-                    icon: "assets/icons/expense_red.svg",
-                    amount: touchedIndex == -1 ? "0":"${monthlySummaries[monthlySummaries.keys.toList()[touchedIndex]]?.expenseAmount.toMoney??0}",
-                    text: "Total Expenses",
-                    isSelected: touchedType == "expense",
-                  ),
+                Stack(
+                  children: [
+                    Positioned.fill(
+                      child: BarChart(sectionData),
+                    ),
+                  ],
                 ),
               ],
-            );
-          }),
-          kVerticalSpaceRegular,
-          Builder(
-            builder: (context) {
-              List<Transaction> transactions2 = touchedIndex == -1 ? [] : monthlySummaries[monthlySummaries.keys.toList()[touchedIndex]]?.transactions??[];
-              return Column(
-                children: [
-                  TopCustomersView(
+            ),
+          );
+        }),
+        kVerticalSpaceLarge,
+        LayoutBuilder(builder: (context, constr) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(
+                width: constr.maxWidth * 0.33,
+                child: ChartTransactionIndicator(
+                  icon: "assets/icons/income_green.svg",
+                  color: kGreenColor,
+                  backgroundColor: const Color.fromRGBO(4, 210, 140, 0.1),
+                  text: "Total Income",
+                  isSelected: touchedType == "income",
+                  amount:touchedIndex == -1 ? "0": "${monthlySummaries[monthlySummaries.keys.toList()[touchedIndex]]?.income.toMoney??0}",
+                ),
+              ),
+              SizedBox(
+                width: constr.maxWidth * 0.33,
+                child: ChartTransactionIndicator(
+                  color: AppColors.blue,
+                  text: "Total Trip",
+                  icon: "assets/icons/trip_amount_blue.svg",
+                  amount: touchedIndex == -1 ? "0":  "${monthlySummaries[monthlySummaries.keys.toList()[touchedIndex]]?.tripAmount.toMoney??0}",
+                  backgroundColor: const Color.fromRGBO(2, 80, 198, 0.1),
+                  isSelected: touchedType == "trip",
+                ),
+              ),
+              SizedBox(
+                width: constr.maxWidth * 0.33,
+                child: ChartTransactionIndicator(
+                  color: AppColors.red,
+                  backgroundColor: const Color(0xffECC2C2),
+                  icon: "assets/icons/expense_red.svg",
+                  amount: touchedIndex == -1 ? "0":"${monthlySummaries[monthlySummaries.keys.toList()[touchedIndex]]?.expenseAmount.toMoney??0}",
+                  text: "Total Expenses",
+                  isSelected: touchedType == "expense",
+                ),
+              ),
+            ],
+          );
+        }),
+        kVerticalSpaceRegular,
+        Builder(
+          builder: (context) {
+            List<Transaction> transactions2 = touchedIndex == -1 ? [] : monthlySummaries[monthlySummaries.keys.toList()[touchedIndex]]?.transactions??[];
+            return Column(
+              children: [
+                TopCustomersView(
+                  transactions: transactions2,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: TransactionHistorySection(
                     transactions: transactions2,
+                    withTransaction: true,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: TransactionHistorySection(
-                      transactions: transactions2,
-                      withTransaction: true,
-                    ),
-                  )
-                ],
-              );
-            }
-          )
-        ],
-      ),
+                )
+              ],
+            );
+          }
+        )
+      ],
     );
   }
 
@@ -415,16 +414,14 @@ class _MonthlyTransactionsStatisticsCardState
   void calculateSummaries() {
     monthlySummaries.clear();
     availableMonths.forEach((element) {
-      if (widget.summary.keys
-          .any((e) => element.month == e.month && element.year == e.year)) {
+      if (widget.summary.keys.any((e) => element.month == e.month && element.year == e.year)) {
         monthlySummaries.putIfAbsent(element, () {
           var transactionSummary = widget.summary[widget.summary.keys
-              .firstWhere(
-                  (e) => element.month == e.month && element.year == e.year)]!;
+              .firstWhere((e) => element.month == e.month && element.year == e.year)]!;
           highestAmount = (transactionSummary.tripAmount +
                       transactionSummary.expenseAmount) >
                   highestAmount
-              ? transactionSummary.tripAmount
+              ? transactionSummary.tripAmount + transactionSummary.expenseAmount
               : highestAmount;
           return transactionSummary;
         });

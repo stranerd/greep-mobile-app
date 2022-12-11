@@ -27,8 +27,10 @@ class _SplashScreenState extends State<AuthenticationSplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    print("On authentication Splash Screen");
     return BlocListener<UserCubit, UserState>(
       listener: (context, state) {
+        print(state);
         if (state is UserStateFetched) {
           if (widget.isNewUser){
             g.Get.offAll(const EmailVerificationBottomSheet(),
