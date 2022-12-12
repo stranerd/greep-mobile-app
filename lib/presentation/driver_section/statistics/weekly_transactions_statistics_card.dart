@@ -85,13 +85,6 @@ class _WeeklyTransactionsStatisticsCardState
 
     pageIndex = selectedMonth -1;
     touchedIndex = calculateTouchedIndex(0);
-    // touchedIndex =
-    //     ((widget.summary.keys.first.difference(DateTime(selectedYear)).inDays /
-    //             7)
-    //         .floor());
-    // if (touchedIndex > 6) {
-    //   pageIndex = (touchedIndex / 7).floor();
-    // }
 
     _controller = PageController(initialPage: pageIndex)
       ..addListener(() {
@@ -112,21 +105,11 @@ class _WeeklyTransactionsStatisticsCardState
     generateAvailableWeeks();
     selectedWeek =
     months[selectedMonth -1];
-    // touchedIndex =
-    //     ((widget.summary.keys.first.difference(DateTime(selectedYear)).inDays /
-    //             7)
-    //         .floor());
-    // if (touchedIndex > 6) {
-    //   pageIndex = (touchedIndex / 7).floor();
-    // }
-    // selectedMonth = pageIndex + 1;
-
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    print(selectedMonth);
     return Column(
       children: [
         Container(
@@ -569,7 +552,7 @@ class _WeeklyTransactionsStatisticsCardState
   }
 
   int calculateTouchedIndex(int initTouchedIndex) {
-    int currCount = selectedMonthsCount.sublist(0, pageIndex + 1).reduce((value, element) => value + element);
+    int currCount = selectedMonthsCount.sublist(0, pageIndex).reduce((value, element) => value + element);
     return currCount + initTouchedIndex;
 
   }

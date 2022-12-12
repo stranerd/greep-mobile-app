@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:greep/Commons/colors.dart';
 import 'package:greep/application/geocoder/geocoder_cubit.dart';
@@ -11,12 +10,12 @@ import 'package:greep/commons/scaffold_messenger_service.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/user/model/ride_status.dart';
 import 'package:greep/ioc.dart';
+import 'package:greep/presentation/driver_section/records/record_trip.dart';
 import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:timeline_tile/timeline_tile.dart';
 
 class TripDirectionsScreen extends StatefulWidget {
   const TripDirectionsScreen({Key? key}) : super(key: key);
@@ -34,6 +33,9 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
   @override
   void initState() {
     tripDirectionBuilderCubit = getIt();
+    if (tripDirectionBuilderCubit.state is TripDirectionBuilderStateEndTrip){
+      Get.off(const RecordTrip());
+    }
     super.initState();
   }
 
@@ -66,6 +68,10 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
           setState(() {
             isEndTrip = true;
           });
+
+          Future.delayed(const Duration(seconds: 3), () {
+            Get.off(() => const RecordTrip());
+          });
         }
       },
       builder: (context, state) {
@@ -89,7 +95,7 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
                           Container(
                             width: 20,
                             height: 20,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                                 color: AppColors.red, shape: BoxShape.circle),
                           ),
                         kHorizontalSpaceSmall,
@@ -97,7 +103,7 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
                           Container(
                             width: 5,
                             height: 5,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                                 color: AppColors.red, shape: BoxShape.circle),
                           ),
                         kHorizontalSpaceSmall,
@@ -671,7 +677,7 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
                     ),
                   ),
                   kVerticalSpaceMedium,
-                  LayoutBuilder(builder: (context, constraints) {
+                  if (!isEndTrip)LayoutBuilder(builder: (context, constraints) {
                     if (state is TripDirectionBuilderStateStartTrip) {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -715,7 +721,19 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
                       children: [
                         GestureDetector(
                           onTap: () {
+                            if (isGotTrip || isStartTrip){
+                              tripDirectionBuilderCubit.cancelProgress();
+                              isGotTrip = false;
+                              isStartTrip = false;
+                              isEndTrip= false;
+                              setState(() {
+
+                              });
+                            }
+                            else {
                               Get.back();
+
+                            }
                           },
                           child: Container(
                             padding: const EdgeInsets.all(kDefaultSpacing),
@@ -726,7 +744,7 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
                             child: Row(
                               children: [
                                 Icon(
-                                  Icons.arrow_back_ios,
+                                  isGotTrip ? Icons.close_outlined: Icons.arrow_back_ios ,
                                   color: kWhiteColor,
                                   size: 18.r,
                                 ),
@@ -806,6 +824,7 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
                       ],
                     );
                   }),
+                  kVerticalSpaceRegular
                 ],
               ),
             );
@@ -815,265 +834,3 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen>
     );
   }
 }
-
-// Container(
-//   padding: const EdgeInsets.all(kDefaultSpacing),
-//   decoration: const BoxDecoration(
-//     color: AppColors.lightBlue,
-//   ),
-//   child: Stepper(
-//     physics: const ScrollPhysics(),
-//     currentStep: currStep,
-//     onStepTapped: (int intt) {
-//       setState(() {
-//         currStep = intt;
-//       });
-//     },
-//     onStepContinue: () {},
-//     steps: [
-//       Step(
-//         title: Text(
-//           "Got a trip",
-//           style: kBoldTextStyle,
-//         ),
-//         isActive: state is TripDirectionBuilderStateGotTrip,
-//         content: state is TripDirectionBuilderStateGotTrip
-//             ? Column(
-//                 mainAxisSize: MainAxisSize.min,
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                     BlocProvider.value(
-//                       value: getIt<GeoCoderCubit>()
-//                         ..fetchAddressFromLongAndLat(
-//                             longitude: directionProgress
-//                                 .location.longitude,
-//                             latitude: state.directionProgress
-//                                 .location.latitude),
-//                       child: BlocBuilder<GeoCoderCubit,
-//                           GeoCoderState>(
-//                         builder: (context, geoState) {
-//                           return TextWidget(
-//                             geoState is GeoCoderStateFetched
-//                                 ? geoState.address.isEmpty
-//                                     ? 'Loading address...'
-//                                     : geoState.address
-//                                 : 'Loading address...',
-//                             softWrap: true,
-//                             maxLines: 2,
-//                             fontSize: 13,
-//                             color: AppColors.black,
-//                           );
-//                         },
-//                       ),
-//                     ),
-//                     kVerticalSpaceRegular,
-//                     Row(
-//                       mainAxisSize: MainAxisSize.min,
-//                       crossAxisAlignment:
-//                           CrossAxisAlignment.center,
-//                       children: [
-//                         TextWidget(
-//                           "${state.directionProgress.speed.toString()} km/h",
-//                           fontSize: 12,
-//                         ),
-//                         kHorizontalSpaceSmall,
-//                         Container(
-//                           height: 5.r,
-//                           width: 5.r,
-//                           decoration: const BoxDecoration(
-//                               color: Colors.black,
-//                               shape: BoxShape.circle),
-//                         ),
-//                         kHorizontalSpaceSmall,
-//                         TextWidget(
-//                           "${state.directionProgress.distance.toString()} km",
-//                           fontSize: 12,
-//                         ),
-//                         kHorizontalSpaceSmall,
-//                         Container(
-//                           height: 5.r,
-//                           width: 5.r,
-//                           decoration: const BoxDecoration(
-//                               color: Colors.black,
-//                               shape: BoxShape.circle),
-//                         ),
-//                         kHorizontalSpaceSmall,
-//                         TextWidget(
-//                           "${state.directionProgress.duration.inMinutes} m",
-//                           fontSize: 12,
-//                         ),
-//                       ],
-//                     )
-//                   ])
-//             : Container(),
-//         state: StepState.indexed,
-//       ),
-//       Step(
-//         title: Text(
-//           "Start a trip",
-//           style: kBoldTextStyle,
-//         ),
-//         isActive: state is TripDirectionBuilderStateStartTrip,
-//         content: state is TripDirectionBuilderStateStartTrip
-//             ? Column(
-//                 mainAxisSize: MainAxisSize.min,
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                     BlocProvider.value(
-//                       value: getIt<GeoCoderCubit>()
-//                         ..fetchAddressFromLongAndLat(
-//                             longitude: state.directionProgress
-//                                 .location.longitude,
-//                             latitude: state.directionProgress
-//                                 .location.latitude),
-//                       child: BlocBuilder<GeoCoderCubit,
-//                           GeoCoderState>(
-//                         builder: (context, geoState) {
-//                           print(
-//                               "Getting geo locate for start trip ${state.directionProgress}");
-//                           return TextWidget(
-//                             geoState is GeoCoderStateFetched
-//                                 ? geoState.address.isEmpty
-//                                     ? 'Loading address...'
-//                                     : geoState.address
-//                                 : 'Loading address...',
-//                             softWrap: true,
-//                             maxLines: 2,
-//                             fontSize: 13,
-//                             color: AppColors.black,
-//                           );
-//                         },
-//                       ),
-//                     ),
-//                     kVerticalSpaceRegular,
-//                     Row(
-//                       mainAxisSize: MainAxisSize.min,
-//                       crossAxisAlignment:
-//                           CrossAxisAlignment.center,
-//                       children: [
-//                         TextWidget(
-//                           "${state.directionProgress.speed.toString()} km/h",
-//                           fontSize: 12,
-//                         ),
-//                         kHorizontalSpaceSmall,
-//                         Container(
-//                           height: 5.r,
-//                           width: 5.r,
-//                           decoration: const BoxDecoration(
-//                               color: Colors.black,
-//                               shape: BoxShape.circle),
-//                         ),
-//                         kHorizontalSpaceSmall,
-//                         TextWidget(
-//                           "${state.directionProgress.distance.toString()} km",
-//                           fontSize: 12,
-//                         ),
-//                         kHorizontalSpaceSmall,
-//                         Container(
-//                           height: 5.r,
-//                           width: 5.r,
-//                           decoration: const BoxDecoration(
-//                               color: Colors.black,
-//                               shape: BoxShape.circle),
-//                         ),
-//                         kHorizontalSpaceSmall,
-//                         TextWidget(
-//                           "${state.directionProgress.duration.inMinutes} m",
-//                           fontSize: 12,
-//                         ),
-//                       ],
-//                     )
-//                   ])
-//             : Container(),
-//         state: StepState.indexed,
-//       ),
-//       Step(
-//         title: Text(
-//           "End trip",
-//           style: kBoldTextStyle,
-//         ),
-//         isActive: state is TripDirectionBuilderStateEndTrip,
-//         content: state is TripDirectionBuilderStateEndTrip
-//             ? Column(
-//                 mainAxisSize: MainAxisSize.min,
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                     BlocProvider.value(
-//                       value: getIt<GeoCoderCubit>()
-//                         ..fetchAddressFromLongAndLat(
-//                             longitude: state.directionProgress
-//                                 .location.longitude,
-//                             latitude: state.directionProgress
-//                                 .location.latitude),
-//                       child: BlocBuilder<GeoCoderCubit,
-//                           GeoCoderState>(
-//                         builder: (context, geoState) {
-//                           print(
-//                               "Getting geo locate for end trip ${state.directionProgress}");
-//
-//                           return TextWidget(
-//                             geoState is GeoCoderStateFetched
-//                                 ? geoState.address.isEmpty
-//                                     ? 'Loading address...'
-//                                     : geoState.address
-//                                 : 'Loading address...',
-//                             softWrap: true,
-//                             maxLines: 2,
-//                             fontSize: 13,
-//                             color: AppColors.black,
-//                           );
-//                         },
-//                       ),
-//                     ),
-//                     kVerticalSpaceRegular,
-//                     Wrap(
-//                       // mainAxisSize: MainAxisSize.min,
-//                       // crossAxisAlignment: CrossAxisAlignment.center,
-//                       children: [
-//                         TextWidget(
-//                           "${state.directionProgress.speed.toString()} km/h",
-//                           fontSize: 12,
-//                         ),
-//                         kHorizontalSpaceSmall,
-//                         Container(
-//                           height: 5.r,
-//                           width: 5.r,
-//                           decoration: const BoxDecoration(
-//                               color: Colors.black,
-//                               shape: BoxShape.circle),
-//                         ),
-//                         kHorizontalSpaceSmall,
-//                         TextWidget(
-//                           "${state.directionProgress.distance.toString()} km",
-//                           fontSize: 12,
-//                         ),
-//                         kHorizontalSpaceSmall,
-//                         Container(
-//                           height: 5.r,
-//                           width: 5.r,
-//                           decoration: const BoxDecoration(
-//                               color: Colors.black,
-//                               shape: BoxShape.circle),
-//                         ),
-//                         kHorizontalSpaceSmall,
-//                         TextWidget(
-//                           timeago.format(
-//                               DateTime.now().subtract(state
-//                                   .directionProgress.duration),
-//                               allowFromNow: true,
-//                               locale: 'en_short'),
-//                           fontSize: 12,
-//                         ),
-//                       ],
-//                     )
-//                   ])
-//             : Container(),
-//         state: StepState.indexed,
-//       ),
-//     ],
-//     controlsBuilder:
-//         (BuildContext context, ControlsDetails? controlsDetails) {
-//       return Container();
-//     },
-//   ),
-// ),

@@ -126,4 +126,10 @@ class TripDirectionBuilderCubit extends Cubit<TripDirectionBuilderState> {
           directionProgress: directionProgress, directions: _directions));
     }
   }
+
+  void cancelProgress() {
+    _directions.clear();
+    _rideStatus  = RideStatus.ended;
+    emit(TripDirectionBuilderStateInitial());
+  }
 }

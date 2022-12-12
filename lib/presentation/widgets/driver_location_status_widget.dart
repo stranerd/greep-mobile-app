@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:greep/Commons/colors.dart';
 import 'package:greep/application/location/driver_location_status_cubit.dart';
 import 'package:greep/domain/user/model/ride_status.dart';
+import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 
 class DriverLocationStatusWidget extends StatefulWidget {
@@ -15,6 +16,7 @@ class DriverLocationStatusWidget extends StatefulWidget {
   final bool textOnly;
   final Color? textColor;
   final bool showLastSeen;
+  final bool withText;
   final double? fontSize;
   final TextStyle? textStyle;
 
@@ -23,6 +25,7 @@ class DriverLocationStatusWidget extends StatefulWidget {
       required this.userId,
       this.fontSize,
       this.textColor,
+        this.withText = false,
       this.textOnly = false,
       this.showLastSeen = true,
       this.textStyle})
@@ -52,15 +55,26 @@ class _DriverLocationStatusWidgetState extends State<DriverLocationStatusWidget>
             builder: (c, oS) {
               // print(oS);
               if (oS is DriverLocationStatusStateFetched) {
-                return Container(
-                  height: 14.r,
-                  width: 14.r,
-                  decoration:  BoxDecoration(
-                      color: oS.status.rideStatus == RideStatus.pending
-                          ? AppColors.blue
-                          : oS.status.rideStatus == RideStatus.ended
-                          ? AppColors.red
-                          : AppColors.green, shape: BoxShape.circle),
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 14.r,
+                      width: 14.r,
+                      decoration:  BoxDecoration(
+                          color: oS.status.rideStatus == RideStatus.pending
+                              ? AppColors.blue
+                              : oS.status.rideStatus == RideStatus.ended
+                              ? AppColors.red
+                              : AppColors.green, shape: BoxShape.circle),
+                    ),
+                    if(widget.withText)TextWidget(oS.status.rideStatus == RideStatus.pending
+                        ? "Got a trip"
+                        : oS.status.rideStatus == RideStatus.ended
+                        ? "Ended trip"
+                        : "Start trip")
+
+                  ],
                 );
               }
 

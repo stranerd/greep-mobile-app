@@ -107,7 +107,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
                   context: context,
                   enableDrag: true,
                   // backgroundColor: Colors.transparent,
-                  isDismissible: true,
+                  isDismissible: false,
                   isScrollControlled: true,
                   builder: (context) {
                     return TripDirectionsScreen();

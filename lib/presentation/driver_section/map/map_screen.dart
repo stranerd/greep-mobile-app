@@ -12,11 +12,13 @@ import 'package:greep/application/location/driver_location_status_cubit.dart';
 import 'package:greep/application/user/user_cubit.dart';
 import 'package:greep/application/user/user_util.dart';
 import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/domain/user/model/ride_status.dart';
 import 'package:greep/ioc.dart';
 import 'package:greep/presentation/driver_section/nav_pages/settings/account/view_profile.dart';
 import 'package:greep/presentation/widgets/driver_selector_widget.dart';
 import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
+import 'package:greep/utils/constants/app_colors.dart';
 import 'package:greep/utils/constants/app_styles.dart';
 import 'package:intl/intl.dart';
 
@@ -31,6 +33,8 @@ class _MapScreenState extends State<MapScreen> {
   Completer<GoogleMapController> _controller = Completer();
 
   late DriverLocationStatusCubit driverLocationStatusCubit;
+
+  RideStatus rideStatus = RideStatus.ended;
 
   // static const CameraPosition _grandCubana = CameraPosition(
   //   target: LatLng(
@@ -72,6 +76,7 @@ class _MapScreenState extends State<MapScreen> {
                     listener: (context, locationState) async {
                       if (locationState is DriverLocationStatusStateFetched) {
                         print(locationState);
+                        rideStatus = locationState.status.rideStatus;
                         var mapController = await _controller.future;
                         if (double.parse(locationState.status.longitude) == 0 ||
                             double.parse(locationState.status.latitude) == 0) {
@@ -158,48 +163,85 @@ class _MapScreenState extends State<MapScreen> {
                             child: Container(
                               decoration:
                                   const BoxDecoration(color: kWhiteColor),
-                              child: GoogleMap(
-                                myLocationEnabled: true,
-                                compassEnabled: true,
-                                tiltGesturesEnabled: false,
-                                zoomControlsEnabled: false,
-                                mapType: MapType.normal,
-                                initialCameraPosition: locationState
-                                        is DriverLocationStatusStateFetched
-                                    ? CameraPosition(
-                                        target: LatLng(
-                                          double.parse(
-                                              locationState.status.latitude),
-                                          double.parse(
-                                              locationState.status.longitude),
+                              child: Stack(
+                                children: [
+                                  Positioned.fill(
+                                    child: GoogleMap(
+                                      myLocationEnabled: true,
+                                      compassEnabled: true,
+                                      tiltGesturesEnabled: false,
+                                      zoomControlsEnabled: false,
+                                      mapType: MapType.normal,
+                                      initialCameraPosition: locationState
+                                              is DriverLocationStatusStateFetched
+                                          ? CameraPosition(
+                                              target: LatLng(
+                                                double.parse(
+                                                    locationState.status.latitude),
+                                                double.parse(
+                                                    locationState.status.longitude),
+                                              ),
+                                              zoom: 15,
+                                            )
+                                          : const CameraPosition(
+                                              target: LatLng(
+                                                9.064246972613308,
+                                                7.424030426684654,
+                                              ),
+                                              zoom: 15,
+                                            ),
+                                      onMapCreated: (c) {
+                                        _controller.complete(c);
+                                      },
+                                      markers: {
+                                        Marker(
+                                          markerId: const MarkerId("driver"),
+                                          position: const LatLng(
+                                            9.064246972613308,
+                                            7.424030426684654,
+                                          ),
+                                          infoWindow: const InfoWindow(
+                                            title: "driver",
+                                          ),
+                                          icon: BitmapDescriptor.defaultMarkerWithHue(
+                                            BitmapDescriptor.hueBlue,
+                                          ),
+                                        )
+                                      },
+                                    ),
+                                  ),
+                                  Positioned(
+                                      top: 10.h,
+                                      left: 10.w,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(kDefaultSpacing * 0.5,),
+                                        decoration: BoxDecoration(
+                                          color: kWhiteColor,
+                                          borderRadius: BorderRadius.circular(kDefaultSpacing * 0.75)
                                         ),
-                                        zoom: 15,
-                                      )
-                                    : const CameraPosition(
-                                        target: LatLng(
-                                          9.064246972613308,
-                                          7.424030426684654,
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              height: 14.r,
+                                              width: 14.r,
+                                              decoration:  BoxDecoration(
+                                                  color: rideStatus == RideStatus.pending
+                                                      ? AppColors.blue
+                                                      : rideStatus == RideStatus.ended
+                                                      ? AppColors.red
+                                                      : AppColors.green, shape: BoxShape.circle),
+
+                                            ),
+                                            kHorizontalSpaceSmall,
+                                            TextWidget(rideStatus == RideStatus.pending
+                                                ? "Got a trip"
+                                                : rideStatus == RideStatus.ended
+                                                ? "Ended trip"
+                                                : "Start trip")
+                                          ],
                                         ),
-                                        zoom: 15,
-                                      ),
-                                onMapCreated: (c) {
-                                  _controller.complete(c);
-                                },
-                                markers: {
-                                  Marker(
-                                    markerId: const MarkerId("driver"),
-                                    position: const LatLng(
-                                      9.064246972613308,
-                                      7.424030426684654,
-                                    ),
-                                    infoWindow: const InfoWindow(
-                                      title: "driver",
-                                    ),
-                                    icon: BitmapDescriptor.defaultMarkerWithHue(
-                                      BitmapDescriptor.hueBlue,
-                                    ),
-                                  )
-                                },
+                                      ))
+                                ],
                               ),
                             ),
                           ),
