@@ -11,12 +11,14 @@ class ChartTransactionIndicator extends StatelessWidget {
   final String text;
   final bool isNegative;
   final String amount;
+  final bool isExpense;
   final String icon;
   final bool isSelected;
 
   const ChartTransactionIndicator({
     Key? key,
     required this.color,
+    this.isExpense = false,
     required this.text,
      this.isNegative = false,
     required this.amount,
@@ -51,6 +53,12 @@ class ChartTransactionIndicator extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (isNegative)TextWidget(
+                  "-",
+                  color: color,
+                  fontSize: isSelected ? 19 : 17,
+                  weight: FontWeight.bold,
+                ) ,
+                if (isExpense)TextWidget(
                   "-",
                   color: color,
                   fontSize: isSelected ? 19 : 17,

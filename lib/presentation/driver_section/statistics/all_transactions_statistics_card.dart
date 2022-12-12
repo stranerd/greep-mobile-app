@@ -145,6 +145,7 @@ class _AllTransactionsStatisticsCardState
                         title: "income",
                         showTitle: false,
                         color: kGreenColor,
+
                         radius: touchedIndex == "income" ? 55.r : 50.r,
                       ),
                       PieChartSectionData(
@@ -259,6 +260,7 @@ class _AllTransactionsStatisticsCardState
                   width: constr.maxWidth * 0.33,
                   child: ChartTransactionIndicator(
                     color: AppColors.red,
+                    isExpense: true,
                     backgroundColor: const Color(0xffECC2C2),
                     icon: "assets/icons/expense_red.svg",
                     amount: selectedTransactionSummary.expenseAmount.toMoney,

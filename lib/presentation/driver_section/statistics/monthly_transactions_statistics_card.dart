@@ -37,6 +37,8 @@ class _MonthlyTransactionsStatisticsCardState
 
   List<int> years = [];
 
+  List<String> months = [];
+
   List<DateTime> availableMonths = [];
 
   Map<DateTime, TransactionSummary> monthlySummaries = {};
@@ -51,6 +53,7 @@ class _MonthlyTransactionsStatisticsCardState
 
   @override
   void initState() {
+
     _controller = PageController(initialPage: pageIndex)..addListener(() {
 
       setState(() {
@@ -377,6 +380,7 @@ class _MonthlyTransactionsStatisticsCardState
                   icon: "assets/icons/expense_red.svg",
                   amount: touchedIndex == -1 ? "0":"${monthlySummaries[monthlySummaries.keys.toList()[touchedIndex]]?.expenseAmount.toMoney??0}",
                   text: "Total Expenses",
+                  isExpense: true,
                   isSelected: touchedType == "expense",
                 ),
               ),

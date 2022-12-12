@@ -81,6 +81,7 @@ class _TopCustomersViewState extends State<TopCustomersView> {
           topCustomers.isEmpty
               ? const TextWidget(
                   "No top customers",
+            fontSize: 16,
                 )
               : Wrap(
                   spacing: 20.w,

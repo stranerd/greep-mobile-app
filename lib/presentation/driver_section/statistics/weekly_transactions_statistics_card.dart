@@ -36,34 +36,70 @@ class _WeeklyTransactionsStatisticsCardState
 
   String touchedType = "";
 
+  int selectedMonth = DateTime.now().month;
+
+  List<int> selectedMonthsCount = [];
+
   List<int> years = [];
+  List<String> months = [];
 
   List<Map<String, DateTime>> availableWeeks = [];
 
   Map<Map<String, DateTime>, TransactionSummary> weeklySummaries = {};
 
+  Map<DateTime, List<Map<Map<String, DateTime>, TransactionSummary>>>
+      monthlySummaries = {};
+
   int pageIndex = 0;
 
   num highestAmount = 0;
 
+  int barIndex = 0;
+
   @override
   void initState() {
+    months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
     years = widget.summary.keys.map((e) => e.year).toSet().toList();
     selectedYear = years.first;
     generateAvailableWeeks();
+    selectedMonthsCount = monthlySummaries
+        .map((key, value) => MapEntry(key, value.length))
+        .values
+        .toList();
+
     selectedWeek =
-        "${DateFormat(DateFormat.ABBR_MONTH).format(widget.summary.keys.first)} - Week ${_weekNumber(widget.summary.keys.first)}";
-    touchedIndex = ((widget.summary.keys.first.difference(DateTime(selectedYear)).inDays/7).floor());
-    if (touchedIndex > 6) {
-      pageIndex = (touchedIndex / 7).floor();
-    }
+        months[selectedMonth -1];
+
+    pageIndex = selectedMonth -1;
+    touchedIndex = calculateTouchedIndex(0);
+    // touchedIndex =
+    //     ((widget.summary.keys.first.difference(DateTime(selectedYear)).inDays /
+    //             7)
+    //         .floor());
+    // if (touchedIndex > 6) {
+    //   pageIndex = (touchedIndex / 7).floor();
+    // }
 
     _controller = PageController(initialPage: pageIndex)
       ..addListener(() {
         setState(() {
           pageIndex = _controller.page?.toInt() ?? pageIndex;
+          selectedMonth = pageIndex + 1;
           selectedWeek =
-          "${DateFormat(DateFormat.ABBR_MONTH).format(availableWeeks[pageIndex * 7]["from"]!)} - Week ${_weekNumber(availableWeeks[pageIndex * 7]["to"]!)}";
+          months[selectedMonth -1];
         });
       });
     super.initState();
@@ -75,16 +111,22 @@ class _WeeklyTransactionsStatisticsCardState
     selectedYear = years.first;
     generateAvailableWeeks();
     selectedWeek =
-    "${DateFormat(DateFormat.ABBR_MONTH).format(widget.summary.keys.first)} - Week ${_weekNumber(widget.summary.keys.first)}";
-    touchedIndex = ((widget.summary.keys.first.difference(DateTime(selectedYear)).inDays/7).floor());
-    if (touchedIndex > 6) {
-      pageIndex = (touchedIndex / 7).floor();
-    }
+    months[selectedMonth -1];
+    // touchedIndex =
+    //     ((widget.summary.keys.first.difference(DateTime(selectedYear)).inDays /
+    //             7)
+    //         .floor());
+    // if (touchedIndex > 6) {
+    //   pageIndex = (touchedIndex / 7).floor();
+    // }
+    // selectedMonth = pageIndex + 1;
+
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
+    print(selectedMonth);
     return Column(
       children: [
         Container(
@@ -96,70 +138,135 @@ class _WeeklyTransactionsStatisticsCardState
                 selectedWeek,
                 weight: FontWeight.bold,
                 fontSize: 18,
-                letterSpacing: 2,
+                letterSpacing: 1.3,
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: kDefaultSpacing * 0.6,
-                    vertical: kDefaultSpacing * 0.3),
-                decoration: BoxDecoration(
-                    color: AppColors.lightGray,
-                    borderRadius: BorderRadius.circular(kDefaultSpacing)),
-                child: DropdownButton<int>(
-                    isDense: true,
-                    value: selectedYear,
-                    underline: const SizedBox(),
-                    icon: const Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      size: 16,
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: kDefaultSpacing * 0.6,
+                      vertical: kDefaultSpacing * 0.3,
                     ),
-                    items: years
-                        .map(
-                          (e) => DropdownMenuItem<int>(
+                    decoration: BoxDecoration(
+                        color: AppColors.lightGray,
+                        borderRadius: BorderRadius.circular(
+                          kDefaultSpacing,
+                        )),
+                    child: DropdownButton<String>(
+                        isDense: true,
+                        value: months[selectedMonth-1],
+                        underline: const SizedBox(),
+                        icon: const Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          size: 16,
+                        ),
+                        items: months
+                            .map(
+                              (e) => DropdownMenuItem<String>(
                             value: e,
                             child: TextWidget(
-                              e.toString(),
+                              e.substring(0,3).toString(),
                               fontSize: 16,
                               weight: FontWeight.bold,
                             ),
                           ),
                         )
-                        .toList(),
-                    onChanged: (value) {
-                      selectedYear = value ?? DateTime.now().year;
-                      generateAvailableWeeks();
-                      setState(() {});
-                    }),
+                            .toList(),
+                        onChanged: (value) {
+                          selectedMonth = value == null ? selectedMonth : months.indexOf(value) + 1;
+                          selectedWeek =
+                          months[selectedMonth -1];
+                          _controller.animateToPage((
+                              selectedMonth -1).floor(),
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.easeIn);
+                          generateAvailableWeeks();
+                          setState(() {});
+                        }),
+                  ),
+
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: kDefaultSpacing * 0.6,
+                        vertical: kDefaultSpacing * 0.3),
+                    decoration: BoxDecoration(
+                        color: AppColors.lightGray,
+                        borderRadius: BorderRadius.circular(kDefaultSpacing)),
+                    child: DropdownButton<int>(
+                        isDense: true,
+                        value: selectedYear,
+                        underline: const SizedBox(),
+                        icon: const Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          size: 16,
+                        ),
+                        items: years
+                            .map(
+                              (e) => DropdownMenuItem<int>(
+                                value: e,
+                                child: TextWidget(
+                                  e.toString(),
+                                  fontSize: 16,
+                                  weight: FontWeight.bold,
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {
+                          selectedYear = value ?? DateTime.now().year;
+                          generateAvailableWeeks();
+                          setState(() {});
+                        }),
+                  ),
+                ],
               )
             ],
           ),
         ),
         kVerticalSpaceRegular,
         LayoutBuilder(builder: (context, constraints) {
+          print("selectedMonth ${selectedMonth}");
+          var currMonthsCount = selectedMonthsCount[selectedMonth - 1];
+          var prevMonthsCount = selectedMonth == 1
+              ? 0
+              : selectedMonth == 2
+                  ? selectedMonthsCount.first
+                  : selectedMonthsCount
+                      .sublist(0, selectedMonth - 2)
+                      .reduce((value, element) => value + element);
+
           List<BarChartGroupData> barGroups = [];
 
-          for (int i = 0; i < weeklySummaries.length; i++) {
-            TransactionSummary summary =
-                weeklySummaries[weeklySummaries.keys.toList()[i]]!;
+          var monthlySummarie =
+              monthlySummaries[DateTime(selectedYear, selectedMonth)] ?? [];
+
+          for (int i = 0; i < monthlySummarie.length; i++) {
+            var monthlySummarie2 = monthlySummarie[i];
+            TransactionSummary summary = monthlySummarie2.values.isNotEmpty
+                ? monthlySummarie2.values.first
+                : TransactionSummary.Zero();
             num sum = summary.tripAmount.abs() + summary.expenseAmount.abs();
             double total =
-                ((highestAmount == 0 ? 0 : (sum) / highestAmount) * 100);
+                (highestAmount == 0 ? 0 : (sum) / highestAmount) * 100;
             double expense =
                 ((sum == 0 ? 0 : summary.expenseAmount.abs() / sum) *
                     100 *
                     (total / 100));
-            double income = ((sum == 0 ? 0 : summary.income.abs() / (total)) *
+            double income = ((sum == 0
+                    ? 0
+                    : summary.income <= 0
+                        ? 0
+                        : summary.income.abs() / (total)) *
                 100 *
                 (total / 100));
-
-            // print(""
-            //     "summary: $summary \n"
+            //
+            // print("summary: $summary, \n"
             //     "highest: $highestAmount, \n"
-            //     "summaryAmount: ${summary.tripAmount.abs()}  \n"
-            //     "total: $total,  \n"
-            //     "expense: $expense,  \n"
-            //     "income: $income"
-            //     "tochedIndex: $touchedIndex $i \n");
+            //     "summaryAmount: ${summary.tripAmount.abs()}, \n"
+            //     "total: $total, \n"
+            //     "expense: $expense, \n"
+            //     "income: $income, \n"
+            //     "touchedIndex: $touchedIndex $i, \n");
             barGroups.add(
               BarChartGroupData(
                 x: i,
@@ -167,16 +274,16 @@ class _WeeklyTransactionsStatisticsCardState
                   BarChartRodData(
                     toY: total,
                     color: const Color(0xffDDDFE2),
-                    width: Get.width * 0.11,
-                    rodStackItems: touchedIndex == i
+                    width: Get.width * (monthlySummaries.length == 4 ? 0.16 : 0.15),
+                    rodStackItems: barIndex == i
                         ? [
+                            BarChartRodStackItem(income, total, AppColors.blue),
                             BarChartRodStackItem(
                                 expense, income, AppColors.green),
                             BarChartRodStackItem(0, expense, AppColors.red)
                           ]
                         : [],
-                    borderRadius:
-                        BorderRadius.circular(kDefaultSpacing * 0.2),
+                    borderRadius: BorderRadius.circular(kDefaultSpacing * 0.2),
                     backDrawRodData: BackgroundBarChartRodData(
                       show: true,
                       toY: total,
@@ -189,21 +296,13 @@ class _WeeklyTransactionsStatisticsCardState
             );
           }
 
-          print("BArGroups ${barGroups.length}");
 
-          var selectedBarGroups = pageIndex == 0
-              ? barGroups.take(7).toList()
-              : barGroups.sublist(
-                  pageIndex * 7,
-                  ((pageIndex * 7) + 7) < barGroups.length
-                      ? ((pageIndex * 7) + 7)
-                      : barGroups.length);
           print(
-              "Selected Bar Groups pageIndex ${pageIndex * 7} ${pageIndex * 7 + 7} ${selectedBarGroups.length}");
+              "PageIndex: $pageIndex, currMonth $currMonthsCount, prevMonth $prevMonthsCount, ${weeklySummaries.length}");
 
           // print("Selected Bar Groups ${selectedBarGroups}");
           BarChartData sectionData = BarChartData(
-            barGroups: selectedBarGroups,
+            barGroups: barGroups,
             alignment: BarChartAlignment.spaceBetween,
             barTouchData: BarTouchData(
               enabled: true,
@@ -216,20 +315,16 @@ class _WeeklyTransactionsStatisticsCardState
                   return;
                 } else {
                   setState(() {
-                    touchedIndex =
-                        barTouchResponse.spot!.touchedBarGroupIndex +
-                            (pageIndex * 7);
-                    print("touched index ${pageIndex} ${touchedIndex}");
-                    DateTime from = weeklySummaries[
-                                weeklySummaries.keys.toList()[touchedIndex]]
-                            ?.dateRange
-                            .first ??
-                        DateTime.now();
-                    DateTime to = weeklySummaries[
-                                weeklySummaries.keys.toList()[touchedIndex]]
-                            ?.dateRange
-                            .last ??
-                        DateTime.now();
+                    int currCount = selectedMonthsCount.sublist(0, pageIndex).reduce((value, element) => value + element);
+                    print("Current Count $currCount");
+
+                    barIndex = barTouchResponse.spot!.touchedBarGroupIndex;
+                    touchedIndex = barIndex + currCount;
+                    print("touched index $pageIndex $touchedIndex ");
+
+                    DateTime from = availableWeeks[touchedIndex]["from"] ?? DateTime.now();
+                    DateTime to = availableWeeks[touchedIndex]["to"] ?? DateTime.now();
+
                     String week =
                         " ${DateFormat("${DateFormat.ABBR_WEEKDAY}, ${DateFormat.ABBR_MONTH} ").format(from)} ${from.day} - ${DateFormat("${DateFormat.ABBR_WEEKDAY}, ${DateFormat.DAY} ${DateFormat.ABBR_MONTH}").format(to)}";
                     selectedWeek = week;
@@ -249,7 +344,6 @@ class _WeeklyTransactionsStatisticsCardState
                   );
                 },
               ),
-
             ),
             titlesData: FlTitlesData(
               show: true,
@@ -257,16 +351,11 @@ class _WeeklyTransactionsStatisticsCardState
                   sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (n, medata) {
-                        String day = "W${n.toInt() + 1}";
-                        // var availableWeek = availableWeeks[n.toInt()];
-                        // DateTime from = availableWeek["from"]!;
-                        // for (int i = 0; i< 7; i++){
-                        //   day = DateFormat(DateFormat.ABBR_WEEKDAY).format(from.add(Duration(days: i)));
-                        // }
+                        String day = "${months[selectedMonth-1].substring(0,3)}-w${n.toInt() + 1}";
 
                         return TextWidget(
-                          day,
-                          fontSize: 16,
+                          day.toUpperCase(),
+                          fontSize: 13,
                         );
                       })),
               leftTitles: AxisTitles(
@@ -294,12 +383,12 @@ class _WeeklyTransactionsStatisticsCardState
           );
           return Container(
             alignment: Alignment.center,
-            height: 250.h,
+            height: 0.25.sh,
             width: 1.sw,
             child: PageView(
               controller: _controller,
               children: List.generate(
-                (barGroups.length / 7).ceil(),
+                (12),
                 (index) => Stack(
                   children: [
                     Positioned.fill(
@@ -311,8 +400,11 @@ class _WeeklyTransactionsStatisticsCardState
             ),
           );
         }),
-        kVerticalSpaceLarge,
+        kVerticalSpaceRegular,
         LayoutBuilder(builder: (context, constr) {
+          var income2 =
+              weeklySummaries[weeklySummaries.keys.toList()[touchedIndex]]?.income ??
+                  0;
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -323,10 +415,9 @@ class _WeeklyTransactionsStatisticsCardState
                   color: kGreenColor,
                   backgroundColor: const Color.fromRGBO(4, 210, 140, 0.1),
                   text: "Total Income",
+                  isNegative: income2 < 0,
                   isSelected: touchedType == "income",
-                  amount: touchedIndex == -1
-                      ? "0"
-                      : "${weeklySummaries[weeklySummaries.keys.toList()[touchedIndex]]?.income.toMoney ?? 0}",
+                  amount: touchedIndex == -1 ? "0" : income2.abs().toMoney,
                 ),
               ),
               SizedBox(
@@ -352,6 +443,7 @@ class _WeeklyTransactionsStatisticsCardState
                       ? "0"
                       : "${weeklySummaries[weeklySummaries.keys.toList()[touchedIndex]]?.expenseAmount.toMoney ?? 0}",
                   text: "Total Expenses",
+                  isExpense: true,
                   isSelected: touchedType == "expense",
                 ),
               ),
@@ -371,7 +463,9 @@ class _WeeklyTransactionsStatisticsCardState
                 transactions: transactions2,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 8.0.w,
+                ),
                 child: TransactionHistorySection(
                   transactions: transactions2,
                   withTransaction: true,
@@ -380,15 +474,25 @@ class _WeeklyTransactionsStatisticsCardState
             ],
           );
         }),
-
       ],
     );
   }
 
   void generateAvailableWeeks() {
+    monthlySummaries.clear();
     availableWeeks.clear();
     List<List<DateTime>> dates = TransactionSummaryCubit.getWeeksForRange(
-        DateTime(selectedYear, 1, 1), DateTime(selectedYear, 12, 31));
+      DateTime(
+        selectedYear,
+        1,
+        1,
+      ),
+      DateTime(
+        selectedYear,
+        12,
+        31,
+      ),
+    );
 
     dates.forEach((element) {
       availableWeeks.add({
@@ -396,45 +500,79 @@ class _WeeklyTransactionsStatisticsCardState
         "to": element.last,
       });
     });
+    for (int i = 1; i <= 12; i++) {
+      monthlySummaries.putIfAbsent(
+        DateTime(selectedYear, i),
+        () => [],
+      );
+    }
+
+    print("monthlySummaries ${monthlySummaries.length}");
 
     weeklySummaries.clear();
 
     dates.forEach((element) {
       if (widget.summary.keys.any((e) => element.hasDate(e))) {
+        var transactionSummary = widget.summary[
+            widget.summary.keys.firstWhere((e) => element.hasDate(e))]!;
+        highestAmount =
+            (transactionSummary.tripAmount + transactionSummary.expenseAmount) >
+                    highestAmount
+                ? transactionSummary.tripAmount
+                : highestAmount;
+        Map<Map<String, DateTime>, TransactionSummary> mapped = {};
+        Map<String, DateTime> map = {
+          "from": element.first,
+          "to": element.last,
+        };
+
+        mapped.putIfAbsent(map, () => transactionSummary);
+
         weeklySummaries.putIfAbsent({
           "from": element.first,
           "to": element.last,
         }, () {
-          var transactionSummary = widget.summary[
-              widget.summary.keys.firstWhere((e) => element.hasDate(e))]!;
-          highestAmount = (transactionSummary.tripAmount +
-                      transactionSummary.expenseAmount) >
-                  highestAmount
-              ? transactionSummary.tripAmount
-              : highestAmount;
           return transactionSummary;
         });
+        monthlySummaries[DateTime(selectedYear, element.last.month)]
+            ?.add(mapped);
       } else {
+        var transactionSummary2 = TransactionSummary.Zero();
+
+        Map<Map<String, DateTime>, TransactionSummary> mapped = {};
+        Map<String, DateTime> map = {
+          "from": element.first,
+          "to": element.last,
+        };
+
+        mapped.putIfAbsent(map, () => transactionSummary2);
         weeklySummaries.putIfAbsent({
           "from": element.first,
           "to": element.last,
-        }, () => TransactionSummary.Zero());
+        }, () {
+          return transactionSummary2;
+        });
+        monthlySummaries[DateTime(selectedYear, element.last.month)]
+            ?.add(mapped);
       }
     });
-
-    // weeklySummaries.forEach((key, value) {
-    //   print("Dates $key");
-    //
-    //   print("Summary $value");
-    //
-    // });
-    //
-    // print("Weekly Summaries ${weeklySummaries.length}");
 
     calculateSummaries();
   }
 
-  void calculateSummaries() {}
+  void calculateSummaries() {
+    selectedMonthsCount = monthlySummaries
+        .map((key, value) => MapEntry(key, value.length))
+        .values
+        .toList();
+
+  }
+
+  int calculateTouchedIndex(int initTouchedIndex) {
+    int currCount = selectedMonthsCount.sublist(0, pageIndex + 1).reduce((value, element) => value + element);
+    return currCount + initTouchedIndex;
+
+  }
 
   int _weekNumber(DateTime date) {
     int dayOfYear = int.parse(DateFormat("D").format(date));

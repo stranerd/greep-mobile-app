@@ -455,6 +455,7 @@ class _DailyTransactionsStatisticsCardState
                       ? "0"
                       : "${dailySummaries[dailySummaries.keys.toList()[touchedIndex]]?.expenseAmount.toMoney ?? 0}",
                   text: "Total Expenses",
+                  isExpense: true,
                   isSelected: touchedType == "expense",
                 ),
               ),
