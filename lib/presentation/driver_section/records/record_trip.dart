@@ -84,6 +84,8 @@ class _RecordTripState extends State<RecordTrip>
               Future.delayed(const Duration(milliseconds: 1500), () {
                 if (isFromTrips ){
                   Get.offAll(NavBarView());
+                  directionBuilderCubit.cancelProgress(isCompleted: true);
+
                 }
                 else {
                 Get.back();}
@@ -176,7 +178,7 @@ class _RecordTripState extends State<RecordTrip>
                             false;
 
                         if (shouldDelete) {
-                          directionBuilderCubit.cancelProgress();
+                          directionBuilderCubit.cancelProgress(isCompleted: false);
                           Get.off(NavBarView());
                         }
                       } else {

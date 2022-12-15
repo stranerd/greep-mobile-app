@@ -173,7 +173,7 @@ class TripDirectionBuilderCubit extends Cubit<TripDirectionBuilderState> {
     }
   }
 
-  void cancelProgress() {
+  void cancelProgress({required bool isCompleted}) {
     _directions.clear();
     _rideStatus = RideStatus.ended;
     FirebaseApi.updateDriverLocation(
@@ -186,6 +186,6 @@ class TripDirectionBuilderCubit extends Cubit<TripDirectionBuilderState> {
           "end": null,
         }
     );
-    emit(TripDirectionBuilderStateInitial());
+    emit(isCompleted ? TripDirectionBuilderStateCompleted() : TripDirectionBuilderStateInitial());
   }
 }

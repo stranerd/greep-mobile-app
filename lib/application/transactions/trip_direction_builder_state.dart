@@ -27,3 +27,5 @@ class TripDirectionBuilderStateEndTrip extends TripDirectionBuilderState {
   TripDirectionBuilderStateEndTrip(
       {required this.directionProgress, required this.directions});
 }
+
+class TripDirectionBuilderStateCompleted extends TripDirectionBuilderState {}
