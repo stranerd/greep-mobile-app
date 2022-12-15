@@ -9,9 +9,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:greep/Commons/colors.dart';
 import 'package:greep/application/driver/drivers_cubit.dart';
 import 'package:greep/application/location/driver_location_status_cubit.dart';
+import 'package:greep/application/location/location.dart';
 import 'package:greep/application/user/user_cubit.dart';
 import 'package:greep/application/user/user_util.dart';
 import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/domain/direction/direction_client.dart';
+import 'package:greep/domain/direction/directions.dart';
+import 'package:greep/domain/user/model/driver_location_status.dart';
 import 'package:greep/domain/user/model/ride_status.dart';
 import 'package:greep/ioc.dart';
 import 'package:greep/presentation/driver_section/nav_pages/settings/account/view_profile.dart';
@@ -36,6 +40,9 @@ class _MapScreenState extends State<MapScreen> {
 
   RideStatus rideStatus = RideStatus.ended;
 
+  double defaultLat = 9.064246972613308;
+  double defaultLong = 7.424030426684654;
+
   // static const CameraPosition _grandCubana = CameraPosition(
   //   target: LatLng(
   //     9.064246972613308,
@@ -46,10 +53,59 @@ class _MapScreenState extends State<MapScreen> {
 
   String? userId;
 
+  Directions? directions;
+
+  Marker currentLocationMarker = Marker(
+    markerId: const MarkerId("Driver"),
+    position: const LatLng(
+      9.064246972613308,
+      7.424030426684654,
+    ),
+    infoWindow: const InfoWindow(
+      title: "Driver",
+    ),
+    icon: BitmapDescriptor.defaultMarkerWithHue(
+      BitmapDescriptor.hueBlue,
+    ),
+  );
+
+  Marker? gotTripMarker;
+
+  Marker? startTripMarker;
+
+  Marker? endTripMarker;
+
   @override
   void initState() {
     driverLocationStatusCubit = getIt();
     super.initState();
+  }
+
+  void calculateDistance(DriverLocation driverLocation) async {
+    List<Location> wayPoints = [];
+
+    if (driverLocation.startDirection != null) {
+      wayPoints.add(driverLocation.startDirection!.location);
+    }
+
+    if (driverLocation.endDirection != null) {
+      wayPoints.add(driverLocation.endDirection!.location);
+    }
+
+    print("waypoints ${wayPoints.length}");
+
+    var currLocation = Location(
+      longitude: double.tryParse(driverLocation.longitude) ?? 0,
+      latitude: double.tryParse(driverLocation.latitude) ?? 0,
+    );
+    var directions = await DirectionsClient.instance.getDirections(
+        origin: driverLocation.gotDirection?.location ??
+            driverLocation.startDirection?.location ??
+            driverLocation.endDirection?.location ??
+            currLocation,
+        destination: currLocation,
+        waypoints: wayPoints);
+    this.directions = directions!;
   }
 
   @override
@@ -63,14 +119,15 @@ class _MapScreenState extends State<MapScreen> {
               listener: (context, driverState) async {
                 if (driverState is DriversStateFetched) {
                   userId = driverState.selectedUser.id;
+                  driverLocationStatusCubit
+                      .checkOnlineStatus(userId ?? getUser().id);
 
                   setState(() {});
                 }
               },
               builder: (context, driverState) {
                 return BlocProvider.value(
-                  value: driverLocationStatusCubit
-                    ..checkOnlineStatus(userId ?? getUser().id),
+                  value: driverLocationStatusCubit,
                   child: BlocConsumer<DriverLocationStatusCubit,
                       DriverLocationStatusState>(
                     listener: (context, locationState) async {
@@ -78,26 +135,126 @@ class _MapScreenState extends State<MapScreen> {
                         print(locationState);
                         rideStatus = locationState.status.rideStatus;
                         var mapController = await _controller.future;
+                        currentLocationMarker = Marker(
+                          markerId: const MarkerId("Driver"),
+                          position: LatLng(
+                            double.tryParse(locationState.status.latitude) ??
+                                defaultLat,
+                            double.tryParse(locationState.status.latitude) ??
+                                defaultLong,
+                          ),
+                          infoWindow: const InfoWindow(
+                            title: "Driver",
+                          ),
+                          icon: BitmapDescriptor.defaultMarkerWithHue(
+                            BitmapDescriptor.hueBlue,
+                          ),
+                        );
+
+                        if (locationState.status.gotDirection != null) {
+                          gotTripMarker = Marker(
+                            markerId: const MarkerId("Got Trip"),
+                            position: LatLng(
+                              locationState
+                                      .status.gotDirection?.location.latitude ??
+                                  defaultLat,
+                              locationState.status.startDirection?.location
+                                      .longitude ??
+                                  defaultLong,
+                            ),
+                            infoWindow: const InfoWindow(
+                              title: "Got Trip",
+                            ),
+                            icon: BitmapDescriptor.defaultMarkerWithHue(
+                              BitmapDescriptor.hueBlue,
+                            ),
+                          );
+                        }
+                        if (locationState.status.startDirection != null) {
+                          startTripMarker = Marker(
+                            markerId: const MarkerId("Start Trip"),
+                            position: LatLng(
+                              locationState.status.startDirection?.location
+                                      .latitude ??
+                                  defaultLat,
+                              locationState.status.startDirection?.location
+                                      .longitude ??
+                                  defaultLong,
+                            ),
+                            infoWindow: const InfoWindow(
+                              title: "Start Trip",
+                            ),
+                            icon: BitmapDescriptor.defaultMarkerWithHue(
+                              BitmapDescriptor.hueGreen,
+                            ),
+                          );
+                        }
+                        if (locationState.status.endDirection != null) {
+                          endTripMarker = Marker(
+                            markerId: const MarkerId("End Trip"),
+                            position: LatLng(
+                              locationState
+                                      .status.endDirection?.location.latitude ??
+                                  defaultLat,
+                              locationState.status.endDirection?.location
+                                      .longitude ??
+                                  defaultLong,
+                            ),
+                            infoWindow: const InfoWindow(
+                              title: "End Trip",
+                            ),
+                            icon: BitmapDescriptor.defaultMarkerWithHue(
+                              BitmapDescriptor.hueRed,
+                            ),
+                          );
+                        }
+
+                        setState(() {});
+
+                        calculateDistance(locationState.status);
+
                         if (double.parse(locationState.status.longitude) == 0 ||
                             double.parse(locationState.status.latitude) == 0) {
                           mapController.animateCamera(
-                              CameraUpdate.newCameraPosition(
-                                  const CameraPosition(
-                                      target: LatLng(
-                                          9.570340603589216, 7.806149434951432),
-                                      zoom: 5,),),);
+                            CameraUpdate.newCameraPosition(
+                              const CameraPosition(
+                                target: LatLng(
+                                    9.570340603589216, 7.806149434951432),
+                                zoom: 5,
+                              ),
+                            ),
+                          );
                         } else {
-                          mapController.animateCamera(CameraUpdate.newCameraPosition(
-                            CameraPosition(target: LatLng(
-                              double.parse(locationState.status.latitude),
-                              double.parse(locationState.status.longitude),
-                            ),zoom: 15)
-
-                          ));
+                          mapController.animateCamera(
+                              CameraUpdate.newCameraPosition(CameraPosition(
+                                  target: LatLng(
+                                    double.parse(locationState.status.latitude),
+                                    double.parse(
+                                        locationState.status.longitude),
+                                  ),
+                                  zoom: 15)));
                         }
+                        setState(() {});
                       }
                     },
                     builder: (context, locationState) {
+                      Set<Marker> markers = {currentLocationMarker};
+                      if (gotTripMarker != null) {
+                        print("Got trip yes");
+                        markers.add(gotTripMarker!);
+                      }
+                      if (startTripMarker != null) {
+                        print("Start trip yes");
+
+                        markers.add(startTripMarker!);
+                      }
+                      if (endTripMarker != null) {
+                        print("End trip yes");
+
+                        markers.add(endTripMarker!);
+                      }
+
+                      print("markers length: ${markers.length}");
                       return Column(
                         children: [
                           Container(
@@ -167,7 +324,7 @@ class _MapScreenState extends State<MapScreen> {
                                 children: [
                                   Positioned.fill(
                                     child: GoogleMap(
-                                      myLocationEnabled: true,
+                                      myLocationEnabled: userId == getUser().id,
                                       compassEnabled: true,
                                       tiltGesturesEnabled: false,
                                       zoomControlsEnabled: false,
@@ -176,10 +333,10 @@ class _MapScreenState extends State<MapScreen> {
                                               is DriverLocationStatusStateFetched
                                           ? CameraPosition(
                                               target: LatLng(
-                                                double.parse(
-                                                    locationState.status.latitude),
-                                                double.parse(
-                                                    locationState.status.longitude),
+                                                double.parse(locationState
+                                                    .status.latitude),
+                                                double.parse(locationState
+                                                    .status.longitude),
                                               ),
                                               zoom: 15,
                                             )
@@ -193,51 +350,67 @@ class _MapScreenState extends State<MapScreen> {
                                       onMapCreated: (c) {
                                         _controller.complete(c);
                                       },
-                                      markers: {
-                                        Marker(
-                                          markerId: const MarkerId("driver"),
-                                          position: const LatLng(
-                                            9.064246972613308,
-                                            7.424030426684654,
+                                      polylines: {
+                                        if (directions != null)
+                                          Polyline(
+                                            polylineId:
+                                                const PolylineId("Directions"),
+                                            color: locationState
+                                                    is DriverLocationStatusStateFetched
+                                                ? locationState.status
+                                                            .rideStatus ==
+                                                        RideStatus.pending
+                                                    ? AppColors.blue
+                                                    : locationState.status
+                                                                .rideStatus ==
+                                                            RideStatus.ended
+                                                        ? AppColors.red
+                                                        : AppColors.green
+                                                : AppColors.green,
+                                            width:
+                                                (kDefaultSpacing * 0.6).toInt(),
+                                            points: directions!.polyPoints
+                                                .map((e) => LatLng(
+                                                    e.latitude, e.longitude))
+                                                .toList(),
                                           ),
-                                          infoWindow: const InfoWindow(
-                                            title: "driver",
-                                          ),
-                                          icon: BitmapDescriptor.defaultMarkerWithHue(
-                                            BitmapDescriptor.hueBlue,
-                                          ),
-                                        )
                                       },
+                                      markers: markers,
                                     ),
                                   ),
                                   Positioned(
                                       top: 10.h,
                                       left: 10.w,
                                       child: Container(
-                                        padding: const EdgeInsets.all(kDefaultSpacing * 0.5,),
-                                        decoration: BoxDecoration(
-                                          color: kWhiteColor,
-                                          borderRadius: BorderRadius.circular(kDefaultSpacing * 0.75)
+                                        padding: const EdgeInsets.all(
+                                          kDefaultSpacing * 0.5,
                                         ),
+                                        decoration: BoxDecoration(
+                                            color: kWhiteColor,
+                                            borderRadius: BorderRadius.circular(
+                                                kDefaultSpacing * 0.75)),
                                         child: Row(
                                           children: [
                                             Container(
                                               height: 14.r,
                                               width: 14.r,
-                                              decoration:  BoxDecoration(
-                                                  color: rideStatus == RideStatus.pending
+                                              decoration: BoxDecoration(
+                                                  color: rideStatus ==
+                                                          RideStatus.pending
                                                       ? AppColors.blue
-                                                      : rideStatus == RideStatus.ended
-                                                      ? AppColors.red
-                                                      : AppColors.green, shape: BoxShape.circle),
-
+                                                      : rideStatus ==
+                                                              RideStatus.ended
+                                                          ? AppColors.red
+                                                          : AppColors.green,
+                                                  shape: BoxShape.circle),
                                             ),
                                             kHorizontalSpaceSmall,
-                                            TextWidget(rideStatus == RideStatus.pending
+                                            TextWidget(rideStatus ==
+                                                    RideStatus.pending
                                                 ? "Got a trip"
                                                 : rideStatus == RideStatus.ended
-                                                ? "Ended trip"
-                                                : "Start trip")
+                                                    ? "Ended trip"
+                                                    : "Start trip")
                                           ],
                                         ),
                                       ))
