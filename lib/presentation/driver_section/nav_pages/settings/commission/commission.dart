@@ -142,7 +142,7 @@ class CommissionHome extends StatelessWidget {
                                     separatorBuilder: (_, __) =>
                                         kVerticalSpaceSmall,
                                     itemCount: commissions.length,
-                                    shrinkWrap: true,
+                                    shrinkWrap: false,
                                     itemBuilder: (c, i) {
                                       CommissionSummary summary = commissions[
                                           commissions.keys.toList()[i]]!;

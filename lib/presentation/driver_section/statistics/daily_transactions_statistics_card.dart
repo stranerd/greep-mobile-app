@@ -424,7 +424,7 @@ class _DailyTransactionsStatisticsCardState
                   icon: "assets/icons/income_green.svg",
                   color: kGreenColor,
                   backgroundColor: const Color.fromRGBO(4, 210, 140, 0.1),
-                  text: "Total Income",
+                  text: "Daily Income",
                   isNegative: income2 < 0,
                   isSelected: touchedType == "income",
                   amount: touchedIndex == -1
@@ -436,7 +436,7 @@ class _DailyTransactionsStatisticsCardState
                 width: constr.maxWidth * 0.33,
                 child: ChartTransactionIndicator(
                   color: AppColors.blue,
-                  text: "Total Trip",
+                  text: "Daily Trip",
                   icon: "assets/icons/trip_amount_blue.svg",
                   amount: touchedIndex == -1
                       ? "0"
@@ -454,7 +454,7 @@ class _DailyTransactionsStatisticsCardState
                   amount: touchedIndex == -1
                       ? "0"
                       : "${dailySummaries[dailySummaries.keys.toList()[touchedIndex]]?.expenseAmount.toMoney ?? 0}",
-                  text: "Total Expenses",
+                  text: "Daily Expenses",
                   isExpense: true,
                   isSelected: touchedType == "expense",
                 ),

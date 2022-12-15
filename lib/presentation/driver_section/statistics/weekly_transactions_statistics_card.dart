@@ -397,7 +397,7 @@ class _WeeklyTransactionsStatisticsCardState
                   icon: "assets/icons/income_green.svg",
                   color: kGreenColor,
                   backgroundColor: const Color.fromRGBO(4, 210, 140, 0.1),
-                  text: "Total Income",
+                  text: "Weekly Income",
                   isNegative: income2 < 0,
                   isSelected: touchedType == "income",
                   amount: touchedIndex == -1 ? "0" : income2.abs().toMoney,
@@ -407,7 +407,7 @@ class _WeeklyTransactionsStatisticsCardState
                 width: constr.maxWidth * 0.33,
                 child: ChartTransactionIndicator(
                   color: AppColors.blue,
-                  text: "Total Trip",
+                  text: "Weekly Trip",
                   icon: "assets/icons/trip_amount_blue.svg",
                   amount: touchedIndex == -1
                       ? "0"
@@ -425,7 +425,7 @@ class _WeeklyTransactionsStatisticsCardState
                   amount: touchedIndex == -1
                       ? "0"
                       : "${weeklySummaries[weeklySummaries.keys.toList()[touchedIndex]]?.expenseAmount.toMoney ?? 0}",
-                  text: "Total Expenses",
+                  text: "Weekly Expenses",
                   isExpense: true,
                   isSelected: touchedType == "expense",
                 ),

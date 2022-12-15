@@ -30,61 +30,72 @@ class ChartTransactionIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Container(
-          width: 27.w,
-          height: 50.h,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(kDefaultSpacing * 0.4),
-              color: backgroundColor),
-          child: SvgPicture.asset(
-            icon,
-            height: 15.h,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          width: constraints.maxWidth,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                width: 27.w,
+                height: 50.h,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(kDefaultSpacing * 0.4),
+                    color: backgroundColor),
+                child: SvgPicture.asset(
+                  icon,
+                  height: 15.h,
+                ),
+              ),
+              kHorizontalSpaceSmall,
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (isNegative)TextWidget(
+                          "-",
+                          color: color,
+                          fontSize: isSelected ? 19 : 17,
+                          weight: FontWeight.bold,
+                        ) ,
+                        if (isExpense)TextWidget(
+                          "-",
+                          color: color,
+                          fontSize: isSelected ? 19 : 17,
+                          weight: FontWeight.bold,
+                        ),
+                        TurkishSymbol(
+                          width: isSelected ? 17.r : 16.r,
+                          height: isSelected ? 17.r : 16.r,
+                          color: color,
+                        ),
+                        TextWidget(
+                          amount,
+                          color: color,
+                          fontSize: isSelected ? 19 : 17,
+                          weight: FontWeight.bold,
+                        ),
+                      ],
+                    ),
+                    FittedBox(
+                      child: TextWidget(
+                        text,
+                        fontSize: 12.8,
+                        weight: isSelected ? FontWeight.bold : FontWeight.normal ,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
-        ),
-        kHorizontalSpaceSmall,
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (isNegative)TextWidget(
-                  "-",
-                  color: color,
-                  fontSize: isSelected ? 19 : 17,
-                  weight: FontWeight.bold,
-                ) ,
-                if (isExpense)TextWidget(
-                  "-",
-                  color: color,
-                  fontSize: isSelected ? 19 : 17,
-                  weight: FontWeight.bold,
-                ),
-                TurkishSymbol(
-                  width: isSelected ? 17.r : 16.r,
-                  height: isSelected ? 17.r : 16.r,
-                  color: color,
-                ),
-                TextWidget(
-                  amount,
-                  color: color,
-                  fontSize: isSelected ? 19 : 17,
-                  weight: FontWeight.bold,
-                ),
-              ],
-            ),
-            TextWidget(
-              text,
-              fontSize: 12.8,
-              weight: isSelected ? FontWeight.bold : FontWeight.normal ,
-            ),
-          ],
-        )
-      ],
+        );
+      }
     );
   }
 }
