@@ -9,6 +9,7 @@ import 'package:greep/application/transactions/user_transactions_cubit.dart';
 import 'package:greep/application/user/user_cubit.dart';
 import 'package:greep/application/user/utils/get_current_user.dart';
 import 'package:greep/domain/firebase/Firebase_service.dart';
+import 'package:greep/domain/transaction/transaction.dart';
 import 'package:greep/domain/transaction/transaction_service.dart';
 import 'package:greep/domain/user/model/ride_status.dart';
 import 'package:meta/meta.dart';
@@ -51,7 +52,7 @@ class TransactionCrudCubit extends Cubit<TransactionCrudState> {
         trip: trip.map((key, value) => MapEntry(key.value, value.toMap()))
       );
       }
-      emit(TransactionCrudStateSuccess());
+      emit(TransactionCrudStateSuccess(isAdd: true,transaction: response.data!));
       _refreshTransactions();
       GetIt.I<UserCustomersCubit>().fetchUserCustomers(fullRefresh: true);
     }
@@ -73,9 +74,9 @@ class TransactionCrudCubit extends Cubit<TransactionCrudState> {
 
     if (response.isError) {
       emit(TransactionCrudStateFailure(
-          errorMessage: response.errorMessage ?? "An error occured"));
+          errorMessage: response.errorMessage ?? "An error occurred"));
     } else {
-      emit(TransactionCrudStateSuccess());
+      emit(TransactionCrudStateSuccess(isExpense: true));
       _refreshTransactions();
     }
   }

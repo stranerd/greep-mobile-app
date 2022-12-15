@@ -87,10 +87,10 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                   child: SplashTap(
                     onTap: () {
                       Share.share('''
-                    I will love to share this transaction to you
+                    I would love to share this transaction to you
                     at Greep.
                     
-                    You can check it out at Greep
+                    You can check it out at Greep https://play.google.com/store/apps/details?id=com.greepio.greep
                     
                     ''');
                     },

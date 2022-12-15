@@ -216,7 +216,7 @@ class _TotalIncomeState extends State<TotalIncome> {
                                       separatorBuilder: (_, __) =>
                                           kVerticalSpaceRegular,
                                       itemCount: commissions.length,
-                                      shrinkWrap: true,
+                                      shrinkWrap: false,
                                       physics: const BouncingScrollPhysics(),
                                       itemBuilder: (c, i) {
                                         CommissionSummary summary = commissions[
@@ -262,13 +262,13 @@ class _TotalIncomeState extends State<TotalIncome> {
                                                   MainAxisAlignment.center,
                                               children: [
                                                 TurkishSymbol(
-                                                  width: 25.sp,
-                                                  height: 25.sp,
+                                                  width: 45.sp,
+                                                  height: 45.sp,
                                                   color: const Color(0xff04D28C),
                                                 ),
                                                 TextWidget(
                                                   totalIncome.commission.toMoney,
-                                                  fontSize: 25,
+                                                  fontSize: 50.sp,
                                                   color: const Color(0xff04D28C),
                                                   weight: FontWeight.bold,
                                                 ),

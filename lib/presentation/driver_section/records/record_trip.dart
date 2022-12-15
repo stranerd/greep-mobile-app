@@ -14,6 +14,7 @@ import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/transaction/TransactionData.dart';
 import 'package:greep/ioc.dart';
 import 'package:greep/presentation/driver_section/nav_pages/nav_bar/nav_bar_view.dart';
+import 'package:greep/presentation/driver_section/transaction/transaction_details.dart';
 import 'package:greep/presentation/widgets/form_input_bg_widget.dart';
 import 'package:greep/presentation/widgets/input_text_field.dart';
 import 'package:greep/presentation/widgets/submit_button.dart';
@@ -80,17 +81,21 @@ class _RecordTripState extends State<RecordTrip>
         return BlocConsumer<TransactionCrudCubit, TransactionCrudState>(
           listener: (context, state) {
             if (state is TransactionCrudStateSuccess) {
-              success = "Trip recorded successfully";
+              success = state.isAdd ? "Trip recorded successfully": "Expense recorded";
               Future.delayed(const Duration(milliseconds: 1500), () {
                 if (isFromTrips ){
-                  Get.offAll(NavBarView());
                   directionBuilderCubit.cancelProgress(isCompleted: true);
-
                 }
+                if (state.isAdd){
+
+                Get.off(TransactionDetails(transaction: state.transaction!));}
                 else {
-                Get.back();}
+                  Get.back();
+                }
+
               });
-            }
+              }
+
 
             if (state is TransactionCrudStateFailure) {
               error = state.errorMessage;
@@ -138,7 +143,7 @@ class _RecordTripState extends State<RecordTrip>
                                                         backgroundColor:
                                                             kPrimaryColor,
                                                         minimumSize:
-                                                            Size(150, 50)),
+                                                            const Size(150, 50)),
                                                     onPressed: () {
                                                       Get.back(result: false);
                                                     },
@@ -158,7 +163,7 @@ class _RecordTripState extends State<RecordTrip>
                                                       backgroundColor:
                                                           AppColors.red,
                                                       minimumSize:
-                                                          Size(150, 50)),
+                                                          const Size(150, 50)),
                                                   child: Text(
                                                     "Cancel",
                                                     style: kWhiteTextStyle,
@@ -179,7 +184,7 @@ class _RecordTripState extends State<RecordTrip>
 
                         if (shouldDelete) {
                           directionBuilderCubit.cancelProgress(isCompleted: false);
-                          Get.off(NavBarView());
+                          Get.off(const NavBarView());
                         }
                       } else {
                         Navigator.pop(context);
@@ -524,7 +529,7 @@ class _RecordTripState extends State<RecordTrip>
 
   void _pickDate() {
     DatePicker.showDatePicker(context,
-            maxTime: DateTime.now(), theme: DatePickerTheme())
+            maxTime: DateTime.now(), theme: const DatePickerTheme())
         .then((value) {
       if (value == null) return;
       DateTime selectedDate = value;
