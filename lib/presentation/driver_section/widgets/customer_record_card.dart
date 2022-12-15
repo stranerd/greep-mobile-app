@@ -35,12 +35,14 @@ class CustomerRecordCard extends StatelessWidget {
   Widget build(BuildContext context) {
     String text = "";
     String subText = "";
+    bool isNegative = false;
     TextStyle textStyle = titleStyle;
     String subText2 = "";
 
     TransactionType type = transaction.data.transactionType;
     TransactionData data = transaction.data;
-    text = transaction.amount.toString();
+    isNegative = transaction.amount < 0;
+    text = transaction.amount.abs().toString();
 
     Customer? customer = GetIt.I<UserCustomersCubit>()
         .getCustomerByName(transaction.data.customerName!);
@@ -54,10 +56,10 @@ class CustomerRecordCard extends StatelessWidget {
                   ? "balanced"
                   : "balanced";
       if (paymentType.contains("collect")) {
-        text = transaction.debt.toString();
+        text = transaction.debt.abs().toString();
       }
       if (paymentType.contains("pay")) {
-        text = transaction.debt.toString();
+        text = transaction.debt.abs().toString();
       }
       subText = paymentType;
 
@@ -119,6 +121,10 @@ class CustomerRecordCard extends StatelessWidget {
           children: [
             Row(
               children: [
+                if (isNegative)TextWidget(
+                  "-",
+                  style: textStyle,
+                ),
                 TurkishSymbol(
                   width: (11.w),
                   height: (11.h),

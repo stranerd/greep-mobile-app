@@ -55,7 +55,8 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
               isGotTrip = true;
               isStartTrip = false;
               isEndTrip = false;
-            });
+            }
+            );
           });
 
         }

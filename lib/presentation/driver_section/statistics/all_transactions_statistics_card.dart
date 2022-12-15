@@ -85,51 +85,6 @@ class _AllTransactionsStatisticsCardState
             height: 0.25.sh,
             child: Stack(
               children: [
-                Positioned(
-                  right: kDefaultSpacing * 0.5,
-
-                  child: Container(
-                    decoration: const BoxDecoration(color: kWhiteColor),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: kDefaultSpacing * 0.6,
-                              vertical: kDefaultSpacing * 0.3),
-                          decoration: BoxDecoration(
-                              color: AppColors.lightGray,
-                              borderRadius: BorderRadius.circular(kDefaultSpacing)),
-                          child: DropdownButton<int>(
-                              isDense: true,
-                              value: selectedYear,
-                              underline: const SizedBox(),
-                              icon: const Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                size: 16,
-                              ),
-                              items: years
-                                  .map(
-                                    (e) => DropdownMenuItem<int>(
-                                      value: e,
-                                      child: TextWidget(
-                                        e.toString(),
-                                        fontSize: 16,
-                                        weight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: (value) {
-                                selectedYear = value ?? DateTime.now().year;
-                                calculateYears();
-                                setState(() {});
-                              }),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
                 Positioned.fill(
                   child: Builder(builder: (context) {
                     double expense =
@@ -226,6 +181,52 @@ class _AllTransactionsStatisticsCardState
                     );
                   }),
                 ),
+                Positioned(
+                  right: kDefaultSpacing * 0.5,
+
+                  child: Container(
+                    decoration: const BoxDecoration(color: kWhiteColor),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: kDefaultSpacing * 0.6,
+                              vertical: kDefaultSpacing * 0.3),
+                          decoration: BoxDecoration(
+                              color: AppColors.lightGray,
+                              borderRadius: BorderRadius.circular(kDefaultSpacing)),
+                          child: DropdownButton<int>(
+                              isDense: true,
+                              value: selectedYear,
+                              underline: const SizedBox(),
+                              icon: const Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                size: 16,
+                              ),
+                              items: years
+                                  .map(
+                                    (e) => DropdownMenuItem<int>(
+                                  value: e,
+                                  child: TextWidget(
+                                    e.toString(),
+                                    fontSize: 16,
+                                    weight: FontWeight.bold,
+                                  ),
+                                ),
+                              )
+                                  .toList(),
+                              onChanged: (value) {
+                                selectedYear = value ?? DateTime.now().year;
+                                calculateYears();
+                                setState(() {});
+                              }),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+
               ],
             ),
           ),
