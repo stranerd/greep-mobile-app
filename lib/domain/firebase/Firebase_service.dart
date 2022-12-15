@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:greep/application/location/location.dart';
+import 'package:greep/application/transactions/trip_direction_builder_cubit.dart';
 import 'package:greep/domain/user/model/ride_status.dart';
 
 class FirebaseApi {
@@ -27,11 +28,13 @@ class FirebaseApi {
     });
   }
 
-  static Future sendManagerRequest({
-    required String driverId,
-      required String managerId, required String managerName, required String commission}
-  ) async {
-    final refMessages = FirebaseFirestore.instance.collection('ManagerRequests');
+  static Future sendManagerRequest(
+      {required String driverId,
+      required String managerId,
+      required String managerName,
+      required String commission}) async {
+    final refMessages =
+        FirebaseFirestore.instance.collection('ManagerRequests');
 
     await refMessages.doc().set({
       'driverId': driverId,
@@ -66,8 +69,7 @@ class FirebaseApi {
 
   static Future sendManagerAccept({
     required String managerId,
-  }
-      ) async {
+  }) async {
     final refMessages = FirebaseFirestore.instance.collection('ManagerAccepts');
 
     await refMessages.doc().set({
@@ -76,15 +78,11 @@ class FirebaseApi {
     });
   }
 
-
-  static Future updateDriverLocation({
-    required String driverId,
-    required Location location,
-    RideStatus rideStatus = RideStatus.ended
-
-
-  }
-      ) async {
+  static Future updateDriverLocation(
+      {required String driverId,
+      required Location location,
+      RideStatus rideStatus = RideStatus.ended,
+      Map<String, DirectionProgress?> directions = const {}}) async {
     final collection = FirebaseFirestore.instance.collection('DriverLocation');
     var future = collection.where("driverId", isEqualTo: driverId).get();
     future.then((value) async {
@@ -95,6 +93,12 @@ class FirebaseApi {
           'latitude': location.latitude.toString(),
           'longitude': location.longitude.toString(),
           'updatedAt': DateTime.now(),
+          'directions': directions.map(
+            (key, value) => MapEntry(
+              key,
+              value?.toMap(),
+            ),
+          )
         });
       } else {
         value.docs.forEach((element) {
@@ -103,12 +107,17 @@ class FirebaseApi {
             'longitude': location.longitude.toString(),
             'rideStatus': rideStatus.name,
             'updatedAt': DateTime.now(),
+            'directions': directions.map(
+              (key, value) => MapEntry(
+                key,
+                value?.toMap(),
+              ),
+            )
           });
         });
       }
     });
   }
-
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getDriverLocation(
       String userId) {
@@ -118,6 +127,22 @@ class FirebaseApi {
     return data.snapshots();
   }
 
+  static void addTransactionTrip({required Map<String, Map> trip, required String transactionId})async  {
+    final refMessages =
+    FirebaseFirestore.instance.collection('TransactionTrips');
 
+    await refMessages.doc().set({
+      'transactionId': transactionId,
+      'trip': trip,
+      'createdAt': DateTime.now(),
+    });
+  }
 
+  static Stream<QuerySnapshot<Map<String, dynamic>>> transactionTripStreams(
+      String transactionId) {
+    var data = FirebaseFirestore.instance
+        .collection('TransactionTrips')
+        .where('transactionId', isEqualTo: transactionId);
+    return data.snapshots();
+  }
 }

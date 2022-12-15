@@ -13,6 +13,7 @@ import 'package:greep/application/location/location_cubit.dart';
 import 'package:greep/application/transactions/customer_statistics_cubit.dart';
 import 'package:greep/application/transactions/transaction_crud_cubit.dart';
 import 'package:greep/application/transactions/transaction_summary_cubit.dart';
+import 'package:greep/application/transactions/transaction_trips_cubit.dart';
 import 'package:greep/application/transactions/trip_direction_builder_cubit.dart';
 import 'package:greep/application/transactions/user_transactions_cubit.dart';
 import 'package:greep/application/driver/drivers_cubit.dart';
@@ -131,6 +132,7 @@ class IoC {
     getIt.registerFactory(() => UserCrudCubit(
           userService: _userService,
         ));
+    getIt.registerFactory( () => TransactionTripsCubit());
     getIt.registerFactory(() => GeoCoderCubit());
 
 

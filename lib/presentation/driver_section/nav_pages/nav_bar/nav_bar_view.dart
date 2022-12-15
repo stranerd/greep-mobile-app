@@ -110,7 +110,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
                   isDismissible: false,
                   isScrollControlled: true,
                   builder: (context) {
-                    return TripDirectionsScreen();
+                    return const TripDirectionsScreen();
                   });
             },
             child: Image.asset(

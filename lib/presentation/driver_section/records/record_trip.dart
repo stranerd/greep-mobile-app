@@ -49,6 +49,7 @@ class _RecordTripState extends State<RecordTrip>
   DateTime? recordDate;
   List<String> paymentTypes = [];
   List<String> customersNames = [];
+  bool isFromTrips = false;
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -61,6 +62,7 @@ class _RecordTripState extends State<RecordTrip>
           (directionBuilderCubit.state as TripDirectionBuilderStateEndTrip)
               .directionProgress
               .date;
+      isFromTrips = true;
     }
     customersNames = GetIt.I<CustomerStatisticsCubit>().getUserCustomers();
     _nameController = TextEditingController();
@@ -80,7 +82,11 @@ class _RecordTripState extends State<RecordTrip>
             if (state is TransactionCrudStateSuccess) {
               success = "Trip recorded successfully";
               Future.delayed(const Duration(milliseconds: 1500), () {
-                Get.back();
+                if (isFromTrips ){
+                  Get.offAll(NavBarView());
+                }
+                else {
+                Get.back();}
               });
             }
 
@@ -509,6 +515,7 @@ class _RecordTripState extends State<RecordTrip>
           amount: num.parse(_price),
           paymentType: _paymentType,
           description: _description,
+          trip: directionBuilderCubit.state is TripDirectionBuilderStateEndTrip ? (directionBuilderCubit.state as TripDirectionBuilderStateEndTrip).directions : null,
           dateRecorded: recordDate!);
     }
   }

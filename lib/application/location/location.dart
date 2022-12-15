@@ -23,7 +23,7 @@ class Location extends Equatable {
   }
 
   factory Location.fromMap(Map<String, dynamic> map) {
-    return new Location(
+    return Location(
       longitude: map['longitude'] as double,
       latitude: map['latitude'] as double,
     );
@@ -32,8 +32,9 @@ class Location extends Equatable {
   Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast
     return {
-      'longitude': this.longitude,
-      'latitude': this.latitude,
+      'longitude': longitude,
+      'latitude': latitude,
+      'address': address,
     } as Map<String, dynamic>;
   }
 
@@ -49,6 +50,6 @@ class Location extends Equatable {
 
 extension LocationToLatLgn on Location {
   String toDirectionsLatLng() {
-    return '${this.latitude},${this.longitude}';
+    return '${latitude},${longitude}';
   }
 }
