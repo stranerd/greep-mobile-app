@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as g;
 import 'package:greep/application/auth/AuthenticationCubit.dart';
 import 'package:greep/application/user/user_cubit.dart';
@@ -18,8 +19,7 @@ class AuthenticationSplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<AuthenticationSplashScreen>
-    with ScaffoldMessengerService {
+class _SplashScreenState extends State<AuthenticationSplashScreen> {
   @override
   void initState() {
     super.initState();
@@ -44,9 +44,9 @@ class _SplashScreenState extends State<AuthenticationSplashScreen>
         }
         if (state is UserStateError) {
           if (state.isSocket || state.isConnectionTimeout) {
-            error = state.errorMessage ?? "Please check your internet";
+            Fluttertoast.showToast(msg: state.errorMessage ?? "Please check your internet");
           } else {
-            error = "token expired, please login again";
+            Fluttertoast.showToast(msg: "token expired, please login again");
           }
           context.read<AuthenticationCubit>().signout();
           Future.delayed(const Duration(seconds: 2), () => g.Get.offAll(() => const SplashScreen()));

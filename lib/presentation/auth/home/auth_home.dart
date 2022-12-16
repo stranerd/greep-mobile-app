@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as g;
 import 'package:get_it/get_it.dart';
 import 'package:greep/application/auth/AuthenticationCubit.dart';
@@ -31,7 +32,7 @@ class AuthHomeScreen extends StatefulWidget {
 }
 
 class _AuthHomeScreenState extends State<AuthHomeScreen>
-    with InputValidator, ScaffoldMessengerService {
+    with InputValidator {
   String email = "";
   String password = "";
   String confirmPassword = "";
@@ -90,7 +91,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
           g.Get.offAll(() => const AuthenticationSplashScreen(),transition: g.Transition.fadeIn);
         }
         if (state is AuthenticationStateError) {
-          error = state.errorMessage;
+          Fluttertoast.showToast(msg: state.errorMessage,);
         }
       },
       builder: (context, state) {
@@ -222,7 +223,8 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
                                       setState(() {
                                         fieldErrors = state.fieldErrors;
                                       });
-                                      error = state.errorMessage?? "Sign up failed";
+
+                                      Fluttertoast.showToast(msg: state.errorMessage?? "Sign up failed");
                                     }
 
                                   },
