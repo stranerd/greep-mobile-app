@@ -88,7 +88,6 @@ class _TransactionDetailsState extends State<TransactionDetails> with ScaffoldMe
             }
           }, child: BlocBuilder<TransactionTripsCubit, TransactionTripsState>(
             builder: (context, tripState) {
-              print("Transaction trip state $tripState");
               return Scaffold(
                 backgroundColor: Colors.white,
                 floatingActionButton: SafeArea(
@@ -110,7 +109,6 @@ class _TransactionDetailsState extends State<TransactionDetails> with ScaffoldMe
                       screenshotController.capture().then((Uint8List? image) async {
                         if (image != null){
                         final result = await ImageGallerySaver.saveImage(image,quality: 100,name: "Greep - Transaction - ${DateTime.now()}");
-                        print("result ${result}");
                         if ((result as Map)["isSuccess"] ?? false) {
                           Share.shareXFiles([XFile.fromData(image)]);
                         }
@@ -572,8 +570,6 @@ class _TransactionDetailsState extends State<TransactionDetails> with ScaffoldMe
                                                                         builder:
                                                                             (context,
                                                                             geoState) {
-                                                                          print(
-                                                                              "Getting geo locate for start trip $directionProgress");
                                                                           return TextWidget(
                                                                             geoState
                                                                             is GeoCoderStateFetched
@@ -756,8 +752,6 @@ class _TransactionDetailsState extends State<TransactionDetails> with ScaffoldMe
                                                                               builder:
                                                                                   (context,
                                                                                       geoState) {
-                                                                                print(
-                                                                                    "Getting geo locate for start trip $directionProgress");
                                                                                 return TextWidget(
                                                                                   geoState
                                                                                           is GeoCoderStateFetched
@@ -938,8 +932,6 @@ class _TransactionDetailsState extends State<TransactionDetails> with ScaffoldMe
                                                                         builder:
                                                                             (context,
                                                                             geoState) {
-                                                                          print(
-                                                                              "Getting geo locate for end trip $directionProgress");
                                                                           return TextWidget(
                                                                             geoState
                                                                             is GeoCoderStateFetched

@@ -51,7 +51,6 @@ class AuthenticationClient {
   }
 
   Future<ResponseEntity<Map<String,dynamic>>> googleLogin(GoogleSigninRequest request) async {
-    print("signing up with Google");
     final Dio dio = Dio();
     Response response;
     try {
@@ -60,7 +59,6 @@ class AuthenticationClient {
         data: request.toJson(),
       );
 
-      print("response from google sign in ${response.data}");
       return ResponseEntity.Data({
         "id": response.data["user"]["id"],
         "token": response.data["accessToken"],
@@ -87,7 +85,6 @@ class AuthenticationClient {
   }
 
   Future<ResponseEntity<Map<String,dynamic>>> appleSignin(AppleSigninRequest request) async {
-    print("Apple sign in ${request.toMap()}");
     final Dio dio = Dio();
     Response response;
     try {
@@ -96,7 +93,6 @@ class AuthenticationClient {
           data: FormData.fromMap(request.toMap()));
 
 
-      print("response from apple sign in ${response.data}");
       return ResponseEntity.Data({
         "id": response.data["user"]["id"],
         "token": response.data["accessToken"],

@@ -70,7 +70,6 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
                 success = "Driver accepted request";
                 GetIt.I<UserCubit>().fetchUser();
               });
-              print("manager accepted");
             }
           },
         ),

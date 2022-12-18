@@ -13,7 +13,6 @@ class NewManagerAcceptsCubit extends Cubit<NewManagerAcceptsState> {
       : super(NewManagerAcceptsStateInitial()) {
     _userSubscription = userCubit.stream.listen((event) {
       if (event is UserStateFetched) {
-        print("checking manager requests");
         checkNewAccepts(event.user.id);
       }
     });

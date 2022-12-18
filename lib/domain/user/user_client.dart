@@ -34,7 +34,6 @@ class UserClient {
               .toString()
               .toLowerCase()
               .contains("access token")) {
-            print("refreshing token");
             var response =
                 await GetIt.I<AuthenticationService>().refreshToken();
             if (response.isError) {

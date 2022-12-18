@@ -14,3 +14,17 @@ extension RideStatusExt on RideStatus {
     }
   }
 }
+
+extension RideStatusExtString on String {
+  RideStatus get rideStatusValue{
+
+    if (this == "got"){
+      return RideStatus.pending;
+    }
+    else if (this == "start"){
+      return RideStatus.inProgress;
+    }
+
+    return RideStatus.ended;
+  }
+}

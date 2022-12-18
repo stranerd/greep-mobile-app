@@ -76,7 +76,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("Rebuild transaction screen ui");
     return BlocConsumer<TransactionSummaryCubit, TransactionSummaryState>(
         listener: (context, state) {
       if (state is TransactionSummaryStateDone) {

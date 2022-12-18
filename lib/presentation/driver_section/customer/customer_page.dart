@@ -256,7 +256,6 @@ class _CustomerScreenState extends State<CustomerScreen> {
                             Expanded(
                               child: TextField(
                                 onChanged: (s) {
-                                  print("On changed ${s}");
                                   if (s.isNotEmpty) {
                                     filteredTransactions =
                                         transactions.where((element) {
