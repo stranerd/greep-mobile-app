@@ -496,8 +496,6 @@ class _DailyTransactionsStatisticsCardState
     availableDays = List.generate(dates.mapMany((item) => item).toList().length,
         (index) => dates.first.first.add(Duration(days: index)));
 
-    print(
-        "available days ${availableDays.length} ${DateFormat(DateFormat.ABBR_WEEKDAY).format(availableDays.first)}");
     calculateSummaries();
   }
 

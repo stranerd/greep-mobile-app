@@ -132,7 +132,6 @@ class _MapScreenState extends State<MapScreen> {
                       DriverLocationStatusState>(
                     listener: (context, locationState) async {
                       if (locationState is DriverLocationStatusStateFetched) {
-                        print(locationState);
                         rideStatus = locationState.status.rideStatus;
                         var mapController = await _controller.future;
                         currentLocationMarker = Marker(
@@ -240,21 +239,14 @@ class _MapScreenState extends State<MapScreen> {
                     builder: (context, locationState) {
                       Set<Marker> markers = {currentLocationMarker};
                       if (gotTripMarker != null) {
-                        print("Got trip yes");
                         markers.add(gotTripMarker!);
                       }
                       if (startTripMarker != null) {
-                        print("Start trip yes");
-
                         markers.add(startTripMarker!);
                       }
                       if (endTripMarker != null) {
-                        print("End trip yes");
-
                         markers.add(endTripMarker!);
                       }
-
-                      print("markers length: ${markers.length}");
                       return Column(
                         children: [
                           Container(
