@@ -30,6 +30,8 @@ import 'package:greep/application/user/user_cubit.dart';
 import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/scaffold_messenger_service.dart';
 import 'package:greep/commons/themes.dart';
+import 'package:greep/commons/timeago_custom.dart';
+import 'package:timeago/timeago.dart';
 import 'package:greep/ioc.dart';
 import 'package:greep/presentation/splash/splash.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -48,7 +50,7 @@ void main() async {
         : await getTemporaryDirectory(),
   );
   await dotenv.load(fileName: ".env");
-
+  setLocaleMessages("en_short", MyCustomMessages());
   var ioc = IoC();
 
   if (Platform.isIOS) {

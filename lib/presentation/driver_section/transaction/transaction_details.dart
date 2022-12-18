@@ -30,6 +30,7 @@ import 'package:maps_launcher/maps_launcher.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_styles.dart';
@@ -521,7 +522,7 @@ class _TransactionDetailsState extends State<TransactionDetails> with ScaffoldMe
                                                             "Got a trip")
                                                       ],
                                                     ),
-                                                    Expanded(
+                                                    Flexible(
                                                       child: tripState
                                                       is TransactionTripsStateAvailable
                                                           ? Builder(
@@ -553,43 +554,68 @@ class _TransactionDetailsState extends State<TransactionDetails> with ScaffoldMe
                                                                   CrossAxisAlignment
                                                                       .end,
                                                                   children: [
-                                                                    BlocProvider
-                                                                        .value(
-                                                                      value: getIt<
-                                                                          GeoCoderCubit>()
-                                                                        ..fetchAddressFromLongAndLat(
-                                                                            longitude: directionProgress
-                                                                                .location
-                                                                                .longitude,
-                                                                            latitude: directionProgress
-                                                                                .location
-                                                                                .latitude),
-                                                                      child: BlocBuilder<
-                                                                          GeoCoderCubit,
-                                                                          GeoCoderState>(
-                                                                        builder:
-                                                                            (context,
-                                                                            geoState) {
-                                                                          return TextWidget(
-                                                                            geoState
-                                                                            is GeoCoderStateFetched
-                                                                                ? geoState.address.isEmpty
-                                                                                ? 'Loading address...'
-                                                                                : geoState.address
-                                                                                : 'Loading address...',
-                                                                            softWrap:
-                                                                            true,
-                                                                            textAlign: TextAlign.end,
-                                                                            maxLines:
-                                                                            3,
-                                                                            fontSize:
-                                                                            15,
-                                                                            color: AppColors
-                                                                                .veryLightGray,
-                                                                          );
-                                                                        },
-                                                                      ),
-                                                                    ),
+                                                                    Builder(builder: (context) {
+                                                                      String address = directionProgress
+                                                                          .location
+                                                                          .address !=
+                                                                          null
+                                                                          ? directionProgress
+                                                                          .location
+                                                                          .address
+                                                                          ?.isNotEmpty ??
+                                                                          false
+                                                                          ? directionProgress
+                                                                          .location
+                                                                          .address!
+                                                                          : ""
+                                                                          : "";
+                                                                      if (address.isNotEmpty) {
+                                                                        return TextWidget(
+                                                                          address,
+                                                                          softWrap: true,
+                                                                          textAlign: TextAlign.right,
+                                                                          maxLines: 2,
+                                                                          fontSize: 15,
+                                                                          color: AppColors
+                                                                              .veryLightGray,
+                                                                        );
+                                                                      }
+                                                                      return BlocProvider.value(
+                                                                        value: getIt<
+                                                                            GeoCoderCubit>()
+                                                                          ..fetchAddressFromLongAndLat(
+                                                                              longitude: directionProgress
+                                                                                  .location
+                                                                                  .longitude,
+                                                                              latitude: directionProgress
+                                                                                  .location
+                                                                                  .latitude),
+                                                                        child: BlocBuilder<
+                                                                            GeoCoderCubit,
+                                                                            GeoCoderState>(
+                                                                          builder: (context,
+                                                                              geoState) {
+                                                                            return TextWidget(
+                                                                              geoState
+                                                                              is GeoCoderStateFetched
+                                                                                  ? geoState
+                                                                                  .address
+                                                                                  .isEmpty
+                                                                                  ? 'Loading address...'
+                                                                                  : geoState
+                                                                                  .address
+                                                                                  : 'Loading address...',
+                                                                              softWrap: true,
+                                                                              maxLines: 2,
+                                                                              fontSize: 15,
+                                                                              color: AppColors
+                                                                                  .veryLightGray,
+                                                                            );
+                                                                          },
+                                                                        ),
+                                                                      );
+                                                                    }),
+
                                                                     kVerticalSpaceRegular,
                                                                     Row(
                                                                       mainAxisSize:
@@ -635,8 +661,8 @@ class _TransactionDetailsState extends State<TransactionDetails> with ScaffoldMe
                                                                               BoxShape.circle),
                                                                         ),
                                                                         kHorizontalSpaceSmall,
-                                                                        TextWidget(
-                                                                          "${directionProgress.duration.inMinutes} m",
+                                                                        const TextWidget(
+                                                                         "0m",
                                                                           fontSize:
                                                                           14,
                                                                         ),
@@ -703,7 +729,7 @@ class _TransactionDetailsState extends State<TransactionDetails> with ScaffoldMe
                                                                 "Start trip")
                                                           ],
                                                         ),
-                                                        Expanded(
+                                                        Flexible(
                                                           child: tripState
                                                                   is TransactionTripsStateAvailable
                                                               ? Builder(
@@ -735,43 +761,68 @@ class _TransactionDetailsState extends State<TransactionDetails> with ScaffoldMe
                                                                             CrossAxisAlignment
                                                                                 .end,
                                                                         children: [
-                                                                          BlocProvider
-                                                                              .value(
-                                                                            value: getIt<
-                                                                                GeoCoderCubit>()
-                                                                              ..fetchAddressFromLongAndLat(
-                                                                                  longitude: directionProgress
-                                                                                      .location
-                                                                                      .longitude,
-                                                                                  latitude: directionProgress
-                                                                                      .location
-                                                                                      .latitude),
-                                                                            child: BlocBuilder<
-                                                                                GeoCoderCubit,
-                                                                                GeoCoderState>(
-                                                                              builder:
-                                                                                  (context,
-                                                                                      geoState) {
-                                                                                return TextWidget(
-                                                                                  geoState
-                                                                                          is GeoCoderStateFetched
-                                                                                      ? geoState.address.isEmpty
-                                                                                          ? 'Loading address...'
-                                                                                          : geoState.address
-                                                                                      : 'Loading address...',
-                                                                                  softWrap:
-                                                                                      true,
-                                                                                  textAlign: TextAlign.end,
-                                                                                  maxLines:
-                                                                                      3,
-                                                                                  fontSize:
-                                                                                      15,
-                                                                                  color: AppColors
-                                                                                      .veryLightGray,
-                                                                                );
-                                                                              },
-                                                                            ),
-                                                                          ),
+                                                                          Builder(builder: (context) {
+                                                                            String address = directionProgress
+                                                                                .location
+                                                                                .address !=
+                                                                                null
+                                                                                ? directionProgress
+                                                                                .location
+                                                                                .address
+                                                                                ?.isNotEmpty ??
+                                                                                false
+                                                                                ? directionProgress
+                                                                                .location
+                                                                                .address!
+                                                                                : ""
+                                                                                : "";
+                                                                            if (address.isNotEmpty) {
+                                                                              return TextWidget(
+                                                                                address,
+                                                                                softWrap: true,
+                                                                                textAlign: TextAlign.right,
+                                                                                maxLines: 2,
+                                                                                fontSize: 15,
+                                                                                color: AppColors
+                                                                                    .veryLightGray,
+                                                                              );
+                                                                            }
+                                                                            return BlocProvider.value(
+                                                                              value: getIt<
+                                                                                  GeoCoderCubit>()
+                                                                                ..fetchAddressFromLongAndLat(
+                                                                                    longitude: directionProgress
+                                                                                        .location
+                                                                                        .longitude,
+                                                                                    latitude: directionProgress
+                                                                                        .location
+                                                                                        .latitude),
+                                                                              child: BlocBuilder<
+                                                                                  GeoCoderCubit,
+                                                                                  GeoCoderState>(
+                                                                                builder: (context,
+                                                                                    geoState) {
+                                                                                  return TextWidget(
+                                                                                    geoState
+                                                                                    is GeoCoderStateFetched
+                                                                                        ? geoState
+                                                                                        .address
+                                                                                        .isEmpty
+                                                                                        ? 'Loading address...'
+                                                                                        : geoState
+                                                                                        .address
+                                                                                        : 'Loading address...',
+                                                                                    softWrap: true,
+                                                                                    maxLines: 2,
+                                                                                    fontSize: 15,
+                                                                                    color: AppColors
+                                                                                        .veryLightGray,
+                                                                                  );
+                                                                                },
+                                                                              ),
+                                                                            );
+                                                                          }),
+
                                                                           kVerticalSpaceRegular,
                                                                           Row(
                                                                             mainAxisSize:
@@ -818,7 +869,17 @@ class _TransactionDetailsState extends State<TransactionDetails> with ScaffoldMe
                                                                               ),
                                                                               kHorizontalSpaceSmall,
                                                                               TextWidget(
-                                                                                "${directionProgress.duration.inMinutes} m",
+                                                                                timeago.format(
+                                                                                    directionProgress
+                                                                                        .date
+                                                                                        .add(directionProgress
+                                                                                        .duration),
+                                                                                    clock: directionProgress
+                                                                                        .date,
+                                                                                    allowFromNow:
+                                                                                    true,
+                                                                                    locale:
+                                                                                    'en_short'),
                                                                                 fontSize:
                                                                                     14,
                                                                               ),
@@ -883,7 +944,7 @@ class _TransactionDetailsState extends State<TransactionDetails> with ScaffoldMe
                                                             "End trip")
                                                       ],
                                                     ),
-                                                    Expanded(
+                                                    Flexible(
                                                       child: tripState
                                                       is TransactionTripsStateAvailable
                                                           ? Builder(
@@ -915,43 +976,67 @@ class _TransactionDetailsState extends State<TransactionDetails> with ScaffoldMe
                                                                   CrossAxisAlignment
                                                                       .end,
                                                                   children: [
-                                                                    BlocProvider
-                                                                        .value(
-                                                                      value: getIt<
-                                                                          GeoCoderCubit>()
-                                                                        ..fetchAddressFromLongAndLat(
-                                                                            longitude: directionProgress
-                                                                                .location
-                                                                                .longitude,
-                                                                            latitude: directionProgress
-                                                                                .location
-                                                                                .latitude),
-                                                                      child: BlocBuilder<
-                                                                          GeoCoderCubit,
-                                                                          GeoCoderState>(
-                                                                        builder:
-                                                                            (context,
-                                                                            geoState) {
-                                                                          return TextWidget(
-                                                                            geoState
-                                                                            is GeoCoderStateFetched
-                                                                                ? geoState.address.isEmpty
-                                                                                ? 'Loading address...'
-                                                                                : geoState.address
-                                                                                : 'Loading address...',
-                                                                            softWrap:
-                                                                            true,
-                                                                            textAlign: TextAlign.end,
-                                                                            maxLines:
-                                                                            3,
-                                                                            fontSize:
-                                                                            15,
-                                                                            color: AppColors
-                                                                                .veryLightGray,
-                                                                          );
-                                                                        },
-                                                                      ),
-                                                                    ),
+                                                                    Builder(builder: (context) {
+                                                                      String address = directionProgress
+                                                                          .location
+                                                                          .address !=
+                                                                          null
+                                                                          ? directionProgress
+                                                                          .location
+                                                                          .address
+                                                                          ?.isNotEmpty ??
+                                                                          false
+                                                                          ? directionProgress
+                                                                          .location
+                                                                          .address!
+                                                                          : ""
+                                                                          : "";
+                                                                      if (address.isNotEmpty) {
+                                                                        return TextWidget(
+                                                                          address,
+                                                                          softWrap: true,
+                                                                          textAlign: TextAlign.right,
+                                                                          maxLines: 2,
+                                                                          fontSize: 15,
+                                                                          color: AppColors
+                                                                              .veryLightGray,
+                                                                        );
+                                                                      }
+                                                                      return BlocProvider.value(
+                                                                        value: getIt<
+                                                                            GeoCoderCubit>()
+                                                                          ..fetchAddressFromLongAndLat(
+                                                                              longitude: directionProgress
+                                                                                  .location
+                                                                                  .longitude,
+                                                                              latitude: directionProgress
+                                                                                  .location
+                                                                                  .latitude),
+                                                                        child: BlocBuilder<
+                                                                            GeoCoderCubit,
+                                                                            GeoCoderState>(
+                                                                          builder: (context,
+                                                                              geoState) {
+                                                                            return TextWidget(
+                                                                              geoState
+                                                                              is GeoCoderStateFetched
+                                                                                  ? geoState
+                                                                                  .address
+                                                                                  .isEmpty
+                                                                                  ? 'Loading address...'
+                                                                                  : geoState
+                                                                                  .address
+                                                                                  : 'Loading address...',
+                                                                              softWrap: true,
+                                                                              maxLines: 2,
+                                                                              fontSize: 15,
+                                                                              color: AppColors
+                                                                                  .veryLightGray,
+                                                                            );
+                                                                          },
+                                                                        ),
+                                                                      );
+                                                                    }),
                                                                     kVerticalSpaceRegular,
                                                                     Row(
                                                                       mainAxisSize:
@@ -998,7 +1083,15 @@ class _TransactionDetailsState extends State<TransactionDetails> with ScaffoldMe
                                                                         ),
                                                                         kHorizontalSpaceSmall,
                                                                         TextWidget(
-                                                                          "${directionProgress.duration.inMinutes} m",
+                                                            timeago.format(directionProgress
+                                                                .date,
+                                                            clock:  directionProgress
+                                                                .date
+                                                                .add(directionProgress
+                                                                .duration),
+                                                            locale: "en_short"
+                                                            ),
+
                                                                           fontSize:
                                                                           14,
                                                                         ),
@@ -1082,13 +1175,20 @@ class _TransactionDetailsState extends State<TransactionDetails> with ScaffoldMe
                                                     Builder(
                                                         builder: (context) {
                                                           if (tripState is TransactionTripsStateAvailable){
-                                                            double duration = 0;
+                                                            int duration = 0;
                                                             if (tripState.trip.endDirection!=null){
-                                                              duration += tripState.trip.endDirection?.duration.inMinutes??0;
+                                                              duration += tripState.trip.endDirection?.duration.inSeconds??0;
                                                             }
 
                                                             return TextWidget(
-                                                              "$duration minutes",
+                                                              timeago.format(
+                                                                  DateTime.now(),
+                                                                  clock:DateTime.now().add(Duration(seconds: duration)),
+                                                                  allowFromNow:
+                                                                  true,
+                                                                  locale:
+                                                                  'en_short')
+                                                              ,
                                                               color:
                                                               AppColors.veryLightGray,
                                                               fontSize: 18,
