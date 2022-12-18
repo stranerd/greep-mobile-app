@@ -31,6 +31,7 @@ class _SplashScreenState extends State<AuthenticationSplashScreen> {
     return BlocListener<UserCubit, UserState>(
       listener: (context, state) {
         print(state);
+        print("widget is new user ${widget.isNewUser}");
         if (state is UserStateFetched) {
           if (widget.isNewUser){
             g.Get.offAll(const EmailVerificationBottomSheet(),

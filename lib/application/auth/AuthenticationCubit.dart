@@ -99,6 +99,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
           AuthenticationStateAuthenticated(
               token: response.data!["token"]!,
               userId: response.data!["id"]!,
+            isSignup: true
           ),
         );
       }

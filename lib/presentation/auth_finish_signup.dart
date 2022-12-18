@@ -57,11 +57,15 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SignupCubit, SignupState>(
+      listenWhen: (_, __) {
+        return ModalRoute.of(context)?.isCurrent ?? false;
+      },
       listener: (context, state) {
         if (state is SignupStateError) {
           error = state.errorMessage ?? "Sign up failed";
         }
         if (state is SignupStateSuccess) {
+          // print("pushing to splash screen on signup success");
           g.Get.to(() => const AuthenticationSplashScreen(isNewUser: true,),transition: g.Transition.fadeIn);
         }
       },

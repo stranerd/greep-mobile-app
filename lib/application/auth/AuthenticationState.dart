@@ -6,8 +6,6 @@ class AuthenticationStateLoading extends AuthenticationState {
   final bool isGoogle;
 
   AuthenticationStateLoading({this.isGoogle = false});
-
-
 }
 
 class AuthenticationStateNotAuthenticated extends AuthenticationState {}
@@ -15,8 +13,13 @@ class AuthenticationStateNotAuthenticated extends AuthenticationState {}
 class AuthenticationStateAuthenticated extends AuthenticationState {
   final String token;
   final String userId;
+  final bool isSignup;
 
-  AuthenticationStateAuthenticated({required this.token, required this.userId});
+  AuthenticationStateAuthenticated({
+    required this.token,
+    this.isSignup = false,
+    required this.userId,
+  });
 }
 
 class AuthenticationStateError extends AuthenticationState {

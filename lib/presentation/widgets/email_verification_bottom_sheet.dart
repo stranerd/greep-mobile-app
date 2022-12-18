@@ -106,138 +106,140 @@ class _EmailVerificationBottomSheetState
         },
         builder: (context, state) {
           return Scaffold(
-            body: Container(
-              padding: EdgeInsets.all(kDefaultSpacing),
-              decoration: const BoxDecoration(
-                color: kWhiteColor,
-              ),
-              height: Get.height,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  kVerticalSpaceLarge,
-                  Center(
-                      child: Image.asset(
-                        "assets/images/email_verification.png",
-                        width: 250.w,
-                        height: 250.h,
-                      )),
-                  kVerticalSpaceLarge,
-                  kVerticalSpaceLarge,
-                  Container(
-                    width: Get.width,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const TextWidget(
-                          "Verify your email",
-                          weight: FontWeight.bold,
-                        ),
-                        kVerticalSpaceMedium,
-                        TextWidget(
-                          "Please enter the 4 digit code sent to",
-                          style: kDefaultTextStyle,
-                        ),
-                        kVerticalSpaceSmall,
-                        TextWidget(
-                          getUser().email,
-                          color: kGreenColor,
-                          style: kDefaultTextStyle,
-                        ),
-                      ],
-                    ),
-                  ),
-                  kVerticalSpaceLarge,
-                  LayoutBuilder(builder: (context, constr) {
-                    return PinCodeTextField(
-                      controller: pinEditingController,
-                      onChanged: (String value) {
-                        setState(() {
-                          pin = value;
-
-                        });
-                        if (value.length < 6) {
-                          setState(() {
-                            isError = false;
-                          });
-                        }
-                      },
-                      length: 6,
-                      textStyle:
-                      kPrimaryTextStyle.copyWith(fontWeight: FontWeight.bold),
-                      pinTheme: PinTheme(
-                        shape: PinCodeFieldShape.box,
-                        borderWidth: 0.5,
-                        borderRadius: BorderRadius.circular(
-                          kDefaultSpacing * 0.5,
-                        ),
-                        fieldHeight: 70.h,
-                        fieldWidth: 55.w,
-                        inactiveColor: kGreenColor,
-                        // selectedColor: kGreenColor,
-                        activeColor: kPrimaryColor,
-                      ),
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      onCompleted: (str) async {
-                        emailVerificationCubit.confirmVerificationCode( token: str.trim());
-                      },
-                      appContext: context,
-                    );
-                  }),
-                  kVerticalSpaceRegular,
-                  Align(
-                    alignment: Alignment.center,
-                    child:  _timer.isActive
-                        ? RichText(
-                      text: TextSpan(children: [
-                        TextSpan(
-                            text: "Resend code in ",
-                            style: kDefaultTextStyle),
-                        TextSpan(
-                            text: " ${_start.toString()}",
-                            style: kBoldTextStyle)
-                      ]),
-                    ) : Text.rich(
-                      TextSpan(
+            body: SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.all(kDefaultSpacing),
+                decoration: const BoxDecoration(
+                  color: kWhiteColor,
+                ),
+                // height: Get.height,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    kVerticalSpaceLarge,
+                    Center(
+                        child: Image.asset(
+                          "assets/images/email_verification.png",
+                          width: 250.w,
+                          height: 250.h,
+                        )),
+                    kVerticalSpaceLarge,
+                    kVerticalSpaceLarge,
+                    Container(
+                      width: Get.width,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          TextSpan(
-                            text: "Didn't received code? ",
-                            style: kDefaultTextStyle.copyWith(
-                              fontSize: kDefaultSpacing.sp,
-                            ),
+                          const TextWidget(
+                            "Verify your email",
+                            weight: FontWeight.bold,
                           ),
-                          TextSpan(
-                            text: "Resend",
-                            recognizer: TapGestureRecognizer()..onTap = () {
-                              _start = RESENDINTERVAL;
-                              pinEditingController.clear();
-                              emailVerificationCubit.sendVerificationCode(getUser().email);
-
-                            },
-                            style: kBoldTextStyle.copyWith(
-                              color: AppColors.green,
-                              fontSize: kDefaultSpacing.sp,
-                            ),
-                          )
+                          kVerticalSpaceMedium,
+                          TextWidget(
+                            "Please enter the 4 digit code sent to",
+                            style: kDefaultTextStyle,
+                          ),
+                          kVerticalSpaceSmall,
+                          TextWidget(
+                            getUser().email,
+                            color: kGreenColor,
+                            style: kDefaultTextStyle,
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                  kVerticalSpaceRegular,
-                  SubmitButton(
-                    text: "Confirm",
-                    textStyle: kBoldWhiteTextStyle,
-                    isLoading: state is EmailVerificationStateLoading,
-                    enabled: (state is! EmailVerificationStateLoading) && (pin.length ==6),
-                    onSubmit: () {
-                      emailVerificationCubit.confirmVerificationCode(token: pin);
-                    },
-                    backgroundColor: AppColors.green,
-                    borderRadius: kDefaultSpacing * 0.5,
-                  ),
-                  kVerticalSpaceRegular,
+                    kVerticalSpaceLarge,
+                    LayoutBuilder(builder: (context, constr) {
+                      return PinCodeTextField(
+                        controller: pinEditingController,
+                        onChanged: (String value) {
+                          setState(() {
+                            pin = value;
 
-                ],
+                          });
+                          if (value.length < 6) {
+                            setState(() {
+                              isError = false;
+                            });
+                          }
+                        },
+                        length: 6,
+                        textStyle:
+                        kPrimaryTextStyle.copyWith(fontWeight: FontWeight.bold),
+                        pinTheme: PinTheme(
+                          shape: PinCodeFieldShape.box,
+                          borderWidth: 0.5,
+                          borderRadius: BorderRadius.circular(
+                            kDefaultSpacing * 0.5,
+                          ),
+                          fieldHeight: 70.h,
+                          fieldWidth: 55.w,
+                          inactiveColor: kGreenColor,
+                          // selectedColor: kGreenColor,
+                          activeColor: kPrimaryColor,
+                        ),
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        onCompleted: (str) async {
+                          emailVerificationCubit.confirmVerificationCode( token: str.trim());
+                        },
+                        appContext: context,
+                      );
+                    }),
+                    kVerticalSpaceRegular,
+                    Align(
+                      alignment: Alignment.center,
+                      child:  _timer.isActive
+                          ? RichText(
+                        text: TextSpan(children: [
+                          TextSpan(
+                              text: "Resend code in ",
+                              style: kDefaultTextStyle),
+                          TextSpan(
+                              text: " ${_start.toString()}",
+                              style: kBoldTextStyle)
+                        ]),
+                      ) : Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Didn't received code? ",
+                              style: kDefaultTextStyle.copyWith(
+                                fontSize: kDefaultSpacing.sp,
+                              ),
+                            ),
+                            TextSpan(
+                              text: "Resend",
+                              recognizer: TapGestureRecognizer()..onTap = () {
+                                _start = RESENDINTERVAL;
+                                pinEditingController.clear();
+                                emailVerificationCubit.sendVerificationCode(getUser().email);
+
+                              },
+                              style: kBoldTextStyle.copyWith(
+                                color: AppColors.green,
+                                fontSize: kDefaultSpacing.sp,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    kVerticalSpaceRegular,
+                    SubmitButton(
+                      text: "Confirm",
+                      textStyle: kBoldWhiteTextStyle,
+                      isLoading: state is EmailVerificationStateLoading,
+                      enabled: (state is! EmailVerificationStateLoading) && (pin.length ==6),
+                      onSubmit: () {
+                        emailVerificationCubit.confirmVerificationCode(token: pin);
+                      },
+                      backgroundColor: AppColors.green,
+                      borderRadius: kDefaultSpacing * 0.5,
+                    ),
+                    kVerticalSpaceRegular,
+
+                  ],
+                ),
               ),
             ),
           );

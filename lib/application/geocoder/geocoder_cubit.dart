@@ -9,7 +9,7 @@ class GeoCoderCubit extends Cubit<GeoCoderState> {
 
   Future<String> fetchAddressFromLongAndLat(
       {required double longitude, required double latitude}) async {
-    print("Fetching address for $longitude $latitude");
+    // print("Fetching address for $longitude $latitude");
 
     var location = l.Location(longitude: longitude, latitude: latitude);
     if (addresses.containsKey(location)) {

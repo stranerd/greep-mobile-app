@@ -88,7 +88,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
     return BlocConsumer<AuthenticationCubit, AuthenticationState>(
       listener: (context, state) {
         if (state is AuthenticationStateAuthenticated) {
-          g.Get.offAll(() => const AuthenticationSplashScreen(),transition: g.Transition.fadeIn);
+          g.Get.offAll(() => AuthenticationSplashScreen(isNewUser: state.isSignup,),transition: g.Transition.fadeIn);
         }
         if (state is AuthenticationStateError) {
           Fluttertoast.showToast(msg: state.errorMessage,);
@@ -212,6 +212,9 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
                                   backgroundColor: kGreenColor,
                                   onSubmit: _login, )
                               : BlocConsumer<SignupCubit, SignupState>(
+                            listenWhen: (_, __) {
+                              return ModalRoute.of(context)?.isCurrent ?? false;
+                            },
                                   listener: (context, state) {
                                     if (state is SignupStateReady){
                                       g.Get.to(() =>  AuthFinishSignup(email: email,password: password,),
