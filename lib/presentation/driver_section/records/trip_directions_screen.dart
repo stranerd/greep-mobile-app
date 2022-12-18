@@ -32,10 +32,26 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
   @override
   void initState() {
     tripDirectionBuilderCubit = getIt();
-    if (tripDirectionBuilderCubit.state is TripDirectionBuilderStateEndTrip){
-      Future.delayed(Duration.zero, () {
+    if (tripDirectionBuilderCubit.state is TripDirectionBuilderStateEndTrip) {
+      isGotTrip = true;
+      isStartTrip = true;
+      isEndTrip = true;
+      Future.delayed(Duration(seconds: 3), () {
         Get.off(const RecordTrip());
       });
+    }
+    if (tripDirectionBuilderCubit.state is TripDirectionBuilderStateStartTrip) {
+      {
+        isGotTrip = true;
+        isStartTrip = true;
+      }
+
+    }
+    if (tripDirectionBuilderCubit.state is TripDirectionBuilderStateGotTrip) {
+      {
+        isGotTrip = true;
+      }
+
     }
     super.initState();
   }
@@ -55,10 +71,8 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
               isGotTrip = true;
               isStartTrip = false;
               isEndTrip = false;
-            }
-            );
+            });
           });
-
         }
 
         if (state is TripDirectionBuilderStateStartTrip) {
@@ -68,21 +82,19 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
               isStartTrip = true;
             });
           });
-
         }
 
         if (state is TripDirectionBuilderStateEndTrip) {
           SchedulerBinding.instance.addPostFrameCallback((_) {
-
             // success = "Ended Trip!";
-          setState(() {
-            isEndTrip = true;
-          });
+            setState(() {
+              isEndTrip = true;
+            });
 
-          Future.delayed(const Duration(seconds: 3), () {
-            Get.back();
-            Get.to(() => const RecordTrip());
-          });
+            Future.delayed(const Duration(seconds: 3), () {
+              Get.back();
+              Get.to(() => const RecordTrip());
+            });
           });
         }
       },
@@ -689,35 +701,80 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
                     ),
                   ),
                   kVerticalSpaceMedium,
-                  if (!isEndTrip)LayoutBuilder(builder: (context, constraints) {
-                    if (state is TripDirectionBuilderStateStartTrip) {
+                  if (!isEndTrip)
+                    LayoutBuilder(builder: (context, constraints) {
+                      if (state is TripDirectionBuilderStateStartTrip) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SplashTap(
+                              onTap: () {
+                                tripDirectionBuilderCubit.endTrip();
+                                setState(() {
+                                  currStep = 2;
+                                });
+                              },
+                              child: Container(
+                                width: constraints.maxWidth,
+                                padding: const EdgeInsets.all(kDefaultSpacing),
+                                decoration: BoxDecoration(
+                                    color: AppColors.red,
+                                    borderRadius: BorderRadius.circular(
+                                        kDefaultSpacing * 0.5)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      "assets/icons/map_navigator.png",
+                                      scale: 3,
+                                    ),
+                                    kHorizontalSpaceTiny,
+                                    const TextWidget(
+                                      "End Trip",
+                                      weight: FontWeight.bold,
+                                      color: kWhiteColor,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
                       return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SplashTap(
+                          GestureDetector(
                             onTap: () {
-                              tripDirectionBuilderCubit.endTrip();
-                              setState(() {
-                                currStep = 2;
-                              });
+                              if (isGotTrip || isStartTrip) {
+                                tripDirectionBuilderCubit.cancelProgress(
+                                    isCompleted: false);
+                                isGotTrip = false;
+                                isStartTrip = false;
+                                isEndTrip = false;
+                                setState(() {});
+                              } else {
+                                Get.back();
+                              }
                             },
                             child: Container(
-                              width: constraints.maxWidth,
                               padding: const EdgeInsets.all(kDefaultSpacing),
                               decoration: BoxDecoration(
                                   color: AppColors.red,
                                   borderRadius: BorderRadius.circular(
                                       kDefaultSpacing * 0.5)),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Image.asset(
-                                    "assets/icons/map_navigator.png",
-                                    scale: 3,
+                                  Icon(
+                                    isGotTrip
+                                        ? Icons.close_outlined
+                                        : Icons.arrow_back_ios,
+                                    color: kWhiteColor,
+                                    size: 18.r,
                                   ),
                                   kHorizontalSpaceTiny,
-                                  const TextWidget(
-                                    "End Trip",
+                                  TextWidget(
+                                    isGotTrip ? "Cancel" : "Back",
                                     weight: FontWeight.bold,
                                     color: kWhiteColor,
                                   ),
@@ -725,116 +782,73 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
                               ),
                             ),
                           ),
+                          if (state is TripDirectionBuilderStateEndTrip ||
+                              state is TripDirectionBuilderStateInitial ||
+                              state is TripDirectionBuilderStateCompleted)
+                            SplashTap(
+                              onTap: () {
+                                tripDirectionBuilderCubit.gotTrip();
+                                setState(() {
+                                  currStep = 0;
+                                });
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(kDefaultSpacing),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      kDefaultSpacing * 0.5),
+                                  color: AppColors.blue,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      "assets/icons/map_navigator.png",
+                                      scale: 3,
+                                    ),
+                                    kHorizontalSpaceTiny,
+                                    const TextWidget(
+                                      "Got a trip",
+                                      weight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          if (state is TripDirectionBuilderStateGotTrip)
+                            SplashTap(
+                              onTap: () {
+                                tripDirectionBuilderCubit.startTrip();
+                                setState(() {
+                                  currStep = 1;
+                                });
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(kDefaultSpacing),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      kDefaultSpacing * 0.5),
+                                  color: AppColors.green,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      "assets/icons/map_navigator.png",
+                                      scale: 3,
+                                    ),
+                                    kHorizontalSpaceTiny,
+                                    const TextWidget(
+                                      "Start a trip",
+                                      weight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
                         ],
                       );
-                    }
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            if (isGotTrip || isStartTrip){
-                              tripDirectionBuilderCubit.cancelProgress(isCompleted: false);
-                              isGotTrip = false;
-                              isStartTrip = false;
-                              isEndTrip= false;
-                              setState(() {
-
-                              });
-                            }
-                            else {
-                              Get.back();
-                            }
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(kDefaultSpacing),
-                            decoration: BoxDecoration(
-                                color: AppColors.red,
-                                borderRadius: BorderRadius.circular(
-                                    kDefaultSpacing * 0.5)),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  isGotTrip ? Icons.close_outlined: Icons.arrow_back_ios ,
-                                  color: kWhiteColor,
-                                  size: 18.r,
-                                ),
-                                kHorizontalSpaceTiny,
-                                 TextWidget(
-                                  isGotTrip ? "Cancel": "Back",
-                                  weight: FontWeight.bold,
-                                  color: kWhiteColor,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        if (state is TripDirectionBuilderStateEndTrip ||
-                            state is TripDirectionBuilderStateInitial || state is TripDirectionBuilderStateCompleted)
-                          SplashTap(
-                            onTap: () {
-                              tripDirectionBuilderCubit.gotTrip();
-                              setState(() {
-                                currStep = 0;
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(kDefaultSpacing),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                    kDefaultSpacing * 0.5),
-                                color: AppColors.blue,
-                              ),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    "assets/icons/map_navigator.png",
-                                    scale: 3,
-                                  ),
-                                  kHorizontalSpaceTiny,
-                                  const TextWidget(
-                                    "Got a trip",
-                                    weight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        if (state is TripDirectionBuilderStateGotTrip)
-                          SplashTap(
-                            onTap: () {
-                              tripDirectionBuilderCubit.startTrip();
-                              setState(() {
-                                currStep = 1;
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(kDefaultSpacing),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                    kDefaultSpacing * 0.5),
-                                color: AppColors.green,
-                              ),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    "assets/icons/map_navigator.png",
-                                    scale: 3,
-                                  ),
-                                  kHorizontalSpaceTiny,
-                                  const TextWidget(
-                                    "Start a trip",
-                                    weight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                      ],
-                    );
-                  }),
+                    }),
                   kVerticalSpaceRegular
                 ],
               ),
