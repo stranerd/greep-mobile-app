@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:greep/application/geocoder/geocoder_cubit.dart';
 import 'package:greep/application/location/location.dart';
 import 'package:greep/application/response.dart';
 import 'package:greep/application/user/user_cubit.dart';
 import 'package:greep/domain/firebase/Firebase_service.dart';
 import 'package:greep/domain/user/model/User.dart';
 import 'package:greep/domain/user/user_client.dart';
+import 'package:greep/ioc.dart';
 import 'package:location/location.dart' as loc;
 
 import 'location_state.dart';
@@ -31,7 +33,7 @@ class LocationCubit extends Cubit<LocationState> {
 
   LocationCubit() : super(LocationStateUninitialized()) {
     subscribe();
-    timer = Timer.periodic(const Duration(hours: 10), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 10), (timer) {
       User user = GetIt.I<UserCubit>().user;
       updateUserLocation(user.id);
 
@@ -48,14 +50,18 @@ class LocationCubit extends Cubit<LocationState> {
       requestLocation();
     } else if (_serviceEnabled &&
         _permissionGranted == loc.PermissionStatus.granted) {
-      streamSubscription = _location.onLocationChanged.listen((locationData) {
+      streamSubscription = _location.onLocationChanged.listen((locationData) async {
         if (locationData.latitude != null && locationData.longitude != null) {
+          GeoCoderCubit geoCoder =getIt<GeoCoderCubit>();
+          String address = await geoCoder.fetchAddressFromLongAndLat(longitude: locationData.longitude ?? 0, latitude: locationData.latitude??0,);
           Location newLocation = Location(
             latitude: locationData.latitude!,
             longitude: locationData.longitude!,
+            address: address
           );
           _currLocation = newLocation;
           emit(LocationStateOn(newLocation));
+
         } else {
           _currLocation = Location.Zero();
           emit(LocationStateOff());

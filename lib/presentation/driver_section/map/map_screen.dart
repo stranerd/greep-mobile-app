@@ -92,8 +92,6 @@ class _MapScreenState extends State<MapScreen> {
       wayPoints.add(driverLocation.endDirection!.location);
     }
 
-    print("waypoints ${wayPoints.length}");
-
     var currLocation = Location(
       longitude: double.tryParse(driverLocation.longitude) ?? 0,
       latitude: double.tryParse(driverLocation.latitude) ?? 0,

@@ -19,6 +19,7 @@ class Location extends Equatable {
     return Location(
       longitude: double.parse(data["longitude"]),
       latitude: double.parse(data["latitude"]),
+      address: data["address"] ?? ""
     );
   }
 
@@ -26,6 +27,8 @@ class Location extends Equatable {
     return Location(
       longitude: map['longitude'] as double,
       latitude: map['latitude'] as double,
+        address: map["address"] ?? ""
+
     );
   }
 

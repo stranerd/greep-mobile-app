@@ -7,6 +7,7 @@ class DriverLocation {
   final String latitude;
   final String driverId;
   final String longitude;
+  final String address;
   final DateTime updatedAt;
   final DirectionProgress? gotDirection;
   final DirectionProgress? startDirection;
@@ -16,6 +17,7 @@ class DriverLocation {
     this.gotDirection,
     this.startDirection,
     this.endDirection,
+    required this.address,
     required this.latitude,
     required this.driverId,
     required this.longitude,
@@ -25,6 +27,7 @@ class DriverLocation {
 
   factory DriverLocation.fromServer(dynamic data) {
     return DriverLocation(
+      address: data["address"]??"",
       rideStatus: getType(
         data["rideStatus"] ?? "ended",
       ),
@@ -61,6 +64,7 @@ class DriverLocation {
   factory DriverLocation.zero() {
     return DriverLocation(
         latitude: "0",
+        address: "",
         driverId: "0",
         longitude: "0",
         rideStatus: RideStatus.ended,
@@ -82,6 +86,6 @@ class DriverLocation {
 
   @override
   String toString() {
-    return 'DriverLocation{rideStatus: $rideStatus, latitude: $latitude, driverId: $driverId, longitude: $longitude, updatedAt: $updatedAt, gotDirection: $gotDirection, startDirection: $startDirection, endDirection: $endDirection}';
+    return 'DriverLocation{rideStatus: $rideStatus,address: $address, latitude: $latitude, driverId: $driverId, longitude: $longitude, updatedAt: $updatedAt, gotDirection: $gotDirection, startDirection: $startDirection, endDirection: $endDirection}';
   }
 }

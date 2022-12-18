@@ -74,7 +74,7 @@ class IoC {
       authenticationService: _authenticationService,
     );
 
-    getIt.registerSingleton(TripDirectionBuilderCubit(
+    getIt.registerLazySingleton(() => TripDirectionBuilderCubit(
         locationCubit: getIt(),
       ),
     );

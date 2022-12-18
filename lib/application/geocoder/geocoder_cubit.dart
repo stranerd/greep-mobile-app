@@ -7,19 +7,21 @@ class GeoCoderCubit extends Cubit<GeoCoderState> {
   GeoCoderCubit() : super(GeoCoderStateUninitialized());
   Map<l.Location, String> addresses = {};
 
-  void fetchAddressFromLongAndLat(
+  Future<String> fetchAddressFromLongAndLat(
       {required double longitude, required double latitude}) async {
     print("Fetching address for $longitude $latitude");
 
     var location = l.Location(longitude: longitude, latitude: latitude);
     if (addresses.containsKey(location)) {
       emit(GeoCoderStateFetched(addresses[location]!));
+      return addresses[location]??"";
     }
     emit(GeoCoderStateLoading());
     List<Placemark> placemarks =
         await placemarkFromCoordinates(latitude, longitude);
     if (placemarks.isEmpty) {
       emit(GeoCoderStateFetched(""));
+      return "";
     }
 
     String address = "${placemarks[0].street}${placemarks[0].street!=null?",":""} ${placemarks[0].locality??""}${placemarks[0].locality!=null?",":""} ${placemarks[0].administrativeArea ??""}${placemarks[0].administrativeArea!=null?",":""} ${placemarks[0].country??""}";
@@ -31,5 +33,7 @@ class GeoCoderCubit extends Cubit<GeoCoderState> {
       );
     }
     emit(GeoCoderStateFetched(address));
+    return address;
   }
+
 }

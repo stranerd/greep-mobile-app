@@ -35,7 +35,7 @@ class DirectionProgress {
       'date': date.toString(),
       'speed': speed,
       'location': location.toMap(),
-      'duration': duration.inMinutes,
+      'duration': duration.inSeconds,
     };
   }
 
@@ -57,7 +57,7 @@ class DirectionProgress {
       'date': date,
       'speed': speed,
       'location': location.toMap(),
-      'duration': duration.inMinutes,
+      'duration': duration.inSeconds,
     };
   }
 
@@ -220,27 +220,21 @@ class TripDirectionBuilderCubit
     RideStatus status =
         json["rideStatus"]?.toString().rideStatusValue ?? RideStatus.ended;
     bool isRunning = json["isRunning"] ?? false;
-    print("isRunning $isRunning");
     if (isRunning) {
 
-      print("Getting state $status");
       DirectionProgress directionProgress =
           DirectionProgress.fromStorage(json["directionProgress"]);
-
-      print("Direction progress $directionProgress");
 
       Map<RideStatus, DirectionProgress> directions =
           (json["directions"] as Map<String, dynamic>).map(
         (key, value) {
           value = value as Map<String, dynamic>;
-          print("map value ${value}, map key $key");
           return MapEntry(
           key.rideStatusValue,
           DirectionProgress.fromStorage(value),
         );
         },
       );
-      print("Directions $directions");
       _directions = directions;
       _rideStatus = status;
 
@@ -254,14 +248,9 @@ class TripDirectionBuilderCubit
         state = TripDirectionBuilderStateEndTrip(
             directionProgress: directionProgress, directions: directions);
       }
-
-      print("state after is running $state");
     } else {
-      print("is not running");
       state =   TripDirectionBuilderStateInitial();
     }
-    print("generated state $state");
-    emit(state);
     return state;
   }
 
@@ -277,7 +266,6 @@ class TripDirectionBuilderCubit
       "directions": _directions
           .map((key, value) => MapEntry(key.value, value.toStorage()))
     };
-    print("¢¢¢ Saving Trip to json ${state.toString()} $map");
 
     return map;
   }

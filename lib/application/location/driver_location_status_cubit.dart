@@ -27,6 +27,7 @@ class DriverLocationStatusCubit extends Cubit<DriverLocationStatusState> {
             status: DriverLocation(
                 rideStatus: RideStatus.ended,
                 latitude: "",
+                address: "",
                 longitude: "",
                 driverId: userId,
                 updatedAt: DateTime.now().subtract(const Duration(hours: 1)))));

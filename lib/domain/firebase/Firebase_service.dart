@@ -92,6 +92,7 @@ class FirebaseApi {
           'rideStatus': RideStatus.ended.name,
           'latitude': location.latitude.toString(),
           'longitude': location.longitude.toString(),
+          'address': location.address.toString(),
           'updatedAt': DateTime.now(),
           'directions': directions.map(
             (key, value) => MapEntry(
@@ -107,6 +108,7 @@ class FirebaseApi {
             'longitude': location.longitude.toString(),
             'rideStatus': rideStatus.name,
             'updatedAt': DateTime.now(),
+            'address': location.address.toString(),
             'directions': directions.map(
               (key, value) => MapEntry(
                 key,

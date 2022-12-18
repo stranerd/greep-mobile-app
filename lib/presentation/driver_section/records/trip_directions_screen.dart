@@ -36,22 +36,17 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
       isGotTrip = true;
       isStartTrip = true;
       isEndTrip = true;
-      Future.delayed(Duration(seconds: 3), () {
-        Get.off(const RecordTrip());
-      });
     }
     if (tripDirectionBuilderCubit.state is TripDirectionBuilderStateStartTrip) {
       {
         isGotTrip = true;
         isStartTrip = true;
       }
-
     }
     if (tripDirectionBuilderCubit.state is TripDirectionBuilderStateGotTrip) {
       {
         isGotTrip = true;
       }
-
     }
     super.initState();
   }
@@ -89,11 +84,6 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
             // success = "Ended Trip!";
             setState(() {
               isEndTrip = true;
-            });
-
-            Future.delayed(const Duration(seconds: 3), () {
-              Get.back();
-              Get.to(() => const RecordTrip());
             });
           });
         }
@@ -243,49 +233,78 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                    BlocProvider.value(
-                                                      value: getIt<
-                                                          GeoCoderCubit>()
-                                                        ..fetchAddressFromLongAndLat(
-                                                            longitude: state
-                                                                .directionProgress
-                                                                .location
-                                                                .longitude,
-                                                            latitude: state
-                                                                .directionProgress
-                                                                .location
-                                                                .latitude),
-                                                      child: BlocBuilder<
-                                                          GeoCoderCubit,
-                                                          GeoCoderState>(
-                                                        builder: (context,
-                                                            geoState) {
-                                                          print(
-                                                              "Getting geo locate for end trip ${state.directionProgress}");
-
-                                                          return TextWidget(
-                                                            geoState
-                                                                    is GeoCoderStateFetched
-                                                                ? geoState
-                                                                        .address
-                                                                        .isEmpty
-                                                                    ? 'Loading address...'
-                                                                    : geoState
-                                                                        .address
-                                                                : 'Loading address...',
-                                                            softWrap: true,
-                                                            maxLines: 2,
-                                                            fontSize: 15,
-                                                            color: AppColors
-                                                                .veryLightGray,
-                                                          );
-                                                        },
-                                                      ),
-                                                    ),
+                                                    Builder(builder: (context) {
+                                                      String address = state
+                                                                  .directionProgress
+                                                                  .location
+                                                                  .address !=
+                                                              null
+                                                          ? state
+                                                                      .directionProgress
+                                                                      .location
+                                                                      .address
+                                                                      ?.isNotEmpty ??
+                                                                  false
+                                                              ? state
+                                                                  .directionProgress
+                                                                  .location
+                                                                  .address!
+                                                              : ""
+                                                          : "";
+                                                      if (address.isNotEmpty) {
+                                                        return TextWidget(
+                                                          address,
+                                                          softWrap: true,
+                                                          maxLines: 2,
+                                                          fontSize: 15,
+                                                          color: AppColors
+                                                              .veryLightGray,
+                                                        );
+                                                      }
+                                                      return BlocProvider.value(
+                                                        value: getIt<
+                                                            GeoCoderCubit>()
+                                                          ..fetchAddressFromLongAndLat(
+                                                              longitude: state
+                                                                  .directionProgress
+                                                                  .location
+                                                                  .longitude,
+                                                              latitude: state
+                                                                  .directionProgress
+                                                                  .location
+                                                                  .latitude),
+                                                        child: BlocBuilder<
+                                                            GeoCoderCubit,
+                                                            GeoCoderState>(
+                                                          builder: (context,
+                                                              geoState) {
+                                                            return TextWidget(
+                                                              geoState
+                                                                      is GeoCoderStateFetched
+                                                                  ? geoState
+                                                                          .address
+                                                                          .isEmpty
+                                                                      ? 'Loading address...'
+                                                                      : geoState
+                                                                          .address
+                                                                  : 'Loading address...',
+                                                              softWrap: true,
+                                                              maxLines: 2,
+                                                              fontSize: 15,
+                                                              color: AppColors
+                                                                  .veryLightGray,
+                                                            );
+                                                          },
+                                                        ),
+                                                      );
+                                                    }),
                                                     kVerticalSpaceRegular,
-                                                    Wrap(
-                                                      // mainAxisSize: MainAxisSize.min,
-                                                      // crossAxisAlignment: CrossAxisAlignment.center,
+                                                    Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
                                                       children: [
                                                         TextWidget(
                                                           "${state.directionProgress.speed.toString()} km/h",
@@ -319,18 +338,28 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
                                                                       .circle),
                                                         ),
                                                         kHorizontalSpaceSmall,
-                                                        TextWidget(
-                                                          timeago.format(
-                                                              DateTime.now()
-                                                                  .subtract(state
-                                                                      .directionProgress
-                                                                      .duration),
-                                                              allowFromNow:
-                                                                  true,
-                                                              locale:
-                                                                  'en_short'),
-                                                          fontSize: 14,
-                                                        ),
+                                                        Builder(
+                                                            builder: (context) {
+                                                          print(
+                                                              "duration ${state.directionProgress.duration.inSeconds}");
+                                                          return TextWidget(
+                                                            timeago.format(
+                                                                state
+                                                                    .directionProgress
+                                                                    .date
+                                                                    .add(state
+                                                                        .directionProgress
+                                                                        .duration),
+                                                                clock: state
+                                                                    .directionProgress
+                                                                    .date,
+                                                                allowFromNow:
+                                                                    true,
+                                                                locale:
+                                                                    'en_short'),
+                                                            fontSize: 14,
+                                                          );
+                                                        }),
                                                       ],
                                                     )
                                                   ])
@@ -425,44 +454,66 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      BlocProvider.value(
-                                                        value: getIt<
-                                                            GeoCoderCubit>()
-                                                          ..fetchAddressFromLongAndLat(
-                                                              longitude:
-                                                                  directionProgress
-                                                                      .location
-                                                                      .longitude,
-                                                              latitude:
-                                                                  directionProgress
-                                                                      .location
-                                                                      .latitude),
-                                                        child: BlocBuilder<
-                                                            GeoCoderCubit,
-                                                            GeoCoderState>(
-                                                          builder: (context,
-                                                              geoState) {
-                                                            print(
-                                                                "Getting geo locate for start trip ${directionProgress}");
-                                                            return TextWidget(
-                                                              geoState
-                                                                      is GeoCoderStateFetched
-                                                                  ? geoState
-                                                                          .address
-                                                                          .isEmpty
-                                                                      ? 'Loading address...'
-                                                                      : geoState
-                                                                          .address
-                                                                  : 'Loading address...',
-                                                              softWrap: true,
-                                                              maxLines: 2,
-                                                              fontSize: 15,
-                                                              color: AppColors
-                                                                  .veryLightGray,
-                                                            );
-                                                          },
-                                                        ),
-                                                      ),
+                                                      Builder(builder: (context) {
+                                                        String address = directionProgress
+                                                            .location
+                                                            .address !=
+                                                            null
+                                                            ? directionProgress
+                                                            .location
+                                                            .address
+                                                            ?.isNotEmpty ??
+                                                            false
+                                                            ? directionProgress
+                                                            .location
+                                                            .address!
+                                                            : ""
+                                                            : "";
+                                                        if (address.isNotEmpty) {
+                                                          return TextWidget(
+                                                            address,
+                                                            softWrap: true,
+                                                            maxLines: 2,
+                                                            fontSize: 15,
+                                                            color: AppColors
+                                                                .veryLightGray,
+                                                          );
+                                                        }
+                                                        return BlocProvider.value(
+                                                          value: getIt<
+                                                              GeoCoderCubit>()
+                                                            ..fetchAddressFromLongAndLat(
+                                                                longitude: directionProgress
+                                                                    .location
+                                                                    .longitude,
+                                                                latitude: directionProgress
+                                                                    .location
+                                                                    .latitude),
+                                                          child: BlocBuilder<
+                                                              GeoCoderCubit,
+                                                              GeoCoderState>(
+                                                            builder: (context,
+                                                                geoState) {
+                                                              return TextWidget(
+                                                                geoState
+                                                                is GeoCoderStateFetched
+                                                                    ? geoState
+                                                                    .address
+                                                                    .isEmpty
+                                                                    ? 'Loading address...'
+                                                                    : geoState
+                                                                    .address
+                                                                    : 'Loading address...',
+                                                                softWrap: true,
+                                                                maxLines: 2,
+                                                                fontSize: 15,
+                                                                color: AppColors
+                                                                    .veryLightGray,
+                                                              );
+                                                            },
+                                                          ),
+                                                        );
+                                                      }),
                                                       kVerticalSpaceRegular,
                                                       Row(
                                                         mainAxisSize:
@@ -504,7 +555,17 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
                                                           ),
                                                           kHorizontalSpaceSmall,
                                                           TextWidget(
-                                                            "${directionProgress.duration.inMinutes} m",
+                                                            timeago.format(
+                                                                directionProgress
+                                                                    .date
+                                                                    .add(directionProgress
+                                                                    .duration),
+                                                                clock: directionProgress
+                                                                    .date,
+                                                                allowFromNow:
+                                                                true,
+                                                                locale:
+                                                                'en_short'),
                                                             fontSize: 14,
                                                           ),
                                                         ],
@@ -604,42 +665,66 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      BlocProvider.value(
-                                                        value: getIt<
-                                                            GeoCoderCubit>()
-                                                          ..fetchAddressFromLongAndLat(
-                                                              longitude:
-                                                                  directionProgress
-                                                                      .location
-                                                                      .longitude,
-                                                              latitude:
-                                                                  directionProgress
-                                                                      .location
-                                                                      .latitude),
-                                                        child: BlocBuilder<
-                                                            GeoCoderCubit,
-                                                            GeoCoderState>(
-                                                          builder: (context,
-                                                              geoState) {
-                                                            return TextWidget(
-                                                              geoState
-                                                                      is GeoCoderStateFetched
-                                                                  ? geoState
-                                                                          .address
-                                                                          .isEmpty
-                                                                      ? 'Loading address...'
-                                                                      : geoState
-                                                                          .address
-                                                                  : 'Loading address...',
-                                                              softWrap: true,
-                                                              maxLines: 2,
-                                                              fontSize: 15,
-                                                              color: AppColors
-                                                                  .veryLightGray,
-                                                            );
-                                                          },
-                                                        ),
-                                                      ),
+                                                      Builder(builder: (context) {
+                                                        String address = directionProgress
+                                                            .location
+                                                            .address !=
+                                                            null
+                                                            ? directionProgress
+                                                            .location
+                                                            .address
+                                                            ?.isNotEmpty ??
+                                                            false
+                                                            ? directionProgress
+                                                            .location
+                                                            .address!
+                                                            : ""
+                                                            : "";
+                                                        if (address.isNotEmpty) {
+                                                          return TextWidget(
+                                                            address,
+                                                            softWrap: true,
+                                                            maxLines: 2,
+                                                            fontSize: 15,
+                                                            color: AppColors
+                                                                .veryLightGray,
+                                                          );
+                                                        }
+                                                        return BlocProvider.value(
+                                                          value: getIt<
+                                                              GeoCoderCubit>()
+                                                            ..fetchAddressFromLongAndLat(
+                                                                longitude: directionProgress
+                                                                    .location
+                                                                    .longitude,
+                                                                latitude: directionProgress
+                                                                    .location
+                                                                    .latitude),
+                                                          child: BlocBuilder<
+                                                              GeoCoderCubit,
+                                                              GeoCoderState>(
+                                                            builder: (context,
+                                                                geoState) {
+                                                              return TextWidget(
+                                                                geoState
+                                                                is GeoCoderStateFetched
+                                                                    ? geoState
+                                                                    .address
+                                                                    .isEmpty
+                                                                    ? 'Loading address...'
+                                                                    : geoState
+                                                                    .address
+                                                                    : 'Loading address...',
+                                                                softWrap: true,
+                                                                maxLines: 2,
+                                                                fontSize: 15,
+                                                                color: AppColors
+                                                                    .veryLightGray,
+                                                              );
+                                                            },
+                                                          ),
+                                                        );
+                                                      }),
                                                       kVerticalSpaceSmall,
                                                       Row(
                                                         mainAxisSize:
@@ -680,8 +765,8 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
                                                                         .circle),
                                                           ),
                                                           kHorizontalSpaceSmall,
-                                                          TextWidget(
-                                                            "${directionProgress.duration.inMinutes} m",
+                                                          const TextWidget(
+                                                            "0m",
                                                             fontSize: 14,
                                                           ),
                                                         ],
@@ -758,6 +843,7 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
                               }
                             },
                             child: Container(
+                              width: constraints.maxWidth * 0.45,
                               padding: const EdgeInsets.all(kDefaultSpacing),
                               decoration: BoxDecoration(
                                   color: AppColors.red,
@@ -770,7 +856,7 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
                                         ? Icons.close_outlined
                                         : Icons.arrow_back_ios,
                                     color: kWhiteColor,
-                                    size: 18.r,
+                                    size: 25.r,
                                   ),
                                   kHorizontalSpaceTiny,
                                   TextWidget(
@@ -793,6 +879,7 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
                                 });
                               },
                               child: Container(
+                                width: constraints.maxWidth * 0.45,
                                 padding: const EdgeInsets.all(kDefaultSpacing),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(
@@ -824,6 +911,7 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
                                 });
                               },
                               child: Container(
+                                width: constraints.maxWidth * 0.45,
                                 padding: const EdgeInsets.all(kDefaultSpacing),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(
@@ -849,6 +937,74 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
                         ],
                       );
                     }),
+                  if (isEndTrip)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            tripDirectionBuilderCubit.cancelProgress(
+                                isCompleted: false);
+                            isGotTrip = false;
+                            isStartTrip = false;
+                            isEndTrip = false;
+                            setState(() {});
+                          },
+                          child: Container(
+                            width: constraints.maxWidth * 0.46,
+                            padding: const EdgeInsets.all(kDefaultSpacing),
+                            decoration: BoxDecoration(
+                                color: AppColors.red,
+                                borderRadius: BorderRadius.circular(
+                                    kDefaultSpacing * 0.5)),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.close_outlined,
+                                  color: kWhiteColor,
+                                  size: 25.r,
+                                ),
+                                kHorizontalSpaceTiny,
+                                const TextWidget(
+                                  "Cancel",
+                                  weight: FontWeight.bold,
+                                  color: kWhiteColor,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SplashTap(
+                          onTap: () {
+                            Get.back();
+                            Get.to(() => const RecordTrip());
+                          },
+                          child: Container(
+                            width: constraints.maxWidth * 0.47,
+                            padding: const EdgeInsets.all(kDefaultSpacing),
+                            decoration: BoxDecoration(
+                                color: AppColors.green,
+                                borderRadius: BorderRadius.circular(
+                                    kDefaultSpacing * 0.5)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  "assets/icons/map_navigator.png",
+                                  scale: 3,
+                                ),
+                                kHorizontalSpaceTiny,
+                                const TextWidget(
+                                  "Record Trip",
+                                  weight: FontWeight.bold,
+                                  color: kWhiteColor,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   kVerticalSpaceRegular
                 ],
               ),
