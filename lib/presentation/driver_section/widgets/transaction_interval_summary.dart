@@ -28,7 +28,6 @@ class TransactionIntervalSummaryWidget extends StatelessWidget {
               TransactionSummaryCubit>()
               .calculateInterval(DateTime(from.year, from.month, from.day), to);
 
-
           return TransactionSummaryBuilder(
               transactionSummary: transactionSummary);
         }

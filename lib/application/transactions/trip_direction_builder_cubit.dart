@@ -215,7 +215,6 @@ class TripDirectionBuilderCubit
 
   @override
   TripDirectionBuilderState? fromJson(Map<String, dynamic> json) {
-    print("¢¢¢ Generating Transaction from json $json ");
     late TripDirectionBuilderState state;
     RideStatus status =
         json["rideStatus"]?.toString().rideStatusValue ?? RideStatus.ended;

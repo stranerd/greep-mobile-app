@@ -37,9 +37,11 @@ class _RangeTransactionsScreenState extends State<RangeTransactionsScreen> {
 
   @override
   void initState() {
+    var from = widget.from;
+    var to = widget.to;
     transactions = GetIt.I<TransactionSummaryCubit>().filterTransactions(
-      widget.from,
-      widget.to,
+      DateTime(from.year,from.month,from.day,0,0,0),
+      DateTime(to.year,to.month,to.day + 1),
     );
 
     transactionSummary =

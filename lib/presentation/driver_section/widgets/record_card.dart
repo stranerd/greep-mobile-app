@@ -84,7 +84,7 @@ class _RecordCardState extends State<RecordCard> {
               children: [
                 TextWidget(
                   widget.initial,
-                  fontSize: 15,
+                  fontSize: 17,
                   style: widget.titleStyle,
                 ),
                 if (widget.withSymbol)
@@ -95,7 +95,7 @@ class _RecordCardState extends State<RecordCard> {
                   ),
                 TextWidget(
                   widget.title,
-                  fontSize: 16,
+                  fontSize: 17,
                   style: widget.titleStyle,
                   overflow: TextOverflow.ellipsis,
                 ),

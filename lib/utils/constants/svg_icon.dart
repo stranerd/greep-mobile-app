@@ -15,7 +15,7 @@ class SvgAssets {
   static final SvgData settingsActive =
       SvgData('assets/icons/settings-active.svg');
 
-  static final SvgData mapActive = SvgData("assets/icons/map.svg");
+  static final SvgData mapActive = SvgData("assets/icons/location.png");
 
 }
 
@@ -41,7 +41,13 @@ class SvgIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.asset(
+    return svgIcon.data.endsWith(".png") ?Image.asset(
+      svgIcon.data,
+      color: noColor == true
+          ? null
+          : color ?? Theme.of(context).textTheme.bodyText1!.color,
+      height: size,
+    ) :  SvgPicture.asset(
       svgIcon.data,
       color: noColor == true
           ? null
