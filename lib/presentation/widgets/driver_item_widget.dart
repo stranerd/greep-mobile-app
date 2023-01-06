@@ -43,7 +43,7 @@ class DriverItemWidget extends StatelessWidget {
               ),
               Positioned(
                 bottom: 0,
-                right: 0,
+                right: 5.w,
                 child: DriverLocationStatusWidget(
                   userId: id,
                 ),

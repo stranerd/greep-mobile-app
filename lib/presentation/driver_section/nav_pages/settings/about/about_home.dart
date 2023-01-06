@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:greep/commons/colors.dart';
+import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/presentation/driver_section/widgets/settings_home_item.dart';
+import 'package:greep/presentation/widgets/splash_tap.dart';
+import 'package:greep/presentation/widgets/text_widget.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:upgrader/upgrader.dart';
 
 import '../../../../../utils/constants/app_styles.dart';
 import 'privacy_policy.dart';
@@ -11,6 +19,7 @@ class AboutHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -18,7 +27,8 @@ class AboutHome extends StatelessWidget {
         leading: IconButton(
             onPressed: () {
               Get.back();
-            }, icon: const Icon(Icons.arrow_back_ios, size: 16)),
+            },
+            icon: const Icon(Icons.arrow_back_ios, size: 16)),
         title: Text(
           "About",
           style: AppTextStyles.blackSizeBold14,
@@ -31,58 +41,61 @@ class AboutHome extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
           child: Column(
             children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const PrivacyPolicy(),
-                    ),
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: kLightGrayColor,
-                  ),
-                  child: Row(
-                    children: [
-                      Text("Privacy policy", style: AppTextStyles.blackSize16),
-                      const Spacer(),
-                      const Icon(Icons.arrow_forward_ios, size: 16),
-                    ],
-                  ),
+              kVerticalSpaceLarge,
+              Center(
+                child: Image.asset(
+                  "assets/images/about_greep.png",
+                  scale: 2,
                 ),
               ),
-              const SizedBox(height: 16),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const TermsAndConditions(),
-                    ),
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: kLightGrayColor,
-                  ),
-                  child: Row(
-                    children: [
-                      Text("Terms & Conditions",
-                          style: AppTextStyles.blackSize16),
-                      const Spacer(),
-                      const Icon(Icons.arrow_forward_ios, size: 16),
-                    ],
-                  ),
-                ),
+              kVerticalSpaceRegular,
+              FutureBuilder<PackageInfo>(
+                  future: PackageInfo.fromPlatform(),
+                  builder: (c,s){
+                    if (s.hasData){
+                return TextWidget("v${s.data?.version} (${s.data?.buildNumber})");}
+                    return SizedBox();
+              }),
+              kVerticalSpaceLarge,
+              SplashTap(
+                onTap: () {},
+                child: const SettingsHomeItem(
+                    title: "Like us on Facebook ", icon: "assets/icons/fb.svg"),
               ),
+              kVerticalSpaceSmall,
+              SplashTap(
+                onTap: () {
+                  // Get.to(() => const AboutHome());
+                },
+                child: const SettingsHomeItem(
+                    title: "Follow us on Twitter",
+                    icon: "assets/icons/twitter.svg"),
+              ),
+              SizedBox(height: 8.h),
+              SplashTap(
+                onTap: () {
+                  // Get.to(() => const ContactUs());
+                },
+                child: const SettingsHomeItem(
+                    title: "Join us on Telegram",
+                    icon: "assets/icons/telegram.svg"),
+              ),
+              kVerticalSpaceLarge,
+              kVerticalSpaceLarge,
+
+              Divider(),
+              ListTile(
+                onTap: (){
+
+                },
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                leading: SvgPicture.asset("assets/icons/updates.svg"),
+                title: TextWidget(
+                  "Check for updates",
+                ),
+                subtitle: TextWidget( Upgrader().isUpdateAvailable() ? "You have a new update":"Your current version is up to date."),
+              )
             ],
           ),
         ),

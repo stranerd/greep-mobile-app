@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:greep/Commons/colors.dart';
 import 'package:greep/application/auth/AuthenticationCubit.dart';
 import 'package:greep/application/auth/AuthenticationState.dart';
 import 'package:greep/application/driver/drivers_cubit.dart';
@@ -10,11 +11,14 @@ import 'package:greep/application/user/user_cubit.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/presentation/driver_section/add_driver_screen.dart';
 import 'package:greep/presentation/driver_section/drivers/drivers_screen.dart';
+import 'package:greep/presentation/driver_section/nav_pages/settings/about/privacy_policy.dart';
+import 'package:greep/presentation/driver_section/nav_pages/settings/about/terms_and_conditions.dart';
 import 'package:greep/presentation/driver_section/nav_pages/settings/commission/total_income.dart';
 import 'package:greep/presentation/driver_section/widgets/settings_home_item.dart';
 import 'package:greep/presentation/splash/splash.dart';
 import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
+import 'package:greep/utils/constants/app_colors.dart';
 import 'package:greep/utils/constants/app_styles.dart';
 
 import 'about/about_home.dart';
@@ -126,10 +130,36 @@ class SettingsHome extends StatelessWidget {
                     ),
                     SplashTap(
                       onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const PrivacyPolicy(),
+                          ),
+                        );
+                      },
+                      child: const SettingsHomeItem(
+                          title: "Privacy Policy", icon: "assets/icons/privacy.svg"),
+                    ),
+                    kVerticalSpaceSmall,
+                    SplashTap(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TermsAndConditions(),
+                          ),
+                        );
+                      },
+                      child: const SettingsHomeItem(
+                          title: "Services Agreement", icon: "assets/icons/terms.svg"),
+                    ),
+                    kVerticalSpaceSmall,
+                    SplashTap(
+                      onTap: () {
                         Get.to(() => const AboutHome());
                       },
                       child: const SettingsHomeItem(
-                          title: "About", icon: "assets/icons/info.svg"),
+                          title: "About Us", icon: "assets/icons/info.svg"),
                     ),
                      SizedBox(height: 8.h),
                     SplashTap(
@@ -142,13 +172,20 @@ class SettingsHome extends StatelessWidget {
                           icon: "assets/icons/headphones.svg"),
                     ),
                     kVerticalSpaceLarge,
-                    kVerticalSpaceLarge,
-                    TextButton(
-                        onPressed: signout,
-                        child: TextWidget(
-                          "Sign Out",
-                          style: kErrorColorTextStyle,
-                        ))
+                    Divider(),
+                    kVerticalSpaceRegular,
+                    Container(
+                      padding: EdgeInsets.only(left: 10.w),
+                      alignment: Alignment.centerLeft,
+                      child: GestureDetector(
+                          onTap: () => signout(context),
+                          child: TextWidget(
+
+                            "Sign Out",
+                            textAlign: TextAlign.left,
+                            style: kErrorColorTextStyle,
+                          )),
+                    )
                   ],
                 );
               },
@@ -159,7 +196,84 @@ class SettingsHome extends StatelessWidget {
     );
   }
 
-  void signout() {
-    GetIt.I<AuthenticationCubit>().signout();
+  void signout(context) async{
+    bool shouldDelete = await showDialog<bool?>(
+        barrierDismissible: true,
+        context: context,
+        builder: (context) {
+          return Dialog(
+              child: Container(
+                padding:
+                const EdgeInsets.all(kDefaultSpacing),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Are you sure you want sign out?",
+                      softWrap: true,
+                      textAlign: TextAlign.center,
+                      style: kDefaultTextStyle.copyWith(
+                          height: 1.35),
+                    ),
+                    kVerticalSpaceRegular,
+                    kVerticalSpaceLarge,
+                    Flexible(
+                      child: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            child: TextButton(
+                                style: TextButton.styleFrom(
+                                    padding:
+                                    EdgeInsets.zero,
+                                    backgroundColor:
+                                    kPrimaryColor,
+                                    minimumSize:
+                                    const Size(150, 50)),
+                                onPressed: () {
+                                  Get.back(result: false);
+                                },
+                                child: Text(
+                                  "Cancel",
+                                  style: kBoldTextStyle
+                                      .copyWith(
+                                      color:
+                                      kWhiteColor),
+                                )),
+                          ),
+                          kHorizontalSpaceSmall,
+                          Flexible(
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                  backgroundColor:
+                                  AppColors.red,
+                                  minimumSize:
+                                  const Size(150, 50)),
+                              child: Text(
+                                "Sign out",
+                                style: kWhiteTextStyle,
+                              ),
+                              onPressed: () {
+                                Get.back(result: true);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ));
+        }) ??
+        false;
+
+    if (shouldDelete) {
+      GetIt.I<AuthenticationCubit>().signout();
+
+  } else {
+  Get.back();
+  }
   }
 }
