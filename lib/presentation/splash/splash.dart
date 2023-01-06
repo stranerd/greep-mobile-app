@@ -5,6 +5,7 @@ import 'package:greep/application/auth/AuthenticationCubit.dart';
 import 'package:greep/commons/colors.dart';
 import 'package:greep/presentation/auth/home/auth_home.dart';
 import 'package:greep/presentation/auth/onboarding/OnboardingSlides.dart';
+import 'package:greep/presentation/auth/onboarding/OnboardingSlides2.dart';
 import 'package:greep/presentation/driver_section/home_page.dart';
 import 'package:greep/presentation/driver_section/nav_pages/nav_bar/nav_bar_view.dart';
 import 'package:greep/presentation/splash/authentication_splash.dart';
@@ -63,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> loadApp() async {
     // print("isfirst time: $isFirstTime");
     if (isFirstTime) {
-      Get.offAll(() => const OnboardingSlides());
+      Get.offAll(() => const OnboardingSlides2());
       return;
     }
 
