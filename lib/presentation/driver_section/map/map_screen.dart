@@ -43,14 +43,6 @@ class _MapScreenState extends State<MapScreen> {
   double defaultLat = 9.064246972613308;
   double defaultLong = 7.424030426684654;
 
-  // static const CameraPosition _grandCubana = CameraPosition(
-  //   target: LatLng(
-  //     9.064246972613308,
-  //     7.424030426684654,
-  //   ),
-  //   zoom: 15,
-  // );
-
   String? userId;
 
   Directions? directions;
@@ -118,77 +110,78 @@ class _MapScreenState extends State<MapScreen> {
                       DriverLocationStatusState>(
                     listener: (context, locationState) async {
                       if (locationState is DriverLocationStatusStateFetched) {
+                        print("driver location found ${locationState.status}");
                         rideStatus = locationState.status.rideStatus;
                         var mapController = await _controller.future;
                         currentLocationMarker = Marker(
                           markerId: const MarkerId("Driver"),
                           position: LatLng(
                             double.parse(locationState.status.latitude),
-                            double.parse(locationState.status.latitude),
+                            double.parse(locationState.status.longitude),
                           ),
                           infoWindow: const InfoWindow(
                             title: "Driver",
                           ),
                           icon: await BitmapDescriptor.fromAssetImage(ImageConfiguration(), "assets/icons/map_pin_1x.png")
                         );
-                        print("Update current location marker");
+                        // print("Update current location marker");
 
                         if (locationState.status.gotDirection != null) {
-                          // gotTripMarker = Marker(
-                          //   markerId: const MarkerId("Got Trip"),
-                          //   position: LatLng(
-                          //     locationState
-                          //             .status.gotDirection?.location.latitude ??
-                          //         defaultLat,
-                          //     locationState.status.startDirection?.location
-                          //             .longitude ??
-                          //         defaultLong,
-                          //   ),
-                          //   infoWindow: const InfoWindow(
-                          //     title: "Got Trip",
-                          //   ),
-                          //   icon: BitmapDescriptor.defaultMarkerWithHue(
-                          //     BitmapDescriptor.hueBlue,
-                          //   ),
-                          // );
+                          gotTripMarker = Marker(
+                            markerId: const MarkerId("Got Trip"),
+                            position: LatLng(
+                              locationState
+                                      .status.gotDirection?.location.latitude ??
+                                  0,
+                              locationState.status.startDirection?.location
+                                      .longitude ??
+                                  0,
+                            ),
+                            infoWindow: const InfoWindow(
+                              title: "Got Trip",
+                            ),
+                            icon: BitmapDescriptor.defaultMarkerWithHue(
+                              BitmapDescriptor.hueBlue,
+                            ),
+                          );
                         }
                         if (locationState.status.startDirection != null) {
-                          // startTripMarker = Marker(
-                          //   markerId: const MarkerId("Start Trip"),
-                          //   position: LatLng(
-                          //     locationState.status.startDirection?.location
-                          //             .latitude ??
-                          //         defaultLat,
-                          //     locationState.status.startDirection?.location
-                          //             .longitude ??
-                          //         defaultLong,
-                          //   ),
-                          //   infoWindow: const InfoWindow(
-                          //     title: "Start Trip",
-                          //   ),
-                          //   icon: BitmapDescriptor.defaultMarkerWithHue(
-                          //     BitmapDescriptor.hueGreen,
-                          //   ),
-                          // );
+                          startTripMarker = Marker(
+                            markerId: const MarkerId("Start Trip"),
+                            position: LatLng(
+                              locationState.status.startDirection?.location
+                                      .latitude ??
+                                  0,
+                              locationState.status.startDirection?.location
+                                      .longitude ??
+                                  0,
+                            ),
+                            infoWindow: const InfoWindow(
+                              title: "Start Trip",
+                            ),
+                            icon: BitmapDescriptor.defaultMarkerWithHue(
+                              BitmapDescriptor.hueGreen,
+                            ),
+                          );
                         }
                         if (locationState.status.endDirection != null) {
-                          // endTripMarker = Marker(
-                          //   markerId: const MarkerId("End Trip"),
-                          //   position: LatLng(
-                          //     locationState
-                          //             .status.endDirection?.location.latitude ??
-                          //         defaultLat,
-                          //     locationState.status.endDirection?.location
-                          //             .longitude ??
-                          //         defaultLong,
-                          //   ),
-                          //   infoWindow: const InfoWindow(
-                          //     title: "End Trip",
-                          //   ),
-                          //   icon: BitmapDescriptor.defaultMarkerWithHue(
-                          //     BitmapDescriptor.hueRed,
-                          //   ),
-                          // );
+                          endTripMarker = Marker(
+                            markerId: const MarkerId("End Trip"),
+                            position: LatLng(
+                              locationState
+                                      .status.endDirection?.location.latitude ??
+                                  0,
+                              locationState.status.endDirection?.location
+                                      .longitude ??
+                                  0,
+                            ),
+                            infoWindow: const InfoWindow(
+                              title: "End Trip",
+                            ),
+                            icon: BitmapDescriptor.defaultMarkerWithHue(
+                              BitmapDescriptor.hueRed,
+                            ),
+                          );
                         }
 
                         setState(() {});
@@ -218,7 +211,7 @@ class _MapScreenState extends State<MapScreen> {
                       }
                     },
                     builder: (context, locationState) {
-                      print(locationState);
+                      // print(locationState);
                       Set<Marker> markers = {};
                       if (currentLocationMarker !=null){
                         markers.add(currentLocationMarker!);
