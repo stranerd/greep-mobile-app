@@ -297,7 +297,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
   Map<DateTime, CommissionSummary> getManagerTotalWeeklyCommissions() {
     String userId = getSelectedUserId();
     List<DriverCommission> driverCommissions = userId == currentUser().id
-        ? [DriverCommission(driverId: userId, commission: 1)]
+        ? [DriverCommission(driverId: userId, commission: currentUser().commission??1)]
         : GetIt.I<ManagerDriversCubit>()
             .driverCommissions
             .where((element) => element.driverId == userId)
@@ -390,7 +390,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
   Map<DateTime, CommissionSummary> getManagerTotalDailyCommissions() {
     String userId = getSelectedUserId();
     List<DriverCommission> driverCommissions = userId == currentUser().id
-        ? [DriverCommission(driverId: userId, commission: 1)]
+        ? [DriverCommission(driverId: userId, commission: currentUser().commission??1)]
         : GetIt.I<ManagerDriversCubit>()
             .driverCommissions
             .where((element) => element.driverId == userId)
@@ -440,7 +440,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
   Map<DateTime, CommissionSummary> getManagerTotalMonthlyCommissions() {
     String userId = getSelectedUserId();
     List<DriverCommission> driverCommissions = userId == currentUser().id
-        ? [DriverCommission(driverId: userId, commission: 1)]
+        ? [DriverCommission(driverId: userId, commission: currentUser().commission??1)]
         : GetIt.I<ManagerDriversCubit>()
         .driverCommissions
         .where((element) => element.driverId == userId)
@@ -492,7 +492,7 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
   CommissionSummary getManagerDriverTotalIncome(){
     String userId = getSelectedUserId();
     DriverCommission driverCommissions = userId == currentUser().id
-        ? DriverCommission(driverId: userId, commission: 1)
+        ? DriverCommission(driverId: userId, commission: currentUser().commission??1)
         : GetIt.I<ManagerDriversCubit>()
         .driverCommissions
         .firstWhere((element) => element.driverId == userId)

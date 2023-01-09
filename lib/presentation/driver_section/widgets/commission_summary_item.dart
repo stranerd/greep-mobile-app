@@ -66,7 +66,7 @@ class CommissionSummaryItem extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextWidget(day, style: AppTextStyles.blackSizeBold16),
+        TextWidget(day, style: AppTextStyles.blackSizeBold14),
         const SizedBox(height: 8),
         Container(
           width: double.infinity,
