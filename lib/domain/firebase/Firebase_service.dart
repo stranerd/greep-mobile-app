@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:greep/application/location/location.dart';
 import 'package:greep/application/transactions/trip_direction_builder_cubit.dart';
+import 'package:greep/application/user/user_util.dart';
 import 'package:greep/domain/user/model/ride_status.dart';
 
 class FirebaseApi {
@@ -82,14 +83,17 @@ class FirebaseApi {
       {required String driverId,
       required Location location,
       RideStatus rideStatus = RideStatus.ended,
-      Map<String, DirectionProgress?> directions = const {}}) async {
+      Map<String, DirectionProgress?> directions = const {},
+  bool softUpdate = false}
+  ) async {
+    print("Updating driver location, rideStatus: ${rideStatus.name}, ${getUser().fullName}");
     final collection = FirebaseFirestore.instance.collection('DriverLocation');
     var future = collection.where("driverId", isEqualTo: driverId).get();
     future.then((value) async {
       if (value.docs.isEmpty) {
         await collection.doc().set({
           'driverId': driverId,
-          'rideStatus': RideStatus.ended.name,
+          'rideStatus': rideStatus.name,
           'latitude': location.latitude.toString(),
           'longitude': location.longitude.toString(),
           'address': location.address.toString(),
@@ -103,18 +107,24 @@ class FirebaseApi {
         });
       } else {
         value.docs.forEach((element) {
+          Map<String, dynamic> fullUpdate = {};
+          if (!softUpdate){
+            fullUpdate = {
+              'rideStatus': rideStatus.name,
+              'directions': directions.map(
+                    (key, value) => MapEntry(
+                  key,
+                  value?.toMap(),
+                ),
+              )
+            };
+          }
           element.reference.update({
             'latitude': location.latitude.toString(),
             'longitude': location.longitude.toString(),
-            'rideStatus': rideStatus.name,
             'updatedAt': DateTime.now(),
             'address': location.address.toString(),
-            'directions': directions.map(
-              (key, value) => MapEntry(
-                key,
-                value?.toMap(),
-              ),
-            )
+            ...fullUpdate
           });
         });
       }

@@ -106,7 +106,7 @@ class LocationCubit extends Cubit<LocationState> {
 
   Future<void> updateUserLocation(String userId,
       {Location? location}) async {
-      await FirebaseApi.updateDriverLocation(driverId: userId, location: _currLocation);
+      await FirebaseApi.updateDriverLocation(driverId: userId, location: _currLocation, softUpdate: true);
        // print("$_currLocation location update ");
     }
 
