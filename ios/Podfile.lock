@@ -617,6 +617,8 @@ PODS:
     - ReachabilitySwift
   - device_info_plus (0.0.1):
     - Flutter
+  - esys_flutter_share_plus (0.0.1):
+    - Flutter
   - Firebase/Auth (9.5.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 9.5.0)
@@ -840,6 +842,7 @@ DEPENDENCIES:
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
+  - esys_flutter_share_plus (from `.symlinks/plugins/esys_flutter_share_plus/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
@@ -903,6 +906,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/connectivity_plus/ios"
   device_info_plus:
     :path: ".symlinks/plugins/device_info_plus/ios"
+  esys_flutter_share_plus:
+    :path: ".symlinks/plugins/esys_flutter_share_plus/ios"
   firebase_auth:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
@@ -963,6 +968,7 @@ SPEC CHECKSUMS:
   cloud_firestore: bed9432d72bb357aa33e864fd4d5b7c2f0e098d0
   connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
   device_info_plus: e5c5da33f982a436e103237c0c85f9031142abed
+  esys_flutter_share_plus: 302b73471e2686a9ce282898d1df5d6f4382edba
   Firebase: 800f16f07af493d98d017446a315c27af0552f41
   firebase_auth: 29485cbf2b2c5f0710f7c5dc3fa490736d70a675
   firebase_core: c266297725f66cacd7eac30745cd1a629d3b048b

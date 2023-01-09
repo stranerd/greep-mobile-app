@@ -19,6 +19,7 @@ dependencies:
   device_preview:
   dio: ^4.0.6
   equatable: ^2.0.3
+  esys_flutter_share_plus: ^2.2.0
   firebase_auth:
   fl_chart: ^0.55.2
   flutter_bloc: ^8.1.1

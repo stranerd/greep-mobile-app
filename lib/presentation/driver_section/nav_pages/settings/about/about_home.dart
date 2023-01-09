@@ -54,7 +54,7 @@ class AboutHome extends StatelessWidget {
                   builder: (c,s){
                     if (s.hasData){
                 return TextWidget("v${s.data?.version} (${s.data?.buildNumber})");}
-                    return SizedBox();
+                    return const SizedBox();
               }),
               kVerticalSpaceLarge,
               SplashTap(
@@ -83,7 +83,7 @@ class AboutHome extends StatelessWidget {
               kVerticalSpaceLarge,
               kVerticalSpaceLarge,
 
-              Divider(),
+              const Divider(),
               ListTile(
                 onTap: (){
 
@@ -91,7 +91,7 @@ class AboutHome extends StatelessWidget {
                 dense: true,
                 contentPadding: EdgeInsets.zero,
                 leading: SvgPicture.asset("assets/icons/updates.svg"),
-                title: TextWidget(
+                title: const TextWidget(
                   "Check for updates",
                 ),
                 subtitle: TextWidget( Upgrader().isUpdateAvailable() ? "You have a new update":"Your current version is up to date."),

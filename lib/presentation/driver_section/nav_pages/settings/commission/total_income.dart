@@ -9,6 +9,7 @@ import 'package:greep/application/transactions/response/commission_summary.dart'
 import 'package:greep/application/transactions/response/customer_summary.dart';
 import 'package:greep/application/transactions/transaction_summary_cubit.dart';
 import 'package:greep/application/user/user_cubit.dart';
+import 'package:greep/application/user/user_util.dart';
 import 'package:greep/commons/Utils/utils.dart';
 import 'package:greep/commons/money.dart';
 import 'package:greep/commons/ui_helpers.dart';
@@ -216,7 +217,6 @@ class _TotalIncomeState extends State<TotalIncome> {
                                       separatorBuilder: (_, __) =>
                                           kVerticalSpaceRegular,
                                       itemCount: commissions.length,
-                                      shrinkWrap: false,
                                       physics: const BouncingScrollPhysics(),
                                       itemBuilder: (c, i) {
                                         CommissionSummary summary = commissions[
