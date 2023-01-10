@@ -44,8 +44,6 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
 
   @override
   void initState() {
-    BlocProvider.of<LocationCubit>(context).requestLocation();
-
     _tapGestureRecognizer = TapGestureRecognizer()
       ..onTap = () {
         setState(() {

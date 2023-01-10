@@ -81,11 +81,16 @@ class _SplashScreenState extends State<AuthenticationSplashScreen> {
                             color: AppColors.lightBlue,
                           ),
                           GestureDetector(
-                            onTap: () {
-                              locationCubit.subscribe();
+                            onTap: () async{
+                              var isOn = await locationCubit.subscribe();
+                              if (isOn) {
+                                locationCubit.emitOn();
+                              }
+                              else {
+                              }
                               g.Get.back();
                               g.Get.offAll(
-                                () => const NavBarView(),
+                                    () => const NavBarView(),
                                 transition: g.Transition.fadeIn,
                               );
                             },
