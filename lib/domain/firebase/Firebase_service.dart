@@ -86,7 +86,6 @@ class FirebaseApi {
       Map<String, DirectionProgress?> directions = const {},
   bool softUpdate = false}
   ) async {
-    print("Updating driver location, rideStatus: ${rideStatus.name}, ${getUser().fullName}");
     final collection = FirebaseFirestore.instance.collection('DriverLocation');
     var future = collection.where("driverId", isEqualTo: driverId).get();
     future.then((value) async {

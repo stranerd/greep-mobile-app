@@ -41,8 +41,11 @@ class LocationCubit extends Cubit<LocationState> {
   }
 
   void subscribe() async {
+    print("asking for location service");
     _serviceEnabled = await _location.serviceEnabled();
     _permissionGranted = await _location.hasPermission();
+    print(_serviceEnabled);
+    print(_permissionGranted);
     if (!_serviceEnabled) {
       emit(LocationStateOff());
     } else if (_permissionGranted == loc.PermissionStatus.denied) {
@@ -50,6 +53,13 @@ class LocationCubit extends Cubit<LocationState> {
       requestLocation();
     } else if (_serviceEnabled &&
         _permissionGranted == loc.PermissionStatus.granted) {
+      print("emitting location on ");
+      _location.getLocation().then((value) {
+        _currLocation = Location(longitude: value.longitude ?? 0, latitude: value.latitude ?? 0);
+        emit(LocationStateOn(_currLocation));
+        print("emitted location on ${_currLocation}");
+      });
+
       streamSubscription = _location.onLocationChanged.listen((locationData) async {
         if (locationData.latitude != null && locationData.longitude != null) {
           GeoCoderCubit geoCoder =getIt<GeoCoderCubit>();
@@ -82,6 +92,7 @@ class LocationCubit extends Cubit<LocationState> {
     }
 
     _permissionGranted = await _location.hasPermission();
+    print("permission granted ${_permissionGranted}");
     if (_permissionGranted == loc.PermissionStatus.denied) {
       _permissionGranted = await _location.requestPermission();
       if (_permissionGranted != loc.PermissionStatus.granted) {

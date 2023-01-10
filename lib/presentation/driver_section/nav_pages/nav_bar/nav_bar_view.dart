@@ -8,6 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:greep/application/driver/drivers_cubit.dart';
 import 'package:greep/application/driver/new_manager_accepts_cubit.dart';
 import 'package:greep/application/driver/new_manager_requests_cubit.dart';
+import 'package:greep/application/location/location_cubit.dart';
 import 'package:greep/application/transactions/customer_statistics_cubit.dart';
 import 'package:greep/application/transactions/transaction_summary_cubit.dart';
 import 'package:greep/application/driver/manager_requests_cubit.dart';
@@ -19,6 +20,7 @@ import 'package:greep/commons/scaffold_messenger_service.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/firebase/Firebase_service.dart';
 import 'package:greep/domain/user/model/manager_request.dart';
+import 'package:greep/ioc.dart';
 import 'package:greep/presentation/driver_section/map/map_screen.dart';
 import 'package:greep/presentation/driver_section/records/trip_directions_screen.dart';
 import 'package:stacked/stacked.dart';
@@ -202,6 +204,10 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
     setState(() {
       _currNavIndex = index;
     });
+
+    if (_currNavIndex == 3){
+      getIt<LocationCubit>().subscribe();
+    }
   }
 
   void showManagerRequest(ManagerRequest request) async {

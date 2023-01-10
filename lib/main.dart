@@ -98,7 +98,7 @@ class MyApp extends StatelessWidget {
           value: GetIt.I<AuthenticationCubit>(),
         ),
         BlocProvider.value(
-          value: (GetIt.instance.get<LocationCubit>()),
+          value: (getIt<LocationCubit>()),
         ),
         BlocProvider.value(
           value: GetIt.I<UserCubit>(),

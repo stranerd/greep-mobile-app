@@ -1,15 +1,19 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' as g;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:greep/Commons/colors.dart';
 import 'package:greep/application/driver/drivers_cubit.dart';
 import 'package:greep/application/location/driver_location_status_cubit.dart';
 import 'package:greep/application/location/location.dart';
+import 'package:greep/application/location/location_cubit.dart';
+import 'package:greep/application/location/location_state.dart';
 import 'package:greep/application/user/user_cubit.dart';
 import 'package:greep/application/user/user_util.dart';
 import 'package:greep/commons/ui_helpers.dart';
@@ -110,20 +114,21 @@ class _MapScreenState extends State<MapScreen> {
                       DriverLocationStatusState>(
                     listener: (context, locationState) async {
                       if (locationState is DriverLocationStatusStateFetched) {
-                        print("driver location found ${locationState.status}");
+                        // print("driver location found ${locationState.status}");
                         rideStatus = locationState.status.rideStatus;
                         var mapController = await _controller.future;
                         currentLocationMarker = Marker(
-                          markerId: const MarkerId("Driver"),
-                          position: LatLng(
-                            double.parse(locationState.status.latitude),
-                            double.parse(locationState.status.longitude),
-                          ),
-                          infoWindow: const InfoWindow(
-                            title: "Driver",
-                          ),
-                          icon: await BitmapDescriptor.fromAssetImage(ImageConfiguration(), "assets/icons/map_pin_1x.png")
-                        );
+                            markerId: const MarkerId("Driver"),
+                            position: LatLng(
+                              double.parse(locationState.status.latitude),
+                              double.parse(locationState.status.longitude),
+                            ),
+                            infoWindow: const InfoWindow(
+                              title: "Driver",
+                            ),
+                            icon: await BitmapDescriptor.fromAssetImage(
+                                const ImageConfiguration(),
+                                "assets/icons/map_pin_${Platform.isIOS ? "1x" : "2x"}.png"));
                         // print("Update current location marker");
 
                         if (locationState.status.gotDirection != null) {
@@ -200,12 +205,13 @@ class _MapScreenState extends State<MapScreen> {
                             ),
                           );
                         } else {
-                          mapController.animateCamera(
-                              CameraUpdate.newCameraPosition(CameraPosition(
-                                  target: LatLng(currentLocationMarker!.position.latitude,
+                          mapController
+                              .animateCamera(CameraUpdate.newLatLngZoom(
+                                  LatLng(
+                                    currentLocationMarker!.position.latitude,
                                     currentLocationMarker!.position.longitude,
                                   ),
-                                  zoom: 15)));
+                                  15));
                         }
                         setState(() {});
                       }
@@ -213,7 +219,7 @@ class _MapScreenState extends State<MapScreen> {
                     builder: (context, locationState) {
                       // print(locationState);
                       Set<Marker> markers = {};
-                      if (currentLocationMarker !=null){
+                      if (currentLocationMarker != null && userId != getUser().id) {
                         markers.add(currentLocationMarker!);
                       }
                       if (gotTripMarker != null) {
@@ -383,7 +389,81 @@ class _MapScreenState extends State<MapScreen> {
                                                     : "Start trip")
                                           ],
                                         ),
-                                      ))
+                                      )),
+                                  BlocBuilder<LocationCubit, LocationState>(
+                                    bloc: getIt<LocationCubit>(),
+                                    builder: (context, locState) {
+                                      print(locState);
+                                     if (locState is LocationStateOff) {
+
+                                       return Positioned.fill(
+                                          child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withOpacity(
+                                            0.5,
+                                          ),
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: IntrinsicHeight(
+                                          child: Container(
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal: 0.1.sw),
+                                            padding: const EdgeInsets.all(
+                                                kDefaultSpacing),
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        kDefaultSpacing)),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const TextWidget(
+                                                  "Location Services is Disabled",
+                                                  color: AppColors.red,
+                                                  fontSize: 27,
+                                                  weight: FontWeight.bold,
+                                                ),
+                                                kVerticalSpaceRegular,
+                                                const TextWidget(
+                                                  "Google map needs access to your location. Please turn on you location in your device settings.",
+                                                  weight: FontWeight.w500,
+                                                  fontSize: 20,
+                                                ),
+                                                kVerticalSpaceRegular,
+                                                const Divider(
+                                                  color: AppColors.lightBlue,
+                                                ),
+                                                GestureDetector(
+                                                  onTap: (){
+                                                    Geolocator.openLocationSettings();
+
+                                                  },
+                                                  child: Column(
+
+                                                    children: [
+                                                      kVerticalSpaceSmall,
+                                                      const TextWidget(
+                                                        "Enable Location Access",
+                                                        color: AppColors.blue,
+                                                        weight: FontWeight.w600,
+                                                      ),
+                                                      kVerticalSpaceSmall,
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                       );
+                                     }
+
+                                     return Container();
+
+                                    },
+                                  )
                                 ],
                               ),
                             ),
