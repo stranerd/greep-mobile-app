@@ -31,13 +31,12 @@ class AuthHomeScreen extends StatefulWidget {
   _AuthHomeScreenState createState() => _AuthHomeScreenState();
 }
 
-class _AuthHomeScreenState extends State<AuthHomeScreen>
-    with InputValidator {
+class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
   String email = "";
   String password = "";
   String confirmPassword = "";
   final formKey = GlobalKey<FormState>();
-  Map<String,dynamic> fieldErrors = {};
+  Map<String, dynamic> fieldErrors = {};
 
   bool isSignin = true;
 
@@ -65,8 +64,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
 
   void _login() {
     fieldErrors = {};
-    setState(() {
-    });
+    setState(() {});
     if (formKey.currentState!.validate()) {
       BlocProvider.of<AuthenticationCubit>(context)
           .login(LoginRequest(email: email.trim(), password: password));
@@ -75,8 +73,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
 
   void _signup() {
     fieldErrors = {};
-    setState(() {
-    });
+    setState(() {});
     if (formKey.currentState!.validate()) {
       BlocProvider.of<SignupCubit>(context)
           .testSignup(LoginRequest(email: email.trim(), password: password));
@@ -88,10 +85,17 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
     return BlocConsumer<AuthenticationCubit, AuthenticationState>(
       listener: (context, state) {
         if (state is AuthenticationStateAuthenticated) {
-          g.Get.offAll(() => AuthenticationSplashScreen(isNewUser: state.isSignup,),transition: g.Transition.fadeIn);
+          g.Get.offAll(
+            () => AuthenticationSplashScreen(
+              isNewUser: state.isSignup,
+            ),
+            transition: g.Transition.fadeIn,
+          );
         }
         if (state is AuthenticationStateError) {
-          Fluttertoast.showToast(msg: state.errorMessage,);
+          Fluttertoast.showToast(
+            msg: state.errorMessage,
+          );
         }
       },
       builder: (context, state) {
@@ -136,8 +140,8 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
                           kVerticalSpaceRegular,
                           LoginTextField(
                             title: "Password",
-                            validator: (String s){
-                              if (s.length < 8){
+                            validator: (String s) {
+                              if (s.length < 8) {
                                 return "Password must contain atleast 8 characters";
                               }
                               return null;
@@ -155,7 +159,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
                               title: "Confirm password",
                               validator: (String s) {
                                 if (!isSignin) {
-                                  if (s.length < 8){
+                                  if (s.length < 8) {
                                     return "Password must contain at least 8 characters";
                                   }
                                   if (s != password) {
@@ -179,19 +183,20 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
                           children: [
                             kVerticalSpaceRegular,
                             Container(
-                              padding: const EdgeInsets.all(kDefaultSpacing * 0.5),
+                              padding:
+                                  const EdgeInsets.all(kDefaultSpacing * 0.5),
                               decoration: BoxDecoration(
-                                color: kErrorColor.withOpacity(0.1),
-                                border: Border.all(color: kErrorColor)
-                              ),
+                                  color: kErrorColor.withOpacity(0.1),
+                                  border: Border.all(color: kErrorColor)),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: fieldErrors.keys.map((e) {
                                   return Wrap(
                                     children: [
-                                      Text("* $e: ${fieldErrors[e]}"
-
-                                        ,style: kErrorColorTextStyle,)
+                                      Text(
+                                        "* $e: ${fieldErrors[e]}",
+                                        style: kErrorColorTextStyle,
+                                      )
                                     ],
                                   );
                                 }).toList(),
@@ -208,39 +213,41 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
                                   isLoading:
                                       state is AuthenticationStateLoading,
                                   enabled: state is! AuthenticationStateLoading,
-                                  text:  "Login",
+                                  text: "Login",
                                   backgroundColor: kGreenColor,
-                                  onSubmit: _login, )
+                                  onSubmit: _login,
+                                )
                               : BlocConsumer<SignupCubit, SignupState>(
-                            listenWhen: (_, __) {
-                              return ModalRoute.of(context)?.isCurrent ?? false;
-                            },
+                                  listenWhen: (_, __) {
+                                    return ModalRoute.of(context)?.isCurrent ??
+                                        false;
+                                  },
                                   listener: (context, state) {
-                                    if (state is SignupStateReady){
-                                      g.Get.to(() =>  AuthFinishSignup(email: email,password: password,),
-                                          transition: g.Transition.fadeIn
-                                      );
-
+                                    if (state is SignupStateReady) {
+                                      g.Get.to(
+                                          () => AuthFinishSignup(
+                                                email: email,
+                                                password: password,
+                                              ),
+                                          transition: g.Transition.fadeIn);
                                     }
-                                    if (state is SignupStateError){
+                                    if (state is SignupStateError) {
                                       setState(() {
                                         fieldErrors = state.fieldErrors;
                                       });
 
-                                      Fluttertoast.showToast(msg: state.errorMessage?? "Sign up failed");
+                                      Fluttertoast.showToast(
+                                          msg: state.errorMessage ??
+                                              "Sign up failed");
                                     }
-
                                   },
                                   builder: (context, state) {
                                     return SubmitButton(
-                                        isLoading:
-                                            state is SignupStateLoading,
-                                        enabled: state
-                                            is! SignupStateLoading,
+                                        isLoading: state is SignupStateLoading,
+                                        enabled: state is! SignupStateLoading,
                                         text: "Create Account",
                                         backgroundColor: kGreenColor,
-                                        onSubmit: _signup
-                                        );
+                                        onSubmit: _signup);
                                   },
                                 ),
                           kVerticalSpaceRegular,
@@ -248,7 +255,8 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
                             alignment: Alignment.centerLeft,
                             child: TextButton(
                               onPressed: () {
-                                g.Get.to(() => const ForgotPasswordScreen(),transition: g.Transition.fadeIn);
+                                g.Get.to(() => const ForgotPasswordScreen(),
+                                    transition: g.Transition.fadeIn);
                               },
                               child: Text(
                                 "Forgot Password?",
@@ -272,14 +280,14 @@ class _AuthHomeScreenState extends State<AuthHomeScreen>
                             icon: "assets/icons/google.png",
                           ),
                           kVerticalSpaceRegular,
-                         if (Platform.isIOS) SocialSigninWidget(
-                            onTap: () {
-
-                              GetIt.I<AuthenticationCubit>().loginWithApple();
-                            },
-                            text: "Continue with Apple",
-                            icon: "assets/icons/apple.png",
-                          ),
+                          if (Platform.isIOS)
+                            SocialSigninWidget(
+                              onTap: () {
+                                GetIt.I<AuthenticationCubit>().loginWithApple();
+                              },
+                              text: "Continue with Apple",
+                              icon: "assets/icons/apple.png",
+                            ),
                           kVerticalSpaceRegular,
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
