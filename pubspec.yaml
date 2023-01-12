@@ -74,6 +74,7 @@ dependencies:
   timeline_tile: ^2.0.0
   upgrader: ^5.0.0
   uuid: ^3.0.5
+  url_launcher: ^6.1.7
   vector_math: ^2.1.2
 
 

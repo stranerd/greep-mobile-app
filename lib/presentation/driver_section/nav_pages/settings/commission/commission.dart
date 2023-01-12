@@ -133,7 +133,7 @@ class _CommissionHomeState extends State<CommissionHome> {
                                   width: 1.0,
                                 ),
                               ),
-                              child: TextWidget("${commission}%",
+                              child: TextWidget("${(commission * 100).toStringAsFixed(1)}%",
                                   style: AppTextStyles.blackSizeBold16),
                             ),
                           ],

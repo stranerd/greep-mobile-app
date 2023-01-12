@@ -95,7 +95,7 @@ class _EmailVerificationBottomSheetState
           }
 
           if (state is EmailVerificationStateError){
-            error = state.errorMessage;
+            error = state.errorMessage.toLowerCase().contains("invalid") ? "Incorrect code": state.errorMessage;
 
           }
 

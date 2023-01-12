@@ -393,7 +393,6 @@ class _MapScreenState extends State<MapScreen> {
                                   BlocBuilder<LocationCubit, LocationState>(
                                     bloc: getIt<LocationCubit>(),
                                     builder: (context, locState) {
-                                      print(locState);
                                      if (locState is LocationStateOff) {
 
                                        return Positioned.fill(

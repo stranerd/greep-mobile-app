@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:greep/commons/Utils/utils.dart';
 import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/presentation/driver_section/widgets/settings_home_item.dart';
@@ -9,6 +10,7 @@ import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:upgrader/upgrader.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../utils/constants/app_styles.dart';
 import 'privacy_policy.dart';
@@ -58,14 +60,18 @@ class AboutHome extends StatelessWidget {
               }),
               kVerticalSpaceLarge,
               SplashTap(
-                onTap: () {},
+                onTap: () {
+                  Utils.launchURL("https://www.facebook.com/profile.php?id=100082853892890");
+
+                },
                 child: const SettingsHomeItem(
                     title: "Like us on Facebook ", icon: "assets/icons/fb.svg"),
               ),
               kVerticalSpaceSmall,
               SplashTap(
                 onTap: () {
-                  // Get.to(() => const AboutHome());
+                  Utils.launchURL("https://www.twitter.com/AppGreep");
+
                 },
                 child: const SettingsHomeItem(
                     title: "Follow us on Twitter",

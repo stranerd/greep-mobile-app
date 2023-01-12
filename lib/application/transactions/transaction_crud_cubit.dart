@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:greep/application/customers/user_customers_cubit.dart';
+import 'package:greep/application/driver/drivers_cubit.dart';
 import 'package:greep/application/transactions/request/add_balance_request.dart';
 import 'package:greep/application/transactions/request/add_expense_request.dart';
 import 'package:greep/application/transactions/request/add_trip_request.dart';
@@ -12,6 +13,7 @@ import 'package:greep/domain/firebase/Firebase_service.dart';
 import 'package:greep/domain/transaction/transaction.dart';
 import 'package:greep/domain/transaction/transaction_service.dart';
 import 'package:greep/domain/user/model/ride_status.dart';
+import 'package:greep/ioc.dart';
 import 'package:meta/meta.dart';
 
 part 'transaction_crud_state.dart';
@@ -100,7 +102,7 @@ class TransactionCrudCubit extends Cubit<TransactionCrudState> {
       emit(TransactionCrudStateFailure(
           errorMessage: response.errorMessage ?? "An error occurred"));
       GetIt.I<UserTransactionsCubit>()
-          .fetchUserTransactions(requestId: currentUser().id, softUpdate: true);
+          .fetchUserTransactions(requestId: getIt<DriversCubit>().selectedUser.id, softUpdate: true);
       GetIt.I<UserCustomersCubit>().fetchUserCustomers(fullRefresh: true);
     } else {
       emit(TransactionCrudStateSuccess());
@@ -110,6 +112,6 @@ class TransactionCrudCubit extends Cubit<TransactionCrudState> {
 
   void _refreshTransactions() {
     GetIt.I<UserTransactionsCubit>()
-        .fetchUserTransactions(requestId: currentUser().id, fullRefresh: true);
+        .fetchUserTransactions(requestId: getIt<DriversCubit>().selectedUser.id, fullRefresh: true);
   }
 }

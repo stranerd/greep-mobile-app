@@ -92,12 +92,10 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
           selectedItemColor: kPrimaryColor,
           selectedIconTheme: const IconThemeData(color: kPrimaryColor),
         ),
-        body: SafeArea(
-          child: UpgradeAlert(
-            child: IndexedStack(
-              index: _currNavIndex,
-              children: _children,
-            ),
+        body: UpgradeAlert(
+          child: IndexedStack(
+            index: _currNavIndex,
+            children: _children,
           ),
         ),
         floatingActionButton: _currNavIndex != 0 ? null : SizedBox(

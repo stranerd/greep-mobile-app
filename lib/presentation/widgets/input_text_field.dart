@@ -17,6 +17,7 @@ class LoginTextField extends StatefulWidget {
   final bool withBorder;
   final String? hintText;
   final bool enabled;
+  final TextStyle? textStyle;
 
   const LoginTextField({
     Key? key,
@@ -26,6 +27,7 @@ class LoginTextField extends StatefulWidget {
     this.inputType,
     this.withTitle = true,
     this.minLines,
+    this.textStyle,
     this.enabled = true,
     this.hintText,
     this.withBorder = false,
@@ -80,6 +82,7 @@ class _LoginTextFieldState extends State<LoginTextField> {
             controller: widget.customController ?? editingController,
             cursorColor: kPrimaryColor,
             enabled: widget.enabled,
+            style: widget.textStyle,
             // style: Theme.of(context).textTheme.bodyText1,
             obscureText: widget.isPassword && isObscure,
             decoration: InputDecoration(

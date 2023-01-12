@@ -379,6 +379,8 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                                                 : DateFormat(
                                                         "${DateFormat.DAY}/${DateFormat.MONTH}/${DateFormat.YEAR} ")
                                                     .format(from!),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                             style: AppTextStyles.blackSize14,
                                           ),
                                         ),
@@ -416,6 +418,9 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
                                                 : DateFormat(
                                                         "${DateFormat.DAY}/${DateFormat.MONTH}/${DateFormat.YEAR} ")
                                                     .format(to!),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+
                                             style: AppTextStyles.blackSize14,
                                           ),
                                         ),

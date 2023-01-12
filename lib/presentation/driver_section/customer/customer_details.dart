@@ -59,6 +59,9 @@ class _CustomerDetailsState extends State<CustomerDetails> {
           setState(() {
             customer =
                 GetIt.I<UserCustomersCubit>().getCustomerByName(widget.name);
+            _customerSummary =
+                GetIt.I<CustomerStatisticsCubit>().getCustomerSummary(widget.name);
+
           });
         }
       },

@@ -46,13 +46,13 @@ class SettingsHome extends StatelessWidget {
           backgroundColor: Colors.white,
           title: TextWidget(
             "Settings",
-            style: AppTextStyles.blackSizeBold14,
+            style: AppTextStyles.blackSizeBold16,
           ),
-          centerTitle: false,
+          centerTitle: true,
           elevation: 0.0,
         ),
         body: Padding(
-          padding:  EdgeInsets.fromLTRB(16.r, 0, 16.r, 0),
+          padding:  EdgeInsets.fromLTRB(16.r, 16.r, 16.r, 0),
           child: SafeArea(
             child: BlocBuilder<DriversCubit, DriversState>(
               builder: (context, state) {

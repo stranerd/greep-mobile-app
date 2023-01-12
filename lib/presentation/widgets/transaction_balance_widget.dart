@@ -88,6 +88,7 @@ class _TransactionBalanceWidgetState extends State<TransactionBalanceWidget>
                           child: LoginTextField(
                             customController: _amountController,
                             withTitle: false,
+                            textStyle: widget.transaction.debt < 0 ? AppTextStyles.redSize14 : AppTextStyles.blueSize14,
                             inputType: TextInputType.number,
                             title: "Amount",
                             onChanged: (s) {

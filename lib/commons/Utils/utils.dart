@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -172,6 +173,26 @@ notifyListeners();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String data = prefs.getString(name)!;
     return data;
+  }
+
+  static void launchURL(String link) async {
+    if (Platform.isIOS) {
+      if (await canLaunch(link)) {
+        await launch(link, forceSafariVC: false);
+      } else {
+        if (await canLaunch(link)) {
+          await launch(link);
+        } else {
+          throw 'Could not launch $link';
+        }
+      }
+    } else {
+      if (await canLaunch(link)) {
+        await launch(link);
+      } else {
+        throw 'Could not launch $link';
+      }
+    }
   }
 
 }
