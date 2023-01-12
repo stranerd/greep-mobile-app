@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
@@ -51,144 +52,147 @@ class SettingsHome extends StatelessWidget {
           centerTitle: true,
           elevation: 0.0,
         ),
-        body: Padding(
-          padding:  EdgeInsets.fromLTRB(16.r, 16.r, 16.r, 0),
+        body: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.dark,
           child: SafeArea(
-            child: BlocBuilder<DriversCubit, DriversState>(
-              builder: (context, state) {
-                return Column(
-                  children: [
-                    SplashTap(
-                      onTap: () {
-                        Get.to(() => const ProfileView());
-                      },
-                      child: const SettingsHomeItem(
-                          title: "Account", icon: "assets/icons/person.svg"),
-                    ),
-                    const SizedBox(height: 8),
-                    BlocBuilder<UserCubit, UserState>(
-                      builder: (context, state) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SplashTap(
-                              onTap: () {
-                                Get.to(() => const DriversScreen());
-                              },
-                              child: const SettingsHomeItem(
-                                  title: "Drivers",
-                                  icon: "assets/icons/local_taxi.svg"),
+            child: Padding(
+              padding:  EdgeInsets.fromLTRB(16.r, 16.r, 16.r, 0),
+              child: BlocBuilder<DriversCubit, DriversState>(
+                builder: (context, state) {
+                  return Column(
+                    children: [
+                      SplashTap(
+                        onTap: () {
+                          Get.to(() => const ProfileView());
+                        },
+                        child: const SettingsHomeItem(
+                            title: "Account", icon: "assets/icons/person.svg"),
+                      ),
+                      const SizedBox(height: 8),
+                      BlocBuilder<UserCubit, UserState>(
+                        builder: (context, state) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SplashTap(
+                                onTap: () {
+                                  Get.to(() => const DriversScreen());
+                                },
+                                child: const SettingsHomeItem(
+                                    title: "Drivers",
+                                    icon: "assets/icons/local_taxi.svg"),
+                              ),
+                                                             SizedBox(height: 8.h),
+
+                            ],
+                          );
+                        },
+                      ),
+                      BlocBuilder<DriversCubit, DriversState>(
+                        builder: (context, state) {
+                          if (state is DriversStateManager) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SplashTap(
+                                  onTap: () {
+                                    Get.to(() => const TotalIncome());
+                                  },
+                                  child: const SettingsHomeItem(
+                                      title: "Total Income",
+                                      icon: "assets/icons/monetization_on.svg"),
+                                ),
+                                 SizedBox(height: 8.h),
+                              ],
+                            );
+                          }
+                          return Container();
+                        },
+                      ),
+                      BlocBuilder<UserCubit, UserState>(
+                        builder: (context, state) {
+                          if (state is UserStateFetched &&
+                              state.user.hasManager) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SplashTap(
+                                  onTap: () {
+                                    Get.to(() => const CommissionHome());
+                                  },
+                                  child: const SettingsHomeItem(
+                                      title: "Commission",
+                                      icon: "assets/icons/monetization_on.svg"),
+                                ),
+                                 SizedBox(height: 8.h),
+                              ],
+                            );
+                          }
+                          return Container();
+                        },
+                      ),
+                      SplashTap(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PrivacyPolicy(),
                             ),
-                                                           SizedBox(height: 8.h),
-
-                          ],
-                        );
-                      },
-                    ),
-                    BlocBuilder<DriversCubit, DriversState>(
-                      builder: (context, state) {
-                        if (state is DriversStateManager) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SplashTap(
-                                onTap: () {
-                                  Get.to(() => const TotalIncome());
-                                },
-                                child: const SettingsHomeItem(
-                                    title: "Total Income",
-                                    icon: "assets/icons/monetization_on.svg"),
-                              ),
-                               SizedBox(height: 8.h),
-                            ],
                           );
-                        }
-                        return Container();
-                      },
-                    ),
-                    BlocBuilder<UserCubit, UserState>(
-                      builder: (context, state) {
-                        if (state is UserStateFetched &&
-                            state.user.hasManager) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SplashTap(
-                                onTap: () {
-                                  Get.to(() => const CommissionHome());
-                                },
-                                child: const SettingsHomeItem(
-                                    title: "Commission",
-                                    icon: "assets/icons/monetization_on.svg"),
-                              ),
-                               SizedBox(height: 8.h),
-                            ],
+                        },
+                        child: const SettingsHomeItem(
+                            title: "Privacy Policy", icon: "assets/icons/privacy.svg"),
+                      ),
+                      kVerticalSpaceSmall,
+                      SplashTap(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const TermsAndConditions(),
+                            ),
                           );
-                        }
-                        return Container();
-                      },
-                    ),
-                    SplashTap(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const PrivacyPolicy(),
-                          ),
-                        );
-                      },
-                      child: const SettingsHomeItem(
-                          title: "Privacy Policy", icon: "assets/icons/privacy.svg"),
-                    ),
-                    kVerticalSpaceSmall,
-                    SplashTap(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const TermsAndConditions(),
-                          ),
-                        );
-                      },
-                      child: const SettingsHomeItem(
-                          title: "Services Agreement", icon: "assets/icons/terms.svg"),
-                    ),
-                    kVerticalSpaceSmall,
-                    SplashTap(
-                      onTap: () {
-                        Get.to(() => const AboutHome());
-                      },
-                      child: const SettingsHomeItem(
-                          title: "About Us", icon: "assets/icons/info.svg"),
-                    ),
-                     SizedBox(height: 8.h),
-                    SplashTap(
-                      onTap: () {
-                        Get.to(() => const ContactUs());
+                        },
+                        child: const SettingsHomeItem(
+                            title: "Services Agreement", icon: "assets/icons/terms.svg"),
+                      ),
+                      kVerticalSpaceSmall,
+                      SplashTap(
+                        onTap: () {
+                          Get.to(() => const AboutHome());
+                        },
+                        child: const SettingsHomeItem(
+                            title: "About Us", icon: "assets/icons/info.svg"),
+                      ),
+                       SizedBox(height: 8.h),
+                      SplashTap(
+                        onTap: () {
+                          Get.to(() => const ContactUs());
 
-                      },
-                      child: const SettingsHomeItem(
-                          title: "Contact Us",
-                          icon: "assets/icons/headphones.svg"),
-                    ),
-                    kVerticalSpaceLarge,
-                    Divider(),
-                    kVerticalSpaceRegular,
-                    Container(
-                      padding: EdgeInsets.only(left: 10.w),
-                      alignment: Alignment.centerLeft,
-                      child: GestureDetector(
-                          onTap: () => signout(context),
-                          child: TextWidget(
+                        },
+                        child: const SettingsHomeItem(
+                            title: "Contact Us",
+                            icon: "assets/icons/headphones.svg"),
+                      ),
+                      kVerticalSpaceLarge,
+                      Divider(),
+                      kVerticalSpaceRegular,
+                      Container(
+                        padding: EdgeInsets.only(left: 10.w),
+                        alignment: Alignment.centerLeft,
+                        child: GestureDetector(
+                            onTap: () => signout(context),
+                            child: TextWidget(
 
-                            "Sign Out",
-                            textAlign: TextAlign.left,
-                            style: kErrorColorTextStyle,
-                          )),
-                    )
-                  ],
-                );
-              },
+                              "Sign Out",
+                              textAlign: TextAlign.left,
+                              style: kErrorColorTextStyle,
+                            )),
+                      )
+                    ],
+                  );
+                },
+              ),
             ),
           ),
         ),

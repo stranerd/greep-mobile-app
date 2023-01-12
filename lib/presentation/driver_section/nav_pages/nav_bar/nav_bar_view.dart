@@ -82,6 +82,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
         ),
       ],
       child: Scaffold(
+
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currNavIndex,
           onTap: setCurrNav,

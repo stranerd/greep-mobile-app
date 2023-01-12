@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:greep/application/transactions/user_transactions_cubit.dart';
@@ -95,152 +96,156 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   automaticallyImplyLeading: true,
                 )
               : null,
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: kDefaultSpacing * 0.5,
-                  vertical: kDefaultSpacing * 0.5),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Align(
-                      alignment: Alignment.centerLeft,
-                      child: DriverSelectorRow()),
-                  kVerticalSpaceSmall,
-                  BlocBuilder<DriversCubit, DriversState>(
-                    builder: (context, driverState) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          driverState is! DriversStateManager
-                              ? Align(
-                                  alignment: Alignment.center,
-                                  child: TextWidget(
-                                    'Transactions',
+          body: AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle.dark,
+
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: kDefaultSpacing * 0.5,
+                    vertical: kDefaultSpacing * 0.5),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Align(
+                        alignment: Alignment.centerLeft,
+                        child: DriverSelectorRow()),
+                    kVerticalSpaceSmall,
+                    BlocBuilder<DriversCubit, DriversState>(
+                      builder: (context, driverState) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            driverState is! DriversStateManager
+                                ? Align(
+                                    alignment: Alignment.center,
+                                    child: TextWidget(
+                                      'Transactions',
+                                      style: AppTextStyles.blackSizeBold16,
+                                    ),
+                                  )
+                                : TextWidget(
+                                    driverState.selectedUser == currentUser()
+                                        ? 'Your transactions'
+                                        : "${driverState.selectedUser.firstName} transactions",
                                     style: AppTextStyles.blackSizeBold16,
                                   ),
-                                )
-                              : TextWidget(
-                                  driverState.selectedUser == currentUser()
-                                      ? 'Your transactions'
-                                      : "${driverState.selectedUser.firstName} transactions",
-                                  style: AppTextStyles.blackSizeBold16,
-                                ),
-                        ],
-                      );
-                    },
-                  ),
-                  kVerticalSpaceSmall,
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(kDefaultSpacing),
-                      color: const Color(0xffE8EFFD),
-                    ),
-                    child: TabBar(
-                      onTap: (int e) {
+                          ],
+                        );
                       },
-                      indicator: BoxDecoration(
-                        borderRadius: BorderRadius.circular(kDefaultSpacing),
-                        color: Colors.black,
-                      ),
-                      labelColor: Colors.white,
-                      labelStyle: AppTextStyles.whiteSize12
-                          .copyWith(fontWeight: FontWeight.bold),
-                      unselectedLabelColor: Colors.black,
-                      unselectedLabelStyle: AppTextStyles.blackSize12
-                          .copyWith(fontWeight: FontWeight.bold),
-                      tabs: const [
-                        Tab(
-                          height: 30,
-                          text: 'Daily',
-                        ),
-                        Tab(
-                          height: 30,
-                          text: 'Weekly',
-                        ),
-                        Tab(
-                          height: 30,
-                          text: 'Monthly',
-                        ),
-                        Tab(
-                          height: 30,
-                          text: 'All',
-                        ),
-                      ],
                     ),
-                  ),
-                  kVerticalSpaceSmall,
-                  Expanded(
-                    child: TabBarView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: [
-                        SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              Builder(builder: (context) {
-                                Map<DateTime,TransactionSummary> summary = GetIt.I<
-                                    TransactionSummaryCubit>()
-                                    .getDailyTransactions();
-                                return DailyTransactionsStatisticsCard(
-                                    summary: summary);
-                              }),
-
-                            ],
-                          ),
+                    kVerticalSpaceSmall,
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(kDefaultSpacing),
+                        color: const Color(0xffE8EFFD),
+                      ),
+                      child: TabBar(
+                        onTap: (int e) {
+                        },
+                        indicator: BoxDecoration(
+                          borderRadius: BorderRadius.circular(kDefaultSpacing),
+                          color: Colors.black,
                         ),
-
-                        SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              Builder(builder: (context) {
-                                Map<DateTime,TransactionSummary> summary = GetIt.I<
-                                    TransactionSummaryCubit>()
-                                    .getWeeklyTransactions();
-                                return WeeklyTransactionsStatisticsCard(
-                                    summary: summary);
-                              }),
-                            ],
+                        labelColor: Colors.white,
+                        labelStyle: AppTextStyles.whiteSize12
+                            .copyWith(fontWeight: FontWeight.bold),
+                        unselectedLabelColor: Colors.black,
+                        unselectedLabelStyle: AppTextStyles.blackSize12
+                            .copyWith(fontWeight: FontWeight.bold),
+                        tabs: const [
+                          Tab(
+                            height: 30,
+                            text: 'Daily',
                           ),
-                        ),
-
-                        SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              Builder(builder: (context) {
-                                Map<DateTime,TransactionSummary> summary = GetIt.I<
-                                        TransactionSummaryCubit>()
-                                    .getMonthlyTransactions();
-                                return MonthlyTransactionsStatisticsCard(
-                                    summary: summary);
-                              }),
-
-                            ],
+                          Tab(
+                            height: 30,
+                            text: 'Weekly',
                           ),
-                        ),
-                        Builder(builder: (context) {
-                          TransactionSummary summary =
-                              GetIt.I<TransactionSummaryCubit>()
-                                  .getManagerDriverTotalTransactionSummary();
-                          return SingleChildScrollView(
+                          Tab(
+                            height: 30,
+                            text: 'Monthly',
+                          ),
+                          Tab(
+                            height: 30,
+                            text: 'All',
+                          ),
+                        ],
+                      ),
+                    ),
+                    kVerticalSpaceSmall,
+                    Expanded(
+                      child: TabBarView(
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: [
+                          SingleChildScrollView(
                             child: Column(
                               children: [
-                                AllTransactionsStatisticsCard(
-                                  transactionSummary: summary,
-                                ),
-                                kVerticalSpaceRegular,
-                                const Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: TransactionHistorySection(),
-                                )
+                                Builder(builder: (context) {
+                                  Map<DateTime,TransactionSummary> summary = GetIt.I<
+                                      TransactionSummaryCubit>()
+                                      .getDailyTransactions();
+                                  return DailyTransactionsStatisticsCard(
+                                      summary: summary);
+                                }),
+
                               ],
                             ),
-                          );
-                        })
-                      ],
+                          ),
+
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Builder(builder: (context) {
+                                  Map<DateTime,TransactionSummary> summary = GetIt.I<
+                                      TransactionSummaryCubit>()
+                                      .getWeeklyTransactions();
+                                  return WeeklyTransactionsStatisticsCard(
+                                      summary: summary);
+                                }),
+                              ],
+                            ),
+                          ),
+
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Builder(builder: (context) {
+                                  Map<DateTime,TransactionSummary> summary = GetIt.I<
+                                          TransactionSummaryCubit>()
+                                      .getMonthlyTransactions();
+                                  return MonthlyTransactionsStatisticsCard(
+                                      summary: summary);
+                                }),
+
+                              ],
+                            ),
+                          ),
+                          Builder(builder: (context) {
+                            TransactionSummary summary =
+                                GetIt.I<TransactionSummaryCubit>()
+                                    .getManagerDriverTotalTransactionSummary();
+                            return SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  AllTransactionsStatisticsCard(
+                                    transactionSummary: summary,
+                                  ),
+                                  kVerticalSpaceRegular,
+                                  const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: TransactionHistorySection(),
+                                  )
+                                ],
+                              ),
+                            );
+                          })
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
