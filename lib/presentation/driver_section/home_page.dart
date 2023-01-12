@@ -354,7 +354,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         "Add a record",
                                                         style: kBoldWhiteTextStyle.copyWith(
                                                             fontSize:
-                                                                13))
+                                                                13)),
+                                                kVerticalSpaceSmall
                                               ],
                                             ),
                                           ],

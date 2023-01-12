@@ -280,8 +280,8 @@ class _WeeklyTransactionsStatisticsCardState
           }
 
 
-          print(
-              "PageIndex: $pageIndex, currMonth $currMonthsCount, prevMonth $prevMonthsCount, ${weeklySummaries.length}");
+          // print(
+          //     "PageIndex: $pageIndex, currMonth $currMonthsCount, prevMonth $prevMonthsCount, ${weeklySummaries.length}");
 
           // print("Selected Bar Groups ${selectedBarGroups}");
           BarChartData sectionData = BarChartData(
@@ -298,12 +298,10 @@ class _WeeklyTransactionsStatisticsCardState
                   return;
                 } else {
                   setState(() {
-                    int currCount = selectedMonthsCount.sublist(0, pageIndex).reduce((value, element) => value + element);
-                    print("Current Count $currCount");
+                    int currCount = pageIndex == 0 ? 0 : selectedMonthsCount.sublist(0, pageIndex).reduce((value, element) => value + element);
 
                     barIndex = barTouchResponse.spot!.touchedBarGroupIndex;
                     touchedIndex = barIndex + currCount;
-                    print("touched index $pageIndex $touchedIndex ");
 
                     DateTime from = availableWeeks[touchedIndex]["from"] ?? DateTime.now();
                     DateTime to = availableWeeks[touchedIndex]["to"] ?? DateTime.now();
@@ -552,7 +550,9 @@ class _WeeklyTransactionsStatisticsCardState
   }
 
   int calculateTouchedIndex(int initTouchedIndex) {
-    int currCount = selectedMonthsCount.sublist(0, pageIndex).reduce((value, element) => value + element);
+    print("Calculate");
+    print(initTouchedIndex);
+    int currCount = pageIndex == 0 ? selectedMonthsCount.first : selectedMonthsCount.sublist(0, pageIndex).reduce((value, element) => value + element);
     return currCount + initTouchedIndex;
 
   }
