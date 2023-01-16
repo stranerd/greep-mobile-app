@@ -63,7 +63,7 @@ android {
         applicationId "com.greepio.greep"
         multiDexEnabled true
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         manifestPlaceholders = [googleMapKey: googleMapKey,applicationName2: "Greep"]

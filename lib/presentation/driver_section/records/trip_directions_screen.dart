@@ -307,7 +307,7 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
                                                               .center,
                                                       children: [
                                                         TextWidget(
-                                                          "${state.directionProgress.speed.toString()} km/h",
+                                                          "${state.directionProgress.speed.toStringAsFixed(2).toString()} km/h",
                                                           fontSize: 14,
                                                         ),
                                                         kHorizontalSpaceSmall,
@@ -523,7 +523,7 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
                                                                 .center,
                                                         children: [
                                                           TextWidget(
-                                                            "${directionProgress.speed.toString()} km/h",
+                                                            "${directionProgress.speed.toStringAsFixed(2).toString()} km/h",
                                                             fontSize: 14,
                                                           ),
                                                           kHorizontalSpaceSmall,
@@ -734,7 +734,7 @@ class _TripDirectionsScreenState extends State<TripDirectionsScreen> {
                                                                 .center,
                                                         children: [
                                                           TextWidget(
-                                                            "${directionProgress.speed.toString()} km/h",
+                                                            "${directionProgress.speed.toStringAsFixed(2).toString()} km/h",
                                                             fontSize: 14,
                                                           ),
                                                           kHorizontalSpaceSmall,

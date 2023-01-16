@@ -46,6 +46,14 @@ class NavBarView extends StatefulWidget {
 class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
   int _currNavIndex = 0;
 
+
+  @override
+  void initState() {
+    super.initState();
+      getIt<LocationCubit>().subscribe();
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
@@ -204,9 +212,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
       _currNavIndex = index;
     });
 
-    if (_currNavIndex == 3){
-      getIt<LocationCubit>().subscribe();
-    }
+
   }
 
   void showManagerRequest(ManagerRequest request) async {
