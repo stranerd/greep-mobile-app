@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greep/Commons/colors.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -11,6 +12,7 @@ class TextWidget extends StatelessWidget {
     this.overflow,
     this.style,
     this.fontSize,
+        this.fontFamily,
     this.textAlign,
     this.letterSpacing,
     this.maxLines, this.softWrap,
@@ -22,6 +24,7 @@ class TextWidget extends StatelessWidget {
   final TextOverflow? overflow;
   final double? fontSize;
   final TextAlign? textAlign;
+  final String? fontFamily;
   final FontWeight? weight;
   final double? letterSpacing;
   final int? maxLines;
@@ -32,13 +35,14 @@ class TextWidget extends StatelessWidget {
       text,
       style: style == null
           ? kDefaultTextStyle.copyWith(
-              color: color,
+              color: color ?? kBlackColor,
+              fontFamily: fontFamily,
               fontWeight: weight,
               fontSize: fontSize ?? 14.sp,
               letterSpacing: letterSpacing)
           : style!.copyWith(
-              color: color,
               fontSize: fontSize ?? 14.sp,
+              fontFamily: fontFamily,
               fontWeight: weight,
               letterSpacing: letterSpacing),
       textAlign: textAlign,

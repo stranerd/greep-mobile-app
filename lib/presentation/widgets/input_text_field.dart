@@ -30,7 +30,7 @@ class LoginTextField extends StatefulWidget {
     this.textStyle,
     this.enabled = true,
     this.hintText,
-    this.withBorder = false,
+    this.withBorder = true,
     this.customController,
     required this.onChanged,
   }) : super(key: key);
@@ -82,17 +82,19 @@ class _LoginTextFieldState extends State<LoginTextField> {
             controller: widget.customController ?? editingController,
             cursorColor: kPrimaryColor,
             enabled: widget.enabled,
-            style: widget.textStyle,
+            style: widget.textStyle ?? kDefaultTextStyle.copyWith(
+              fontSize: 14.sp
+            ),
             // style: Theme.of(context).textTheme.bodyText1,
             obscureText: widget.isPassword && isObscure,
             decoration: InputDecoration(
               hintStyle: kSubtitleTextStyle.copyWith(
-                fontSize: 17.sp
+                fontSize: 14.sp
               ),
                 suffixIcon: widget.isPassword
                     ? IconButton(
                         icon: Icon(
-                            isObscure ? Icons.visibility : Icons.visibility_off,
+                            isObscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
                             color: kBlackColor),
                         onPressed: toggleObscurity,
                       )
@@ -103,27 +105,31 @@ class _LoginTextFieldState extends State<LoginTextField> {
                 focusedBorder: !widget.withBorder
                     ? InputBorder.none
                     : OutlineInputBorder(
-                        borderRadius: BorderRadius.circular((kDefaultSpacing * 0.75).r),
+                        borderRadius: BorderRadius.circular(12.r,),
                         borderSide:
-                             const BorderSide(color: kGreyColor2, width: 1),
+                             const BorderSide(color: Color(0xFFE0E2E4), width: 2),
                       ),
+                // isDense: true,
                 border: !widget.withBorder
                     ? InputBorder.none
                     : OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(kDefaultSpacing* 0.75),
+                        borderRadius: BorderRadius.circular(12.r,),
                         borderSide:
-                             const BorderSide(color: kGreyColor2, width: 1),
+                             const BorderSide(color: Color(0xFFE0E2E4), width: 2),
                       ),
+                contentPadding: EdgeInsets.only(
+                  top: 5.h,bottom: 5.h,right: 16.w,left: 16.w
+                ),
                 enabledBorder: !widget.withBorder
                     ? InputBorder.none
                     : OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(kDefaultSpacing* 0.75),
+                        borderRadius: BorderRadius.circular(12.r,),
                         borderSide:
-                             const BorderSide(color: kGreyColor2, width: 1),
+                             const BorderSide(color: Color(0xFFE0E2E4), width: 2),
                       ),
                 errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: const BorderSide(color: kErrorColor, width: 0.5),
+                  borderRadius: BorderRadius.circular(12.r),
+                  borderSide: const BorderSide(color: kErrorColor, width: 2),
                 )),
             validator: (val) => widget.validator(val!),
           )

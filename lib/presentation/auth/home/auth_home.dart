@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as g;
 import 'package:get_it/get_it.dart';
@@ -23,6 +24,8 @@ import 'package:greep/presentation/splash/authentication_splash.dart';
 import 'package:greep/presentation/widgets/input_text_field.dart';
 import 'package:greep/presentation/widgets/social_signin_widget.dart';
 import 'package:greep/presentation/widgets/submit_button.dart';
+import 'package:greep/presentation/widgets/text_widget.dart';
+import 'package:greep/utils/constants/app_colors.dart';
 
 class AuthHomeScreen extends StatefulWidget {
   const AuthHomeScreen({Key? key}) : super(key: key);
@@ -109,18 +112,41 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       kVerticalSpaceRegular,
-                      Text(
-                        isSignin ? "Welcome back!" : "Create account",
-                        style: const TextStyle(
-                          fontFamily: "Poppins-Bold",
-                          fontSize: 30,
+                      Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextWidget(
+                              isSignin ? "Welcome back!" : "Create an account",
+                              fontFamily: "Poppins-Bold",
+                              fontSize: 22.sp,
+                            ),
+                               TextWidget(
+                                (isSignin) ? "Login to continue" : "Join the Greep Family",
+                                color: AppColors.veryLightGray,
+                              ),
+                          ],
                         ),
                       ),
-                      kVerticalSpaceTiny,
-                      if (isSignin)
-                        Text(
-                          "Login to continue",
-                          style: kDefaultTextStyle,
+                      SizedBox(
+                        height: 24.h,
+                      ),
+                      SocialSigninWidget(
+                        onTap: () {
+                          GetIt.I<AuthenticationCubit>().signinWithGoogle();
+                        },
+                        text: "Continue with Google",
+                        icon: "assets/icons/google-colored.svg",
+                      ),
+                      kVerticalSpaceRegular,
+                      if (Platform.isIOS)
+                        SocialSigninWidget(
+                          onTap: () {
+                            GetIt.I<AuthenticationCubit>().loginWithApple();
+                          },
+                          text: "Continue with Apple",
+                          icon: "assets/icons/apple.png",
                         ),
                       kVerticalSpaceLarge,
                       Column(
@@ -212,7 +238,9 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
                                       state is AuthenticationStateLoading,
                                   enabled: state is! AuthenticationStateLoading,
                                   text: "Login",
-                                  backgroundColor: kGreenColor,
+                                  textStyle: kDefaultTextStyle.copyWith(
+                                      fontSize: 14.sp, color: Colors.white),
+                                  backgroundColor: kBlackColor,
                                   onSubmit: _login,
                                 )
                               : BlocConsumer<SignupCubit, SignupState>(
@@ -244,22 +272,21 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
                                         isLoading: state is SignupStateLoading,
                                         enabled: state is! SignupStateLoading,
                                         text: "Create Account",
-                                        backgroundColor: kGreenColor,
+                                        textStyle: kDefaultTextStyle.copyWith(
+                                            fontSize: 14.sp,
+                                            color: Colors.white),
+                                        backgroundColor: kBlackColor,
                                         onSubmit: _signup);
                                   },
                                 ),
                           kVerticalSpaceRegular,
                           Align(
-                            alignment: Alignment.centerLeft,
+                            alignment: Alignment.center,
                             child: TextButton(
                               onPressed: () {
                                 g.Get.to(() => const ForgotPasswordScreen(),
                                     transition: g.Transition.fadeIn);
                               },
-                              child: Text(
-                                "Forgot Password?",
-                                style: kDefaultTextStyle,
-                              ),
                               style: TextButton.styleFrom(
                                 textStyle: kDefaultTextStyle.copyWith(
                                     decoration: TextDecoration.underline),
@@ -267,50 +294,40 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
                                 padding: EdgeInsets.zero,
                                 minimumSize: Size.zero,
                               ),
-                            ),
-                          ),
-                          kVerticalSpaceRegular,
-                          SocialSigninWidget(
-                            onTap: () {
-                              GetIt.I<AuthenticationCubit>().signinWithGoogle();
-                            },
-                            text: "Continue with Google",
-                            icon: "assets/icons/google.png",
-                          ),
-                          kVerticalSpaceRegular,
-                          if (Platform.isIOS)
-                            SocialSigninWidget(
-                              onTap: () {
-                                GetIt.I<AuthenticationCubit>().loginWithApple();
-                              },
-                              text: "Continue with Apple",
-                              icon: "assets/icons/apple.png",
-                            ),
-                          kVerticalSpaceRegular,
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text.rich(
-                                TextSpan(
-                                  text: isSignin
-                                      ? 'Don\'t have an account? '
-                                      : 'Have an account? ',
-                                  style: kDefaultTextStyle,
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                        text: isSignin
-                                            ? ' Create account'
-                                            : ' Log in',
-                                        recognizer: _tapGestureRecognizer,
-                                        style: kDefaultTextStyle.copyWith(
-                                            decoration:
-                                                TextDecoration.underline)),
-                                  ],
-                                ),
-                                style: TextStyle(
-                                    color: Colors.black.withOpacity(0.5)),
+                              child: const TextWidget(
+                                "Forgot Password?",
+                                color: AppColors.blue,
                               ),
-                            ],
+                            ),
+                          ),
+                          kVerticalSpaceRegular,
+                          Align(
+                            alignment: Alignment.center,
+                            child: Text.rich(
+                              TextSpan(
+                                text: isSignin
+                                    ? 'Don\'t have an account? '
+                                    : 'Have an account? ',
+                                style:
+                                    kDefaultTextStyle.copyWith(fontSize: 14.sp),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: isSignin
+                                          ? ' Create account'
+                                          : ' Log in',
+                                      recognizer: _tapGestureRecognizer,
+                                      style: kDefaultTextStyle.copyWith(
+                                          fontSize: 14.sp,
+                                          color: AppColors.blue,
+                                          decoration:
+                                              TextDecoration.underline)),
+                                ],
+                              ),
+                              style: kDefaultTextStyle.copyWith(
+                                fontSize: 14.sp,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ],
                       ),

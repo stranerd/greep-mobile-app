@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as g;
 import 'package:greep/application/auth/AuthenticationCubit.dart';
@@ -65,16 +66,16 @@ class _SplashScreenState extends State<AuthenticationSplashScreen> {
                             scale: 2,
                           ),
                           kVerticalSpaceLarge,
-                          const TextWidget(
+                           TextWidget(
                             "Allow “Greep” to access your location?",
                             weight: FontWeight.bold,
-                            fontSize: 22,
+                            fontSize: 20.sp,
                           ),
                           kVerticalSpaceRegular,
-                          const TextWidget(
+                           TextWidget(
                             "Your location data will be used to give you a realtime ride experience of your trips and allow managers to see your trip history and realtime trip progress",
                             weight: FontWeight.w500,
-                            fontSize: 18,
+                            fontSize: 14.sp,
                           ),
                           kVerticalSpaceLarge,
                           const Divider(
@@ -97,10 +98,10 @@ class _SplashScreenState extends State<AuthenticationSplashScreen> {
                             child: Column(
                               children: [
                                 kVerticalSpaceSmall,
-                                const TextWidget(
+                                 TextWidget(
                                   "Allow",
                                   color: AppColors.blue,
-                                  fontSize: 20,
+                                  fontSize: 18.sp,
                                   weight: FontWeight.bold,
                                 ),
                                 kVerticalSpaceSmall,
@@ -121,10 +122,10 @@ class _SplashScreenState extends State<AuthenticationSplashScreen> {
                             child: Column(
                               children: [
                                 kVerticalSpaceSmall,
-                                const TextWidget(
+                                 TextWidget(
                                   "Don't Allow",
                                   color: AppColors.blue,
-                                  fontSize: 20,
+                                  fontSize: 18.sp,
                                 ),
                                 kVerticalSpaceSmall,
                               ],

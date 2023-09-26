@@ -50,9 +50,12 @@ class SubmitButton extends StatelessWidget {
                       style: textStyle!=null? textStyle! :kWhiteTextStyle,
                     ),
                   )
-                : const CircularProgressIndicator(
-                    color: kWhiteColor,
-                  ),
+                :  SizedBox(
+              height: 20.r,width: 20.r,
+                  child: CircularProgressIndicator(
+                      color: kWhiteColor,
+                    ),
+                ),
           ),
         ),
       ),
