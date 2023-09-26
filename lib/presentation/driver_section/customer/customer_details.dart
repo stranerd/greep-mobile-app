@@ -53,7 +53,9 @@ class _CustomerDetailsState extends State<CustomerDetails> {
   Widget build(BuildContext context) {
     num debt = customer != null ? customer!.debt : 0;
 
-    return BlocListener<UserCustomersCubit, UserCustomersState>(
+    return MultiBlocListener(
+  listeners: [
+    BlocListener<UserCustomersCubit, UserCustomersState>(
       listener: (context, state) {
         if (state is UserCustomersStateFetched) {
           setState(() {
@@ -65,7 +67,16 @@ class _CustomerDetailsState extends State<CustomerDetails> {
           });
         }
       },
-      child: Scaffold(
+),
+    BlocListener<UserTransactionsCubit, UserTransactionsState>(
+      listener: (context, state) {
+        setState(() {
+          _customerSummary = GetIt.I<CustomerStatisticsCubit>().getCustomerSummary(widget.name);
+        });
+      },
+    ),
+  ],
+  child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -187,7 +198,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
           ),
         ),
       ),
-    );
+);
   }
 
   _setFilter(String filter) {

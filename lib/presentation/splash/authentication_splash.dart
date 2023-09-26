@@ -143,6 +143,7 @@ class _SplashScreenState extends State<AuthenticationSplashScreen> {
           }
         }
         if (state is UserStateError) {
+          print("user state error  ${state.errorMessage}");
           if (state.isSocket || state.isConnectionTimeout) {
             Fluttertoast.showToast(
                 msg: state.errorMessage ?? "Please check your internet");

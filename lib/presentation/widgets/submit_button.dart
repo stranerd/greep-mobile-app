@@ -19,7 +19,7 @@ class SubmitButton extends StatelessWidget {
   const SubmitButton(
       {Key? key,
       this.isLoading = false,
-        this.borderRadius = kDefaultSpacing * 0.3,
+        this.borderRadius = 12,
       required this.text,
       this.fontSize = 22,
         this.padding = kDefaultSpacing,

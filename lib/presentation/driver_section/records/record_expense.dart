@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart' as dt;
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
@@ -323,10 +323,10 @@ class _RecordExpenseState extends State<RecordExpense> with ScaffoldMessengerSer
   }
 
   void _pickDate() {
-    DatePicker.showDatePicker(context, theme: DatePickerTheme()).then((value) {
+    dt.DatePicker.showDatePicker(context, theme: dt.DatePickerTheme()).then((value) {
       if (value == null) return;
       DateTime selectedDate = value;
-      DatePicker.showTime12hPicker(
+      dt.DatePicker.showTime12hPicker(
         context,
       ).then((value) {
         if (value == null) {

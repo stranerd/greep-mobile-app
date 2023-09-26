@@ -23,6 +23,8 @@ class AuthenticationClient {
         data: request.toJson(),
       );
 
+      print("sign in data");
+
       return ResponseEntity.Data({
         "id": response.data["user"]["id"],
         "token": response.data["accessToken"],
@@ -133,6 +135,8 @@ class AuthenticationClient {
         ),
       );
 
+      print("signup data ${response.data}");
+
       return ResponseEntity.Data({
         "id": response.data["user"]["id"],
         "token": response.data["accessToken"],
@@ -147,6 +151,7 @@ class AuthenticationClient {
         return ResponseEntity.Socket();
       }
       if (e.type == DioErrorType.response) {
+        print("signup data ${e.response?.data}");
         return ResponseEntity.Error(
             e.response!.data["message"] ?? "An error occurred in sign up");
       }

@@ -29,6 +29,7 @@ class UserClient {
         return ResponseEntity.Socket();
       }
       if (e.type == DioErrorType.response) {
+        print("error in user ${e.response?.data}");
         try {
           if (e.response!.data[0]["message"]
               .toString()
@@ -58,7 +59,7 @@ class UserClient {
       }
       return ResponseEntity.Error(message);
     } catch (e) {
-      print("Exception $e");
+      print("User Exception error $e");
       return ResponseEntity.Error(
           "An error occurred logging you in. Try again");
     }

@@ -94,7 +94,7 @@ class OnboardingSlidesWidgetView2
                                                 color: index == 1
                                                     ? kWhiteColor
                                                     : kBlackColor,
-                                                fontSize: 20,
+                                                fontSize: 20.sp,
                                               ),
                                             ),
                                           ),
@@ -113,7 +113,7 @@ class OnboardingSlidesWidgetView2
                                                   color: index == 1
                                                       ? kWhiteColor
                                                       : kBlackColor,
-                                                  fontSize: 15
+                                                  fontSize: 15.sp
 //                                                backgroundColor: kBlackColor,
                                                   ),
                                             ),

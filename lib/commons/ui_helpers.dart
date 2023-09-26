@@ -21,7 +21,7 @@ const kDefaultSpacing = 16.18;
  Widget kVerticalSpaceLarge = SizedBox(height: (kDefaultSpacing * 2.0).h);
 
 var kDefaultTextStyle = GoogleFonts.poppins(
-  fontSize: 15.18,
+  fontSize: 14,
   color: kBlackColor,
 );
 
@@ -31,7 +31,7 @@ var kBoldTextStyle = kDefaultTextStyle.copyWith(
 
 var kBoldTextStyle2 = const TextStyle(
   fontFamily: "Poppins-Bold",
-  fontSize: 15.18,
+  fontSize: 14,
   color: kBlackColor,
 );
 

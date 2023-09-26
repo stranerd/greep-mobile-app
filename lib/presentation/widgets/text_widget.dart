@@ -34,11 +34,11 @@ class TextWidget extends StatelessWidget {
           ? kDefaultTextStyle.copyWith(
               color: color,
               fontWeight: weight,
-              fontSize: fontSize?.sp,
+              fontSize: fontSize ?? 14.sp,
               letterSpacing: letterSpacing)
           : style!.copyWith(
               color: color,
-              fontSize: fontSize?.sp,
+              fontSize: fontSize ?? 14.sp,
               fontWeight: weight,
               letterSpacing: letterSpacing),
       textAlign: textAlign,

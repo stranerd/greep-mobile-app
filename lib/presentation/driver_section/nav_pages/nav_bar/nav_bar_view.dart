@@ -23,7 +23,6 @@ import 'package:greep/domain/user/model/manager_request.dart';
 import 'package:greep/ioc.dart';
 import 'package:greep/presentation/driver_section/map/map_screen.dart';
 import 'package:greep/presentation/driver_section/records/trip_directions_screen.dart';
-import 'package:stacked/stacked.dart';
 import 'package:upgrader/upgrader.dart';
 
 import '../../../../utils/constants/app_colors.dart';
@@ -33,7 +32,6 @@ import '../../customer/customer_page.dart';
 import '../../home_page.dart';
 import '../../transaction/view_transactions.dart';
 import '../settings/home_page.dart';
-import 'nav_bar_viewmodel.dart';
 import 'package:greep/application/user/utils/get_current_user.dart';
 
 class NavBarView extends StatefulWidget {
