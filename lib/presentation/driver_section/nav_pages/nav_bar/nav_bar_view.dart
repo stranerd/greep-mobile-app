@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:greep/application/driver/drivers_cubit.dart';
@@ -22,7 +23,9 @@ import 'package:greep/domain/firebase/Firebase_service.dart';
 import 'package:greep/domain/user/model/manager_request.dart';
 import 'package:greep/ioc.dart';
 import 'package:greep/presentation/driver_section/map/map_screen.dart';
+import 'package:greep/presentation/driver_section/message/messages_screen.dart';
 import 'package:greep/presentation/driver_section/records/trip_directions_screen.dart';
+import 'package:greep/presentation/widgets/add_record_dialog.dart';
 import 'package:upgrader/upgrader.dart';
 
 import '../../../../utils/constants/app_colors.dart';
@@ -44,12 +47,10 @@ class NavBarView extends StatefulWidget {
 class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
   int _currNavIndex = 0;
 
-
   @override
   void initState() {
     super.initState();
-      getIt<LocationCubit>().subscribe();
-
+    getIt<LocationCubit>().subscribe();
   }
 
   @override
@@ -88,7 +89,6 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
         ),
       ],
       child: Scaffold(
-
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currNavIndex,
           onTap: setCurrNav,
@@ -105,49 +105,52 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
             children: _children,
           ),
         ),
-        floatingActionButton: _currNavIndex != 0 ? null : SizedBox(
-          height: 70.h,
-          width: 70.w,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: FloatingActionButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                        context: context,
-                        enableDrag: true,
-                        // backgroundColor: Colors.transparent,
-                        isDismissible: true,
-                        isScrollControlled: true,
-                        builder: (context) {
-                          return const TripDirectionsScreen();
-                        });
-                  },
-                  child: Image.asset(
-                    "assets/icons/map_navigator.png",
-                    scale: 2,
-                  ),
+        floatingActionButton: _currNavIndex != 0
+            ? null
+            : SizedBox(
+                height: 64.r,
+                width: 64.r,
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: FloatingActionButton(
+                        onPressed: () {
+                          showModalBottomSheet(
+                              context: context,
+                              enableDrag: true,
+                              // backgroundColor: Colors.transparent,
+                              isDismissible: true,
+                              isScrollControlled: true,
+                              builder: (context) {
+                                return const AddRecordDialog();
+                              });
+                        },
+                        child: Icon(Icons.add,color: AppColors.white,size: 32.r,)
+                      ),
+                    ),
+                    // Positioned(
+                    //     top: 0,
+                    //     right: 0,
+                    //     child: BlocBuilder<TripDirectionBuilderCubit,
+                    //         TripDirectionBuilderState>(
+                    //       builder: (context, state) {
+                    //         return Container(
+                    //           width: 20.w,
+                    //           height: 20.h,
+                    //           decoration: BoxDecoration(
+                    //             shape: BoxShape.circle,
+                    //             color: state is TripDirectionBuilderStateGotTrip
+                    //                 ? AppColors.blue
+                    //                 : state is TripDirectionBuilderStateStartTrip
+                    //                     ? AppColors.green
+                    //                     : AppColors.red,
+                    //           ),
+                    //         );
+                    //       },
+                    //     ))
+                  ],
                 ),
               ),
-              Positioned(
-                  top: 0,
-                  right: 0,
-                  child: BlocBuilder<TripDirectionBuilderCubit, TripDirectionBuilderState>(
-                    builder: (context, state) {
-
-                      return Container(
-                        width: 20.w,
-                        height: 20.h,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: state is TripDirectionBuilderStateGotTrip ? AppColors.blue: state is TripDirectionBuilderStateStartTrip ? AppColors.green : AppColors.red,
-                        ),
-                      );
-                    },
-                  ))
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -155,26 +158,24 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
   final List<Widget> _children = const [
     HomeScreen(),
     CustomerScreen(),
+    // MapScreen(),
+    MessagesScreen(),
     TransactionsScreen(),
-    MapScreen(),
-    SettingsHome(),
   ];
 
   List<BottomNavigationBarItem> getBottomIcons() {
     List<SvgData> icons = [
       SvgAssets.home,
       SvgAssets.people,
+      SvgAssets.message,
       SvgAssets.history,
-      SvgAssets.map,
-      SvgAssets.settings,
     ];
 
     List<SvgData> icon = [
       SvgAssets.homeActive,
       SvgAssets.peopleActive,
+      SvgAssets.message,
       SvgAssets.historyActive,
-      SvgAssets.mapActive,
-      SvgAssets.settingsActive,
     ];
 
     List<String> name = [
@@ -185,17 +186,27 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
           'Settings',
     ];
 
-    List<BottomNavigationBarItem> bottomNavList = List.generate(5, (i) {
+    List<BottomNavigationBarItem> bottomNavList = List.generate(4, (i) {
       var item = BottomNavigationBarItem(
         label: '',
         icon: SvgIcon(
           svgIcon: icons[i],
-          size: 25.r,
+          size: 24.r,
         ),
-        activeIcon: SvgIcon(
-          svgIcon: icon[i],
-          color: AppColors.black,
-          size: 25.r,
+        activeIcon: Column(
+          children: [
+            SvgIcon(
+              svgIcon: icons[i],
+              color: AppColors.black,
+              size: 24.r,
+            ),
+            kVerticalSpaceTiny,
+            SvgPicture.asset(
+              "assets/icons/nav-active.svg",
+              width: 4.r,
+              height: 4.r,
+            )
+          ],
         ),
       );
 
@@ -209,8 +220,6 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
     setState(() {
       _currNavIndex = index;
     });
-
-
   }
 
   void showManagerRequest(ManagerRequest request) async {
@@ -250,7 +259,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
                       child: Dialog(
                         shape: RoundedRectangleBorder(
                             borderRadius:
-                            BorderRadius.circular(kDefaultSpacing)),
+                                BorderRadius.circular(kDefaultSpacing)),
                         child: Container(
                           height: 300,
                           padding: const EdgeInsets.all(kDefaultSpacing),
@@ -270,7 +279,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
                                     TextSpan(children: [
                                       TextSpan(
                                           text:
-                                          "Manager ${request.managerName} ",
+                                              "Manager ${request.managerName} ",
                                           style: kBoldTextStyle),
                                       const TextSpan(
                                         text: "with id ",
@@ -280,12 +289,11 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
                                           style: kBoldTextStyle),
                                       TextSpan(
                                           text:
-                                          " has requested to access your list of transactions and gets a commission of ",
+                                              " has requested to access your list of transactions and gets a commission of ",
                                           style: kDefaultTextStyle),
                                       TextSpan(
                                           text:
-                                          "${(request.commission * 100)
-                                              .toStringAsFixed(1)}% ",
+                                              "${(request.commission * 100).toStringAsFixed(1)}% ",
                                           style: kBoldTextStyle),
                                       TextSpan(
                                           text: "of every transactions made!",
@@ -297,12 +305,12 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
                               ),
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   TextButton(
                                     onPressed: () async {
                                       bool shouldAccept =
-                                      await confirmRequest(true);
+                                          await confirmRequest(true);
                                       if (shouldAccept) {
                                         userCrudCubit.acceptManager(
                                             managerId: request.managerId,
@@ -310,13 +318,13 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
                                       }
                                     },
                                     child: state is UserCrudStateLoading &&
-                                        state.isManagerAdd
+                                            state.isManagerAdd
                                         ? const CircularProgressIndicator()
                                         : Text(
-                                      "Accept",
-                                      style: kWhiteTextStyle.copyWith(
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                            "Accept",
+                                            style: kWhiteTextStyle.copyWith(
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                     style: TextButton.styleFrom(
                                       textStyle: kWhiteTextStyle.copyWith(
                                           fontWeight: FontWeight.bold),
@@ -329,7 +337,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
                                   TextButton(
                                     onPressed: () async {
                                       bool shouldAccept =
-                                      await confirmRequest(false);
+                                          await confirmRequest(false);
                                       if (shouldAccept) {
                                         userCrudCubit.rejectManager(
                                             managerId: request.managerId,
@@ -337,16 +345,16 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
                                       }
                                     },
                                     child: state is UserCrudStateLoading &&
-                                        state.isManagerReject
+                                            state.isManagerReject
                                         ? const CircularProgressIndicator()
                                         : Text(
-                                      "Reject",
-                                      style: kBoldTextStyle,
-                                    ),
+                                            "Reject",
+                                            style: kBoldTextStyle,
+                                          ),
                                     style: TextButton.styleFrom(
                                       textStyle: kBoldTextStyle,
                                       tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
+                                          MaterialTapTargetSize.shrinkWrap,
                                       padding: const EdgeInsets.all(
                                           kDefaultSpacing * 0.5),
                                       minimumSize: Size.zero,
@@ -369,19 +377,17 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
 
   Future<bool> confirmRequest(bool shouldAccept) async {
     return await showDialog<bool?>(
-        barrierDismissible: true,
-        context: context,
-        builder: (context) {
-          return Dialog(
-              child: Container(
+            barrierDismissible: true,
+            context: context,
+            builder: (context) {
+              return Dialog(
+                  child: Container(
                 padding: const EdgeInsets.all(kDefaultSpacing),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "Are you sure you want to ${shouldAccept
-                          ? 'accept'
-                          : 'reject'} manager?",
+                      "Are you sure you want to ${shouldAccept ? 'accept' : 'reject'} manager?",
                       softWrap: true,
                       textAlign: TextAlign.center,
                       style: kDefaultTextStyle.copyWith(height: 1.35),
@@ -415,7 +421,7 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
                   ],
                 ),
               ));
-        }) ??
+            }) ??
         false;
   }
 }

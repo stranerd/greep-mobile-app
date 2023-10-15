@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:greep/application/user/utils/get_current_user.dart';
 
@@ -16,8 +18,10 @@ import 'package:dio/dio.dart' as dio;
 import 'package:greep/commons/scaffold_messenger_service.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/user/model/User.dart';
+import 'package:greep/presentation/widgets/back_icon.dart';
 import 'package:greep/presentation/widgets/input_text_field.dart';
 import 'package:greep/presentation/widgets/submit_button.dart';
+import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/utils/constants/app_styles.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
@@ -70,20 +74,13 @@ class _EditProfileState extends State<EditProfile>
             backgroundColor: Colors.white,
             appBar: AppBar(
               backgroundColor: Colors.white,
-              leading: IconButton(
-                onPressed: () {
-                  Get.back();
-                },
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  size: 16,
-                ),
+              leading: const BackIcon(isArrow:true,),
+              title: TextWidget(
+                "Edit account",
+                fontSize: 18.sp,
+                weight: FontWeight.bold,
               ),
-              title: Text(
-                "Edit Account",
-                style: AppTextStyles.blackSizeBold14,
-              ),
-              centerTitle: false,
+              centerTitle: true,
               elevation: 0.0,
             ),
             body: SingleChildScrollView(
@@ -95,12 +92,12 @@ class _EditProfileState extends State<EditProfile>
                     width: Get.width,
                     alignment: Alignment.centerLeft,
                     child: SizedBox(
-                      height: 100,
-                      width: 100,
+                      height: 80.r,
+                      width: 80.r,
                       child: Stack(clipBehavior: Clip.none, children: [
                         Container(
-                          height: 100,
-                          width: 100,
+                          height: 80.r,
+                          width: 80.r,
                           clipBehavior: Clip.hardEdge,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
@@ -119,25 +116,17 @@ class _EditProfileState extends State<EditProfile>
                                   width: 100,
                                 ),
                         ),
-                        Positioned(
-                          right: -10,
-                          bottom: 0,
+                        Align(
+                          alignment: Alignment.center,
                           child: InkWell(
                             onTap: () async {
                               pickImage(
                                   source: ImageSource.gallery,
                                   context: context);
                             },
-                            child: Container(
-                                height: 50,
-                                width: 50,
-                                decoration: const BoxDecoration(
-                                    color: kBlackColor, shape: BoxShape.circle),
-                                child: Image.asset(
-                                  "assets/icons/camera.png",
-                                  width: 40,
-                                  height: 40,
-                                )),
+                            child: SvgPicture.asset(
+                              "assets/icons/camera.svg",
+                            ),
                           ),
                         ),
                       ]),
@@ -151,58 +140,53 @@ class _EditProfileState extends State<EditProfile>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           kVerticalSpaceRegular,
-                          Row(
+                          Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("First Name",
-                                        style: AppTextStyles.blackSize14),
-                                    kVerticalSpaceSmall,
-                                    LoginTextField(
-                                      customController: _firstNameController,
-                                      validator: emptyFieldValidator,
-                                      onChanged: (String value) {
-                                        _firstName = value;
-                                        setState(() {});
-                                      },
-                                      withTitle: false,
-                                      withBorder: true,
-                                    ),
-                                  ],
-                                ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("First Name",
+                                      style: AppTextStyles.blackSize14),
+                                  kVerticalSpaceSmall,
+                                  InputTextField(
+                                    customController: _firstNameController,
+                                    validator: emptyFieldValidator,
+                                    onChanged: (String value) {
+                                      _firstName = value;
+                                      setState(() {});
+                                    },
+                                    withTitle: false,
+                                    withBorder: true,
+                                  ),
+                                ],
                               ),
-                              kHorizontalSpaceRegular,
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("Last Name",
-                                        style: AppTextStyles.blackSize14),
-                                    kVerticalSpaceSmall,
-                                    LoginTextField(
-                                      customController: _lastNameController,
-                                      validator: emptyFieldValidator,
-                                      onChanged: (String value) {
-                                        setState(() {
-                                          _lastName = value;
-                                        });
-                                      },
-                                      withTitle: false,
-                                      withBorder: true,
-                                    ),
-                                  ],
-                                ),
+                              SizedBox(height: 24.h,),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Last Name",
+                                      style: AppTextStyles.blackSize14),
+                                  kVerticalSpaceSmall,
+                                  InputTextField(
+                                    customController: _lastNameController,
+                                    validator: emptyFieldValidator,
+                                    onChanged: (String value) {
+                                      setState(() {
+                                        _lastName = value;
+                                      });
+                                    },
+                                    withTitle: false,
+                                    withBorder: true,
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          const SizedBox(
-                            height: 16.0,
+                          SizedBox(
+                            height: 24.0.h,
                           ),
                           SubmitButton(
-                            backgroundColor: kGreenColor,
                               enabled: (_firstNameController.text.isNotEmpty &&
                                   _lastNameController.text.isNotEmpty),
                               text: "Save",

@@ -50,34 +50,27 @@ class _TopCustomersViewState extends State<TopCustomersView> {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: kDefaultSpacing * 0.5),
       decoration: BoxDecoration(
-        color: const Color.fromRGBO(24, 93, 231, 0.1),
-        borderRadius: BorderRadius.circular(kDefaultSpacing * 0.5),
       ),
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  SvgPicture.asset("assets/icons/star.svg",),
-                  kHorizontalSpaceTiny,
-                  SvgPicture.asset("assets/icons/star.svg"),
-                  kHorizontalSpaceTiny,
-                  SvgPicture.asset("assets/icons/star.svg"),
-                ],
-              ),
-              kHorizontalSpaceRegular,
-              const TextWidget(
+              SvgPicture.asset("assets/icons/star-gold.svg",),
+              SvgPicture.asset("assets/icons/star-gold.svg"),
+              SvgPicture.asset("assets/icons/star-gold.svg"),
+               TextWidget(
                 "Top Customers",
-                fontSize: 18,
+                fontSize: 14.sp,
                 weight: FontWeight.bold,
               ),
+              SvgPicture.asset("assets/icons/star-gold.svg",),
+              SvgPicture.asset("assets/icons/star-gold.svg"),
+              SvgPicture.asset("assets/icons/star-gold.svg"),
             ],
           ),
-          kVerticalSpaceSmall,
+          SizedBox(height: 12.h,),
           topCustomers.isEmpty
               ? const TextWidget(
                   "No top customers",
@@ -92,12 +85,12 @@ class _TopCustomersViewState extends State<TopCustomersView> {
                             children: [
                               TextWidget(
                                 "${index + 1}.",
-                                fontSize: 16,
+                                fontSize: 14.sp,
                               ),
                               kHorizontalSpaceTiny,
                               TextWidget(
                                 topCustomers[index].capitalizeFirst!,
-                                fontSize: 16,
+                                fontSize: 14.sp,
                               ),
                             ],
                           )),

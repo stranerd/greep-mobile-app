@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:greep/Commons/colors.dart';
 import 'package:greep/application/transactions/response/transaction_summary.dart';
@@ -9,6 +10,7 @@ import 'package:greep/commons/money.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/transaction/transaction.dart';
 import 'package:greep/presentation/driver_section/statistics/top_customers.dart';
+import 'package:greep/presentation/driver_section/statistics/widgets/transaction_statistics_summary_card.dart';
 import 'package:greep/presentation/driver_section/widgets/chart_transaction_indicator.dart';
 import 'package:greep/presentation/driver_section/widgets/transaction_history.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
@@ -146,95 +148,44 @@ class _DailyTransactionsStatisticsCardState
               TextWidget(
                 selectedDay,
                 weight: FontWeight.bold,
-                fontSize: 16,
+                fontSize: 14.sp,
               ),
               Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: kDefaultSpacing * 0.6,
-                      vertical: kDefaultSpacing * 0.3,
+                  GestureDetector(
+                    onTap: () {
+                      _controller.previousPage(duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+                    },
+                    child: SvgPicture.asset(
+                      "assets/icons/arrowleft.svg",
+                      width: 24.w,
                     ),
-                    decoration: BoxDecoration(
-                        color: AppColors.lightGray,
-                        borderRadius: BorderRadius.circular(
-                          kDefaultSpacing,
-                        )),
-                    child: DropdownButton<String>(
-                        isDense: true,
-                        value: months[selectedMonth],
-                        underline: const SizedBox(),
-                        icon: const Icon(
-                          Icons.keyboard_arrow_down_rounded,
-                          size: 16,
-                        ),
-                        items: months
-                            .map(
-                              (e) => DropdownMenuItem<String>(
-                                value: e,
-                                child: TextWidget(
-                                  e.substring(0,3).toString(),
-                                  fontSize: 16,
-                                  weight: FontWeight.bold,
-                                ),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (value) {
-                          selectedMonth = months.indexOf(value ?? "");
-                          touchedIndex =
-                              DateTime(selectedYear, selectedMonth + 1)
-                                      .difference(DateTime(selectedYear))
-                                      .inDays
-                                      .abs() +
-                                  (_isLeapYear(selectedYear)
-                                      ? (availableDays.length - 366)
-                                      : (availableDays.length - 365));
-                          _controller.animateToPage(
-                              (touchedIndex / 7).floor(),
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.easeIn);
-                          // generateAvailableDays();
-                          setState(() {});
-                        }),
                   ),
-                  kHorizontalSpaceSmall,
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: kDefaultSpacing * 0.6,
-                        vertical: kDefaultSpacing * 0.3),
-                    decoration: BoxDecoration(
-                        color: AppColors.lightGray,
-                        borderRadius: BorderRadius.circular(kDefaultSpacing)),
-                    child: DropdownButton<int>(
-                        isDense: true,
-                        value: selectedYear,
-                        underline: const SizedBox(),
-                        icon: const Icon(
-                          Icons.keyboard_arrow_down_rounded,
-                          size: 16,
-                        ),
-                        items: years
-                            .map(
-                              (e) => DropdownMenuItem<int>(
-                                value: e,
-                                child: TextWidget(
-                                  e.toString(),
-                                  fontSize: 16,
-                                  weight: FontWeight.bold,
-                                ),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (value) {
-                          selectedYear = value ?? selectedYear;
-                          setState(() {});
-                          generateAvailableDays();
-                          setState(() {});
-                        }),
+                  SizedBox(
+                    width: 3.w,
+                  ),
+                  Builder(
+                    builder: (context) {
+                      DateTime date = ((pageIndex * 7) + 7) > availableDays.length ? availableDays[pageIndex * 7] : availableDays[(pageIndex * 7) + 7];
+                      return TextWidget(
+                          "${DateFormat("${DateFormat.ABBR_MONTH} ${DateFormat.DAY}").format(date.subtract(const Duration(days: 7,),),)} - ${DateFormat("${DateFormat.ABBR_MONTH} ${DateFormat.DAY}").format(date)}");
+                    }
+                  ),
+                  SizedBox(
+                    width: 3.w,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      _controller.nextPage(duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+
+                    },
+                    child: SvgPicture.asset(
+                      "assets/icons/arrowright.svg",
+                      width: 24.w,
+                    ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
@@ -252,42 +203,74 @@ class _DailyTransactionsStatisticsCardState
                 ((sum == 0 ? 0 : summary.expenseAmount.abs() / sum) *
                     100 *
                     (total / 100));
-            double income = ((sum == 0 ? 0 : summary.income <= 0 ? 0 :  summary.income.abs() / (total)) *
+            double income = ((sum == 0
+                    ? 0
+                    : summary.income <= 0
+                        ? 0
+                        : summary.income.abs() / (sum)) *
+                100 *
+                (total / 100));
+            double trip = ((summary.tripAmount == 0
+                ? 0
+                : summary.tripAmount <= 0
+                ? 0
+                : summary.tripAmount.abs() / (sum)) *
                 100 *
                 (total / 100));
 
-            // print(""
-            //     "summary: $summary \n"
-            //     "highest: $highestAmount, \n"
-            //     "summaryAmount: ${summary.tripAmount.abs()}  \n"
-            //     "total: $total,  \n"
-            //     "expense: $expense,  \n"
-            //     "income: $income"
-            //     "tochedIndex: $touchedIndex $i \n");
-            barGroups.add(
+           if (touchedIndex == i) {
+             // print(""
+             //     "summary: $summary \n"
+             //     "highest: $highestAmount, \n"
+             //     "summaryAmount: ${summary.tripAmount.abs()}  \n"
+             //     "total: $total,  \n"
+             //     "expense: $expense,  \n"
+             // "trips: ${trip} \n"
+             //     "income: $income \n"
+             //     "tochedIndex: $touchedIndex $i \n");
+           }barGroups.add(
               BarChartGroupData(
                 x: i,
                 barRods: [
                   BarChartRodData(
-                    toY: total,
-                    color: const Color(0xffDDDFE2),
-                    width: Get.width * 0.11,
-                    rodStackItems: touchedIndex == i
-                        ? [
-                      BarChartRodStackItem(income, total, AppColors.blue),
-
-                      BarChartRodStackItem(
-                                expense, income, AppColors.green),
-                            BarChartRodStackItem(0, expense, AppColors.red)
-                          ]
-                        : [],
-                    borderRadius:
-                        BorderRadius.circular(kDefaultSpacing * 0.2),
-                    backDrawRodData: BackgroundBarChartRodData(
-                      show: true,
-                      toY: total,
-                      color: const Color(0xffDDDFE2),
-                    ),
+                    toY: 0,
+                    color: touchedIndex == i
+                        ? AppColors.coinGold
+                        : const Color(0xffDDDFE2),
+                    width: Get.width * 0.10 * 0.2,
+                    borderRadius: BorderRadius.circular(6.r),
+                  ),
+                  BarChartRodData(
+                    toY: income,
+                    color: touchedIndex == i
+                        ? AppColors.green
+                        : const Color(0xffDDDFE2),
+                    width: Get.width * 0.1 * 0.2,
+                    borderRadius: BorderRadius.circular(6.r),
+                  ),
+                  BarChartRodData(
+                    toY: trip,
+                    color: touchedIndex == i
+                        ? AppColors.blue
+                        : const Color(0xffDDDFE2),
+                    width: Get.width * 0.1 * 0.2,
+                    borderRadius: BorderRadius.circular(6.r),
+                  ),
+                  BarChartRodData(
+                    toY: expense,
+                    color: touchedIndex == i
+                        ? AppColors.red
+                        : const Color(0xffDDDFE2),
+                    width: Get.width * 0.1 * 0.2,
+                    borderRadius: BorderRadius.circular(6.r),
+                  ),
+                  BarChartRodData(
+                    toY: 0,
+                    color: touchedIndex == i
+                        ? AppColors.blueGreen
+                        : const Color(0xffDDDFE2),
+                    width: Get.width * 0.1 * 0.2,
+                    borderRadius: BorderRadius.circular(6.r),
                   ),
                 ],
                 showingTooltipIndicators: [],
@@ -318,20 +301,19 @@ class _DailyTransactionsStatisticsCardState
                   return;
                 } else {
                   setState(() {
-                    touchedIndex =
-                        barTouchResponse.spot!.touchedBarGroupIndex +
-                            (pageIndex * 7);
-                    String abrr = _getDayAbbr(DateFormat(DateFormat.DAY)
-                        .format(dailySummaries[dailySummaries.keys
-                                    .toList()[touchedIndex]]
+                    touchedIndex = barTouchResponse.spot!.touchedBarGroupIndex +
+                        (pageIndex * 7);
+                    String abrr = _getDayAbbr(DateFormat(DateFormat.DAY).format(
+                        dailySummaries[
+                                    dailySummaries.keys.toList()[touchedIndex]]
                                 ?.transactions
                                 .first
                                 .timeAdded ??
                             DateTime.now()));
                     selectedDay = DateFormat(
-                            "${DateFormat.DAY}'$abrr' ${DateFormat.ABBR_WEEKDAY} ${DateFormat.ABBR_MONTH}")
-                        .format(dailySummaries[dailySummaries.keys
-                                    .toList()[touchedIndex]]
+                            "${DateFormat.ABBR_WEEKDAY}, ${DateFormat.DAY} ${DateFormat.ABBR_MONTH}")
+                        .format(dailySummaries[
+                                    dailySummaries.keys.toList()[touchedIndex]]
                                 ?.transactions
                                 .first
                                 .timeAdded ??
@@ -344,10 +326,10 @@ class _DailyTransactionsStatisticsCardState
                 getTooltipItem: (group, groupIndex, rod, rodIndex) {
                   return BarTooltipItem(
                     ' ',
-                    const TextStyle(
+                    TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      fontSize: 16.sp,
                     ),
                   );
                 },
@@ -358,16 +340,23 @@ class _DailyTransactionsStatisticsCardState
               bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                       showTitles: true,
+                      reservedSize: 48.h,
                       getTitlesWidget: (n, medata) {
-                        String day =
-                            DateFormat(DateFormat.ABBR_WEEKDAY).format(
-                          availableDays.first.add(
-                            Duration(days: n.toInt()),
-                          ),
+                        var nDay = availableDays.first.add(
+                          Duration(days: n.toInt()),
                         );
-                        return TextWidget(
-                          day,
-                          fontSize: 16,
+                        String day = DateFormat(DateFormat.ABBR_WEEKDAY).format(
+                          nDay,
+                        );
+                        return Column(
+                          children: [
+                            SizedBox(height: 10.h,),
+                            TextWidget(
+                              day,
+                              fontSize: 12.sp,
+                            ),
+                            TextWidget(nDay.day.toString(),fontSize: 11.sp,),
+                          ],
                         );
                       })),
               leftTitles: AxisTitles(
@@ -395,7 +384,7 @@ class _DailyTransactionsStatisticsCardState
           );
           return Container(
             alignment: Alignment.center,
-            height: 220.h,
+            height: 112.h,
             width: 1.sw,
             child: PageView(
               controller: _controller,
@@ -413,65 +402,41 @@ class _DailyTransactionsStatisticsCardState
           );
         }),
         kVerticalSpaceRegular,
-        LayoutBuilder(builder: (context, constr) {
-          var income2 = dailySummaries[dailySummaries.keys.toList()[touchedIndex]]?.income ?? 0;
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              SizedBox(
-                width: constr.maxWidth * 0.33,
-                child: ChartTransactionIndicator(
-                  icon: "assets/icons/income_green.svg",
-                  color: kGreenColor,
-                  backgroundColor: const Color.fromRGBO(4, 210, 140, 0.1),
-                  text: "Daily Income",
-                  isNegative: income2 < 0,
-                  isSelected: touchedType == "income",
-                  amount: touchedIndex == -1
-                      ? "0"
-                      : income2.abs().toMoney,
-                ),
-              ),
-              SizedBox(
-                width: constr.maxWidth * 0.33,
-                child: ChartTransactionIndicator(
-                  color: AppColors.blue,
-                  text: "Daily Trip",
-                  icon: "assets/icons/trip_amount_blue.svg",
-                  amount: touchedIndex == -1
-                      ? "0"
-                      : "${dailySummaries[dailySummaries.keys.toList()[touchedIndex]]?.tripAmount.toMoney ?? 0}",
-                  backgroundColor: const Color.fromRGBO(2, 80, 198, 0.1),
-                  isSelected: touchedType == "trip",
-                ),
-              ),
-              SizedBox(
-                width: constr.maxWidth * 0.33,
-                child: ChartTransactionIndicator(
-                  color: AppColors.red,
-                  backgroundColor: const Color(0xffECC2C2),
-                  icon: "assets/icons/expense_red.svg",
-                  amount: touchedIndex == -1
-                      ? "0"
-                      : "${dailySummaries[dailySummaries.keys.toList()[touchedIndex]]?.expenseAmount.toMoney ?? 0}",
-                  text: "Daily Expenses",
-                  isExpense: true,
-                  isSelected: touchedType == "expense",
-                ),
-              ),
-            ],
-          );
-        }),
-        kVerticalSpaceRegular,
         Builder(builder: (context) {
           List<Transaction> transactions2 = touchedIndex == -1
               ? []
               : dailySummaries[dailySummaries.keys.toList()[touchedIndex]]
                       ?.transactions ??
                   [];
+          num expenses = touchedIndex == -1
+              ? 0
+              : dailySummaries[dailySummaries.keys.toList()[touchedIndex]]
+                      ?.expenseAmount ??
+                  0;
+
+          num trips = touchedIndex == -1
+              ? 0
+              : dailySummaries[dailySummaries.keys.toList()[touchedIndex]]
+                      ?.tripAmount ??
+                  0;
+
+          var income =
+              dailySummaries[dailySummaries.keys.toList()[touchedIndex]]
+                      ?.income ??
+                  0;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              TransactionStatisticsSummaryCard(
+                target: 0,
+                income: income,
+                trips: trips,
+                expenses: expenses,
+                withdrawals: 0,
+              ),
+              SizedBox(
+                height: 16.h,
+              ),
               TopCustomersView(
                 transactions: transactions2,
               ),

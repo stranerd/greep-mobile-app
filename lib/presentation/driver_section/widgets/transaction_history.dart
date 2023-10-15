@@ -30,10 +30,10 @@ class TransactionHistorySection extends StatelessWidget {
           dense: true,
           contentPadding: EdgeInsets.zero,
           horizontalTitleGap: 0,
-          title: const TextWidget(
-            "Transaction history",
+          title: TextWidget(
+            "Recent",
             weight: FontWeight.bold,
-            fontSize: 16,
+            fontSize: 16.sp,
           ),
           minVerticalPadding: 0,
           trailing: SplashTap(
@@ -57,20 +57,7 @@ class TransactionHistorySection extends StatelessWidget {
             return const EmptyResultWidget(text: "No recent transactions");
           }
           return ListView.separated(
-            separatorBuilder: (_, __) => Row(
-              children: [
-                SizedBox(
-                  width: 70.w,
-                ),
-                Expanded(
-                  child: Container(
-                    width: Get.width * 0.7,
-                    height: 4.h,
-                    decoration: const BoxDecoration(color: AppColors.lightGray),
-                  ),
-                ),
-              ],
-            ),
+            separatorBuilder: (_, __) => SizedBox(height: 12.h,),
             itemCount: transactions.length,
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,

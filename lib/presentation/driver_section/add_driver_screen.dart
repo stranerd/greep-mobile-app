@@ -10,6 +10,7 @@ import 'package:greep/commons/colors.dart';
 
 import 'package:greep/commons/scaffold_messenger_service.dart';
 import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/presentation/widgets/back_icon.dart';
 import 'package:greep/presentation/widgets/form_input_bg_widget.dart';
 import 'package:greep/presentation/widgets/input_text_field.dart';
 import 'package:greep/presentation/widgets/submit_button.dart';
@@ -70,15 +71,7 @@ class _AddDriverScreenState extends State<AddDriverScreen> with ScaffoldMessenge
                 backgroundColor: Colors.white,
                 appBar: AppBar(
                   backgroundColor: Colors.white,
-                  leading: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon:  Icon(
-                        Icons.arrow_back_ios,
-                        size: 16.r,
-                      ),
-                      color: AppColors.black),
+                  leading: BackIcon(isArrow: true,),
                   title: TextWidget(
                     'Add a Driver',
                     style: AppTextStyles.blackSizeBold14,
@@ -98,7 +91,7 @@ class _AddDriverScreenState extends State<AddDriverScreen> with ScaffoldMessenge
                             "Driver",
                           ),
                           SizedBox(height: 8.h,),
-                          LoginTextField(
+                          InputTextField(
                             hintText: "Enter driver id",
                             customController: _driverIdController,
                             validator: emptyFieldValidator,

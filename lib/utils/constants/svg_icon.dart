@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SvgAssets {
-  static final SvgData home = SvgData('assets/icons/home.svg');
-  static final SvgData people = SvgData('assets/icons/people.svg');
-  static final SvgData history = SvgData('assets/icons/history.svg');
+  static final SvgData home = SvgData('assets/icons/home2.svg');
+  static final SvgData people = SvgData('assets/icons/people2.svg');
+  static final SvgData history = SvgData('assets/icons/history2.svg');
   static final SvgData settings = SvgData('assets/icons/settings.svg');
+  static final SvgData message = SvgData('assets/icons/message.svg');
+
   static final SvgData map = SvgData("assets/icons/map.svg");
 
   static final SvgData homeActive = SvgData('assets/icons/home-active.svg');

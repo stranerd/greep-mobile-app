@@ -16,7 +16,7 @@ class SocialSigninWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 50,
+        height: 50.h,
         width: Get.width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.r),

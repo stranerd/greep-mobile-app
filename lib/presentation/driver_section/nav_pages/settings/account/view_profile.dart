@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
@@ -14,6 +15,9 @@ import 'package:greep/commons/scaffold_messenger_service.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/user/UserService.dart';
 import 'package:greep/domain/user/model/User.dart';
+import 'package:greep/presentation/driver_section/widgets/settings_home_item.dart';
+import 'package:greep/presentation/widgets/back_icon.dart';
+import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 
@@ -52,18 +56,13 @@ class _ProfileViewState extends State<ProfileView>
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
-          leading: IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              size: 16,
-            ),
-          ),
-          title: Text(
+          leading: const BackIcon(isArrow:true,),
+
+
+          title: TextWidget(
             "Account",
-            style: AppTextStyles.blackSizeBold14,
+            fontSize: 18.sp,
+            weight: FontWeight.bold,
           ),
           actions: [
             IconButton(
@@ -75,10 +74,11 @@ class _ProfileViewState extends State<ProfileView>
                   ),
                 );
               },
-              icon: SvgPicture.asset("assets/icons/edit-icon.svg"),
+              icon: SvgPicture.asset("assets/icons/edit.svg"),
             ),
+            SizedBox(width: 8.w,),
           ],
-          centerTitle: false,
+          centerTitle: true,
           elevation: 0.0,
         ),
         body: SafeArea(
@@ -130,17 +130,18 @@ class _ProfileViewState extends State<ProfileView>
                   },
                 ),
                 kVerticalSpaceLarge,
-                Divider(),
                 kVerticalSpaceRegular,
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: MaterialButton(
-                    onPressed: () async {
+                  child: SplashTap(
+                    onTap: () {
                       deleteAccount();
                     },
-                    child: const TextWidget(
-                      "Delete Account",
-                      color: kErrorColor,
+                    child: const SettingsHomeItem(
+                      title: "Delete account",
+                      icon: "assets/icons/trash.svg",
+                      color: AppColors.red,
+                      withTrail: false,
                     ),
                   ),
                 )

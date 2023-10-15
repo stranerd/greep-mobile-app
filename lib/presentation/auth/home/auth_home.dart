@@ -151,7 +151,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
                       kVerticalSpaceLarge,
                       Column(
                         children: [
-                          LoginTextField(
+                          InputTextField(
                             title: "Email",
                             validator: validateEmail,
                             isPassword: false,
@@ -162,7 +162,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
                             },
                           ),
                           kVerticalSpaceRegular,
-                          LoginTextField(
+                          InputTextField(
                             title: "Password",
                             validator: (String s) {
                               if (s.length < 8) {
@@ -179,7 +179,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
                           ),
                           kVerticalSpaceRegular,
                           if (!isSignin)
-                            LoginTextField(
+                            InputTextField(
                               title: "Confirm password",
                               validator: (String s) {
                                 if (!isSignin) {

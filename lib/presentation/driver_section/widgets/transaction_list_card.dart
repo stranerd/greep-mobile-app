@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart' as g;
 import 'package:greep/commons/colors.dart';
@@ -8,7 +9,13 @@ import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/transaction/TransactionData.dart';
 import 'package:greep/domain/transaction/transaction.dart';
 import 'package:greep/presentation/driver_section/transaction/transaction_details.dart';
+import 'package:greep/presentation/driver_section/transaction/transaction_details_screen.dart';
+import 'package:greep/presentation/widgets/custom_icons.dart';
+import 'package:greep/presentation/widgets/edit_record_dialogue.dart';
+import 'package:greep/presentation/widgets/money_widget.dart';
+import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
+import 'package:greep/presentation/widgets/time_dot_widget.dart';
 import 'package:greep/presentation/widgets/turkish_symbol.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 import 'package:greep/utils/constants/app_styles.dart';
@@ -54,67 +61,134 @@ class TransactionListCard extends StatelessWidget {
         .format(transaction.timeAdded);
 
     initial = type == TransactionType.trip ? "+" : "-";
-    trailText = transaction.amount.abs().toMoney;
+    trailText = transaction.amount.abs().toString();
     trailStyle = type == TransactionType.trip
-        ? kDefaultTextStyle.copyWith(color: kGreenColor,)
+        ? kDefaultTextStyle.copyWith(
+            color: kGreenColor,
+          )
         : kErrorColorTextStyle.copyWith();
-    return Container(
-      decoration: BoxDecoration(
-          border: withBorder
-              ? Border.all(
-                  color: Colors.grey.shade200,
-                )
-              : null,
-          color: withColor ? AppColors.lightGray : null,
-          borderRadius:
-              withBorder ? BorderRadius.circular((kDefaultSpacing * 0.5).r) : null),
-      child: ListTile(
-        contentPadding: padding == null
-            ? EdgeInsets.zero
-            : EdgeInsets.symmetric(horizontal: padding!.w),
-        leading: withLeading
-            ? Container(
-                width: 60,
-                padding: const EdgeInsets.all(
-                  kDefaultSpacing,
-                ),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.lightGray,
-                ),
-                child:
-                    transaction.data.transactionType == TransactionType.expense
-                        ? Image.asset("assets/icons/expense.png",
-                            width: 25.w, height: 25.h)
-                        : SvgPicture.asset("assets/icons/local_taxi.svg"),
-              )
-            : null,
+    return Slidable(
+      closeOnScroll: false,
+      endActionPane: ActionPane(
+        motion: const DrawerMotion(),
+        extentRatio: 0.18,
+
+        children: [
+          SlidableAction(
+            icon: CustomIcons.edit_trip,
+            autoClose: true,
+            foregroundColor: Colors.white,
+            // label: '${widget.chatList.viewersCount}',
+            backgroundColor: AppColors.green,
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(12.r),
+                bottomRight: Radius.circular(
+                  12.r,
+                )),
+            onPressed: (context) {
+              showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  isDismissible: true,
+                  builder: (context) {
+                    return EditRecordDialogue(
+                      transaction: transaction,
+                    );
+                  });
+            },
+          ),
+        ],
+      ),
+      key: Key(transaction.id),
+      child: SplashTap(
         onTap: shouldTap
-            ? () => g.Get.to(() => TransactionDetails(transaction: transaction),
-                transition: g.Transition.fadeIn)
+            ? () => g.Get.to(
+                  () => TransactionDetailsScreen(
+                    transaction: transaction,
+                  ),
+                  transition: g.Transition.fadeIn,
+                )
             : null,
-        title: TextWidget(text, style: AppTextStyles.blackSize14),
-        subtitle: TextWidget(
-          subText,
-          style: kDefaultTextStyle.copyWith(fontSize: 12),
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextWidget(
-              initial,
-              style: trailStyle,
-            ),
-            TurkishSymbol(
-              width: (14.w),
-              height: (14.h),
-              color: trailStyle.color,
-            ),
-            TextWidget(
-              trailText,
-              style: trailStyle,
-            ),
-          ],
+        child: Container(
+          padding: EdgeInsets.all(12.r),
+          decoration: BoxDecoration(
+            borderRadius: withBorder
+                ? BorderRadius.circular(
+                    12.r,
+                  )
+                : null,
+            border: Border.all(color: AppColors.lightGray, width: 2.w),
+            color: AppColors.white,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  if (withLeading)
+                    Row(
+                      children: [
+                        Container(
+                          width: 44.r,
+                          height: 44.r,
+                          padding: EdgeInsets.all(
+                            10.r,
+                          ),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border:
+                                Border.all(width: 2, color: transaction.data.transactionType == TransactionType.expense ? AppColors.red.withOpacity(0.25) : Color(0x3F0150C5)),
+                            color: AppColors.white,
+                          ),
+                          child: transaction.data.transactionType ==
+                                  TransactionType.expense
+                              ? SvgPicture.asset(
+                                  "assets/icons/expense2.svg",
+                                  fit: BoxFit.cover,
+                                )
+                              : SvgPicture.asset(
+                                  "assets/icons/car.svg",
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                        SizedBox(
+                          width: 12.w,
+                        ),
+                      ],
+                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextWidget(
+                        text,
+                        fontSize: 14.sp,
+                      ),
+                      SizedBox(
+                        height: 1.h,
+                      ),
+                      TimeDotWidget(
+                        date: transaction.timeAdded,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextWidget(
+                    initial,
+                    style: trailStyle,
+                  ),
+                  MoneyWidget(
+                    amount: num.tryParse(trailText) ?? 0,
+                    color: trailStyle.color,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -85,7 +85,7 @@ class _TransactionBalanceWidgetState extends State<TransactionBalanceWidget>
                       Expanded(
                         child: Container(
                           decoration: const BoxDecoration(),
-                          child: LoginTextField(
+                          child: InputTextField(
                             customController: _amountController,
                             withTitle: false,
                             textStyle: widget.transaction.debt < 0 ? AppTextStyles.redSize14 : AppTextStyles.blueSize14,

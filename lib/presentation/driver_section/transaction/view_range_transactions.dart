@@ -8,6 +8,7 @@ import 'package:greep/commons/money.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/transaction/transaction.dart';
 import 'package:greep/presentation/driver_section/widgets/empty_result_widget.dart';
+import 'package:greep/presentation/widgets/back_icon.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/presentation/widgets/turkish_symbol.dart';
 import 'package:intl/intl.dart';
@@ -56,15 +57,7 @@ class _RangeTransactionsScreenState extends State<RangeTransactionsScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              size: 16,
-            ),
-            color: AppColors.black),
+        leading: BackIcon(isArrow: true,),
         title: Text(
           'Range',
           style: AppTextStyles.blackSizeBold14,

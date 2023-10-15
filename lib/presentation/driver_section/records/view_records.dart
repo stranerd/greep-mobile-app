@@ -1,32 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart' as dt;
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart' as g;
+import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:greep/application/transactions/response/transaction_summary.dart';
 import 'package:greep/application/transactions/transaction_summary_cubit.dart';
-import 'package:greep/application/user/user_cubit.dart';
-import 'package:greep/application/user/utils/get_current_user.dart';
 import 'package:greep/commons/Utils/utils.dart';
 import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/money.dart';
 import 'package:greep/commons/ui_helpers.dart';
-import 'package:greep/presentation/driver_section/transaction/view_range_transactions.dart';
+import 'package:greep/ioc.dart';
+import 'package:greep/presentation/driver_section/records/views/date_range_view.dart';
 import 'package:greep/presentation/driver_section/widgets/empty_result_widget.dart';
+import 'package:greep/presentation/driver_section/widgets/transaction_list_card.dart';
 import 'package:greep/presentation/driver_section/widgets/transactions_card.dart';
+import 'package:greep/presentation/widgets/back_icon.dart';
+import 'package:greep/presentation/widgets/button_filter_widget.dart';
 import 'package:greep/presentation/widgets/driver_selector_widget.dart';
-import 'package:greep/presentation/widgets/splash_tap.dart';
-import 'package:greep/presentation/widgets/submit_button.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
-import 'package:greep/presentation/widgets/transaction_summary_builder.dart';
 import 'package:greep/presentation/widgets/turkish_symbol.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/constants/app_colors.dart';
 import '../../../utils/constants/app_styles.dart';
-import '../widgets/record_card.dart';
 
 class ViewAllRecords extends StatefulWidget {
   const ViewAllRecords({Key? key}) : super(key: key);
@@ -39,18 +37,22 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
   Map<DateTime, TransactionSummary> transactions = {};
 
   List<String> timeIntervals = ["Daily", "Monthly"];
-  var selectedInterval = "Daily";
-
-  TransactionSummary totalIncome = TransactionSummary.Zero();
-
+  var selectedInterval = "Monthly";
   DateTime? from;
   DateTime? to;
 
+  String selectedFilterType = "all";
+
+  TransactionSummary totalIncome = TransactionSummary.Zero();
+
+  late TransactionSummaryCubit transactionSummaryCubit;
+
   @override
   void initState() {
-    transactions = GetIt.I<TransactionSummaryCubit>().getDailyTransactions();
+    transactionSummaryCubit = getIt();
+    transactions = transactionSummaryCubit.getMonthlyTransactions();
 
-    totalIncome = GetIt.I<TransactionSummaryCubit>().totalSummary();
+    totalIncome = transactionSummaryCubit.totalSummary();
     super.initState();
   }
 
@@ -58,441 +60,453 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
   Widget build(BuildContext context) {
     return BlocConsumer<TransactionSummaryCubit, TransactionSummaryState>(
       listener: (context, state) {
-        transactions =
-            GetIt.I<TransactionSummaryCubit>().getDailyTransactions();
+        transactions = transactionSummaryCubit.getMonthlyTransactions(
+            filter: selectedFilterType, from: from, to: to,);
 
-        totalIncome = GetIt.I<TransactionSummaryCubit>().totalSummary();
+        totalIncome = transactionSummaryCubit.totalSummary();
       },
       builder: (context, state) {
-        return DefaultTabController(
-          length: 2,
-          child: Scaffold(
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-              elevation: 0.0,
-              backgroundColor: Colors.white,
-              leading: IconButton(
-                  onPressed: () {
-                    g.Get.back();
-                  },
-                  icon: const Icon(Icons.arrow_back_ios, size: 16)),
+        return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            elevation: 0.0,
+            title: TextWidget(
+              "Transaction history",
+              weight: FontWeight.bold,
+              fontSize: 18.sp,
             ),
-            body: Column(
+            backgroundColor: Colors.white,
+            leading: const BackIcon(
+              isArrow: true,
+            ),
+          ),
+          body: Container(
+            padding: EdgeInsets.all(kDefaultSpacing.r),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const DriverSelectorRow(),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(width: 1, color: AppColors.black)),
-                    child: TabBar(
-                      indicator: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.black,
-                      ),
-                      labelColor: Colors.white,
-                      labelStyle: AppTextStyles.whiteSize12,
-                      unselectedLabelColor: Colors.black,
-                      unselectedLabelStyle: AppTextStyles.blackSize12,
-                      tabs: const [
-                        Tab(
-                          height: 35,
-                          text: 'Recent',
-                        ),
-                        Tab(
-                          height: 35,
-                          text: 'Range',
-                        ),
-                      ],
+                SizedBox(
+                  height: 16.h,
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: kDefaultSpacing.w),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      12.r,
                     ),
+                    border:
+                        Border.all(color: const Color(0xFFE0E2E4), width: 2),
+                  ),
+                  height: 50.h,
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        "assets/icons/search.svg",
+                        width: 24.r,
+                        height: 24.r,
+                      ),
+                      Expanded(
+                        child: TextField(
+                          onChanged: (s) {},
+                          style: kDefaultTextStyle.copyWith(
+                            fontSize: 15.sp,
+                          ),
+                          decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding: EdgeInsets.only(
+                                  left: 12.w,
+                                  top: 8.h,
+                                  bottom: 8.h,
+                                  right: 12.w),
+                              hintText: "Search",
+                              border: InputBorder.none),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 16.w,
+                      ),
+                      VerticalDivider(
+                        width: 2.w,
+                        color: AppColors.veryLightGray,
+                      ),
+                      SizedBox(
+                        width: 16.w,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return DateRangeView(
+                                    onSelectedDate: (from, to) {
+                                  Get.back();
+                                  this.to = to;
+                                  this.from = from;
+
+                                  transactions = transactionSummaryCubit
+                                      .getMonthlyTransactions(
+                                    filter: selectedFilterType,
+                                    from: from,
+                                    to: to,
+                                  );
+                                  setState(() {});
+                                });
+                              });
+                        },
+                        child: Row(
+                          children: [
+                            TextWidget(
+                              "Range",
+                              color: AppColors.veryLightGray,
+                              fontSize: 14.sp,
+                            ),
+                            SizedBox(
+                              width: 4.w,
+                            ),
+                            SvgPicture.asset(
+                              "assets/icons/range.svg",
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                kVerticalSpaceSmall,
+                SizedBox(
+                  height: 24.h,
+                ),
+                SizedBox(
+                  height: 35.h,
+                  child: ListView(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      ButtonFilterWidget(
+                          onTap: () {
+                            selectedFilterType = "all";
 
+                            transactions = transactionSummaryCubit
+                                .getMonthlyTransactions(filter: "",from: from, to: to,);
+                            setState(() {});
+                          },
+                          isActive: selectedFilterType == "all",
+                          text: "All"),
+                      SizedBox(
+                        width: 12.w,
+                      ),
+                      if (from != null && to != null)
+                        Row(
+                          children: [
+                            ButtonFilterWidget(
+                                onTap: () {},
+                                onCancel: () {
+                                  from = null;
+                                  to = null;
+                                  transactions = transactionSummaryCubit
+                                      .getMonthlyTransactions(
+                                          filter: selectedFilterType,from: from, to: to,);
+                                  setState(() {});
+                                },
+                                withCancel: true,
+                                isActive: true,
+                                text:
+                                    "${DateFormat("${DateFormat.DAY} ${DateFormat.ABBR_MONTH}").format(from!)} - ${DateFormat("${DateFormat.DAY} ${DateFormat.ABBR_MONTH}").format(to!)}"),
+                            SizedBox(
+                              width: 12.w,
+                            ),
+                          ],
+                        ),
+                      ButtonFilterWidget(
+                          onTap: () {
+                            selectedFilterType = "trips";
+
+                            transactions =
+                                transactionSummaryCubit.getMonthlyTransactions(
+                                    filter: selectedFilterType,from: from, to: to,);
+                            setState(() {});
+                          },
+                          isActive: selectedFilterType == "trips",
+                          text: "Trips"),
+                      SizedBox(
+                        width: 12.w,
+                      ),
+                      ButtonFilterWidget(
+                          onTap: () {
+                            selectedFilterType = "expenses";
+
+                            transactions =
+                                transactionSummaryCubit.getMonthlyTransactions(
+                                    filter: selectedFilterType,from: from, to: to,);
+                            setState(() {});
+                          },
+                          isActive: selectedFilterType == "expenses",
+                          text: "Expenses"),
+                      SizedBox(
+                        width: 12.w,
+                      ),
+                      ButtonFilterWidget(
+                          onTap: () {
+                            selectedFilterType = "withdrawals";
+                            transactions =
+                                transactionSummaryCubit.getMonthlyTransactions(
+                                    filter: selectedFilterType,from: from, to: to,);
+                            setState(() {});
+                          },
+                          isActive: selectedFilterType == "withdrawals",
+                          text: "Withdrawals"),
+                      SizedBox(
+                        width: 12.w,
+                      ),
+                      ButtonFilterWidget(
+                          onTap: () {
+                            selectedFilterType = "cash";
+
+                            transactions =
+                                transactionSummaryCubit.getMonthlyTransactions(
+                                    filter: selectedFilterType,from: from, to: to,);
+                            setState(() {});
+                          },
+                          isActive: selectedFilterType == "cash",
+                          text: "Cash"),
+                      SizedBox(
+                        width: 12.w,
+                      ),
+                      ButtonFilterWidget(
+                          onTap: () {
+                            selectedFilterType = "wallet";
+                            transactions =
+                                transactionSummaryCubit.getMonthlyTransactions(
+                                    filter: selectedFilterType,from: from, to: to,);
+                            setState(() {});
+                          },
+                          isActive: selectedFilterType == "wallet",
+                          text: "Wallet"),
+                      SizedBox(
+                        width: 12.w,
+                      ),
+                      ButtonFilterWidget(
+                          onTap: () {
+                            selectedFilterType = "manual";
+
+                            transactions =
+                                transactionSummaryCubit.getMonthlyTransactions(
+                                    filter: selectedFilterType,from: from, to: to,);
+                            setState(() {});
+                          },
+                          isActive: selectedFilterType == "manual",
+                          text: "Manual"),
+                      SizedBox(
+                        width: 12.w,
+                      ),
+                      ButtonFilterWidget(
+                          onTap: () {
+                            selectedFilterType = "automatic";
+
+                            transactions =
+                                transactionSummaryCubit.getMonthlyTransactions(
+                                    filter: selectedFilterType,from: from, to: to,);
+                            setState(() {});
+                          },
+                          isActive: selectedFilterType == "automatic",
+                          text: "Automatic"),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 24.h,
+                ),
                 Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(kDefaultSpacing),
-                    child: TabBarView(
-                      children: [
-                        Builder(
-                          builder: (context) {
-                            if (transactions.isEmpty) {
-                              return const EmptyResultWidget(
-                                text: 'No transactions',
-                              );
-                            } else if (transactions.length == 1 &&
-                                transactions[transactions.keys.first]!
-                                    .transactions
-                                    .isEmpty) {
-                              return const EmptyResultWidget(
-                                text: 'No transactions',
-                              );
-                            } else {
-                              return Column(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: kDefaultSpacing * 0.5),
-                                    alignment: Alignment.centerRight,
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
+                  child: Builder(
+                    builder: (context) {
+                      if (transactions.isEmpty) {
+                        return const EmptyResultWidget(
+                          text: 'No transactions',
+                        );
+                      } else if (transactions.length == 1 &&
+                          transactions[transactions.keys.first]!
+                              .transactions
+                              .isEmpty) {
+                        return const EmptyResultWidget(
+                          text: 'No transactions',
+                        );
+                      } else {
+                        return Column(
+                          children: [
+                            Expanded(
+                              child: ListView.separated(
+                                  physics: const ScrollPhysics(),
+                                  itemBuilder: (c, i) {
+                                    DateTime date =
+                                        transactions.keys.toList()[i];
+                                    String day = "";
+                                    if (selectedInterval.toLowerCase() ==
+                                        "daily") {
+                                      if (areDatesEqual(DateTime.now(), date)) {
+                                        day = "Today";
+                                      } else if (areDatesEqual(
+                                          DateTime.now().subtract(
+                                              const Duration(days: 1)),
+                                          date)) {
+                                        day = "Yesterday";
+                                      } else {
+                                        day = DateFormat(
+                                                "${DateFormat.ABBR_WEEKDAY}, ${DateFormat.DAY} ${DateFormat.MONTH} ${DateFormat.YEAR}")
+                                            .format(date);
+                                      }
+                                    } else if (selectedInterval.toLowerCase() ==
+                                        "monthly") {
+                                      day = DateFormat(
+                                              "${DateFormat.ABBR_MONTH} ${DateFormat.YEAR}")
+                                          .format(date);
+                                    }
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          "Filter",
-                                          style: kDefaultTextStyle,
-                                        ),
-                                        kHorizontalSpaceTiny,
-                                        const Icon(Icons.sort),
-                                      ],
-                                    ),
-                                  ),
-                                  kVerticalSpaceSmall,
-                                  Container(
-                                    margin:
-                                    const EdgeInsets.symmetric(horizontal: kDefaultSpacing),
-                                    width: g.Get.width,
-                                    padding: const EdgeInsets.all(kDefaultSpacing * 0.75),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: kLightGrayColor,
-                                      ),
-                                      borderRadius: BorderRadius.circular(kDefaultSpacing * 0.5),
-                                    ),
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton<String>(
-                                        isDense: true,
-                                        isExpanded: true,
-                                        value: selectedInterval,
-                                        items: timeIntervals
-                                            .map((e) => DropdownMenuItem(
-                                          child: Text(
-                                            e,
-                                            style:
-                                            kDefaultTextStyle.copyWith(fontSize: 14),
-                                          ),
-                                          value: e,
-                                        ))
-                                            .toList(),
-                                        onChanged: (String? value) {
-                                          selectedInterval = value ?? selectedInterval;
-                                          if (selectedInterval.toLowerCase() == "daily") {
-                                            transactions = GetIt.I<TransactionSummaryCubit>()
-                                                .getDailyTransactions();
-                                          } else if (selectedInterval.toLowerCase() ==
-                                              "monthly") {
-                                            transactions = GetIt.I<TransactionSummaryCubit>()
-                                                .getMonthlyTransactions();
-                                          }
-
-                                          setState(() {});
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  kVerticalSpaceRegular,
-                                  Expanded(
-                                    child: ListView.separated(
-                                        shrinkWrap: false,
-                                        physics: const ScrollPhysics(),
-                                        itemBuilder: (c, i) {
-                                          DateTime date =
-                                              transactions.keys.toList()[i];
-                                          String day = "";
-                                          if (selectedInterval.toLowerCase() ==
-                                              "daily") {
-                                            if (areDatesEqual(DateTime.now(), date)) {
-                                              day = "Today";
-                                            } else if (areDatesEqual(
-                                                DateTime.now().subtract(
-                                                    const Duration(days: 1)),
-                                                date)) {
-                                              day = "Yesterday";
-                                            } else {
-                                              day = DateFormat(
-                                                      "${DateFormat.ABBR_WEEKDAY}, ${DateFormat.DAY} ${DateFormat.MONTH} ${DateFormat.YEAR}")
-                                                  .format(date);
-                                            }
-                                          } else if (selectedInterval.toLowerCase() ==
-                                              "monthly") {
-                                            day = DateFormat(
-                                                    "${DateFormat.ABBR_MONTH} ${DateFormat.YEAR}")
-                                                .format(date);
-                                          }
-                                          return Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              // color: AppColors.red
+                                              ),
+                                          height: 22.h,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              SizedBox(
-                                                height: 30,
-                                                child: ListView(
-                                                  scrollDirection: Axis.horizontal,
-                                                  physics: const ScrollPhysics(),
-                                                  shrinkWrap: true,
+                                              TextWidget(
+                                                day,
+                                                fontSize: 14.sp,
+                                                weight: FontWeight.bold,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              Expanded(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  // scrollDirection: Axis.horizontal,
+                                                  //
+                                                  // physics: const ScrollPhysics(),
+                                                  // shrinkWrap: true,
                                                   children: [
-                                                    Text(
-                                                      day,
-                                                      style: kBoldTextStyle2.copyWith(
-                                                          fontSize: 13),
+                                                    SizedBox(
+                                                      width: 16.w,
                                                     ),
-                                                    kHorizontalSpaceRegular,
                                                     Row(
-                                                      mainAxisSize: MainAxisSize.min,
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
                                                       mainAxisAlignment:
-                                                          MainAxisAlignment.start,
+                                                          MainAxisAlignment
+                                                              .start,
                                                       crossAxisAlignment:
-                                                          CrossAxisAlignment.center,
+                                                          CrossAxisAlignment
+                                                              .center,
                                                       children: [
-                                                        Text(
-                                                          "Income: ",
-                                                          style: AppTextStyles
-                                                              .blackSize10,
+                                                        TextWidget(
+                                                          "Inc: ",
+                                                          fontSize: 12.sp,
+                                                          color: AppColors
+                                                              .veryLightGray,
                                                         ),
-                                                        TurkishSymbol(
+                                                        const TurkishSymbol(
                                                           width: 8,
                                                           height: 8,
-                                                          color: AppTextStyles
-                                                              .blackSize10.color,
+                                                          color:
+                                                              AppColors.green,
                                                         ),
-                                                        Text(
+                                                        TextWidget(
                                                           transactions[date]!
                                                               .income
                                                               .toMoney,
-                                                          style: AppTextStyles
-                                                              .blackSize10,
+                                                          fontSize: 12.sp,
+                                                          color:
+                                                              AppColors.green,
                                                         )
                                                       ],
                                                     ),
-                                                    kHorizontalSpaceRegular,
+                                                    SizedBox(
+                                                      width: 8.w,
+                                                    ),
                                                     Row(
-                                                      mainAxisSize: MainAxisSize.min,
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
                                                       children: [
-                                                        Text(
+                                                        TextWidget(
                                                           "Trips: ${transactions[date]!.tripAmount == 0 ? "" : "+"}",
-                                                          style: AppTextStyles
-                                                              .greenSize10,
+                                                          fontSize: 12.sp,
                                                         ),
-                                                        TurkishSymbol(
+                                                        const TurkishSymbol(
                                                           width: 8,
                                                           height: 8,
-                                                          color: AppTextStyles
-                                                              .greenSize10.color,
                                                         ),
-                                                        Text(
+                                                        TextWidget(
                                                           transactions[date]!
                                                               .tripAmount
                                                               .toMoney,
-                                                          style: AppTextStyles
-                                                              .greenSize10,
+                                                          fontSize: 12.sp,
                                                         )
                                                       ],
                                                     ),
-                                                    kHorizontalSpaceRegular,
+                                                    SizedBox(
+                                                      width: 8.w,
+                                                    ),
                                                     Row(
-                                                      mainAxisSize: MainAxisSize.min,
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
                                                       children: [
-                                                        Text(
-                                                          "Expenses: ${transactions[date]!.expenseAmount == 0 ? "" : "-"}",
-                                                          style:
-                                                              AppTextStyles.redSize10,
+                                                        TextWidget(
+                                                          "Exp: ${transactions[date]!.expenseAmount == 0 ? "" : "-"}",
+                                                          color: AppColors.red,
+                                                          fontSize: 12.sp,
                                                         ),
-                                                        TurkishSymbol(
+                                                        const TurkishSymbol(
                                                           width: 8,
                                                           height: 8,
-                                                          color: AppTextStyles
-                                                              .redSize10.color,
+                                                          color: AppColors.red,
                                                         ),
-                                                        Text(
+                                                        TextWidget(
                                                           transactions[date]!
                                                               .expenseAmount
                                                               .toMoney,
-                                                          style:
-                                                              AppTextStyles.redSize10,
+                                                          fontSize: 12.sp,
+                                                          color: AppColors.red,
                                                         )
                                                       ],
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                              kVerticalSpaceSmall,
-                                              ListView(
-                                                shrinkWrap: true,
-                                                physics:
-                                                    const NeverScrollableScrollPhysics(),
-                                                children: transactions[date]!
-                                                    .transactions
-                                                    .map((e) {
-                                                  return TransactionCard(
-                                                    transaction: e,
-                                                    withBigAmount: false,
-                                                    subTrailingStyle:
-                                                        AppTextStyles.blackSize12,
-                                                    titleStyle:
-                                                        AppTextStyles.blackSize14,
-                                                    subtitleStyle:
-                                                        AppTextStyles.blackSize12,
-                                                    trailingStyle:
-                                                        AppTextStyles.greenSize14,
-                                                  );
-                                                }).toList(),
-                                              ),
                                             ],
-                                          );
-                                        },
-                                        separatorBuilder: (_, __) =>
-                                            kVerticalSpaceRegular,
-                                        itemCount: transactions.length),
-                                  ),
-                                ],
-                              );
-                            }
-                          },
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextWidget(
-                                        "From",
-                                        style: AppTextStyles.blackSize14,
-                                      ),
-                                      kVerticalSpaceSmall,
-                                      GestureDetector(
-                                        onTap: () => _pickDate(true),
-                                        child: Container(
-                                          width: 150.w,
-                                          padding: const EdgeInsets.fromLTRB(
-                                              16, 16, 16, 16),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            color: AppColors.lightGray,
-                                          ),
-                                          child: TextWidget(
-                                            from == null
-                                                ? "Select Date..."
-                                                : DateFormat(
-                                                        "${DateFormat.DAY}/${DateFormat.MONTH}/${DateFormat.YEAR} ")
-                                                    .format(from!),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: AppTextStyles.blackSize14,
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 16.0,
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextWidget(
-                                        "To",
-                                        style: AppTextStyles.blackSize14,
-                                      ),
-                                      kVerticalSpaceSmall,
-                                      SplashTap(
-                                        onTap: () => _pickDate(false),
-                                        child: Container(
-                                          width: 150.w,
-                                          padding: const EdgeInsets.fromLTRB(
-                                              16, 16, 16, 16),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            color: AppColors.lightGray,
+                                        kVerticalSpaceSmall,
+                                        ListView.separated(
+                                          separatorBuilder: (_, __) => SizedBox(
+                                            height: 12.h,
                                           ),
-                                          child: TextWidget(
-                                            to == null
-                                                ? "Select Date..."
-                                                : DateFormat(
-                                                        "${DateFormat.DAY}/${DateFormat.MONTH}/${DateFormat.YEAR} ")
-                                                    .format(to!),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-
-                                            style: AppTextStyles.blackSize14,
+                                          shrinkWrap: true,
+                                          itemBuilder: (c, i) =>
+                                              TransactionListCard(
+                                            transaction: transactions[date]!
+                                                .transactions[i],
+                                            withLeading: true,
                                           ),
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemCount: transactions[date]!
+                                              .transactions
+                                              .length,
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                                      ],
+                                    );
+                                  },
+                                  separatorBuilder: (_, __) =>
+                                      kVerticalSpaceRegular,
+                                  itemCount: transactions.length),
                             ),
-                            const SizedBox(
-                              height: 16.0,
-                            ),
-                            SubmitButton(
-                                text: "Show Transactions",
-                                backgroundColor: kGreenColor,
-                                enabled: from != null && to != null,
-                                onSubmit: () {
-                                  g.Get.to(
-                                      () => RangeTransactionsScreen(
-                                            userId: currentUser().id,
-                                            from: from!,
-                                            to: to!,
-                                          ),
-                                      transition: g.Transition.fadeIn);
-                                }),
                           ],
-                        ),
-                        // Column(
-                        //   crossAxisAlignment: CrossAxisAlignment.center,
-                        //   children: [
-                        //     RecordCard(
-                        //       initial: totalIncome.income < 0 ? "-":"",
-                        //       withSymbol: true,
-                        //       centerAlign: true,
-                        //       title: totalIncome.income.abs().toMoney,
-                        //       subtitle: "Total Income",
-                        //       width: Get.width * 0.9,
-                        //       titleStyle: AppTextStyles.blackSize16,
-                        //       subtitleStyle: const TextStyle(),
-                        //       transactions: totalIncome.transactions,
-                        //     ),
-                        //     kVerticalSpaceSmall,
-                        //     RecordCard(
-                        //       initial:totalIncome.tripAmount == 0?"": "+",
-                        //       centerAlign: true,
-                        //       withSymbol: true,
-                        //
-                        //       title: totalIncome.tripAmount.toMoney,
-                        //       subtitle: "Total Trips",
-                        //       width: Get.width * 0.9,
-                        //       titleStyle: AppTextStyles.greenSize16,
-                        //       subtitleStyle: const TextStyle(),
-                        //       transactions: totalIncome.transactions,
-                        //     ),
-                        //     kVerticalSpaceSmall,
-                        //     RecordCard(
-                        //       initial: totalIncome.expenseAmount == 0?"": "-",
-                        //       centerAlign: true,
-                        //       withSymbol: true,
-                        //
-                        //       title: totalIncome.expenseAmount.toMoney,
-                        //       subtitle: "Total Expenses",
-                        //       width: Get.width * 0.9,
-                        //       titleStyle: AppTextStyles.redSize16,
-                        //       subtitleStyle: const TextStyle(),
-                        //       transactions: totalIncome.transactions,
-                        //     ),
-                        //   ],
-                        // ),
-                      ],
-                    ),
+                        );
+                      }
+                    },
                   ),
                 ),
               ],
@@ -501,34 +515,5 @@ class _ViewAllRecordsState extends State<ViewAllRecords> {
         );
       },
     );
-  }
-
-  void _pickDate(bool isFrom) {
-    dt.DatePicker.showDatePicker(context, theme: const dt.DatePickerTheme())
-        .then((value) {
-      if (value != null) {
-        if (isFrom) {
-          from = value;
-        } else {
-          to = value;
-        }
-        setState(() {});
-      }
-    });
-    // showDatePicker(
-    //         context: context,
-    //         initialDate: DateTime.now(),
-    //         firstDate: DateTime.now().subtract(const Duration(days: 365 * 10)),
-    //         lastDate: DateTime.now().add(const Duration(days: 365 * 2)))
-    //     .then((value) {
-    //   if (value != null) {
-    //     if (isFrom) {
-    //       from = value;
-    //     } else {
-    //       to = value;
-    //     }
-    //     setState(() {});
-    //   }
-    // });
   }
 }

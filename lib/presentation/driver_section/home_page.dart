@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,11 +24,16 @@ import 'package:greep/presentation/driver_section/transaction/view_transactions.
 import 'package:greep/presentation/driver_section/widgets/empty_result_widget.dart';
 import 'package:greep/presentation/driver_section/widgets/transaction_interval_summary.dart';
 import 'package:greep/presentation/widgets/code_verification_bottom_sheet.dart';
+import 'package:greep/presentation/widgets/custom_appbar.dart';
 import 'package:greep/presentation/widgets/customer_transaction_list.dart';
+import 'package:greep/presentation/widgets/dot_circle.dart';
 import 'package:greep/presentation/widgets/driver_selector_widget.dart';
 import 'package:greep/presentation/widgets/email_verification_bottom_sheet.dart';
+import 'package:greep/presentation/widgets/money_widget.dart';
+import 'package:greep/presentation/widgets/progress_indicator_container.dart';
 import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
+import 'package:greep/presentation/widgets/turkish_symbol.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 import 'package:greep/utils/constants/app_styles.dart';
 import 'package:intl/intl.dart';
@@ -68,10 +74,12 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, userState) {
         var userId = currentUser().id;
         return Scaffold(
-          backgroundColor: kBlackColor,
+          backgroundColor: AppColors.white,
+          appBar: const CustomAppbar(
+            title: '',
+          ),
           body: AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle.light,
-
             child: SafeArea(
               child: BlocConsumer<UserTransactionsCubit, UserTransactionsState>(
                   listener: (c, s) {
@@ -86,357 +94,298 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (context, summaryState) {
                     return BlocBuilder<DriversCubit, DriversState>(
                       builder: (context, driverState) {
-                        return Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Positioned(
-                              top: driverState is DriversStateDriver ? 215.h :(driverState is DriversStateFetched &&
-                                  driverState.selectedUser == currentUser()) ? 270.h : 190.h,
-                              width: g.Get.width,
-                              height: g.Get.height - (driverState is DriversStateDriver ? 250.h :(driverState is DriversStateFetched &&
-                                  driverState.selectedUser == currentUser()) ? 300.h: 230.h),
-                              child: Container(
-                                color: kWhiteColor,
-                                height: g.Get.height - (driverState is DriversStateDriver ? 250.h :(driverState is DriversStateFetched &&
-                                    driverState.selectedUser == currentUser()) ? 300.h: 230.h),
-                                child: SmartRefresher(
-                                  controller: _refreshController,
-                                  onRefresh: _onRefresh,
-                                  child: ListView(
-                                    shrinkWrap: true,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: kDefaultSpacing),
-                                    physics: const BouncingScrollPhysics(),
+                        return SmartRefresher(
+                          controller: _refreshController,
+                          onRefresh: _onRefresh,
+                          child: ListView(
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.all(kDefaultSpacing),
+                            physics: const BouncingScrollPhysics(),
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      kVerticalSpaceMedium,
-                                      ListTile(
-                                        contentPadding: EdgeInsets.zero,
-                                        title: TextWidget("Today",
-                                            style: kDefaultTextStyle.copyWith(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.bold
-                                            )),
-                                        trailing: SplashTap(
-                                          onTap: () {
-                                            g.Get.to(() => const ViewAllRecords(),
-                                                transition: g.Transition.fadeIn);
-                                          },
-                                          child: TextWidget("view all",
-                                              style: AppTextStyles.blackSize12),
-                                        ),
+                                      TextWidget(
+                                        "Overview",
+                                        weight: FontWeight.w600,
+                                        fontSize: 16.sp,
                                       ),
-                                      TransactionIntervalSummaryWidget(
-                                          userId: userId,
-                                          to: DateTime.now(),
-                                          from: DateTime(
-                                              DateTime.now().year,
-                                              DateTime.now().month,
-                                              DateTime.now().day)),
-                                      kVerticalSpaceRegular,
-                                      ListTile(
-
-                                        contentPadding:
-                                            const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                        title: TextWidget("Yesterday",
-                                            style: kDefaultTextStyle.copyWith(
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.bold
-                                            )),
-                                        trailing: SplashTap(
-                                          onTap: () {
-                                            g.Get.to(() => const ViewAllRecords(),
-                                                transition: g.Transition.fadeIn);
-                                          },
-                                          child: TextWidget("view all",
-                                              style: AppTextStyles.blackSize12),
-                                        ),
-                                      ),
-                                      TransactionIntervalSummaryWidget(
-                                          userId: userId,
-                                          to: DateTime(
-                                              DateTime.now().year,
-                                              DateTime.now().month,
-                                              DateTime.now().day),
-                                          from: DateTime(
-                                              DateTime.now()
-                                                  .subtract(
-                                                      const Duration(days: 1))
-                                                  .year,
-                                              DateTime.now()
-                                                  .subtract(
-                                                      const Duration(days: 1))
-                                                  .month,
-                                              DateTime.now()
-                                                  .subtract(
-                                                      const Duration(days: 1))
-                                                  .day)),
-                                      kVerticalSpaceRegular,
-                                      ListTile(
-                                        contentPadding:
-                                            const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                        title: TextWidget("Customers",
-                                            style: kDefaultTextStyle.copyWith(
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.bold
-                                            )),
-                                        trailing: InkWell(
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const CustomerScreen(withBackButton: true)),
-                                              );
-                                            },
-                                            child: TextWidget("view all",
-                                                style:
-                                                    AppTextStyles.blackSize12)),
-                                      ),
-                                      const CustomerTransactionListWidget(),
-                                      kVerticalSpaceRegular,
-                                      ListTile(
-                                        contentPadding:
-                                            const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                        title: TextWidget("Transaction history",
-                                            style: kDefaultTextStyle.copyWith(
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.bold
-                                            )),
-                                        trailing: SplashTap(
-                                          onTap: () {
-                                            g.Get.to(
-                                                () => const TransactionsScreen(),
-                                                arguments: {"showAppBar": true},
-                                                transition: g.Transition.fadeIn);
-                                          },
-                                          child: TextWidget("view all",
-                                              style: AppTextStyles.blackSize12),
-                                        ),
-                                      ),
-                                      Builder(builder: (context) {
-                                        List<Transaction> transactions =
-                                            GetIt.I<UserTransactionsCubit>()
-                                                .getLastUserTransactions();
-                                        if (transactions.isEmpty) {
-                                          return const EmptyResultWidget(
-                                              text: "No recent transactions");
-                                        }
-                                        return ListView.separated(
-                                          separatorBuilder: (_, __) => Row(
-                                            children: [
-                                              SizedBox(
-                                                width: 70.w,
-                                              ),
-                                              Expanded(
-                                                child: Container(
-                                                  width: Get.width * 0.7,
-                                                  height: 4.h,
-                                                  decoration: const BoxDecoration(
-                                                      color: AppColors.lightGray),
-                                                ),
-                                              ),
-                                            ],
+                                      Row(
+                                        children: [
+                                          const TextWidget(
+                                            "This Week",
                                           ),
-                                          itemCount: transactions.length,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          padding: EdgeInsets.zero,
-                                          itemBuilder: (c, i) {
-                                            return TransactionListCard(
-                                              transaction: transactions[i],
-                                              withLeading: true,
-                                            );
-                                          },
-                                        );
-                                      }),
-                                      kVerticalSpaceLarge,
-                                      kVerticalSpaceLarge,
-                                      kVerticalSpaceLarge,
-                                      kVerticalSpaceSmall,
+                                          kHorizontalSpaceTiny,
+                                          SvgPicture.asset(
+                                            "assets/icons/filter.svg",
+                                          )
+                                        ],
+                                      ),
                                     ],
                                   ),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              top: 0,
-                              width: 1.sw,
-                              child: Container(
-                                width: 1.sw,
-                                height: driverState is DriversStateDriver ? 215.h
-                                    : ((driverState is DriversStateFetched && driverState.selectedUser == currentUser())
-                                    ? 270.h: 180.h),
-                                decoration: const BoxDecoration(
-                                  color: kWhiteColor,
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                  kVerticalSpaceRegular,
+                                  ProgressIndicatorContainer(
+                                    progress: 0.75,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Container(
-                                          color: kBlackColor,
-                                          height: driverState is DriversStateDriver ? 190.h : ((driverState is DriversStateFetched &&
-                                              driverState.selectedUser == currentUser()) ? 245.h: 180.h),
-                                          width: 1.sw,
-                                          padding:  EdgeInsets.symmetric(horizontal: kDefaultSpacing.w,vertical: (kDefaultSpacing * 0.5).h),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              // kVerticalSpaceSmall,
-                                              const DriverSelectorRow(
-                                                withWhiteText: true,
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  kVerticalSpaceRegular,
-                                                  driverState
-                                                          is DriversStateDriver
-                                                      ? ListTile(
-                                                          contentPadding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  0, 0, 0, 0),
-                                                          title: TextWidget(
-                                                            DateFormat(
-                                                                    "${DateFormat.ABBR_WEEKDAY}, ${DateFormat.ABBR_MONTH} ${DateFormat.DAY}")
-                                                                .format(DateTime
-                                                                    .now()),
-                                                            style: AppTextStyles
-                                                                .whiteSize12,
-                                                          ),
-                                                          subtitle: TextWidget(
-                                                              "Hi ${userState is UserStateFetched ? userState.user.firstName : "!"}",
-                                                              style:
-                                                                  kBoldWhiteTextStyle),
-                                                          trailing: SplashTap(
-                                                            onTap: () {
-                                                              g.Get.to(
-                                                                  () =>
-                                                                      const ProfileView(),
-                                                                  transition: g
-                                                                      .Transition
-                                                                      .fadeIn);
-                                                            },
-                                                            child: CircleAvatar(
-                                                              backgroundImage:
-                                                                  CachedNetworkImageProvider(userState
-                                                                          is UserStateFetched
-                                                                      ? userState
-                                                                          .user
-                                                                          .photoUrl
-                                                                      : ""),
-                                                              child:
-                                                                  const TextWidget(""),
-                                                            ),
-                                                          ),
-                                                        )
-                                                      : TextWidget(
-                                                          driverState
-                                                                  is DriversStateManager
-                                                              ? driverState
-                                                                          .selectedUser ==
-                                                                      currentUser()
-                                                                  ? "Your activity"
-                                                                  : "${driverState.selectedUser.firstName} Activities"
-                                                              : "",
-                                                          style: kBoldTextStyle2
-                                                              .copyWith(
-                                                            color: kWhiteColor,
-                                                            fontSize: 20,
-                                                          ),
-                                                        ),
-                                                  kVerticalSpaceRegular,
-                                                  if (driverState
-                                                          is DriversStateFetched &&
-                                                      driverState.selectedUser ==
-                                                          currentUser())
-                                                    TextWidget(
-                                                          "Add a record",
-                                                          style: kBoldWhiteTextStyle.copyWith(
-                                                              fontSize:
-                                                                  13)),
-                                                  kVerticalSpaceSmall
-                                                ],
-                                              ),
-                                            ],
-                                          ),
+                                        const TextWidget(
+                                          "Weekly target",
                                         ),
-                                        if ((driverState is DriversStateFetched &&
-                                            driverState.selectedUser == currentUser()))Container(
-                                          height: 25.h,
-                                          decoration: const BoxDecoration(
-                                              color: kWhiteColor),
+                                        Row(
+                                          children: [
+                                            const MoneyWidget(
+                                              amount: 7500,
+                                              weight: FontWeight.bold,
+                                            ),
+                                            kHorizontalSpaceTiny,
+                                            const TextWidget(
+                                              "/",
+                                              weight: FontWeight.bold,
+                                            ),
+                                            kHorizontalSpaceTiny,
+                                            const MoneyWidget(
+                                              amount: 10000,
+                                              weight: FontWeight.bold,
+                                            ),
+                                          ],
                                         )
                                       ],
                                     ),
-                                    if (driverState is DriversStateFetched &&
-                                        driverState.selectedUser == currentUser())
-                                      Positioned(
-                                        width: g.Get.width,
-                                        bottom: 0,
-                                        child: Container(
-                                          height: 50.h,
-                                          padding:  EdgeInsets.symmetric(
-                                              horizontal: kDefaultSpacing.w),
-                                          decoration: const BoxDecoration(),
-                                          child: LayoutBuilder(
-                                              builder: (context, constraints) {
-                                            return Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                SplashTap(
-                                                  onTap: () {
-                                                    g.Get.to(
-                                                        () => const RecordTrip(),
-                                                        transition:
-                                                            g.Transition.fadeIn);
-                                                  },
-                                                  child: AddRecord(
-                                                    width: constraints.maxWidth *
-                                                        0.48,
-                                                    svg: SvgPicture.asset(
-                                                        "assets/icons/local_taxi.svg",
-                                                        width: 25.r,
-                                                        height: 25.r,
-                                                    ),
-                                                    title: "Trip",
-                                                  ),
+                                  ),
+                                  kVerticalSpaceMedium,
+                                  LayoutBuilder(builder: (context, cs) {
+                                    return Row(
+                                      children: [
+                                        Container(
+                                          width: cs.maxWidth * 0.5,
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  DotCircle(color: AppColors.green),
+                                                  kHorizontalSpaceSmall,
+                                                  TextWidget("Target reached"),
+
+                                                ],
+                                              ),
+                                              kVerticalSpaceRegular,
+                                              Row(
+                                                children: [
+                                                  DotCircle(color: AppColors.coinGold),
+                                                  kHorizontalSpaceSmall,
+                                                  TextWidget("Above average"),
+
+                                                ],
+                                              ),
+                                              kVerticalSpaceRegular,
+                                              Row(
+                                                children: [
+                                                  DotCircle(color: AppColors.red),
+                                                  kHorizontalSpaceSmall,
+                                                  TextWidget("Poor performance"),
+
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          width: cs.maxWidth * 0.5,
+                                          alignment: Alignment.centerRight,
+                                          child: Builder(builder: (context) {
+                                            List<PieChartSectionData> sectionData = [
+                                              PieChartSectionData(
+                                                titleStyle: kWhiteTextStyle.copyWith(
+                                                  fontWeight: FontWeight.bold,
                                                 ),
-                                                SplashTap(
-                                                  onTap: () {
-                                                    g.Get.to(
-                                                        () =>
-                                                            const RecordExpense(),
-                                                        transition:
-                                                            g.Transition.fadeIn);
-                                                  },
-                                                  child: AddRecord(
-                                                    width: constraints.maxWidth *
-                                                        0.48,
-                                                    svg: Image.asset(
-                                                        "assets/icons/expense.png",
-                                                        width: 22.r,
-                                                        height: 22.r),
-                                                    title: "Expense",
-                                                  ),
+                                                value: 0.7,
+                                                title: "income",
+                                                showTitle: false,
+                                                color: kGreenColor,
+
+                                                radius:  50.r,
+                                              ),
+                                              PieChartSectionData(
+                                                titleStyle: kWhiteTextStyle.copyWith(
+                                                  fontWeight: FontWeight.bold,
                                                 ),
-                                              ],
+                                                value: 0.3,
+                                                title: "expense",
+                                                showTitle: false,
+                                                color: AppColors.red,
+                                                radius: 50.r,
+                                              ),
+                                            ];
+                                            return SizedBox(
+                                              width: 108.r,
+                                              height: 108.r,
+                                              child: PieChart(
+                                                PieChartData(
+                                                  pieTouchData: PieTouchData(touchCallback:
+                                                      (FlTouchEvent event, pieTouchResponse) {
+                                                  }),
+                                                  startDegreeOffset: 90,
+                                                  borderData: FlBorderData(
+                                                      show: true,
+                                                      border: const Border(
+                                                        bottom: BorderSide(
+                                                            color: kGreenColor, width: 5),
+                                                      )),
+                                                  sectionsSpace: 0,
+
+                                                  centerSpaceRadius: double.infinity,
+                                                  sections: sectionData,),
+                                              ),
                                             );
                                           }),
-                                        ),
-                                      ),
-                                  ],
+                                        )
+                                      ],
+                                    );
+                                  })
+                                ],
+                              ),
+                              kVerticalSpaceMedium,
+                              ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: TextWidget("Today",
+                                    style: kDefaultTextStyle.copyWith(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold)),
+                                trailing: SplashTap(
+                                  onTap: () {
+                                    g.Get.to(() => const ViewAllRecords(),
+                                        transition: g.Transition.fadeIn);
+                                  },
+                                  child: TextWidget("view all",
+                                      style: AppTextStyles.blackSize12),
                                 ),
                               ),
-                            ),
-                          ],
+                              TransactionIntervalSummaryWidget(
+                                  userId: userId,
+                                  to: DateTime.now(),
+                                  from: DateTime(
+                                      DateTime.now().year,
+                                      DateTime.now().month,
+                                      DateTime.now().day)),
+                              kVerticalSpaceRegular,
+                              ListTile(
+                                contentPadding:
+                                    const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                title: TextWidget("Yesterday",
+                                    style: kDefaultTextStyle.copyWith(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold)),
+                                trailing: SplashTap(
+                                  onTap: () {
+                                    g.Get.to(() => const ViewAllRecords(),
+                                        transition: g.Transition.fadeIn);
+                                  },
+                                  child: TextWidget("view all",
+                                      style: AppTextStyles.blackSize12),
+                                ),
+                              ),
+                              TransactionIntervalSummaryWidget(
+                                  userId: userId,
+                                  to: DateTime(DateTime.now().year,
+                                      DateTime.now().month, DateTime.now().day),
+                                  from: DateTime(
+                                      DateTime.now()
+                                          .subtract(const Duration(days: 1))
+                                          .year,
+                                      DateTime.now()
+                                          .subtract(const Duration(days: 1))
+                                          .month,
+                                      DateTime.now()
+                                          .subtract(const Duration(days: 1))
+                                          .day)),
+                              kVerticalSpaceRegular,
+                              ListTile(
+                                contentPadding:
+                                    const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                title: TextWidget("Customers",
+                                    style: kDefaultTextStyle.copyWith(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold)),
+                                trailing: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const CustomerScreen(
+                                                    withBackButton: true)),
+                                      );
+                                    },
+                                    child: TextWidget("view all",
+                                        style: AppTextStyles.blackSize12)),
+                              ),
+                              const CustomerTransactionListWidget(),
+                              kVerticalSpaceRegular,
+                              ListTile(
+                                contentPadding:
+                                    const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                title: TextWidget("Transaction history",
+                                    style: kDefaultTextStyle.copyWith(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold)),
+                                trailing: SplashTap(
+                                  onTap: () {
+                                    g.Get.to(() => const TransactionsScreen(),
+                                        arguments: {"showAppBar": true},
+                                        transition: g.Transition.fadeIn);
+                                  },
+                                  child: TextWidget("view all",
+                                      style: AppTextStyles.blackSize12),
+                                ),
+                              ),
+                              Builder(builder: (context) {
+                                List<Transaction> transactions =
+                                    GetIt.I<UserTransactionsCubit>()
+                                        .getLastUserTransactions();
+                                if (transactions.isEmpty) {
+                                  return const EmptyResultWidget(
+                                      text: "No recent transactions");
+                                }
+                                return ListView.separated(
+                                  separatorBuilder: (_, __) => Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 70.w,
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          width: Get.width * 0.7,
+                                          height: 4.h,
+                                          decoration: const BoxDecoration(
+                                              color: AppColors.lightGray),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  itemCount: transactions.length,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.zero,
+                                  itemBuilder: (c, i) {
+                                    return TransactionListCard(
+                                      transaction: transactions[i],
+                                      withLeading: true,
+                                    );
+                                  },
+                                );
+                              }),
+                              kVerticalSpaceLarge,
+                              kVerticalSpaceLarge,
+                              kVerticalSpaceLarge,
+                              kVerticalSpaceSmall,
+                            ],
+                          ),
                         );
                       },
                     );

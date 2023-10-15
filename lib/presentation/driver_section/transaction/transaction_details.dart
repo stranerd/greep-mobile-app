@@ -25,6 +25,7 @@ import 'package:greep/domain/transaction/TransactionData.dart';
 import 'package:greep/domain/transaction/transaction.dart';
 import 'package:greep/ioc.dart';
 import 'package:greep/presentation/driver_section/widgets/transaction_list_card.dart';
+import 'package:greep/presentation/widgets/back_icon.dart';
 import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/presentation/widgets/transaction_balance_widget.dart';
@@ -261,7 +262,7 @@ class _TransactionDetailsState extends State<TransactionDetails>
                                   Positioned(
                                     top: 5.h,
                                     left: 5.w,
-                                    child: const BackButton(),
+                                    child: const BackIcon(isArrow: true,),
                                   )
                                 ],
                               ),

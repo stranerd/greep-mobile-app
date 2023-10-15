@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   badges: ^2.0.2
+  bubble: ^1.2.1
   cached_network_image: ^3.1.0
   cloud_firestore: ^4.8.2
   connectivity_plus: ^2.3.6
@@ -33,7 +34,7 @@ dependencies:
   flutter_screenutil: ^5.8.4
   flutter_secure_storage: ^5.0.2
   flutter_share: ^2.0.0
-  flutter_slidable: ^2.0.0
+  flutter_slidable: ^3.0.0
   fluttertoast: ^8.0.8
   flutter_svg: ^2.0.7
   geocoding: ^2.0.4
@@ -106,6 +107,9 @@ flutter:
   # https://flutter.dev/assets-and-images/#from-packages
 
   fonts:
+    - family: CustomIcons
+      fonts:
+        - asset: assets/fonts/CustomIcons.ttf
     - family: Poppins-Bold
       fonts:
         - asset: assets/fonts/Poppins-Bold.ttf

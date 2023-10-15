@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/presentation/widgets/back_icon.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class CodeVerificationBottomSheet extends StatefulWidget {
@@ -37,7 +38,7 @@ class _CodeVerificationBottomSheetState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AppBar(
-              leading: BackButton(),
+              leading: const BackIcon(isArrow: true,),
             ),
             kVerticalSpaceLarge,
             Center(

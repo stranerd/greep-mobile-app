@@ -54,7 +54,7 @@ void main() async {
   var ioc = IoC();
 
   if (Platform.isIOS) {
-    String serverToken = dotenv.env['FIREBASEOPTIONS_APIKEY']??"";
+    String serverToken = dotenv.env['FIREBASEOPTIONS_APIKEY'] ?? "";
 
     await Firebase.initializeApp(
       name: "Greep",
@@ -65,9 +65,7 @@ void main() async {
         projectId: "greepio",
       ),
     );
-  }
-  else {
-
+  } else {
     await Firebase.initializeApp();
   }
 
@@ -75,8 +73,7 @@ void main() async {
     FirebaseMessaging.instance.requestPermission();
 
     FirebaseMessaging.instance.getToken().then((value) {});
-  }
-  catch (_){}
+  } catch (_) {}
   GestureBinding.instance.resamplingEnabled = true;
 
   FCMNotificationService.initialize();
@@ -107,7 +104,6 @@ class MyApp extends StatelessWidget {
           value: GetIt.I<DriversCubit>(),
         ),
         BlocProvider.value(value: GetIt.instance<GeoCoderCubit>()),
-
         BlocProvider.value(
           value: GetIt.I<TripDirectionBuilderCubit>(),
         ),
@@ -142,7 +138,7 @@ class MyApp extends StatelessWidget {
       child: ScreenUtilInit(
         designSize: const Size(414, 896),
         minTextAdapt: true,
-        builder: (_,__) => GetMaterialApp(
+        builder: (_, __) => GetMaterialApp(
           debugShowCheckedModeBanner: false,
           theme: theme,
           color: kPrimaryColor,

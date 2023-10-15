@@ -6,10 +6,14 @@ import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/transaction/TransactionData.dart';
 import 'package:greep/domain/transaction/transaction.dart';
 import 'package:greep/presentation/driver_section/widgets/empty_result_widget.dart';
+import 'package:greep/presentation/driver_section/widgets/transaction_list_card.dart';
 import 'package:greep/presentation/driver_section/widgets/transactions_card.dart';
+import 'package:greep/presentation/widgets/app_dialog.dart';
+import 'package:greep/presentation/widgets/money_widget.dart';
 import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/presentation/widgets/turkish_symbol.dart';
+import 'package:greep/utils/constants/app_colors.dart';
 
 class RecordCard extends StatefulWidget {
   const RecordCard({
@@ -49,12 +53,12 @@ class _RecordCardState extends State<RecordCard> {
     return SplashTap(
       onTap: _openDialog,
       child: Container(
-        padding: EdgeInsets.all((kDefaultSpacing * 0.75).r),
+        padding: EdgeInsets.all(14.5.r),
         height: 80.h,
         width: widget.width ?? 0.31.sw,
         decoration: BoxDecoration(
-          color: kLightGrayColor,
-          borderRadius: BorderRadius.circular(8.0.r),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
           boxShadow: widget.isSelected
               ? [
                   BoxShadow(
@@ -69,14 +73,15 @@ class _RecordCardState extends State<RecordCard> {
                 ]
               : null,
           border: Border.all(
-            color: kGreyColor2,
-            width: 0.5.w,
+            color: Color(0xFFF1F3F7),
+            width: 2.w,
           ),
         ),
         child: Column(
           crossAxisAlignment: widget.centerAlign
               ? CrossAxisAlignment.center
               : CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -84,34 +89,31 @@ class _RecordCardState extends State<RecordCard> {
               children: [
                 TextWidget(
                   widget.initial,
-                  fontSize: 17,
+                  fontSize: 16.sp,
                   style: widget.titleStyle,
                 ),
-                if (widget.withSymbol)
-                  TurkishSymbol(
-                    width: (16.w),
-                    height: (16.h),
-                    color: widget.titleStyle.color,
-                  ),
-                TextWidget(
-                  widget.title,
-                  fontSize: 17,
-                  style: widget.titleStyle,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                MoneyWidget(
+                  amount: num.tryParse(widget.title) ?? 0,
+                  withSymbol: widget.withSymbol,
+                  size: 16,
+                  color: widget.titleStyle.color,
+                )
               ],
             ),
-            SizedBox(height: 8.0.h),
-            TextWidget(widget.subtitle,
-                style: kDefaultTextStyle.copyWith(fontSize: 10)),
+            SizedBox(height: 4.0.h),
+            TextWidget(
+              widget.subtitle,
+              color: AppColors.veryLightGray,
+              fontSize: 12.sp,
+            ),
           ],
         ),
       ),
     );
   }
 
-  void _openDialog() {
-    if (widget.onTap!=null){
+  void _openDialog()  {
+    if (widget.onTap != null) {
       widget.onTap!();
       return;
     }
@@ -132,60 +134,36 @@ class _RecordCardState extends State<RecordCard> {
     }
     if (["trip", "expense"]
         .any((e) => widget.subtitle.toLowerCase().contains(e))) {
-      showDialog(
+      showModalBottomSheet(
           context: context,
           builder: (context) {
-            return Dialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(kDefaultSpacing)),
-              child: Container(
-                height: trans.isEmpty ? 200 : Get.height * 0.5,
-                padding: const EdgeInsets.all(kDefaultSpacing),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextWidget(
-                          widget.subtitle,
-                          style: kTitleTextStyle,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Get.back();
-                          },
-                          child: const Icon(
-                            Icons.close,
-                          ),
-                        )
-                      ],
-                    ),
-                    kVerticalSpaceRegular,
-                    if (trans.isEmpty)
-                      const SizedBox(
-                        height: 80,
-                        child: const EmptyResultWidget(
-                          text: "No Transactions",
-                        ),
+            return AppDialog(
+              title: widget.subtitle,
+              height: trans.isEmpty ? 200.h : 0.7.sh,
+
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (trans.isEmpty)
+                    const SizedBox(
+                      height: 80,
+                      child: const EmptyResultWidget(
+                        text: "No Transactions",
                       ),
-                    if (trans.isNotEmpty)
-                      Expanded(
-                          child: ListView(
-                        shrinkWrap: true,
-                        physics: const ScrollPhysics(),
-                        children: trans.map((e) {
-                          return TransactionCard(
-                            transaction: e,
-                            titleStyle: TextStyle(),
-                            subtitleStyle: TextStyle(),
-                            trailingStyle: TextStyle(),
-                            subTrailingStyle: TextStyle(),
-                          );
-                        }).toList(),
-                      ))
-                  ],
-                ),
+                    ),
+                  if (trans.isNotEmpty)
+                    Expanded(
+                        child: ListView(
+                      shrinkWrap: true,
+                      physics: const ScrollPhysics(),
+                      children: trans.map((e) {
+                        return TransactionListCard(
+                          transaction: e,
+                          withLeading: true,
+                        );
+                      }).toList(),
+                    ))
+                ],
               ),
             );
           });

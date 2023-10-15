@@ -13,6 +13,7 @@ import 'package:greep/domain/user/model/User.dart';
 import 'package:greep/domain/user/model/driver_commission.dart';
 import 'package:greep/presentation/driver_section/add_driver_screen.dart';
 import 'package:greep/presentation/driver_section/widgets/empty_result_widget.dart';
+import 'package:greep/presentation/widgets/back_icon.dart';
 import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 import 'package:greep/utils/constants/app_styles.dart';
@@ -56,16 +57,7 @@ class _DriversScreenState extends State<DriversScreen>
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white,
-            leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  size: 16,
-                ),
-                color: AppColors.black,
-            ),
+            leading: BackIcon(isArrow: true,),
             title: Text(
               'Drivers',
               style: AppTextStyles.blackSizeBold14,

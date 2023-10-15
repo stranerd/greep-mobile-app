@@ -11,6 +11,7 @@ class TextWidget extends StatelessWidget {
     this.weight,
     this.overflow,
     this.style,
+        this.fontStyle,
     this.fontSize,
         this.fontFamily,
     this.textAlign,
@@ -27,6 +28,7 @@ class TextWidget extends StatelessWidget {
   final String? fontFamily;
   final FontWeight? weight;
   final double? letterSpacing;
+  final FontStyle? fontStyle;
   final int? maxLines;
 
   @override
@@ -37,6 +39,8 @@ class TextWidget extends StatelessWidget {
           ? kDefaultTextStyle.copyWith(
               color: color ?? kBlackColor,
               fontFamily: fontFamily,
+          fontStyle: fontStyle,
+
               fontWeight: weight,
               fontSize: fontSize ?? 14.sp,
               letterSpacing: letterSpacing)
@@ -44,6 +48,7 @@ class TextWidget extends StatelessWidget {
               fontSize: fontSize ?? 14.sp,
               fontFamily: fontFamily,
               fontWeight: weight,
+              fontStyle: fontStyle,
               letterSpacing: letterSpacing),
       textAlign: textAlign,
       overflow: overflow,

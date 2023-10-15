@@ -1,0 +1,12 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 10692">
+<path id="Vector" d="M10 23.8667C4.33333 22.8667 0 17.9333 0 12C0 5.4 5.4 0 12 0C18.6 0 24 5.4 24 12C24 17.9333 19.6667 22.8667 14 23.8667L13.3333 23.3333H10.6667L10 23.8667Z" fill="url(#paint0_linear_5899_16080)"/>
+<path id="Vector_2" d="M16.6667 15.3337L17.2 12.0003H14V9.66699C14 8.73366 14.3333 8.00033 15.8 8.00033H17.3333V4.93366C16.4667 4.80033 15.5333 4.66699 14.6667 4.66699C11.9333 4.66699 10 6.33366 10 9.33366V12.0003H7V15.3337H10V23.8003C10.6667 23.9337 11.3333 24.0003 12 24.0003C12.6667 24.0003 13.3333 23.9337 14 23.8003V15.3337H16.6667Z" fill="white"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_5899_16080" x1="12" y1="23.1693" x2="12" y2="0" gradientUnits="userSpaceOnUse">
+<stop stop-color="#0062E0"/>
+<stop offset="1" stop-color="#19AFFF"/>
+</linearGradient>
+</defs>
+</svg>

@@ -9,6 +9,8 @@ import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/transaction/TransactionData.dart';
 import 'package:greep/domain/transaction/transaction.dart';
 import 'package:greep/presentation/driver_section/customer/customer_details.dart';
+import 'package:greep/presentation/widgets/money_widget.dart';
+import 'package:greep/presentation/widgets/profile_photo_widget.dart';
 import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/presentation/widgets/turkish_symbol.dart';
@@ -69,30 +71,30 @@ class CustomerCardView extends StatelessWidget {
           width: double.infinity,
           height: 50.0.h,
           decoration: BoxDecoration(
-            color: kLightGrayColor,
-            border: Border.all(
-              color: const Color.fromRGBO(221, 226, 224, 1),
-              width: 1.0,
-            ),
-            borderRadius: BorderRadius.circular(8.0.r),
+            borderRadius: BorderRadius.circular(12.r,),
+            border:
+            Border.all(color: AppColors.lightGray, width: 2),
+
           ),
           child: Padding(
             padding:  EdgeInsets.fromLTRB(16.0.r, 0, 16.0.r, 0),
             child: Row(
               children: [
-                TextWidget(
-                  text,
-                  style: kDefaultTextStyle,
+                Row(
+                  children: [
+                    ProfilePhotoWidget(url: ""),
+                    kHorizontalSpaceSmall,
+                    TextWidget(
+                      text,
+                      weight: FontWeight.w600,
+                    ),
+                  ],
                 ),
                 const Spacer(),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    TurkishSymbol(color: subTextStyle.color,height: 11.h,width: 11.w,),
-                    TextWidget(
-                      subText,
-                      style: subTextStyle,
-                    ),
+                    MoneyWidget(amount: num.tryParse(subText) ?? 0),
                   ],
                 ),
               ],

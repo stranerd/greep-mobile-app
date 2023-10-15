@@ -15,6 +15,10 @@ class SubmitButton extends StatelessWidget {
   final double fontSize;
   final TextStyle? textStyle;
   final Color? backgroundColor;
+  final double? height;
+  final double widthRatio;
+  final double? width;
+
 
   const SubmitButton(
       {Key? key,
@@ -22,40 +26,44 @@ class SubmitButton extends StatelessWidget {
         this.borderRadius = 12,
       required this.text,
       this.fontSize = 22,
-        this.padding = kDefaultSpacing,
+        this.padding = 12,
       required this.onSubmit,
+        this.width,
         this.backgroundColor,
         this.textStyle,
-      this.enabled = true})
+      this.enabled = true, this.height,  this.widthRatio = 1})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Color bgcolor = backgroundColor!=null? backgroundColor! : kPrimaryColor;
-    return LayoutBuilder(
-      builder: (context, constraints) => GestureDetector(
-        onTap: enabled ? onSubmit : null,
-        child: Container(
-          width: constraints.maxWidth,
-          padding: EdgeInsets.all(padding.r),
-          decoration: BoxDecoration(
-            borderRadius:  BorderRadius.all(Radius.circular(borderRadius.r)),
-            color: enabled ? bgcolor : bgcolor.withOpacity(0.3),
-          ),
-          child: Center(
-            child: !isLoading
-                ? FittedBox(
-                    child: TextWidget(
-                      text,
-                      style: textStyle!=null? textStyle! :kWhiteTextStyle,
-                    ),
-                  )
-                :  SizedBox(
-              height: 20.r,width: 20.r,
-                  child: CircularProgressIndicator(
-                      color: kWhiteColor,
-                    ),
-                ),
+    return SizedBox(
+      height: height,
+      child: LayoutBuilder(
+        builder: (context, constraints) => GestureDetector(
+          onTap: enabled ? onSubmit : null,
+          child: Container(
+            width: width ?? constraints.maxWidth * widthRatio,
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: padding.r),
+            decoration: BoxDecoration(
+              borderRadius:  BorderRadius.all(Radius.circular(borderRadius.r)),
+              color: enabled ? bgcolor : bgcolor.withOpacity(0.3),
+            ),
+            child: Center(
+              child: !isLoading
+                  ? FittedBox(
+                      child: TextWidget(
+                        text,
+                        style: textStyle!=null? textStyle! :kWhiteTextStyle,
+                      ),
+                    )
+                  :  SizedBox(
+                height: 20.r,width: 20.r,
+                    child: CircularProgressIndicator(
+                        color: kWhiteColor,
+                      ),
+                  ),
+            ),
           ),
         ),
       ),

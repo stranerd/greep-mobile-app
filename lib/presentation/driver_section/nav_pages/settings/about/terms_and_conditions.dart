@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/presentation/widgets/back_icon.dart';
+import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/utils/constants/app_styles.dart';
 
 class TermsAndConditions extends StatelessWidget {
@@ -12,29 +15,22 @@ class TermsAndConditions extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            size: 16,
-          ),
-        ),
-        title: Text(
+        leading: const BackIcon(isArrow: true,),
+        title: TextWidget(
           "Terms & Conditions",
-          style: AppTextStyles.blackSizeBold14,
+          fontSize: 16.sp,
+          weight: FontWeight.bold,
         ),
         centerTitle: false,
         elevation: 0.0,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+          padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Terms & Condition", style: AppTextStyles.blackSizeBold16),
+              TextWidget("Terms & Condition", fontSize: 16.sp,weight: FontWeight.bold,),
               kVerticalSpaceSmall,
               Text.rich(TextSpan(
                   style: kDefaultTextStyle,

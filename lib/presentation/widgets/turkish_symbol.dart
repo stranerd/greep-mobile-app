@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../Commons/colors.dart';
@@ -14,9 +15,9 @@ class TurkishSymbol extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SvgPicture.asset(
-      "assets/icons/turkish.svg",
-      width: (width ?? 13 * 0.75),
-      height: (height ?? 13 * 0.75),
+      "assets/icons/turkish2.svg",
+      width: (width ?? 14.r ),
+      height: (height ?? 14.r),
       color: color ?? kBlackColor,
       fit: BoxFit.cover,
     );

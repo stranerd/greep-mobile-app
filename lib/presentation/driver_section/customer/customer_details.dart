@@ -14,6 +14,7 @@ import 'package:greep/application/user/utils/get_current_user.dart';
 import 'package:greep/commons/money.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/customer/customer.dart';
+import 'package:greep/presentation/widgets/back_icon.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/presentation/widgets/transaction_balance_widget.dart';
 
@@ -79,21 +80,15 @@ class _CustomerDetailsState extends State<CustomerDetails> {
   child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+
           backgroundColor: Colors.white,
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                size: 16,
-              ),
-              color: AppColors.black),
+          leading: BackIcon(isArrow: true,),
           title: TextWidget(
-            'Customer Details',
-            style: AppTextStyles.blackSizeBold16,
+            widget.name,
+            fontSize: 18.sp,
+            weight: FontWeight.w600,
           ),
-          centerTitle: false,
+          centerTitle: true,
           elevation: 0.0,
         ),
         body: Padding(
@@ -103,16 +98,16 @@ class _CustomerDetailsState extends State<CustomerDetails> {
               shrinkWrap: true,
               physics: const ScrollPhysics(),
               children: [
-                TextWidget(
-                  _customerSummary.name.capitalize ?? "",
-                  style: AppTextStyles.blackSizeBold16,
-                ),
-                SizedBox(
-                  height: 16.0.h,
-                ),
+                // TextWidget(
+                //   _customerSummary.name.capitalize ?? "",
+                //   style: AppTextStyles.blackSizeBold16,
+                // ),
+                // SizedBox(
+                //   height: 16.0.h,
+                // ),
                 TextWidget(
                   "Account",
-                  style: AppTextStyles.blackSizeBold12,
+                  fontSize: 16.sp,weight: FontWeight.w600,
                 ),
                 SizedBox(
                   height: 8.0.h,
@@ -158,7 +153,9 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                 }),
                 kVerticalSpaceRegular,
                 TextWidget("Transaction history",
-                    style: AppTextStyles.blackSizeBold12),
+                    weight: FontWeight.bold,
+                fontSize: 16.sp,
+                ),
                  SizedBox(
                   height: 8.0.h,
                 ),
@@ -187,6 +184,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                                 padding: kDefaultSpacing * 0.5,
                                 transaction: e,
                                 withBorder: true,
+                                withLeading: true,
                               ),
                               kVerticalSpaceSmall,
                             ],

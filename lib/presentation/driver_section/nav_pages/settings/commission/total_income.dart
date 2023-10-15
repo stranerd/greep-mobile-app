@@ -15,6 +15,7 @@ import 'package:greep/commons/money.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/user/model/driver_commission.dart';
 import 'package:greep/presentation/driver_section/widgets/commission_summary_item.dart';
+import 'package:greep/presentation/widgets/back_icon.dart';
 import 'package:greep/presentation/widgets/driver_selector_widget.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/presentation/widgets/turkish_symbol.dart';
@@ -77,11 +78,7 @@ class _TotalIncomeState extends State<TotalIncome> {
           ),
           appBar: AppBar(
             backgroundColor: Colors.white,
-            leading: IconButton(
-                onPressed: () {
-                  Get.back();
-                },
-                icon: const Icon(Icons.arrow_back_ios, size: 16)),
+            leading: BackIcon(isArrow: true,),
             title: Text(
               "Total Income",
               style: AppTextStyles.blackSizeBold14,

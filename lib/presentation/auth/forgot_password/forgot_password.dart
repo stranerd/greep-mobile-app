@@ -7,6 +7,7 @@ import 'package:greep/commons/Utils/input_validator.dart';
 import 'package:greep/commons/scaffold_messenger_service.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/presentation/auth/forgot_password/change_forgot_password.dart';
+import 'package:greep/presentation/widgets/back_icon.dart';
 import 'package:greep/presentation/widgets/code_verification_bottom_sheet.dart';
 import 'package:greep/presentation/widgets/input_text_field.dart';
 import 'package:greep/presentation/widgets/submit_button.dart';
@@ -64,7 +65,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
             builder: (context, state) {
               return Scaffold(
                 appBar: AppBar(
-                  leading: const BackButton(),
+                  leading: const BackIcon(isArrow: true,),
                   leadingWidth: 30,
                   toolbarHeight: 30,
                 ),
@@ -87,7 +88,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                           ),
                           kVerticalSpaceLarge,
                           Column(children: [
-                            LoginTextField(
+                            InputTextField(
                               title: "Email",
                               validator: validateEmail,
                               isPassword: false,

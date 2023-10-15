@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:greep/application/customers/user_customers_cubit.dart';
@@ -13,6 +14,8 @@ import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/transaction/transaction.dart';
 import 'package:greep/presentation/driver_section/widgets/empty_result_widget.dart';
+import 'package:greep/presentation/widgets/button_filter_widget.dart';
+import 'package:greep/presentation/widgets/custom_appbar.dart';
 import 'package:greep/presentation/widgets/driver_selector_widget.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -82,192 +85,51 @@ class _CustomerScreenState extends State<CustomerScreen> {
         builder: (context, state) {
           return Scaffold(
             backgroundColor: Colors.white,
-            appBar: widget.withBackButton
-                ? AppBar(
-                    automaticallyImplyLeading: true,
-                  )
-                : null,
-            body: AnnotatedRegion<SystemUiOverlayStyle>(
-              value: SystemUiOverlayStyle.dark,
-
-              child: SafeArea(
+            appBar: const CustomAppbar(
+              title: "Customers",
+            ),
+            body: SafeArea(
+              child: AnnotatedRegion<SystemUiOverlayStyle>(
+                value: SystemUiOverlayStyle.dark,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: (kDefaultSpacing * 0.5).r,horizontal: (kDefaultSpacing * 0.5).w),
+                  padding: EdgeInsets.symmetric(
+                      vertical: (kDefaultSpacing * 0.5).r,
+                      horizontal: (kDefaultSpacing * 0.5).w),
                   child: SafeArea(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const DriverSelectorRow(),
-                        kVerticalSpaceSmall,
-                        BlocBuilder<DriversCubit, DriversState>(
-                          builder: (context, driverState) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                driverState is! DriversStateManager
-                                    ? Align(
-                                        alignment: Alignment.center,
-                                        child: TextWidget(
-                                          'Customers',
-                                          style: AppTextStyles.blackSizeBold16,
-                                        ),
-                                      )
-                                    : TextWidget(
-                                        driverState.selectedUser == currentUser()
-                                            ? 'Your customers'
-                                            : "${driverState.selectedUser.firstName} customers",
-                                        style: AppTextStyles.blackSizeBold16,
-                                      ),
-                              ],
-                            );
-                          },
-                        ),
-                        kVerticalSpaceRegular,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  width: 16.0.w,
-                                  height: 16.0.h,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColors.blue,
-                                  ),
-                                ),
-                                SizedBox(width: 8.0.w),
-                                TextWidget("To collect",
-                                    style: AppTextStyles.blackSize12),
-                              ],
-                            ),
-                            SizedBox(width: 48.0.w),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 16.0.w,
-                                  height: 16.0.h,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColors.red,
-                                  ),
-                                ),
-                                SizedBox(width: 8.0.w),
-                                TextWidget("To pay",
-                                    style: AppTextStyles.blackSize12),
-                              ],
-                            ),
-                            SizedBox(width: 48.0.w),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 16.0.w,
-                                  height: 16.0.h,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColors.black,
-                                  ),
-                                ),
-                                SizedBox(width: 8.0.w),
-                                TextWidget("Balanced",
-                                    style: AppTextStyles.blackSize12),
-                              ],
-                            ),
-                          ],
-                        ),
-                        kVerticalSpaceSmall,
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: kDefaultSpacing * 0.5),
-                          alignment: Alignment.centerRight,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              TextWidget(
-                                "filter",
-                                fontSize: 15,
-                                style: kDefaultTextStyle,
-                              ),
-                              kHorizontalSpaceTiny,
-                              Icon(
-                                Icons.sort,
-                                size: 20.r,
-                              ),
-                            ],
-                          ),
-                        ),
-                        kVerticalSpaceSmall,
-                        Container(
-                          width: Get.width,
-                          padding: const EdgeInsets.all(kDefaultSpacing * 0.75),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: kDefaultSpacing.w),
                           decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                              12.r,
+                            ),
                             border: Border.all(
-                              color: kLightGrayColor,
-                            ),
-                            borderRadius:
-                                BorderRadius.circular(kDefaultSpacing * 0.5),
+                                color: const Color(0xFFE0E2E4), width: 2),
                           ),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              isDense: true,
-                              isExpanded: true,
-                              value: selectedDebtType,
-                              items: debtTypes
-                                  .map((e) => DropdownMenuItem(
-                                        value: e,
-                                        child: TextWidget(
-                                          e == "collect"
-                                              ? "To Collect"
-                                              : e == "pay"
-                                                  ? "To Pay"
-                                                  : e == "balance"
-                                                      ? "Balanced"
-                                                      : e == "not balanced"
-                                                          ? "Not Balanced"
-                                                          : "None",
-                                          style: kDefaultTextStyle.copyWith(
-                                              fontSize: 14.sp),
-                                        ),
-                                      ))
-                                  .toList(),
-                              onChanged: (String? value) {
-                                selectedDebtType = value ?? selectedDebtType;
-                                transactions = GetIt.I<CustomerStatisticsCubit>()
-                                    .getCustomerTransactions(
-                                        type: selectedDebtType);
-                                filteredTransactions = [...transactions];
-                                setState(() {});
-                              },
-                            ),
-                          ),
-                        ),
-                        kVerticalSpaceRegular,
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: kDefaultSpacing),
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey.shade200),
-                              borderRadius:
-                                  BorderRadius.circular(kDefaultSpacing * 0.5)),
-                          height: 60.h,
+                          height: 50.h,
                           child: Row(
                             children: [
-                              Icon(
-                                Icons.search_outlined,
-                                size: 20.r,
-                                color: Colors.grey.shade600,
+                              SvgPicture.asset(
+                                "assets/icons/search.svg",
+                                width: 24.r,
+                                height: 24.r,
                               ),
-                              kHorizontalSpaceSmall,
                               Expanded(
                                 child: TextField(
                                   onChanged: (s) {
                                     if (s.isNotEmpty) {
                                       filteredTransactions =
                                           transactions.where((element) {
-                                        var customerName = element.data.customerName
+                                        var customerName = element
+                                            .data.customerName
                                             ?.trim()
                                             .toLowerCase();
-                                        return customerName
-                                                ?.contains(s.trim().toLowerCase()) ??
+                                        return customerName?.contains(
+                                                s.trim().toLowerCase()) ??
                                             false;
                                       }).toList();
                                     } else {
@@ -275,21 +137,104 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                     }
                                     setState(() {});
                                   },
-                                  style: kDefaultTextStyle.copyWith(fontSize: 15.sp),
-                                  decoration: const InputDecoration(
-                                      contentPadding: EdgeInsets.only(
-                                        left: kDefaultSpacing * 0.5,
-                                        top: kDefaultSpacing * 0.5,
-                                        bottom: kDefaultSpacing * 0.5,
-                                      ),
+                                  style: kDefaultTextStyle.copyWith(
+                                    fontSize: 15.sp,
+                                  ),
 
-                                      hintText: "Search customer",
+                                  decoration:  InputDecoration(
+                                    isDense: true,
+                                      contentPadding: EdgeInsets.only(
+                                        left: 12.w,
+                                        top:8.h,
+                                        bottom: 8.h,
+                                        right: 12.w
+                                      ),
+                                      hintText: "Search",
                                       border: InputBorder.none),
                                 ),
                               ),
                             ],
                           ),
                         ),
+                        kVerticalSpaceMedium,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            ButtonFilterWidget(
+                                onTap: () {
+                                  setState(() {
+                                    selectedDebtType = "none";
+                                  });
+                                },
+                                isActive: selectedDebtType.isEmpty ||
+                                    selectedDebtType == "none",
+                                text: "Trips"),
+                            kHorizontalSpaceSmall,
+                            ButtonFilterWidget(
+                                onTap: () {
+                                  setState(() {
+                                    selectedDebtType = "pay";
+                                  });
+                                },
+                                isActive: selectedDebtType == "pay",
+                                text: "Owing"),
+                            kHorizontalSpaceSmall,
+                            ButtonFilterWidget(
+                                onTap: () {
+                                  setState(() {
+                                    selectedDebtType = "collect";
+                                  });
+                                },
+                                isActive: selectedDebtType == "collect",
+                                text: "Collecting"),
+                          ],
+                        ),
+                        // Container(
+                        //   width: Get.width,
+                        //   padding: const EdgeInsets.all(kDefaultSpacing * 0.75),
+                        //   decoration: BoxDecoration(
+                        //     border: Border.all(
+                        //       color: kLightGrayColor,
+                        //     ),
+                        //     borderRadius:
+                        //         BorderRadius.circular(kDefaultSpacing * 0.5),
+                        //   ),
+                        //   child: DropdownButtonHideUnderline(
+                        //     child: DropdownButton<String>(
+                        //       isDense: true,
+                        //       isExpanded: true,
+                        //       value: selectedDebtType,
+                        //       items: debtTypes
+                        //           .map((e) => DropdownMenuItem(
+                        //                 value: e,
+                        //                 child: TextWidget(
+                        //                   e == "collect"
+                        //                       ? "To Collect"
+                        //                       : e == "pay"
+                        //                           ? "To Pay"
+                        //                           : e == "balance"
+                        //                               ? "Balanced"
+                        //                               : e == "not balanced"
+                        //                                   ? "Not Balanced"
+                        //                                   : "None",
+                        //                   style: kDefaultTextStyle.copyWith(
+                        //                       fontSize: 14.sp),
+                        //                 ),
+                        //               ))
+                        //           .toList(),
+                        //       onChanged: (String? value) {
+                        //         selectedDebtType = value ?? selectedDebtType;
+                        //         transactions =
+                        //             GetIt.I<CustomerStatisticsCubit>()
+                        //                 .getCustomerTransactions(
+                        //                     type: selectedDebtType);
+                        //         filteredTransactions = [...transactions];
+                        //         setState(() {});
+                        //       },
+                        //     ),
+                        //   ),
+                        // ),
+                        // kVerticalSpaceRegular,
                         kVerticalSpaceMedium,
                         Expanded(
                           child: SmartRefresher(

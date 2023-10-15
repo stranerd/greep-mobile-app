@@ -102,4 +102,4 @@ class TransactionData {
 
 enum TransactionType { expense, trip, balance }
 
-enum PaymentType { cash, card }
+enum PaymentType { cash, card, wallet }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/presentation/widgets/text_widget.dart';
+import 'package:greep/utils/constants/app_colors.dart';
 
 import '../../../../../utils/constants/app_styles.dart';
 
@@ -19,28 +22,31 @@ class AccountItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 10, 0, 10),
+      padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 12.h),
       width: double.infinity,
       decoration: BoxDecoration(
-        color: kLightGrayColor,
-        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(width: 2.w,color: AppColors.lightGray),
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          TextWidget(
             title,
-            style: AppTextStyles.blackSize14,
+            fontSize: 12.sp,
+            color: AppColors.veryLightGray,
           ),
-         kVerticalSpaceTiny,
           isSelectable
               ? SelectableText(
                   subtitle,
-                  style: AppTextStyles.blackSize16,
+                  style: AppTextStyles.blackSize16.copyWith(
+                    fontSize: 16.sp
+                  ),
+
                 )
-              : Text(
+              : TextWidget(
                   subtitle,
-                  style: AppTextStyles.blackSize16,
+            fontSize: 16.sp,
                 ),
         ],
       ),

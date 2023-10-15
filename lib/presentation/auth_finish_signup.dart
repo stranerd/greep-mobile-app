@@ -153,7 +153,7 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
                             style: AppTextStyles.blackSize14,
                           ),
                           kVerticalSpaceSmall,
-                          LoginTextField(
+                          InputTextField(
                             validator: emptyFieldValidator,
                             onChanged: (String v) {
                               setState(() {
@@ -174,7 +174,7 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
                                     Text("First Name",
                                         style: AppTextStyles.blackSize14),
                                     kVerticalSpaceSmall,
-                                    LoginTextField(
+                                    InputTextField(
                                       validator: emptyFieldValidator,
                                       onChanged: (String value) {
                                         _firstName = value;
@@ -194,7 +194,7 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
                                     Text("Last Name",
                                         style: AppTextStyles.blackSize14),
                                     kVerticalSpaceSmall,
-                                    LoginTextField(
+                                    InputTextField(
                                       validator: emptyFieldValidator,
                                       onChanged: (String value) {
                                         setState(() {
@@ -215,7 +215,7 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
                           Text("Phone Number",
                               style: AppTextStyles.blackSize14),
                           kVerticalSpaceSmall,
-                          LoginTextField(
+                          InputTextField(
                             inputType: TextInputType.number,
                             validator: emptyFieldValidator,
                             onChanged: (String value) {
@@ -235,7 +235,7 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
                             style: AppTextStyles.blackSize14,
                           ),
                           kVerticalSpaceSmall,
-                          LoginTextField(
+                          InputTextField(
                             enabled: false,
                             customController: _emailController,
                             withBorder: true,
