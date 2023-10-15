@@ -12,6 +12,7 @@ import 'package:greep/presentation/driver_section/statistics/all_transactions_st
 import 'package:greep/presentation/driver_section/statistics/daily_transactions_statistics_card.dart';
 import 'package:greep/presentation/driver_section/statistics/monthly_transactions_statistics_card.dart';
 import 'package:greep/presentation/driver_section/statistics/weekly_transactions_statistics_card.dart';
+import 'package:greep/presentation/driver_section/statistics/yearly_transactions_statistics_card.dart';
 import 'package:greep/presentation/driver_section/widgets/transaction_history.dart';
 import 'package:greep/presentation/widgets/button_filter_widget.dart';
 import 'package:greep/presentation/widgets/custom_appbar.dart';
@@ -196,6 +197,23 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                   GetIt.I<TransactionSummaryCubit>()
                                       .getMonthlyTransactions();
                                   return MonthlyTransactionsStatisticsCard(
+                                      summary: summary);
+                                }),
+                              ],
+                            ),
+                          );
+
+                        }
+                        else if (selectedFilterType == "year"){
+                          return SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Builder(builder: (context) {
+                                  Map<DateTime, TransactionSummary> summary =
+                                  GetIt.I<TransactionSummaryCubit>()
+                                      .getYearlyTransactions();
+                                  // print("Yearly transatction: ${summary.length}");
+                                  return YearlyTransactionsStatisticsCard(
                                       summary: summary);
                                 }),
                               ],

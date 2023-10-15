@@ -191,71 +191,6 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     return _calculate(getSelectedUserId(), from, to);
   }
 
-  Map<DateTime, TransactionSummary> getDailyTransactions() {
-    String userId = getSelectedUserId();
-    if (_transactions[userId] == null || _transactions[userId]!.isEmpty) {
-      return {DateTime.now(): TransactionSummary.Zero()};
-    }
-    Map<DateTime, TransactionSummary> map = {};
-    for (var element in _transactions[userId]!) {
-      map.putIfAbsent(
-          DateTime(element.timeAdded.year, element.timeAdded.month,
-              element.timeAdded.day), () {
-        List<Transaction> trans = _transactions[userId]!
-            .where((e) =>
-                e.timeAdded.year == element.timeAdded.year &&
-                element.timeAdded.month == e.timeAdded.month &&
-                element.timeAdded.day == e.timeAdded.day)
-            .toList();
-
-        var expenses = trans.where((element) =>
-            element.data.transactionType == TransactionType.expense);
-
-        var trips = trans.where(
-            (element) => element.data.transactionType == TransactionType.trip);
-
-        var totalIncome = trips.isEmpty
-            ? 0
-            : trips.map((element) => element.amount).reduce(
-                  (value, element) => value + element,
-                );
-
-        var totalExpenses = expenses.isEmpty
-            ? 0
-            : expenses
-                .map((e) => e.amount)
-                .reduce((value, element) => value + element);
-        var income = totalIncome - totalExpenses;
-
-        return TransactionSummary(
-            income: income,
-            tripCount: trans
-                .map((e) => e.data)
-                .where((element) =>
-                    element.transactionType == TransactionType.trip)
-                .length,
-            expenseAmount: expenses.isEmpty
-                ? 0
-                : expenses
-                    .map((e) => e.amount)
-                    .reduce((value, element) => value + element),
-            tripAmount: trips.isEmpty
-                ? 0
-                : trips
-                    .map((e) => e.amount)
-                    .reduce((value, element) => element + value),
-            expenseCount: trans
-                .map((e) => e.data)
-                .where((element) =>
-                    element.transactionType == TransactionType.expense)
-                .length,
-            transactions: trans,
-            dateRange: []);
-      });
-    }
-
-    return map;
-  }
 
   Map<DateTime, CommissionSummary> getManagedDailyCommissions() {
     String userId = currentUser().id;
@@ -547,6 +482,136 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
 
     return SplayTreeMap.from(map, (a, b) => b.compareTo(a));
   }
+
+  Map<DateTime, TransactionSummary> getDailyTransactions() {
+    String userId = getSelectedUserId();
+    if (_transactions[userId] == null || _transactions[userId]!.isEmpty) {
+      return {DateTime.now(): TransactionSummary.Zero()};
+    }
+    Map<DateTime, TransactionSummary> map = {};
+    for (var element in _transactions[userId]!) {
+      map.putIfAbsent(
+          DateTime(element.timeAdded.year, element.timeAdded.month,
+              element.timeAdded.day), () {
+        List<Transaction> trans = _transactions[userId]!
+            .where((e) =>
+        e.timeAdded.year == element.timeAdded.year &&
+            element.timeAdded.month == e.timeAdded.month &&
+            element.timeAdded.day == e.timeAdded.day)
+            .toList();
+
+        var expenses = trans.where((element) =>
+        element.data.transactionType == TransactionType.expense);
+
+        var trips = trans.where(
+                (element) => element.data.transactionType == TransactionType.trip);
+
+        var totalIncome = trips.isEmpty
+            ? 0
+            : trips.map((element) => element.amount).reduce(
+              (value, element) => value + element,
+        );
+
+        var totalExpenses = expenses.isEmpty
+            ? 0
+            : expenses
+            .map((e) => e.amount)
+            .reduce((value, element) => value + element);
+        var income = totalIncome - totalExpenses;
+
+        return TransactionSummary(
+            income: income,
+            tripCount: trans
+                .map((e) => e.data)
+                .where((element) =>
+            element.transactionType == TransactionType.trip)
+                .length,
+            expenseAmount: expenses.isEmpty
+                ? 0
+                : expenses
+                .map((e) => e.amount)
+                .reduce((value, element) => value + element),
+            tripAmount: trips.isEmpty
+                ? 0
+                : trips
+                .map((e) => e.amount)
+                .reduce((value, element) => element + value),
+            expenseCount: trans
+                .map((e) => e.data)
+                .where((element) =>
+            element.transactionType == TransactionType.expense)
+                .length,
+            transactions: trans,
+            dateRange: []);
+      });
+    }
+
+    return map;
+  }
+
+  Map<DateTime, TransactionSummary> getYearlyTransactions() {
+    String userId = getSelectedUserId();
+    if (_transactions[userId] == null || _transactions[userId]!.isEmpty) {
+      return {DateTime.now(): TransactionSummary.Zero()};
+    }
+    Map<DateTime, TransactionSummary> map = {};
+    for (var element in _transactions[userId]!) {
+      map.putIfAbsent(
+          DateTime(element.timeAdded.year), () {
+        List<Transaction> trans = _transactions[userId]!
+            .where((e) =>
+        e.timeAdded.year == element.timeAdded.year)
+            .toList();
+
+        var expenses = trans.where((element) =>
+        element.data.transactionType == TransactionType.expense);
+
+        var trips = trans.where(
+                (element) => element.data.transactionType == TransactionType.trip);
+
+        var totalIncome = trips.isEmpty
+            ? 0
+            : trips.map((element) => element.amount).reduce(
+              (value, element) => value + element,
+        );
+
+        var totalExpenses = expenses.isEmpty
+            ? 0
+            : expenses
+            .map((e) => e.amount)
+            .reduce((value, element) => value + element);
+        var income = totalIncome - totalExpenses;
+
+        return TransactionSummary(
+            income: income,
+            tripCount: trans
+                .map((e) => e.data)
+                .where((element) =>
+            element.transactionType == TransactionType.trip)
+                .length,
+            expenseAmount: expenses.isEmpty
+                ? 0
+                : expenses
+                .map((e) => e.amount)
+                .reduce((value, element) => value + element),
+            tripAmount: trips.isEmpty
+                ? 0
+                : trips
+                .map((e) => e.amount)
+                .reduce((value, element) => element + value),
+            expenseCount: trans
+                .map((e) => e.data)
+                .where((element) =>
+            element.transactionType == TransactionType.expense)
+                .length,
+            transactions: trans,
+            dateRange: []);
+      });
+    }
+
+    return map;
+  }
+
 
   Map<DateTime, TransactionSummary> getMonthlyTransactions(
       {String filter = "", DateTime? from, DateTime? to}) {
