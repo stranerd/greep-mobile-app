@@ -73,14 +73,12 @@ class _DailyTransactionsStatisticsCardState
     selectedMonth = widget.summary.keys.first.month - 1;
     generateAvailableDays();
     selectedDay =
-        "${DateFormat(DateFormat.ABBR_MONTH).format(widget.summary.keys.first)} - Week ${_weekNumber(widget.summary.keys.first)}";
-    touchedIndex = widget.summary.keys.first
-            .difference(DateTime(selectedYear))
-            .inDays
-            .abs() +
-        (_isLeapYear(widget.summary.keys.first.year)
-            ? (availableDays.length - 366)
-            : (availableDays.length - 365));
+        "${DateFormat(DateFormat.ABBR_MONTH).format(DateTime.now())} - Week ${_weekNumber(DateTime.now())}";
+    touchedIndex =
+        DateTime.now().difference(DateTime(selectedYear)).inDays.abs() +
+            (_isLeapYear(DateTime.now().year)
+                ? (availableDays.length - 366)
+                : (availableDays.length - 365));
     if (touchedIndex > 6) {
       pageIndex = (touchedIndex / 7).floor();
       // _controller.animateToPage(pageIndex, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
@@ -116,17 +114,15 @@ class _DailyTransactionsStatisticsCardState
     ];
 
     selectedYear = years.first;
-    selectedMonth = widget.summary.keys.first.month - 1;
+    selectedMonth = DateTime.now().month - 1;
     generateAvailableDays();
     selectedDay =
-        "${DateFormat(DateFormat.ABBR_MONTH).format(widget.summary.keys.first)} - Week ${_weekNumber(widget.summary.keys.first)}";
-    touchedIndex = widget.summary.keys.first
-            .difference(DateTime(selectedYear))
-            .inDays
-            .abs() +
-        (_isLeapYear(widget.summary.keys.first.year)
-            ? (availableDays.length - 366)
-            : (availableDays.length - 365));
+        "${DateFormat(DateFormat.ABBR_MONTH).format(DateTime.now())} - Week ${_weekNumber(DateTime.now())}";
+    touchedIndex =
+        DateTime.now().difference(DateTime(selectedYear)).inDays.abs() +
+            (_isLeapYear(DateTime.now().year)
+                ? (availableDays.length - 366)
+                : (availableDays.length - 365));
     if (touchedIndex > 6) {
       pageIndex = (touchedIndex / 7).floor();
       // _controller.animateToPage(pageIndex, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
@@ -154,7 +150,9 @@ class _DailyTransactionsStatisticsCardState
                 children: [
                   GestureDetector(
                     onTap: () {
-                      _controller.previousPage(duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+                      _controller.previousPage(
+                          duration: Duration(milliseconds: 200),
+                          curve: Curves.easeIn);
                     },
                     child: SvgPicture.asset(
                       "assets/icons/arrowleft.svg",
@@ -164,20 +162,27 @@ class _DailyTransactionsStatisticsCardState
                   SizedBox(
                     width: 3.w,
                   ),
-                  Builder(
-                    builder: (context) {
-                      DateTime date = ((pageIndex * 7) + 7) > availableDays.length ? availableDays[pageIndex * 7] : availableDays[(pageIndex * 7) + 7];
-                      return TextWidget(
-                          "${DateFormat("${DateFormat.ABBR_MONTH} ${DateFormat.DAY}").format(date.subtract(const Duration(days: 7,),),)} - ${DateFormat("${DateFormat.ABBR_MONTH} ${DateFormat.DAY}").format(date)}");
-                    }
-                  ),
+                  Builder(builder: (context) {
+                    DateTime date = ((pageIndex * 7) + 7) > availableDays.length
+                        ? availableDays[pageIndex * 7]
+                        : availableDays[(pageIndex * 7) + 7];
+                    return TextWidget(
+                        "${DateFormat("${DateFormat.ABBR_MONTH} ${DateFormat.DAY}").format(
+                      date.subtract(
+                        const Duration(
+                          days: 7,
+                        ),
+                      ),
+                    )} - ${DateFormat("${DateFormat.ABBR_MONTH} ${DateFormat.DAY}").format(date)}");
+                  }),
                   SizedBox(
                     width: 3.w,
                   ),
                   GestureDetector(
                     onTap: () {
-                      _controller.nextPage(duration: Duration(milliseconds: 200), curve: Curves.easeIn);
-
+                      _controller.nextPage(
+                          duration: Duration(milliseconds: 200),
+                          curve: Curves.easeIn);
                     },
                     child: SvgPicture.asset(
                       "assets/icons/arrowright.svg",
@@ -211,65 +216,66 @@ class _DailyTransactionsStatisticsCardState
                 100 *
                 (total / 100));
             double trip = ((summary.tripAmount == 0
-                ? 0
-                : summary.tripAmount <= 0
-                ? 0
-                : summary.tripAmount.abs() / (sum)) *
+                    ? 0
+                    : summary.tripAmount <= 0
+                        ? 0
+                        : summary.tripAmount.abs() / (sum)) *
                 100 *
                 (total / 100));
 
-           if (touchedIndex == i) {
-             // print(""
-             //     "summary: $summary \n"
-             //     "highest: $highestAmount, \n"
-             //     "summaryAmount: ${summary.tripAmount.abs()}  \n"
-             //     "total: $total,  \n"
-             //     "expense: $expense,  \n"
-             // "trips: ${trip} \n"
-             //     "income: $income \n"
-             //     "tochedIndex: $touchedIndex $i \n");
-           }barGroups.add(
+            if (touchedIndex == i) {
+              // print(""
+              //     "summary: $summary \n"
+              //     "highest: $highestAmount, \n"
+              //     "summaryAmount: ${summary.tripAmount.abs()}  \n"
+              //     "total: $total,  \n"
+              //     "expense: $expense,  \n"
+              // "trips: ${trip} \n"
+              //     "income: $income \n"
+              //     "tochedIndex: $touchedIndex $i \n");
+            }
+            barGroups.add(
               BarChartGroupData(
                 x: i,
                 barRods: [
                   BarChartRodData(
-                    toY: 0,
+                    toY: 1,
                     color: touchedIndex == i
                         ? AppColors.coinGold
                         : const Color(0xffDDDFE2),
-                    width: Get.width * 0.10 * 0.2,
+                    width: Get.width * 0.085 * 0.2,
                     borderRadius: BorderRadius.circular(6.r),
                   ),
                   BarChartRodData(
-                    toY: income,
+                    toY: income + 1,
                     color: touchedIndex == i
                         ? AppColors.green
                         : const Color(0xffDDDFE2),
-                    width: Get.width * 0.1 * 0.2,
+                    width: Get.width * 0.085 * 0.2,
                     borderRadius: BorderRadius.circular(6.r),
                   ),
                   BarChartRodData(
-                    toY: trip,
+                    toY: trip + 1,
                     color: touchedIndex == i
                         ? AppColors.blue
                         : const Color(0xffDDDFE2),
-                    width: Get.width * 0.1 * 0.2,
+                    width: Get.width * 0.085 * 0.2,
                     borderRadius: BorderRadius.circular(6.r),
                   ),
                   BarChartRodData(
-                    toY: expense,
+                    toY: expense + 1,
                     color: touchedIndex == i
                         ? AppColors.red
                         : const Color(0xffDDDFE2),
-                    width: Get.width * 0.1 * 0.2,
+                    width: Get.width * 0.085 * 0.2,
                     borderRadius: BorderRadius.circular(6.r),
                   ),
                   BarChartRodData(
-                    toY: 0,
+                    toY: 1,
                     color: touchedIndex == i
                         ? AppColors.blueGreen
                         : const Color(0xffDDDFE2),
-                    width: Get.width * 0.1 * 0.2,
+                    width: Get.width * 0.085 * 0.2,
                     borderRadius: BorderRadius.circular(6.r),
                   ),
                 ],
@@ -303,21 +309,9 @@ class _DailyTransactionsStatisticsCardState
                   setState(() {
                     touchedIndex = barTouchResponse.spot!.touchedBarGroupIndex +
                         (pageIndex * 7);
-                    String abrr = _getDayAbbr(DateFormat(DateFormat.DAY).format(
-                        dailySummaries[
-                                    dailySummaries.keys.toList()[touchedIndex]]
-                                ?.transactions
-                                .first
-                                .timeAdded ??
-                            DateTime.now()));
                     selectedDay = DateFormat(
                             "${DateFormat.ABBR_WEEKDAY}, ${DateFormat.DAY} ${DateFormat.ABBR_MONTH}")
-                        .format(dailySummaries[
-                                    dailySummaries.keys.toList()[touchedIndex]]
-                                ?.transactions
-                                .first
-                                .timeAdded ??
-                            DateTime.now());
+                        .format(dailySummaries.keys.toList()[touchedIndex]);
                   });
                 }
               },
@@ -342,6 +336,8 @@ class _DailyTransactionsStatisticsCardState
                       showTitles: true,
                       reservedSize: 48.h,
                       getTitlesWidget: (n, medata) {
+
+
                         var nDay = availableDays.first.add(
                           Duration(days: n.toInt()),
                         );
@@ -350,12 +346,20 @@ class _DailyTransactionsStatisticsCardState
                         );
                         return Column(
                           children: [
-                            SizedBox(height: 10.h,),
+                            SizedBox(
+                              height: 10.h,
+                            ),
                             TextWidget(
                               day,
                               fontSize: 12.sp,
+                              weight: n == touchedIndex ?FontWeight.bold : null,
+
                             ),
-                            TextWidget(nDay.day.toString(),fontSize: 11.sp,),
+                            TextWidget(
+                              nDay.day.toString(),
+                              fontSize: 12.sp,
+                              weight: n == touchedIndex ?FontWeight.bold : null,
+                            ),
                           ],
                         );
                       })),

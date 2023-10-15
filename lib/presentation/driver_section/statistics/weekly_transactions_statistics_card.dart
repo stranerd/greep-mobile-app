@@ -220,7 +220,7 @@ class _WeeklyTransactionsStatisticsCardState
                 x: i,
                 barRods: [
                   BarChartRodData(
-                    toY: 0,
+                    toY: 1,
                     color: barIndex == i
                         ? AppColors.coinGold
                         : const Color(0xffDDDFE2),
@@ -230,41 +230,41 @@ class _WeeklyTransactionsStatisticsCardState
 
                   ),
                   BarChartRodData(
-                    toY: income,
+                    toY: income + 1,
                     color: barIndex == i
                         ? AppColors.green
                         : const Color(0xffDDDFE2),
-                    width: Get.width * (monthlySummaries.length == 4 ? 0.16 : 0.15) * 0.2,
+                    width: Get.width * (monthlySummaries.length == 4 ? 0.14 : 0.13) * 0.2,
 
                     borderRadius: BorderRadius.circular(6.r),
 
                   ),
                   BarChartRodData(
-                    toY: trip,
+                    toY: trip + 1,
                     color: barIndex == i
                         ? AppColors.blue
                         : const Color(0xffDDDFE2),
-                    width: Get.width * (monthlySummaries.length == 4 ? 0.16 : 0.15) * 0.2,
+                    width: Get.width * (monthlySummaries.length == 4 ? 0.14 : 0.13) * 0.2,
 
                     borderRadius: BorderRadius.circular(6.r),
 
                   ),
                   BarChartRodData(
-                    toY: expense,
+                    toY: expense + 1,
                     color: barIndex == i
                         ? AppColors.red
                         : const Color(0xffDDDFE2),
-                    width: Get.width * (monthlySummaries.length == 4 ? 0.16 : 0.15) * 0.2,
+                    width: Get.width * (monthlySummaries.length == 4 ? 0.14 : 0.13) * 0.2,
 
                     borderRadius: BorderRadius.circular(6.r),
 
                   ),
                   BarChartRodData(
-                    toY: 0,
+                    toY: 1,
                     color: barIndex == i
                         ? AppColors.blueGreen
                         : const Color(0xffDDDFE2),
-                    width: Get.width * (monthlySummaries.length == 4 ? 0.16 : 0.15) * 0.2,
+                    width: Get.width * (monthlySummaries.length == 4 ? 0.14 : 0.13) * 0.2,
 
                     borderRadius: BorderRadius.circular(6.r),
 

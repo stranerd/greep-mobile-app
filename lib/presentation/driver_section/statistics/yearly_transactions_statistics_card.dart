@@ -32,7 +32,7 @@ class _YearlyTransactionsStatisticsCardState
   late PageController _controller;
   bool isTouched = false;
   int touchedIndex = -1;
-  String selectedMonth = "";
+  String currentYear = "";
   int selectedYear = DateTime.now().year;
 
   String touchedType = "";
@@ -69,8 +69,7 @@ class _YearlyTransactionsStatisticsCardState
     years = widget.summary.keys.map((e) => e.year).toSet().toList();
     selectedYear = DateTime.now().year;
     generateAvailableYears();
-    selectedMonth =
-        DateFormat(DateFormat.YEAR).format(widget.summary.keys.first);
+    currentYear = DateFormat(DateFormat.YEAR).format(widget.summary.keys.first);
 
     // touchedIndex is 9 since the current year is at the end of the 10 year generated list for the view
     touchedIndex = 9;
@@ -86,8 +85,7 @@ class _YearlyTransactionsStatisticsCardState
     years = widget.summary.keys.map((e) => e.year).toSet().toList();
     selectedYear = DateTime.now().year;
     generateAvailableYears();
-    selectedMonth =
-        DateFormat(DateFormat.YEAR).format(DateTime(selectedYear));
+    currentYear = DateFormat(DateFormat.YEAR).format(DateTime(selectedYear));
     // touchedIndex = widget.summary.keys.first.month - 1;
 
     // touchedIndex is 9 since the current year is at the end of the 10 year generated list for the view
@@ -109,7 +107,7 @@ class _YearlyTransactionsStatisticsCardState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               TextWidget(
-                selectedMonth,
+                currentYear,
                 weight: FontWeight.bold,
                 fontSize: 14.sp,
               ),
@@ -133,7 +131,9 @@ class _YearlyTransactionsStatisticsCardState
                     width: 3.w,
                   ),
                   Builder(builder: (context) {
-                    return TextWidget(pageIndex == 0 ? "${selectedYear-9} - ${selectedYear - 5}" : "${selectedYear-4} - ${selectedYear}");
+                    return TextWidget(pageIndex == 0
+                        ? "${selectedYear - 9} - ${selectedYear - 5}"
+                        : "${selectedYear - 4} - ${selectedYear}");
                   }),
                   SizedBox(
                     width: 3.w,
@@ -186,18 +186,17 @@ class _YearlyTransactionsStatisticsCardState
                         : summary.income.abs() / (sum)) *
                 100 *
                 (total / 100));
-            if (i == touchedIndex){
-
-            print("Date: "
-                "summary: $summary\n"
-                "highest: $highestAmount,\n"
-                "summaryAmount: ${summary.tripAmount.abs()}\n"
-                "total: $total,\n"
-                "expense: $expense,\n"
-                "income: $income,\n"
-                "trip: $trip,\n"
-                "tochedIndex: $touchedIndex $i \n");
-                }
+            if (i == touchedIndex) {
+              print("Date: "
+                  "summary: $summary\n"
+                  "highest: $highestAmount,\n"
+                  "summaryAmount: ${summary.tripAmount.abs()}\n"
+                  "total: $total,\n"
+                  "expense: $expense,\n"
+                  "income: $income,\n"
+                  "trip: $trip,\n"
+                  "tochedIndex: $touchedIndex $i \n");
+            }
             barGroups.add(
               BarChartGroupData(
                 x: i,
@@ -266,26 +265,14 @@ class _YearlyTransactionsStatisticsCardState
                   // touchedIndex = -1;
                   return;
                 } else {
-                    touchedIndex = barTouchResponse.spot!.touchedBarGroupIndex +
-                        (pageIndex == 0 ? 0 : 5);
-                    print("touched ${touchedIndex}");
+                  touchedIndex = barTouchResponse.spot!.touchedBarGroupIndex +
+                      (pageIndex == 0 ? 0 : 5);
 
-                    var transactions2 = yearlySummaries[
-                                    yearlySummaries.keys.toList()[touchedIndex]]
-                                ?.transactions;
-                    if (transactions2?.isEmpty ?? true){
-                      selectedMonth = availableYears.map((e) => e.year).toList()[touchedIndex].toString();
-                    }
-                    else {
-                    selectedMonth = DateFormat(DateFormat.YEAR).format(
-                        transactions2
-                                ?.first
-                                .timeAdded ??
-                            DateTime.now());
-                    }
-                    setState(() {
-                    });
-
+                  currentYear = availableYears
+                      .map((e) => e.year)
+                      .toList()[touchedIndex]
+                      .toString();
+                  setState(() {});
                 }
               },
               touchTooltipData: BarTouchTooltipData(
@@ -309,10 +296,7 @@ class _YearlyTransactionsStatisticsCardState
                       reservedSize: 32.h,
                       showTitles: true,
                       getTitlesWidget: (n, medata) {
-
-                        var years = availableYears
-                                  .map((e) => e.year)
-                                  .toList();
+                        var years = availableYears.map((e) => e.year).toList();
                         // print(years);
                         return Column(
                           children: [
@@ -320,10 +304,10 @@ class _YearlyTransactionsStatisticsCardState
                               height: 10.h,
                             ),
                             TextWidget(
-                              years[n.toInt()]
-                                  .toString(),
+                              years[n.toInt()].toString(),
                               fontSize: 12.sp,
-                              weight: touchedIndex == n ?FontWeight.bold : null,
+                              weight:
+                                  touchedIndex == n ? FontWeight.bold : null,
                             ),
                           ],
                         );

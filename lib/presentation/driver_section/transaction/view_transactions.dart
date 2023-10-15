@@ -11,6 +11,7 @@ import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/presentation/driver_section/statistics/all_transactions_statistics_card.dart';
 import 'package:greep/presentation/driver_section/statistics/daily_transactions_statistics_card.dart';
 import 'package:greep/presentation/driver_section/statistics/monthly_transactions_statistics_card.dart';
+import 'package:greep/presentation/driver_section/statistics/overrall_transactions_statistics_card.dart';
 import 'package:greep/presentation/driver_section/statistics/weekly_transactions_statistics_card.dart';
 import 'package:greep/presentation/driver_section/statistics/yearly_transactions_statistics_card.dart';
 import 'package:greep/presentation/driver_section/widgets/transaction_history.dart';
@@ -228,8 +229,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           return SingleChildScrollView(
                             child: Column(
                               children: [
-                                AllTransactionsStatisticsCard(
-                                  transactionSummary: summary,
+                                OverallTransactionsStatisticsCard(
+                                  summary: summary,
                                 ),
                                 kVerticalSpaceRegular,
                                 const Padding(

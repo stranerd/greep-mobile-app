@@ -70,8 +70,8 @@ class _MonthlyTransactionsStatisticsCardState
     selectedYear = years.first;
     generateAvailableMonths();
     selectedMonth =
-        DateFormat(DateFormat.MONTH).format(widget.summary.keys.first);
-    touchedIndex = widget.summary.keys.first.month - 1;
+        DateFormat(DateFormat.MONTH).format(DateTime.now());
+    touchedIndex = availableMonths.indexWhere((element) => DateTime.now().year == element.year && DateTime.now().month == element.month);
     if (touchedIndex > 6) {
       pageIndex = 1;
     }
@@ -85,8 +85,9 @@ class _MonthlyTransactionsStatisticsCardState
     selectedYear = years.first;
     generateAvailableMonths();
     selectedMonth =
-        DateFormat(DateFormat.MONTH).format(widget.summary.keys.first);
-    touchedIndex = widget.summary.keys.first.month - 1;
+        DateFormat(DateFormat.MONTH).format(DateTime.now());
+    touchedIndex = availableMonths.indexWhere((element) => DateTime.now().year == element.year && DateTime.now().month == element.month);
+
     if (touchedIndex > 6) {
       pageIndex = 1;
     }
@@ -191,7 +192,7 @@ class _MonthlyTransactionsStatisticsCardState
                 x: i,
                 barRods: [
                   BarChartRodData(
-                    toY: 0+1,
+                    toY: 0 + 1,
                     color: touchedIndex == i
                         ? AppColors.coinGold
                         : const Color(0xffDDDFE2),
@@ -256,13 +257,9 @@ class _MonthlyTransactionsStatisticsCardState
                   setState(() {
                     touchedIndex = barTouchResponse.spot!.touchedBarGroupIndex +
                         (pageIndex == 0 ? 0 : 6);
-                    selectedMonth = DateFormat(DateFormat.MONTH).format(
-                        monthlySummaries[monthlySummaries.keys
-                                    .toList()[touchedIndex]]
-                                ?.transactions
-                                .first
-                                .timeAdded ??
-                            DateTime.now());
+
+                    selectedMonth = DateFormat(DateFormat.MONTH)
+                        .format(availableMonths[touchedIndex]);
                   });
                 }
               },
@@ -337,6 +334,8 @@ class _MonthlyTransactionsStatisticsCardState
                             TextWidget(
                               month,
                               fontSize: 12.sp,
+                              weight:
+                                  touchedIndex == n ? FontWeight.bold : null,
                             ),
                           ],
                         );
