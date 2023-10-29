@@ -10,7 +10,8 @@ class BackIcon extends StatelessWidget {
   final Function? onTap;
   final bool isArrow;
   final String? icon;
-  const BackIcon({Key? key, this.size = 30, this.padding, this.icon, this.onTap, this.isArrow = false,}) : super(key: key);
+  final Color? color;
+  const BackIcon({Key? key, this.size = 30, this.color, this.padding, this.icon, this.onTap, this.isArrow = false,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +32,7 @@ class BackIcon extends StatelessWidget {
           icon ?? (isArrow ?"assets/icons/arrowleft.svg" :"assets/icons/close.svg"),
           width: size.r,
           height: size.r,
+          color: color,
           fit: BoxFit.cover,
         ),
       ),

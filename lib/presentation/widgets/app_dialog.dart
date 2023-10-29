@@ -7,10 +7,12 @@ class AppDialog extends StatelessWidget {
   final Widget child;
   final double? height;
   final String title;
+  final bool displayBack;
 
   const AppDialog({
     Key? key,
     required this.child,
+    this.displayBack = true,
     required this.title,
     this.height,
   }) : super(key: key);
