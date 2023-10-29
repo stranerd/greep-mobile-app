@@ -189,12 +189,26 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
     List<BottomNavigationBarItem> bottomNavList = List.generate(4, (i) {
       var item = BottomNavigationBarItem(
         label: '',
-        icon: SvgIcon(
-          svgIcon: icons[i],
-          size: 24.r,
+        icon: Column(
+          children: [
+            kVerticalSpaceSmall,
+            SvgIcon(
+              svgIcon: icons[i],
+              size: 24.r,
+            ),
+            kVerticalSpaceTiny,
+            SvgPicture.asset(
+              "assets/icons/nav-active.svg",
+              color: Colors.transparent,
+              width: 4.r,
+              height: 4.r,
+            )
+          ],
         ),
         activeIcon: Column(
           children: [
+            kVerticalSpaceSmall,
+
             SvgIcon(
               svgIcon: icons[i],
               color: AppColors.black,

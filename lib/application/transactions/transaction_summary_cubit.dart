@@ -191,7 +191,6 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     return _calculate(getSelectedUserId(), from, to);
   }
 
-
   Map<DateTime, CommissionSummary> getManagedDailyCommissions() {
     String userId = currentUser().id;
     var userTransactions = _transactions[userId] ?? const [];
@@ -495,28 +494,28 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
               element.timeAdded.day), () {
         List<Transaction> trans = _transactions[userId]!
             .where((e) =>
-        e.timeAdded.year == element.timeAdded.year &&
-            element.timeAdded.month == e.timeAdded.month &&
-            element.timeAdded.day == e.timeAdded.day)
+                e.timeAdded.year == element.timeAdded.year &&
+                element.timeAdded.month == e.timeAdded.month &&
+                element.timeAdded.day == e.timeAdded.day)
             .toList();
 
         var expenses = trans.where((element) =>
-        element.data.transactionType == TransactionType.expense);
+            element.data.transactionType == TransactionType.expense);
 
         var trips = trans.where(
-                (element) => element.data.transactionType == TransactionType.trip);
+            (element) => element.data.transactionType == TransactionType.trip);
 
         var totalIncome = trips.isEmpty
             ? 0
             : trips.map((element) => element.amount).reduce(
-              (value, element) => value + element,
-        );
+                  (value, element) => value + element,
+                );
 
         var totalExpenses = expenses.isEmpty
             ? 0
             : expenses
-            .map((e) => e.amount)
-            .reduce((value, element) => value + element);
+                .map((e) => e.amount)
+                .reduce((value, element) => value + element);
         var income = totalIncome - totalExpenses;
 
         return TransactionSummary(
@@ -524,22 +523,22 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
             tripCount: trans
                 .map((e) => e.data)
                 .where((element) =>
-            element.transactionType == TransactionType.trip)
+                    element.transactionType == TransactionType.trip)
                 .length,
             expenseAmount: expenses.isEmpty
                 ? 0
                 : expenses
-                .map((e) => e.amount)
-                .reduce((value, element) => value + element),
+                    .map((e) => e.amount)
+                    .reduce((value, element) => value + element),
             tripAmount: trips.isEmpty
                 ? 0
                 : trips
-                .map((e) => e.amount)
-                .reduce((value, element) => element + value),
+                    .map((e) => e.amount)
+                    .reduce((value, element) => element + value),
             expenseCount: trans
                 .map((e) => e.data)
                 .where((element) =>
-            element.transactionType == TransactionType.expense)
+                    element.transactionType == TransactionType.expense)
                 .length,
             transactions: trans,
             dateRange: []);
@@ -556,30 +555,28 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     }
     Map<DateTime, TransactionSummary> map = {};
     for (var element in _transactions[userId]!) {
-      map.putIfAbsent(
-          DateTime(element.timeAdded.year), () {
+      map.putIfAbsent(DateTime(element.timeAdded.year), () {
         List<Transaction> trans = _transactions[userId]!
-            .where((e) =>
-        e.timeAdded.year == element.timeAdded.year)
+            .where((e) => e.timeAdded.year == element.timeAdded.year)
             .toList();
 
         var expenses = trans.where((element) =>
-        element.data.transactionType == TransactionType.expense);
+            element.data.transactionType == TransactionType.expense);
 
         var trips = trans.where(
-                (element) => element.data.transactionType == TransactionType.trip);
+            (element) => element.data.transactionType == TransactionType.trip);
 
         var totalIncome = trips.isEmpty
             ? 0
             : trips.map((element) => element.amount).reduce(
-              (value, element) => value + element,
-        );
+                  (value, element) => value + element,
+                );
 
         var totalExpenses = expenses.isEmpty
             ? 0
             : expenses
-            .map((e) => e.amount)
-            .reduce((value, element) => value + element);
+                .map((e) => e.amount)
+                .reduce((value, element) => value + element);
         var income = totalIncome - totalExpenses;
 
         return TransactionSummary(
@@ -587,22 +584,22 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
             tripCount: trans
                 .map((e) => e.data)
                 .where((element) =>
-            element.transactionType == TransactionType.trip)
+                    element.transactionType == TransactionType.trip)
                 .length,
             expenseAmount: expenses.isEmpty
                 ? 0
                 : expenses
-                .map((e) => e.amount)
-                .reduce((value, element) => value + element),
+                    .map((e) => e.amount)
+                    .reduce((value, element) => value + element),
             tripAmount: trips.isEmpty
                 ? 0
                 : trips
-                .map((e) => e.amount)
-                .reduce((value, element) => element + value),
+                    .map((e) => e.amount)
+                    .reduce((value, element) => element + value),
             expenseCount: trans
                 .map((e) => e.data)
                 .where((element) =>
-            element.transactionType == TransactionType.expense)
+                    element.transactionType == TransactionType.expense)
                 .length,
             transactions: trans,
             dateRange: []);
@@ -612,21 +609,24 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     return map;
   }
 
-
-  Map<DateTime, TransactionSummary> getMonthlyTransactions(
-      {String filter = "", DateTime? from, DateTime? to}) {
+  Map<DateTime, TransactionSummary> getMonthlyTransactions({
+    String filter = "",
+    DateTime? from,
+    DateTime? to,
+    String query = "",
+  }) {
     print("Filter $filter, From $from, To $to");
     String userId = getSelectedUserId();
+    query = query.toLowerCase();
     List<Transaction> userTransactions = [..._transactions[userId] ?? []];
     print("User transactions: ${userTransactions.length}");
 
     if (from != null && to != null) {
-      userTransactions = userTransactions
-          .where((element) {
-            print(element.timeAdded);
-            return element.timeAdded.isAfter(from) && element.timeAdded.isBefore(to);
-          })
-          .toList();
+      userTransactions = userTransactions.where((element) {
+        print(element.timeAdded);
+        return element.timeAdded.isAfter(from) &&
+            element.timeAdded.isBefore(to);
+      }).toList();
     }
     if (filter.isNotEmpty && filter.toLowerCase() != "all") {
       print("sorting for ${filter}");
@@ -635,8 +635,10 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
             element.data.transactionType == TransactionType.balance);
       } else if (filter == "expenses") {
         print("User expenses: ${userTransactions.length}");
-        userTransactions = userTransactions.where((element) =>
-            element.data.transactionType == TransactionType.expense).toList();
+        userTransactions = userTransactions
+            .where((element) =>
+                element.data.transactionType == TransactionType.expense)
+            .toList();
       } else if (filter == "withdrawals") {
       } else if (filter == "cash") {
         userTransactions.removeWhere(
@@ -646,6 +648,15 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
             (element) => element.data.paymentType != PaymentType.wallet);
       }
     }
+
+    if (query.trim().isNotEmpty) {
+      userTransactions = userTransactions.where((element) {
+        return element.description.toLowerCase().contains(query) ||
+            (element.data.customerName?.toLowerCase().contains(query) ??
+                false) ||
+            (element.data.name?.toLowerCase().contains(query) ?? false);
+      }).toList();
+    }
     if (userTransactions.isEmpty) {
       return {DateTime.now(): TransactionSummary.Zero()};
     }
@@ -653,7 +664,8 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     for (var element in userTransactions) {
       map.putIfAbsent(DateTime(element.timeAdded.year, element.timeAdded.month),
           () {
-        List<Transaction> trans = userTransactions.where((e) =>
+        List<Transaction> trans = userTransactions
+            .where((e) =>
                 e.timeAdded.year == element.timeAdded.year &&
                 element.timeAdded.month == e.timeAdded.month)
             .toList();
