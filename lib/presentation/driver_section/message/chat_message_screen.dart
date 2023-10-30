@@ -6,6 +6,7 @@ import 'package:greep/domain/message/chat_message.dart';
 import 'package:greep/domain/message/message_list.dart';
 import 'package:greep/presentation/driver_section/message/widget/chat_edit_box.dart';
 import 'package:greep/presentation/driver_section/message/widget/single_chat_message_widget.dart';
+import 'package:greep/presentation/driver_section/voice_call/voice_call_screen.dart';
 import 'package:greep/presentation/widgets/profile_photo_widget.dart';
 import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
@@ -55,9 +56,10 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
         titleSpacing: 0,
         title: Row(
           children: [
-            const ProfilePhotoWidget(
+            ProfilePhotoWidget(
               url: "",
               radius: 24,
+              initials: "",
             ),
             SizedBox(
               width: 12.w,
@@ -102,7 +104,10 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
             width: 16.w,
           ),
           SplashTap(
-            onTap: () {},
+            onTap: () {
+              Get.to(() => VoiceCallScreen());
+
+            },
             child: SvgPicture.asset(
               "assets/icons/call.svg",
               width: 24.r,

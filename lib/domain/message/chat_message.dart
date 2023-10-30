@@ -47,6 +47,7 @@ class ChatMessage {
       message: messages[Random().nextInt(messages.length -1)],
       receiver: User(
         id: "id",
+        username: "",
         email: "email",
         fullName: "fullName",
         firstName: "firstName",

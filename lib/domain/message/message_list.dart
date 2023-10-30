@@ -26,6 +26,7 @@ final DateTime date;
         receiver: User(
             id: "id",
             email: "email",
+            username: "",
             fullName: "Ibekason",
             firstName: "Alexander",
             hasManager: false,

@@ -21,10 +21,10 @@ class MessageListWidget extends StatelessWidget {
           Expanded(
             child: Row(
               children: [
-                const ProfilePhotoWidget(
+                ProfilePhotoWidget(
                   url: "",
                   radius: 24,
-
+                  initials: "",
                 ),
                 SizedBox(width: 12.w),
 

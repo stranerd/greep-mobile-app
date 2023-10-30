@@ -78,6 +78,7 @@ class _CashRequestDialogState extends State<CashRequestDialog> {
                         const ProfilePhotoWidget(
                           url: "",
                           radius: 12,
+                          initials: "",
                         ),
                       ],
                     ),

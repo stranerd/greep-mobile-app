@@ -7,6 +7,7 @@ import 'package:get/get.dart' as g;
 import 'package:get/get.dart';
 import 'package:greep/application/user/user_cubit.dart';
 import 'package:greep/application/user/user_cubit.dart';
+import 'package:greep/commons/Utils/utils.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/presentation/driver_section/leaderboard/leaderboard_screen.dart';
 import 'package:greep/presentation/driver_section/nav_pages/settings/account/view_profile.dart';
@@ -81,7 +82,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget{
                             ? state
                             .user
                             .photoUrl
-                            : "",)
+                            : "",initials: Utils.getInitials(state is UserStateFetched ? state.user.fullName : ""),)
                     ),
                     kHorizontalSpaceRegular
                   ],

@@ -10,6 +10,7 @@ import 'package:greep/application/auth/AuthenticationState.dart';
 import 'package:greep/application/driver/drivers_cubit.dart';
 import 'package:greep/application/driver/manager_drivers_cubit.dart';
 import 'package:greep/application/user/user_cubit.dart';
+import 'package:greep/commons/Utils/utils.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/presentation/auth/security/security_screen.dart';
 import 'package:greep/presentation/driver_section/add_driver_screen.dart';
@@ -80,7 +81,7 @@ class SettingsHome extends StatelessWidget {
                                   ProfilePhotoWidget(
                                     url: userState.user.photoUrl,
                                     radius: 40,
-                                  ),
+                                initials: Utils.getInitials(userState.user.fullName,),),
                                   SizedBox(
                                     height: 12.h,
                                   ),

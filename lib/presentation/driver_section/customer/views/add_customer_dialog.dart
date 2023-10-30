@@ -89,9 +89,10 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                               fontSize: 12.sp,
                               color: AppColors.veryLightGray,
                             ),
-                            leading: const ProfilePhotoWidget(
+                            leading: ProfilePhotoWidget(
                               radius: 24,
                               url: "",
+                              initials: customer.name,
                             ),
                             trailing: GestureDetector(
                               onTap: () {

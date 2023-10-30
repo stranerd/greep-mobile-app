@@ -82,7 +82,7 @@ class CustomerCardView extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    ProfilePhotoWidget(url: ""),
+                    ProfilePhotoWidget(url: "",initials: transaction.data.customerName ?? "",),
                     kHorizontalSpaceSmall,
                     TextWidget(
                       text,

@@ -37,6 +37,7 @@ import 'package:greep/presentation/widgets/turkish_symbol.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 import 'package:greep/utils/constants/app_styles.dart';
 import 'package:intl/intl.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'customer/customer_page.dart';
@@ -168,28 +169,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                             children: [
                                               Row(
                                                 children: [
-                                                  DotCircle(color: AppColors.green),
+                                                  DotCircle(
+                                                      color: AppColors.green),
                                                   kHorizontalSpaceSmall,
                                                   TextWidget("Target reached"),
-
                                                 ],
                                               ),
                                               kVerticalSpaceRegular,
                                               Row(
                                                 children: [
-                                                  DotCircle(color: AppColors.coinGold),
+                                                  DotCircle(
+                                                      color:
+                                                          AppColors.coinGold),
                                                   kHorizontalSpaceSmall,
                                                   TextWidget("Above average"),
-
                                                 ],
                                               ),
                                               kVerticalSpaceRegular,
                                               Row(
                                                 children: [
-                                                  DotCircle(color: AppColors.red),
+                                                  DotCircle(
+                                                      color: AppColors.red),
                                                   kHorizontalSpaceSmall,
-                                                  TextWidget("Poor performance"),
-
+                                                  TextWidget(
+                                                      "Poor performance"),
                                                 ],
                                               )
                                             ],
@@ -199,48 +202,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                           width: cs.maxWidth * 0.5,
                                           alignment: Alignment.centerRight,
                                           child: Builder(builder: (context) {
-                                            List<PieChartSectionData> sectionData = [
-                                              PieChartSectionData(
-                                                titleStyle: kWhiteTextStyle.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                value: 0.7,
-                                                title: "income",
-                                                showTitle: false,
-                                                color: kGreenColor,
-
-                                                radius:  50.r,
-                                              ),
-                                              PieChartSectionData(
-                                                titleStyle: kWhiteTextStyle.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                value: 0.3,
-                                                title: "expense",
-                                                showTitle: false,
-                                                color: AppColors.red,
-                                                radius: 50.r,
-                                              ),
-                                            ];
                                             return SizedBox(
                                               width: 108.r,
                                               height: 108.r,
-                                              child: PieChart(
-                                                PieChartData(
-                                                  pieTouchData: PieTouchData(touchCallback:
-                                                      (FlTouchEvent event, pieTouchResponse) {
-                                                  }),
-                                                  startDegreeOffset: 90,
-                                                  borderData: FlBorderData(
-                                                      show: true,
-                                                      border: const Border(
-                                                        bottom: BorderSide(
-                                                            color: kGreenColor, width: 5),
-                                                      )),
-                                                  sectionsSpace: 0,
+                                              child: CircularPercentIndicator(
+                                                backgroundColor:
+                                                    AppColors.gray2,
+                                                percent: 0.75,
+                                                startAngle: 90,
+                                                animation: true,
+                                                animationDuration: 1200,
+                                                circularStrokeCap: CircularStrokeCap.round,
+                                                radius: 50.r,
+                                                progressColor: AppColors.coinGold,
 
-                                                  centerSpaceRadius: double.infinity,
-                                                  sections: sectionData,),
+                                                lineWidth: 20.w,
+                                                center: TextWidget(
+                                                  "75%",
+                                                  color: AppColors.coinGold,
+                                                  fontSize: 18.sp,
+                                                  weight: FontWeight.bold,
+                                                ),
                                               ),
                                             );
                                           }),
