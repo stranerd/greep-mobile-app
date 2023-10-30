@@ -5,6 +5,7 @@ class User extends Equatable{
   final String email;
   final String firstName;
   final String lastName;
+  final String username;
   final String fullName;
   final String photoUrl;
   String? managerName;
@@ -17,6 +18,7 @@ class User extends Equatable{
       required this.email,
       required this.fullName,
         this.managerId,
+        required this.username,
         this.commission,
         this.managerName,
       required this.firstName,
@@ -29,6 +31,7 @@ class User extends Equatable{
         id: data["id"],
         email: data["bio"]["email"],
         fullName: data["bio"]["name"]["full"],
+        username: data["bio"]["username"] ?? "",
         firstName: data["bio"]["name"]["first"] ?? "",
         lastName: data["bio"]["name"]["last"] ?? "",
         hasManager: data["manager"] != null,
@@ -42,6 +45,7 @@ class User extends Equatable{
     var user = User(
         id: data["id"],
         email: data["email"],
+        username: data["username"] ?? "",
         fullName: data["allNames"]["full"],
         firstName: data["name"]["first"] ?? "",
         lastName: data["name"]["last"] ?? "",

@@ -37,6 +37,24 @@ class Utils with ChangeNotifier {
     return date.toUtc();
   }
 
+  static String getInitials(String value) {
+    List<String> values = [];
+    try {
+      if (value.contains('')) {
+        values = value.split(' ');
+        if (values.length > 1 &&
+            values[0].isNotEmpty &&
+            values[1].isNotEmpty) {
+          return '${values[0][0]}${values[1][0]}'.toUpperCase();
+        } else {
+          return values[0].substring(0, 2).toUpperCase();
+        }
+      }
+      return value[0][0].toUpperCase();
+    } catch (e) {
+      return '';
+    }
+  }
   String getRandomString(int length) {
     const _chars =
         'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';

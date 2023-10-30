@@ -68,6 +68,7 @@ class _TripRequestDialogState extends State<TripRequestDialog> {
                         const ProfilePhotoWidget(
                           url: "",
                           radius: 12,
+                          initials: "",
                         ),
                       ],
                     ),

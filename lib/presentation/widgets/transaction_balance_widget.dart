@@ -70,50 +70,38 @@ class _TransactionBalanceWidgetState extends State<TransactionBalanceWidget>
             }
           },
           builder: (context, state) {
-            return LayoutBuilder(builder: (context, constraints) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextWidget(
-                    "Settle this transaction",
-                    style: AppTextStyles.blackSizeBold12,
-                  ),
-                  kVerticalSpaceSmall,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          decoration: const BoxDecoration(),
-                          child: InputTextField(
-                            customController: _amountController,
-                            withTitle: false,
-                            textStyle: widget.transaction.debt < 0 ? AppTextStyles.redSize14 : AppTextStyles.blueSize14,
-                            inputType: TextInputType.number,
-                            title: "Amount",
-                            onChanged: (s) {
-                            },
-                            validator: emptyFieldValidator,
-                          ),
-                        ),
-                      ),
-                      kHorizontalSpaceSmall,
-                      SizedBox(
-                        width: 100,
-                        height: 50,
-                        child: SubmitButton(
-                          text: _debtType,
-                          isLoading: state is TransactionCrudStateLoading,
-                          enabled: state is! TransactionCrudStateLoading,
-                          onSubmit: transact,
-                          padding: kDefaultSpacing * 0.5,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              );
-            });
+           return Row(
+             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+             children: [
+               Expanded(
+                 child: Container(
+                   decoration: const BoxDecoration(),
+                   child: InputTextField(
+                     customController: _amountController,
+                     withTitle: false,
+                     textStyle: widget.transaction.debt < 0 ? AppTextStyles.redSize14 : AppTextStyles.blueSize14,
+                     inputType: TextInputType.number,
+                     title: "Amount",
+                     onChanged: (s) {
+                     },
+                     validator: emptyFieldValidator,
+                   ),
+                 ),
+               ),
+               kHorizontalSpaceSmall,
+               SizedBox(
+                 width: 100,
+                 height: 50,
+                 child: SubmitButton(
+                   text: _debtType,
+                   isLoading: state is TransactionCrudStateLoading,
+                   enabled: state is! TransactionCrudStateLoading,
+                   onSubmit: transact,
+                   padding: kDefaultSpacing * 0.5,
+                 ),
+               ),
+             ],
+           );
           },
         );
       }),

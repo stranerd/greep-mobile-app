@@ -13,41 +13,58 @@ class LeaderboardRankingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BoxShadowContainer(
-      verticalPadding: 12,
+        verticalPadding: 12,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
           children: [
-            TextWidget(
-              "1",
-              fontSize: 16.sp,
-              weight: FontWeight.bold,
-            ),
-            SizedBox(
-              width: 12.w,
-            ),
-            ProfilePhotoWidget(url: "",radius: 20,),
-            SizedBox(width: 12.w,),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
-                TextWidget("Dammy",fontSize: 16.sp,weight: FontWeight.bold,),
-                TextWidget("Recruit",color: AppColors.veryLightGray,),
+                TextWidget(
+                  "1",
+                  fontSize: 16.sp,
+                  weight: FontWeight.bold,
+                ),
+                SizedBox(
+                  width: 12.w,
+                ),
+                ProfilePhotoWidget(
+                  url: "",
+                  radius: 20,
+                  initials: "",
+                ),
 
+                SizedBox(
+                  width: 12.w,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextWidget(
+                      "Dammy",
+                      fontSize: 16.sp,
+                      weight: FontWeight.bold,
+                    ),
+                    TextWidget(
+                      "Recruit",
+                      color: AppColors.veryLightGray,
+                    ),
+                  ],
+                ),
               ],
             ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                TextWidget(
+                  "100pts",
+                  fontSize: 16.sp,
+                ),
+                SvgPicture.asset(
+                  "assets/icons/arrowup-bold.svg",
+                ),
+              ],
+            )
           ],
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            TextWidget("100pts",fontSize: 16.sp,),
-            SvgPicture.asset("assets/icons/arrowup-bold.svg",),
-
-          ],
-        )
-      ],
-    ));
+        ));
   }
 }
