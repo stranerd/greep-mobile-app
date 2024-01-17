@@ -137,7 +137,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
                           GetIt.I<AuthenticationCubit>().signinWithGoogle();
                         },
                         text: "Continue with Google",
-                        icon: "assets/icons/google-colored.svg",
+                        icon: "assets/icons/google-colored.png",
                       ),
                       kVerticalSpaceRegular,
                       if (Platform.isIOS)
@@ -249,6 +249,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
                                         false;
                                   },
                                   listener: (context, state) {
+                                    print(state);
                                     if (state is SignupStateReady) {
                                       g.Get.to(
                                           () => AuthFinishSignup(
@@ -268,6 +269,8 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
                                     }
                                   },
                                   builder: (context, state) {
+                                    print(state);
+
                                     return SubmitButton(
                                         isLoading: state is SignupStateLoading,
                                         enabled: state is! SignupStateLoading,

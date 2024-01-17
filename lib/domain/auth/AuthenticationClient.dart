@@ -121,9 +121,10 @@ class AuthenticationClient {
     }
   }
 
-
   Future<ResponseEntity<Map<String, dynamic>>> signup(
       SignUpRequest request) async {
+    print("Signing up ${request.toMap()}");
+
     final Dio dio = Dio();
     Response response;
     try {
@@ -165,6 +166,7 @@ class AuthenticationClient {
   }
 
   Future<ResponseEntity> testSignup(LoginRequest request) async {
+    print("Testing Signup ${request.toMap()}");
     final Dio dio = Dio();
     Response response;
     try {
@@ -172,6 +174,8 @@ class AuthenticationClient {
         "${baseApi}auth/emails/signup",
         data: request.toJson(),
       );
+
+      print("Test signup result ${response.data}");
 
       return ResponseEntity.Data(response.data);
     } on DioError catch (e) {
@@ -270,7 +274,7 @@ class AuthenticationClient {
     }
   }
 
-  Future<ResponseEntity> confirmPasswordResetChange({required String password, required String token})async {
+  Future<ResponseEntity> confirmPasswordResetChange({required String password, required String token}) async {
     final Dio dio = Dio();
     Response response;
     try {

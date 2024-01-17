@@ -38,7 +38,7 @@ class SettingsHomeItem extends StatelessWidget {
                 icon,
                 width: 24.r,
                 height: 24.r,
-                color: color ?? null,
+                color: color,
               ),
               SizedBox(width: 12.0.w),
             ],
@@ -46,7 +46,7 @@ class SettingsHomeItem extends StatelessWidget {
           TextWidget(
             title,
             fontSize: 14.sp,
-            color: color ?? null,
+            color: color,
           ),
           if(withTrail)const Spacer(),
           if (withTrail)SvgPicture.asset(

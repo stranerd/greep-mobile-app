@@ -27,6 +27,7 @@ import 'package:greep/application/transactions/transaction_summary_cubit.dart';
 import 'package:greep/application/transactions/trip_direction_builder_cubit.dart';
 import 'package:greep/application/transactions/user_transactions_cubit.dart';
 import 'package:greep/application/user/user_cubit.dart';
+import 'package:greep/application/wallet/user_wallet_cubit.dart';
 import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/scaffold_messenger_service.dart';
 import 'package:greep/commons/themes.dart';
@@ -109,6 +110,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider.value(
           value: GetIt.I<SignupCubit>(),
+        ),
+        BlocProvider.value(
+          value: GetIt.I<UserWalletCubit>(),
         ),
         BlocProvider.value(
           value: GetIt.I<UserTransactionsCubit>(),

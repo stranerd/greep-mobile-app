@@ -117,14 +117,19 @@ class _InputTextFieldState extends State<InputTextField> {
                     fit: BoxFit.cover,
                   ),
                 ): widget.isPassword
-                    ? IconButton(
-                        icon: Icon(
-                            isObscure
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined,
-                            color: kBlackColor),
-                        onPressed: toggleObscurity,
-                      )
+                    ? GestureDetector(
+                  onTap: toggleObscurity,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      right: 16.0.w,
+                    ),
+                    child: SvgPicture.asset(
+                      "assets/icons/${isObscure ? "eye" : "eye-slash"}.svg",
+                      width: 24.r,
+                      height: 24.r,
+                    ),
+                  ),
+                )
                     : null,
                 filled: widget.withBorder ? false : true,
                 fillColor: kBorderColor,

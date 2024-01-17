@@ -18,8 +18,10 @@ import 'package:greep/presentation/driver_section/drivers/drivers_screen.dart';
 import 'package:greep/presentation/driver_section/nav_pages/settings/about/privacy_policy.dart';
 import 'package:greep/presentation/driver_section/nav_pages/settings/about/terms_and_conditions.dart';
 import 'package:greep/presentation/driver_section/nav_pages/settings/commission/total_income.dart';
+import 'package:greep/presentation/driver_section/settings/useful_links.dart';
 import 'package:greep/presentation/driver_section/widgets/settings_home_item.dart';
 import 'package:greep/presentation/splash/splash.dart';
+import 'package:greep/presentation/wallet/wallet_screen.dart';
 import 'package:greep/presentation/widgets/back_icon.dart';
 import 'package:greep/presentation/widgets/profile_photo_widget.dart';
 import 'package:greep/presentation/widgets/splash_tap.dart';
@@ -111,6 +113,15 @@ class SettingsHome extends StatelessWidget {
                           SizedBox(height: 12.h),
                           SplashTap(
                             onTap: () {
+                              Get.to(() => const WalletScreen());
+                            },
+                            child: const SettingsHomeItem(
+                                title: "Wallet",
+                                icon: "assets/icons/empty-wallet.svg"),
+                          ),
+                          SizedBox(height: 12.h,),
+                          SplashTap(
+                            onTap: () {
                               Get.to(() => const SecurityScreen());
                             },
                             child: const SettingsHomeItem(
@@ -180,7 +191,25 @@ class SettingsHome extends StatelessWidget {
                                 title: "Support",
                                 icon: "assets/icons/headphone.svg"),
                           ),
+                          if (driverState is DriversStateManager)
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 12.h),
+
+                                SplashTap(
+                                  onTap: () {
+                                    Get.to(() => const UsefulLinks());
+                                  },
+                                  child: const SettingsHomeItem(
+                                      title: "Useful links",
+                                      color: AppColors.black,
+                                      icon: "assets/icons/copy.svg"),
+                                ),
+                              ],
+                            ),
                           kVerticalSpaceLarge,
+
                           kVerticalSpaceRegular,
                           SplashTap(
                             onTap: () {

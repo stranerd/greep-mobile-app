@@ -44,7 +44,10 @@ class SignupCubit extends Cubit<SignupState> {
       emit(SignupStateError(response.errorMessage,fieldErrors: response.fieldErrors,isConnectionTimeout: response.isConnectionTimeout,
       isSocket: response.isSocket));}
       else {
+
         emit(SignupStateReady());
+        print("Test signup ready ${response.data}");
+
       }
     }
   }

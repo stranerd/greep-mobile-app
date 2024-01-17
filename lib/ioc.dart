@@ -20,6 +20,7 @@ import 'package:greep/application/driver/drivers_cubit.dart';
 import 'package:greep/application/driver/manager_requests_cubit.dart';
 import 'package:greep/application/user/user_crud_cubit.dart';
 import 'package:greep/application/user/user_cubit.dart';
+import 'package:greep/application/wallet/user_wallet_cubit.dart';
 import 'package:greep/domain/auth/AuthenticationClient.dart';
 import 'package:greep/domain/auth/AuthenticationService.dart';
 import 'package:greep/domain/customer/customer_client.dart';
@@ -28,6 +29,8 @@ import 'package:greep/domain/transaction/transaction_client.dart';
 import 'package:greep/domain/transaction/transaction_service.dart';
 import 'package:greep/domain/user/UserService.dart';
 import 'package:greep/domain/user/user_client.dart';
+import 'package:greep/domain/wallet/wallet_client.dart';
+import 'package:greep/domain/wallet/wallet_service.dart';
 
 var getIt = GetIt.instance;
 
@@ -49,7 +52,13 @@ class IoC {
   late AuthenticationClient _authenticationClient;
   late NewManagerAcceptsCubit _newManagerAcceptsCubit;
 
+  void initServices(){
+
+    getIt.registerSingleton(WalletService(walletClient: WalletClient(),),);
+  }
+
   IoC() {
+    initServices();
     getIt.registerLazySingleton(() => LocationCubit());
     _authenticationClient = AuthenticationClient();
     getIt.registerSingleton(_authenticationClient);
@@ -137,5 +146,6 @@ class IoC {
 
     getIt.registerFactory(() => DriverLocationStatusCubit());
 
+    getIt.registerSingleton(UserWalletCubit(walletService: getIt(), userCubit: getIt()));
   }
 }
