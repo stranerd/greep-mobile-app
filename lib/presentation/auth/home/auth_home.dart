@@ -155,6 +155,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
                             title: "Email",
                             validator: validateEmail,
                             isPassword: false,
+                            hintText: "Enter email",
                             onChanged: (String value) {
                               setState(() {
                                 email = value;
@@ -164,6 +165,8 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
                           kVerticalSpaceRegular,
                           InputTextField(
                             title: "Password",
+                            hintText: "Enter password",
+
                             validator: (String s) {
                               if (s.length < 8) {
                                 return "Password must contain atleast 8 characters";

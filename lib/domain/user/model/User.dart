@@ -12,6 +12,7 @@ class User extends Equatable{
   final bool hasManager;
   final num? commission;
   final String? managerId;
+  final UserRanking? rankings;
 
    User(
       {required this.id,
@@ -20,6 +21,7 @@ class User extends Equatable{
         this.managerId,
         required this.username,
         this.commission,
+         this.rankings,
         this.managerName,
       required this.firstName,
       required this.hasManager,
@@ -27,24 +29,28 @@ class User extends Equatable{
       required this.photoUrl});
 
   factory User.fromServer(dynamic data) {
+    print("Ranking ${data["account"]?["rankings"]}");
     var user = User(
         id: data["id"],
-        email: data["bio"]["email"],
-        fullName: data["bio"]["name"]["full"],
-        username: data["bio"]["username"] ?? "",
-        firstName: data["bio"]["name"]["first"] ?? "",
-        lastName: data["bio"]["name"]["last"] ?? "",
+        email: data["bio"]?["email"] ?? "",
+        rankings: data["account"]?["rankings"] == null ? null :UserRanking.fromMap(data["account"]?["rankings"]),
+        fullName: data["bio"]?["name"]?["full"] ?? "",
+        username: data["bio"]?["username"] ?? "",
+        firstName: data["bio"]?["name"]["first"] ?? "",
+        lastName: data["bio"]?["name"]?["last"] ?? "",
         hasManager: data["manager"] != null,
         managerId: data["manager"] != null ? data["manager"]["managerId"]: null,
         commission: data["manager"] != null ? data["manager"]["commission"]: null,
-        photoUrl: data["bio"]["photo"]["link"]);
+        photoUrl: data["bio"]?["photo"]?["link"]??"");
     return user;
   }
 
   factory User.fromServerAuth(dynamic data) {
+    print("From server auth ${data}");
     var user = User(
         id: data["id"],
         email: data["email"],
+        rankings:data["account"]?["rankings"] == null ? null : UserRanking.fromMap(data["rankings"]),
         username: data["username"] ?? "",
         fullName: data["allNames"]["full"],
         firstName: data["name"]["first"] ?? "",
@@ -62,4 +68,49 @@ class User extends Equatable{
 
   @override
   List<Object?> get props => [id];
+}
+
+class UserRanking {
+  final Rank? daily;
+  final Rank? weekly;
+  final Rank? monthly;
+
+  UserRanking({required this.daily, required this.weekly, required this.monthly});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'daily': daily,
+      'weekly': weekly,
+      'monthly': monthly,
+    };
+  }
+
+  factory UserRanking.fromMap(Map<String, dynamic>? map) {
+    return UserRanking(
+      daily: map?['daily'] != null ? Rank.fromMap(map!["daily"]) : null,
+      weekly: map?['weekly'] != null ? Rank.fromMap(map!["weekly"]) : null,
+      monthly: map?['monthly'] != null ? Rank.fromMap(map!["monthly"]) : null,
+    );
+  }
+}
+
+class Rank {
+  final num value;
+  final DateTime date;
+
+  Rank({required this.value, required this.date});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'value': value,
+      'date': date,
+    };
+  }
+
+  factory Rank.fromMap(Map<String, dynamic> map) {
+    return Rank(
+      value: map['value'] ?? 0,
+      date: map["lastUpdatedAt"]  != null ? DateTime.fromMillisecondsSinceEpoch(map["lastUpdatedAt"]): DateTime.now(),
+    );
+  }
 }

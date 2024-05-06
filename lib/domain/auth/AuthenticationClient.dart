@@ -23,7 +23,7 @@ class AuthenticationClient {
         data: request.toJson(),
       );
 
-      print("sign in data");
+      print("sign in data ${response.data}");
 
       return ResponseEntity.Data({
         "id": response.data["user"]["id"],
@@ -33,13 +33,13 @@ class AuthenticationClient {
         "email": request.email
       });
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         return ResponseEntity.Error(
             e.response!.data[0]["message"] ?? "Incorrect Credentials");
       }
@@ -67,13 +67,13 @@ class AuthenticationClient {
         "refreshToken": response.data["refreshToken"],
       });
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         return ResponseEntity.Error(
             e.response!.data[0]["message"] ?? "An error occurred. Please try again");
       }
@@ -101,14 +101,14 @@ class AuthenticationClient {
         "refreshToken": response.data["refreshToken"],
       });
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
 
-      if (e.type == DioErrorType.response){
+      if (e.type == DioExceptionType.badResponse){
         print("Apple sign in error ${e.response?.data}");
         return ResponseEntity.Error("There was an error on the server");
       }
@@ -144,14 +144,14 @@ class AuthenticationClient {
         "refreshToken": response.data["refreshToken"]
       });
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         print("connectionTimeout");
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         print("signup data ${e.response?.data}");
         return ResponseEntity.Error(
             e.response!.data["message"] ?? "An error occurred in sign up");
@@ -179,14 +179,14 @@ class AuthenticationClient {
 
       return ResponseEntity.Data(response.data);
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         print("connectionTimeout");
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         Map<String, dynamic> fieldErrors = {};
         e.response!.data.forEach((e) {
           if (e["field"] == "email") {
@@ -221,13 +221,13 @@ class AuthenticationClient {
         "refreshToken": response.data["refreshToken"]
       });
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         return ResponseEntity.Error(
             e.response!.data[0]["message"] ?? "Incorrect Credentials");
       }
@@ -255,13 +255,13 @@ class AuthenticationClient {
 
       return ResponseEntity.Data(null);
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         return ResponseEntity.Error(
             e.response!.data[0]["message"] ?? "Password Reset failed");
       }
@@ -288,13 +288,13 @@ class AuthenticationClient {
 
       return ResponseEntity.Data(null);
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         return ResponseEntity.Error(
             e.response!.data[0]["message"] ?? "Password Reset failed");
       }
@@ -322,13 +322,13 @@ class AuthenticationClient {
 
       return ResponseEntity.Data(null);
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         return ResponseEntity.Error(
             e.response!.data[0]["message"] ?? "Email Verification failed");
       }
@@ -354,13 +354,13 @@ class AuthenticationClient {
 
       return ResponseEntity.Data(null);
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         return ResponseEntity.Error(
             e.response!.data[0]["message"] ?? "Email Verification failed");
       }

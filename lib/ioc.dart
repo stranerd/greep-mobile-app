@@ -10,6 +10,7 @@ import 'package:greep/application/driver/new_manager_requests_cubit.dart';
 import 'package:greep/application/geocoder/geocoder_cubit.dart';
 import 'package:greep/application/location/driver_location_status_cubit.dart';
 import 'package:greep/application/location/location_cubit.dart';
+import 'package:greep/application/notification/user_notification_cubit.dart';
 import 'package:greep/application/transactions/customer_statistics_cubit.dart';
 import 'package:greep/application/transactions/transaction_crud_cubit.dart';
 import 'package:greep/application/transactions/transaction_summary_cubit.dart';
@@ -25,6 +26,8 @@ import 'package:greep/domain/auth/AuthenticationClient.dart';
 import 'package:greep/domain/auth/AuthenticationService.dart';
 import 'package:greep/domain/customer/customer_client.dart';
 import 'package:greep/domain/customer/customer_service.dart';
+import 'package:greep/domain/notification/notification_client.dart';
+import 'package:greep/domain/notification/notification_service.dart';
 import 'package:greep/domain/transaction/transaction_client.dart';
 import 'package:greep/domain/transaction/transaction_service.dart';
 import 'package:greep/domain/user/UserService.dart';
@@ -52,9 +55,17 @@ class IoC {
   late AuthenticationClient _authenticationClient;
   late NewManagerAcceptsCubit _newManagerAcceptsCubit;
 
-  void initServices(){
-
-    getIt.registerSingleton(WalletService(walletClient: WalletClient(),),);
+  void initServices() {
+    getIt.registerSingleton(
+      NotificationService(
+        notificationClient: NotificationClient(),
+      ),
+    );
+    getIt.registerSingleton(
+      WalletService(
+        walletClient: WalletClient(),
+      ),
+    );
   }
 
   IoC() {
@@ -83,7 +94,8 @@ class IoC {
       authenticationService: _authenticationService,
     );
 
-    getIt.registerLazySingleton(() => TripDirectionBuilderCubit(
+    getIt.registerLazySingleton(
+      () => TripDirectionBuilderCubit(
         locationCubit: getIt(),
       ),
     );
@@ -140,12 +152,18 @@ class IoC {
     getIt.registerFactory(() => UserCrudCubit(
           userService: _userService,
         ));
-    getIt.registerFactory( () => TransactionTripsCubit());
+    getIt.registerFactory(() => TransactionTripsCubit());
     getIt.registerFactory(() => GeoCoderCubit());
-
 
     getIt.registerFactory(() => DriverLocationStatusCubit());
 
-    getIt.registerSingleton(UserWalletCubit(walletService: getIt(), userCubit: getIt()));
+    getIt.registerSingleton(
+        UserWalletCubit(walletService: getIt(), userCubit: getIt()));
+
+    getIt.registerSingleton(
+      UserNotificationCubit(
+        notificationService: getIt(),
+      ),
+    );
   }
 }

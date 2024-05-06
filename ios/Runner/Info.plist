@@ -37,20 +37,23 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Greep needs access to your location while in motion.</string>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>Greep requires access to record your trip directions. Trips direction cannot work without your location.</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Greep requires access to record your trip directions. Trips direction cannot work without your location.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Greep requires permission to access your photos to allow you add or change a profile photo from your camera</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Greep needs access to your location while in motion.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Greep requires access to record your trip directions. Trips direction cannot work without your location.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Greep requires access to record your trip directions. Trips direction cannot work without your location.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Greep requires permission to access your microphone</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Greep requires permission to access your photos to allow you add or change a profile photo from your available photos</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>fetch</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
@@ -73,8 +76,6 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<true/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 </dict>
 </plist>

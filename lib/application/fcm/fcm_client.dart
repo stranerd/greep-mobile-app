@@ -43,7 +43,7 @@ abstract class FcmClient {
       print("sent fcm successfully ${response.data}");
     } on DioError catch (e) {
       print("Unable to send fcm");
-      if (e.type == DioErrorType.response){
+      if (e.type == DioExceptionType.badResponse){
         print(e.response!.data);
 
       }

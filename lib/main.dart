@@ -22,6 +22,7 @@ import 'package:greep/application/fcm/fcm_notification_service.dart';
 import 'package:greep/application/geocoder/geocoder_cubit.dart';
 import 'package:greep/application/local_notification/local_notification_service.dart';
 import 'package:greep/application/location/location_cubit.dart';
+import 'package:greep/application/notification/user_notification_cubit.dart';
 import 'package:greep/application/transactions/customer_statistics_cubit.dart';
 import 'package:greep/application/transactions/transaction_summary_cubit.dart';
 import 'package:greep/application/transactions/trip_direction_builder_cubit.dart';
@@ -110,6 +111,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider.value(
           value: GetIt.I<SignupCubit>(),
+        ),
+        BlocProvider.value(
+          value: GetIt.I<UserNotificationCubit>(),
         ),
         BlocProvider.value(
           value: GetIt.I<UserWalletCubit>(),

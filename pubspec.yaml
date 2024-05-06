@@ -13,11 +13,11 @@ dependencies:
     sdk: flutter
   badges: ^2.0.2
   bubble: ^1.2.1
-  cached_network_image: ^3.1.0
+  cached_network_image: ^3.3.1
   cloud_firestore: ^4.8.2
   connectivity_plus: ^2.3.6
   cupertino_icons: ^1.0.2
-  dio: ^4.0.6
+  dio: ^5.4.1
   equatable: ^2.0.3
   esys_flutter_share_plus: ^2.2.0
   firebase_auth: ^4.6.3
@@ -26,15 +26,15 @@ dependencies:
   firebase_core: ^2.14.0
   flutter_datetime_picker_plus: ^2.0.1
   flutter_dotenv: ^5.0.2
-  flutter_local_notifications: ^14.1.1
+  flutter_local_notifications: ^16.3.2
   flutter_typeahead: ^4.0.0
   flutter_polyline_points: ^1.0.0
   firebase_messaging: ^14.6.4
   flutter_native_splash: ^2.1.0
-  flutter_screenutil: ^5.8.4
+  flutter_screenutil: ^5.9.0
   flutter_secure_storage: ^5.0.2
   flutter_share: ^2.0.0
-  flutter_slidable: ^3.0.0
+  flutter_slidable: ^3.0.1
   fluttertoast: ^8.0.8
   flutter_svg: ^2.0.7
   geocoding: ^2.0.4

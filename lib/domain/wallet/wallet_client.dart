@@ -23,14 +23,14 @@ class WalletClient {
 
       return ResponseEntity.Data(Wallet.fromMap(response.data));
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
 
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         print("wallet error data ${e.response?.data} ${e.response?.statusCode}");
         String message = e.response?.data?["message"] ?? "An error occurred fetching wallet";
         return ResponseEntity.Error(message);

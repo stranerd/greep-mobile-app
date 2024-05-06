@@ -26,13 +26,13 @@ class CustomerClient {
       return ResponseEntity.Data(drivers);
     } on DioError catch (e) {
 
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         try {
           if (e.response!.data[0]["message"]
               .toString()

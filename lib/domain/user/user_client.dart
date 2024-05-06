@@ -22,13 +22,13 @@ class UserClient {
       response = await dio.get("users/users/$userId");
       return ResponseEntity.Data(User.fromServer(response.data));
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         print("error in user ${e.response?.data}");
         try {
           if (e.response!.data[0]["message"]
@@ -82,13 +82,13 @@ class UserClient {
 
       return ResponseEntity.Data(drivers);
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         try {
           if (e.response!.data[0]["message"]
               .toString()
@@ -142,13 +142,13 @@ class UserClient {
       });
       return ResponseEntity.Data(users);
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         try {
           if (e.response!.data[0]["message"]
               .toString()
@@ -193,14 +193,14 @@ class UserClient {
           await dio.post("users/users/drivers/add", data: request.toJson());
       return ResponseEntity.Data(null);
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
 
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         try {
           if (e.response!.data[0]["message"]
               .toString()
@@ -244,14 +244,14 @@ class UserClient {
           await dio.post("users/users/managers/accept", data: request.toJson());
       return ResponseEntity.Data(null);
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
 
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         try {
           if (e.response!.data[0]["message"]
               .toString()
@@ -294,14 +294,14 @@ class UserClient {
           data: jsonEncode({"driverId": driverId}));
       return ResponseEntity.Data(null);
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
 
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         try {
           if (e.response!.data[0]["message"]
               .toString()
@@ -349,13 +349,13 @@ class UserClient {
       }
       return ResponseEntity.Error("No manager requests");
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         try {
           if (e.response!.data[0]["message"]
               .toString()
@@ -398,14 +398,14 @@ class UserClient {
       response = await dio.put("auth/user", data: request.toFormData());
       return ResponseEntity.Data(null);
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
 
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         try {
           if (e.response!.data[0]["message"]
               .toString()
@@ -448,14 +448,14 @@ class UserClient {
       response = await dio.delete("auth/user");
       return ResponseEntity.Data(null);
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
 
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         try {
           if (e.response!.data[0]["message"]
               .toString()

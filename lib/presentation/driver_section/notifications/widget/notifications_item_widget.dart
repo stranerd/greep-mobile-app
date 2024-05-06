@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:greep/domain/notification/notification.dart';
+import 'package:greep/domain/notification/user_notification.dart';
 import 'package:greep/presentation/widgets/box_shadow_container.dart';
 import 'package:greep/presentation/widgets/dot_circle.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
@@ -26,10 +26,10 @@ class NotificationsItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextWidget(
-                "Congrats! You ranked #1 today",
+                notification.title,
               ),
               TextWidget(
-                "Today",
+                notification.body,
                 fontSize: 12.sp,
                 color: AppColors.veryLightGray,
               ),
@@ -37,7 +37,7 @@ class NotificationsItemWidget extends StatelessWidget {
           ),
         ),
         SizedBox(width: 10.w,),
-        DotCircle(color: AppColors.blue)
+        if (notification.seen) DotCircle(color: AppColors.blue)
       ],
     ));
   }

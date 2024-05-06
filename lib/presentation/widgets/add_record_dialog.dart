@@ -35,6 +35,8 @@ class _AddRecordDialogState extends State<AddRecordDialog> {
                       color: Colors.black,
                     ),
                     labelColor: Colors.white,
+                    indicatorSize: TabBarIndicatorSize.tab,
+
                     labelStyle: AppTextStyles.whiteSize12,
                     unselectedLabelColor: Colors.black,
                     unselectedLabelStyle: AppTextStyles.blackSize12,

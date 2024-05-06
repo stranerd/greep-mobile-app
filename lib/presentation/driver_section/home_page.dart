@@ -22,9 +22,12 @@ import 'package:greep/domain/transaction/transaction.dart';
 import 'package:greep/presentation/driver_section/nav_pages/settings/account/view_profile.dart';
 import 'package:greep/presentation/driver_section/transaction/view_transactions.dart';
 import 'package:greep/presentation/driver_section/widgets/empty_result_widget.dart';
+import 'package:greep/presentation/driver_section/widgets/home_overview_card.dart';
 import 'package:greep/presentation/driver_section/widgets/transaction_interval_summary.dart';
 import 'package:greep/presentation/widgets/code_verification_bottom_sheet.dart';
 import 'package:greep/presentation/widgets/custom_appbar.dart';
+import 'package:greep/presentation/widgets/custom_popup_menu_divider.dart';
+import 'package:greep/presentation/widgets/custom_popup_menu_item.dart';
 import 'package:greep/presentation/widgets/customer_transaction_list.dart';
 import 'package:greep/presentation/widgets/dot_circle.dart';
 import 'package:greep/presentation/widgets/driver_selector_widget.dart';
@@ -103,135 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding: const EdgeInsets.all(kDefaultSpacing),
                             physics: const BouncingScrollPhysics(),
                             children: [
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      TextWidget(
-                                        "Overview",
-                                        weight: FontWeight.w600,
-                                        fontSize: 16.sp,
-                                      ),
-                                      Row(
-                                        children: [
-                                          const TextWidget(
-                                            "This Week",
-                                          ),
-                                          kHorizontalSpaceTiny,
-                                          SvgPicture.asset(
-                                            "assets/icons/filter.svg",
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  kVerticalSpaceRegular,
-                                  ProgressIndicatorContainer(
-                                    progress: 0.75,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const TextWidget(
-                                          "Weekly target",
-                                        ),
-                                        Row(
-                                          children: [
-                                            const MoneyWidget(
-                                              amount: 7500,
-                                              weight: FontWeight.bold,
-                                            ),
-                                            kHorizontalSpaceTiny,
-                                            const TextWidget(
-                                              "/",
-                                              weight: FontWeight.bold,
-                                            ),
-                                            kHorizontalSpaceTiny,
-                                            const MoneyWidget(
-                                              amount: 10000,
-                                              weight: FontWeight.bold,
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  kVerticalSpaceMedium,
-                                  LayoutBuilder(builder: (context, cs) {
-                                    return Row(
-                                      children: [
-                                        Container(
-                                          width: cs.maxWidth * 0.5,
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  DotCircle(
-                                                      color: AppColors.green),
-                                                  kHorizontalSpaceSmall,
-                                                  TextWidget("Target reached"),
-                                                ],
-                                              ),
-                                              kVerticalSpaceRegular,
-                                              Row(
-                                                children: [
-                                                  DotCircle(
-                                                      color:
-                                                          AppColors.coinGold),
-                                                  kHorizontalSpaceSmall,
-                                                  TextWidget("Above average"),
-                                                ],
-                                              ),
-                                              kVerticalSpaceRegular,
-                                              Row(
-                                                children: [
-                                                  DotCircle(
-                                                      color: AppColors.red),
-                                                  kHorizontalSpaceSmall,
-                                                  TextWidget(
-                                                      "Poor performance"),
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          width: cs.maxWidth * 0.5,
-                                          alignment: Alignment.centerRight,
-                                          child: Builder(builder: (context) {
-                                            return SizedBox(
-                                              width: 108.r,
-                                              height: 108.r,
-                                              child: CircularPercentIndicator(
-                                                backgroundColor:
-                                                    AppColors.gray2,
-                                                percent: 0.75,
-                                                startAngle: 90,
-                                                animation: true,
-                                                animationDuration: 1200,
-                                                circularStrokeCap: CircularStrokeCap.round,
-                                                radius: 50.r,
-                                                progressColor: AppColors.coinGold,
-
-                                                lineWidth: 20.w,
-                                                center: TextWidget(
-                                                  "75%",
-                                                  color: AppColors.coinGold,
-                                                  fontSize: 18.sp,
-                                                  weight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            );
-                                          }),
-                                        )
-                                      ],
-                                    );
-                                  })
-                                ],
-                              ),
+                              HomeOverviewCard(),
                               kVerticalSpaceMedium,
                               ListTile(
                                 contentPadding: EdgeInsets.zero,
@@ -242,7 +117,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 trailing: SplashTap(
                                   onTap: () {
                                     g.Get.to(() => const ViewAllRecords(),
-                                        transition: g.Transition.fadeIn);
+                                        transition: g.Transition.fadeIn,
+                                    );
                                   },
                                   child: TextWidget("view all",
                                       style: AppTextStyles.blackSize12),

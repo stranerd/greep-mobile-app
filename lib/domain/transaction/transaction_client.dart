@@ -22,7 +22,7 @@ class TransactionClient {
     };
     Response response;
     try {
-      response = await dio.get("users/transactions",queryParameters: queryParams);
+      response = await dio.get("trips/transactions",queryParameters: queryParams);
       List<Transaction> transactions = [];
       response.data["results"].forEach((e) {
         transactions.add(Transaction.fromServer(e));
@@ -30,14 +30,14 @@ class TransactionClient {
 
       return ResponseEntity.Data(transactions);
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
 
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         try {
           if (e.response!.data[0]["message"]
               .toString()
@@ -77,17 +77,17 @@ class TransactionClient {
   Future<ResponseEntity<Transaction>> addTrip(AddTripRequest request) async {
     Response response;
     try {
-      response = await dio.post("users/transactions", data: request.toJson());
+      response = await dio.post("trips/transactions", data: request.toJson());
       return ResponseEntity.Data(Transaction.fromServer(response.data));
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
 
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         try {
           if (e.response!.data[0]["message"]
               .toString()
@@ -130,17 +130,17 @@ class TransactionClient {
     print("add balance request");
     Response response;
     try {
-      response = await dio.post("users/transactions", data: request.toJson());
+      response = await dio.post("trips/transactions", data: request.toJson());
       return ResponseEntity.Data(Transaction.fromServer(response.data));
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
 
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         try {
           if (e.response!.data[0]["message"]
               .toString()
@@ -183,17 +183,17 @@ class TransactionClient {
     print("add expense request");
     Response response;
     try {
-      response = await dio.post("users/transactions", data: request.toJson());
+      response = await dio.post("trips/transactions", data: request.toJson());
       return ResponseEntity.Data(Transaction.fromServer(response.data));
     } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         return ResponseEntity.Timeout();
       }
       if (e.error is SocketException) {
         return ResponseEntity.Socket();
       }
 
-      if (e.type == DioErrorType.response) {
+      if (e.type == DioExceptionType.badResponse) {
         try {
           if (e.response!.data[0]["message"]
               .toString()

@@ -48,6 +48,7 @@ class ChatMessage {
       receiver: User(
         id: "id",
         username: "",
+
         email: "email",
         fullName: "fullName",
         firstName: "firstName",

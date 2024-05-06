@@ -337,6 +337,7 @@ class _RecordTripState extends State<RecordTrip>
                       InputTextField(
                         customController: _priceController,
                         validator: emptyFieldValidator,
+
                         onChanged: (String value) {
                           _price = value;
                           setState(() {});
