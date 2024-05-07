@@ -114,6 +114,10 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
                   children: [
                     Positioned.fill(
                       child: FloatingActionButton(
+                        backgroundColor: AppColors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(99.r)
+                        ),
                         onPressed: () {
                           showModalBottomSheet(
                               context: context,

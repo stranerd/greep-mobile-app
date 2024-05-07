@@ -155,7 +155,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
                             title: "Email",
                             validator: validateEmail,
                             isPassword: false,
-                            hintText: "Enter email",
+                            hintText: "Enter your email",
                             onChanged: (String value) {
                               setState(() {
                                 email = value;

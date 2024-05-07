@@ -68,7 +68,7 @@ class _HomeOverviewCardState extends State<HomeOverviewCard> {
             ),
             Color(
               0xff10BB76,
-            ).withOpacity(0.85),
+            ),
             Color(
               0xff10BB76,
             ).withOpacity(0.75),
@@ -117,7 +117,7 @@ class _HomeOverviewCardState extends State<HomeOverviewCard> {
                   return [
                     PopupMenuItem<int>(
                       height: 35.h,
-                      value: 1,
+                      value: 0,
                       child:  CustomPopupMenuItem(
                         text: "Today",
                         textColor: selectedInterval  == 0? AppColors.green : AppColors.black,
@@ -132,12 +132,10 @@ class _HomeOverviewCardState extends State<HomeOverviewCard> {
                     ),
                     PopupMenuItem<int>(
                       height: 30.h,
-
-                      value: 2,
+                      value: 1,
                       child:  CustomPopupMenuItem(
                         text: "Week",
                         textColor: selectedInterval  == 1? AppColors.green : AppColors.black,
-
                         // icon: "assets/icons/help.svg",
                       ),
                     ),
@@ -148,7 +146,6 @@ class _HomeOverviewCardState extends State<HomeOverviewCard> {
                     ),
                     PopupMenuItem<int>(
                       height: 30.h,
-
                       value: 2,
                       child:  CustomPopupMenuItem(
                         text: "Month",

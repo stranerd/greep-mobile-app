@@ -31,11 +31,11 @@ class Transaction extends Equatable {
     var transactionData = TransactionData.fromServer(data["data"]);
 
     return Transaction(
-      driverId: data["driverId"],
+      driverId: data["driverId"] ?? "",
       id: data["id"],
-      managerId: data["managerId"],
-      amount: data["amount"],
-      description: data["description"],
+      managerId: data["managerId"] ?? "",
+      amount: data["amount"] ?? 0,
+      description: data["description"] ?? "",
       timeAdded: DateTime.fromMillisecondsSinceEpoch(data["recordedAt"]),
       timeCreated: DateTime.fromMillisecondsSinceEpoch(data["createdAt"]),
       timeUpdated: DateTime.fromMillisecondsSinceEpoch(data["updatedAt"]),
