@@ -3,25 +3,34 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as g;
+import 'package:get/get.dart';
 import 'package:greep/application/auth/AuthenticationCubit.dart';
+import 'package:greep/application/auth/email_verification/email_verification_cubit.dart';
 import 'package:greep/application/location/location_cubit.dart';
 import 'package:greep/application/location/location_state.dart';
+import 'package:greep/application/user/auth_user_cubit.dart';
 import 'package:greep/application/user/user_cubit.dart';
 import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/scaffold_messenger_service.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/ioc.dart';
+import 'package:greep/presentation/auth/home/auth_home.dart';
+import 'package:greep/presentation/auth_finish_signup.dart';
 import 'package:greep/presentation/driver_section/home_page.dart';
 import 'package:greep/presentation/driver_section/nav_pages/nav_bar/nav_bar_view.dart';
 import 'package:greep/presentation/splash/splash.dart';
+import 'package:greep/presentation/widgets/code_verification_bottom_sheet.dart';
 import 'package:greep/presentation/widgets/email_verification_bottom_sheet.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 
 class AuthenticationSplashScreen extends StatefulWidget {
   final bool isNewUser;
+  final String? email;
+  final String? password;
 
-  const AuthenticationSplashScreen({Key? key, this.isNewUser = false})
+  const AuthenticationSplashScreen(
+      {Key? key, this.isNewUser = false, this.email, this.password})
       : super(key: key);
 
   @override
@@ -30,22 +39,51 @@ class AuthenticationSplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<AuthenticationSplashScreen> {
   late LocationCubit locationCubit;
+  late EmailVerificationCubit emailVerificationCubit;
 
   @override
   void initState() {
     locationCubit = getIt();
+    emailVerificationCubit = getIt();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserCubit, UserState>(
-      listener: (context, state) {
-        if (state is UserStateFetched) {
-          if (widget.isNewUser) {
-            g.Get.offAll(const EmailVerificationBottomSheet(),
-                transition: g.Transition.cupertino);
-          } else {
+    return BlocListener<AuthUserCubit, AuthUserState>(
+      listener: (context, state) async {
+        if (state is AuthUserStateFetched) {
+          if (!state.user.isVerified){
+            emailVerificationCubit.sendVerificationCode(state.user.email);
+            var isVerified = await Get.bottomSheet<bool>(
+                CodeVerificationBottomSheet(
+                  onResendCode: (){
+                    emailVerificationCubit.sendVerificationCode(state.user.email);
+
+                  },
+                  verificationMode: VerificationMode.signup,
+                  onCompleted: (code) {
+                    return emailVerificationCubit.confirmVerificationCode(
+                        token: code);
+                  },
+                  email: state.user.email,
+                ),
+                isScrollControlled: true,
+                ignoreSafeArea: false);
+            if (isVerified ?? false) {
+              if (widget.isNewUser){
+              Get.offAll(
+                const AuthFinishSignup(),
+              );}
+              else {
+                Get.offAll(NavBarView());
+              }
+            } else {
+              getIt<AuthenticationCubit>().signout();
+              Get.off(() => AuthHomeScreen());
+            }
+          }
+           else {
             if (locationCubit.state is LocationStateOff) {
               showModalBottomSheet(
                   context: context,
@@ -66,13 +104,13 @@ class _SplashScreenState extends State<AuthenticationSplashScreen> {
                             scale: 2,
                           ),
                           kVerticalSpaceLarge,
-                           TextWidget(
+                          TextWidget(
                             "Allow “Greep” to access your location?",
                             weight: FontWeight.bold,
                             fontSize: 20.sp,
                           ),
                           kVerticalSpaceRegular,
-                           TextWidget(
+                          TextWidget(
                             "Your location data will be used to give you a realtime ride experience of your trips and allow managers to see your trip history and realtime trip progress",
                             weight: FontWeight.w500,
                             fontSize: 14.sp,
@@ -82,23 +120,21 @@ class _SplashScreenState extends State<AuthenticationSplashScreen> {
                             color: AppColors.lightBlue,
                           ),
                           GestureDetector(
-                            onTap: () async{
+                            onTap: () async {
                               var isOn = await locationCubit.subscribe();
                               if (isOn) {
                                 locationCubit.emitOn();
-                              }
-                              else {
-                              }
+                              } else {}
                               g.Get.back();
                               g.Get.offAll(
-                                    () => const NavBarView(),
+                                () => const NavBarView(),
                                 transition: g.Transition.fadeIn,
                               );
                             },
                             child: Column(
                               children: [
                                 kVerticalSpaceSmall,
-                                 TextWidget(
+                                TextWidget(
                                   "Allow",
                                   color: AppColors.blue,
                                   fontSize: 18.sp,
@@ -122,7 +158,7 @@ class _SplashScreenState extends State<AuthenticationSplashScreen> {
                             child: Column(
                               children: [
                                 kVerticalSpaceSmall,
-                                 TextWidget(
+                                TextWidget(
                                   "Don't Allow",
                                   color: AppColors.blue,
                                   fontSize: 18.sp,
@@ -143,7 +179,7 @@ class _SplashScreenState extends State<AuthenticationSplashScreen> {
             }
           }
         }
-        if (state is UserStateError) {
+        if (state is AuthUserStateError) {
           print("user state error  ${state.errorMessage}");
           if (state.isSocket || state.isConnectionTimeout) {
             Fluttertoast.showToast(

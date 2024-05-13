@@ -20,9 +20,10 @@ class UserCrudStateSuccess extends UserCrudState {
   final bool isDriverAdd;
   final bool isManagerAdd;
   final bool isManagerReject;
+  final bool isUpdateUserType;
   final bool isEditUser;
 
-  UserCrudStateSuccess({this.isDriverAdd = false,this.isManagerAdd = false,this.isManagerReject = false,  this.isEditUser = false});
+  UserCrudStateSuccess({this.isDriverAdd = false, this.isUpdateUserType = false,this.isManagerAdd = false,this.isManagerReject = false,  this.isEditUser = false});
 }
 
 class UserCrudStateFailure extends UserCrudState {

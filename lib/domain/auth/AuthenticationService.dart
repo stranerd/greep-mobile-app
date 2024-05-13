@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/services.dart';
 import 'package:greep/application/auth/AuthStore.dart';
+import 'package:greep/application/auth/password/request/confirm_reset_pin_request.dart';
+import 'package:greep/application/auth/password/request/create_transaction_pin_request.dart';
 import 'package:greep/application/auth/request/AppleSigninRequest.dart';
 import 'package:greep/application/auth/request/GoogleSigninRequest.dart';
 import 'package:greep/application/auth/request/LoginRequest.dart';
@@ -144,6 +146,45 @@ class AuthenticationService {
 
   void googleSignout() async {
     googleSignIn.signOut();
+  }
+
+  Future<ResponseEntity> lightSignup(LoginRequest request) async {
+    var response = await authenticationClient.testSignup(request);
+
+    if (!response.isError) {
+      setToken(response.data!
+        ..putIfAbsent("isGoogle", () => false)
+        ..putIfAbsent("password", () => request.password)
+        ..putIfAbsent("email", () => request.email));
+    }
+
+    return response;
+  }
+
+  Future<ResponseEntity> verifyTransactionPin({required String pin}) async {
+    var responseEntity = await authenticationClient.verifyTransactionPin(pin: pin);
+
+    if (responseEntity.data == false){
+      return ResponseEntity.Error("Transaction PIN incorrect");
+    }
+    return responseEntity;
+
+  }
+  Future<ResponseEntity> updateTransactionPin(
+      UpdateTransactionPinRequest request,
+      ) async {
+    return await authenticationClient.updateTransactionPin(request);
+
+  }
+
+  Future<ResponseEntity> sendResetPINCode() async {
+    return await authenticationClient.sendResetPINCode();
+
+  }
+  Future<ResponseEntity> confirmResetPIN(
+      ConfirmResetPINRequest request,
+      ) async {
+    return await authenticationClient.confirmResetPIN(request);
   }
 
   Future<ResponseEntity<Map<String, dynamic>>> signup(

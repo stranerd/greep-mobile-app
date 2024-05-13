@@ -21,6 +21,8 @@ class ResponseEntity<T> {
   final bool isSocket;
   final String? errorMessage;
   final Map<String, dynamic> fieldErrors;
+  final int statusCode;
+
 
   ResponseEntity(
       {required this.isError,
@@ -28,6 +30,7 @@ class ResponseEntity<T> {
       this.fieldErrors = const {},
       required this.data,
       required this.errorMessage,
+        this.statusCode = 200,
       this.isConnectionTimeout = false,
       this.isSocket = false});
 
@@ -49,7 +52,7 @@ class ResponseEntity<T> {
   }
 
   factory ResponseEntity.Error(dynamic errors,
-      [Map<String, dynamic> fieldErrors = const {}]) {
+      {Map<String, dynamic> fieldErrors = const {}, int statusCode = 400,}) {
     return ResponseEntity(
         isError: true,
         fieldErrors: fieldErrors,
@@ -64,6 +67,6 @@ class ResponseEntity<T> {
 
   @override
   String toString() {
-    return 'ResponseEntity{isError: $isError, data: $data, errors: $errorMessage}';
+    return 'ResponseEntity{isError: $isError, data: $data, isConnectionTimeout: $isConnectionTimeout, pagination: $pagination, isSocket: $isSocket, errorMessage: $errorMessage, fieldErrors: $fieldErrors, statusCode: $statusCode}';
   }
 }

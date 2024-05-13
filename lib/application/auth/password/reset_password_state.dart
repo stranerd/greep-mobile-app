@@ -1,20 +1,20 @@
 part of 'reset_password_cubit.dart';
 
 @immutable
-abstract class ResetPasswordState {}
+abstract class PasswordCrudState {}
 
-class ResetPasswordInitial extends ResetPasswordState {}
+class PasswordCrudInitial extends PasswordCrudState {}
 
-class ResetPasswordStateLoading extends ResetPasswordState {}
+class PasswordCrudStateLoading extends PasswordCrudState {}
 
-class ResetPasswordStateError extends ResetPasswordState {
+class PasswordCrudStateError extends PasswordCrudState {
   final String errorMessage;
 
-  ResetPasswordStateError({required this.errorMessage});
+  PasswordCrudStateError({required this.errorMessage});
 
 
 }
 
-class ResetPasswordCodeSent extends ResetPasswordState {}
+class PasswordCrudStateCodeSent extends PasswordCrudState {}
 
-class ResetPasswordSuccess extends ResetPasswordState {}
+class PasswordCrudStateSuccess extends PasswordCrudState {}

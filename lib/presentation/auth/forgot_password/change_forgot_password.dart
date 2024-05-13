@@ -12,7 +12,7 @@ import 'package:greep/presentation/widgets/submit_button.dart';
 
 class ChangeForgotPasswordScreen extends StatefulWidget {
   final String token;
-  final ResetPasswordCubit resetPasswordCubit;
+  final PasswordCrudCubit resetPasswordCubit;
 
   const ChangeForgotPasswordScreen(
       {Key? key, required this.token, required this.resetPasswordCubit})
@@ -36,16 +36,16 @@ class _ChangeForgotPasswordScreenState extends State<ChangeForgotPasswordScreen>
       value: widget.resetPasswordCubit,
       child: Builder(
         builder: (context) {
-          return BlocConsumer<ResetPasswordCubit, ResetPasswordState>(
+          return BlocConsumer<PasswordCrudCubit, PasswordCrudState>(
             listener: (context, state) {
-              if (state is ResetPasswordStateError) {
+              if (state is PasswordCrudStateError) {
                 if (state.errorMessage.contains("invalid")){
                   error = "Incorrect verification code";
                 }
                 error = state.errorMessage;
               }
 
-              if (state is ResetPasswordSuccess) {
+              if (state is PasswordCrudStateSuccess) {
                 Get.offAll(() => const ChangeForgotPasswordSuccess());
               }
             },
@@ -110,8 +110,8 @@ class _ChangeForgotPasswordScreenState extends State<ChangeForgotPasswordScreen>
 
                             SubmitButton(
                                 text: "Continue",
-                                isLoading: state is ResetPasswordStateLoading,
-                                enabled: state is! ResetPasswordStateLoading,
+                                isLoading: state is PasswordCrudStateLoading,
+                                enabled: state is! PasswordCrudStateLoading,
                                 onSubmit: _confirmPasswordChange),
                           ],
                         ),

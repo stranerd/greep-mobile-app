@@ -20,7 +20,7 @@ class UserWalletCubit extends Cubit<UserWalletState> {
   }) : super(UserWalletStateInitial()) {
     streamSubscription = userCubit.stream.listen((event) {
       if (event is UserStateFetched) {
-        fetchUserWallet();
+        fetchUserWallet(softUpdate: true,);
       }
     });
   }
@@ -28,7 +28,7 @@ class UserWalletCubit extends Cubit<UserWalletState> {
   void fetchUserWallet({
     bool softUpdate = false,
   }) async {
-    if (!softUpdate) {
+    if (!softUpdate && state is! UserWalletStateFetched) {
       emit(UserWalletStateLoading());
     }
 
@@ -37,6 +37,7 @@ class UserWalletCubit extends Cubit<UserWalletState> {
     if (response.isError) {
       emit(UserWalletStateError(
         response.errorMessage ?? "",
+        statusCode: response.statusCode,
         isSocket: response.isSocket,
         isConnectionTimeout: response.isConnectionTimeout,
       ));

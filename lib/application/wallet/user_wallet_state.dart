@@ -32,8 +32,9 @@ class UserWalletStateError extends UserWalletState {
   final String? errorMessage;
   final bool isConnectionTimeout;
   final bool isSocket;
+  final int statusCode;
 
   UserWalletStateError(this.errorMessage,
-      {this.isConnectionTimeout = false, this.isSocket = false});
+      {this.isConnectionTimeout = false, this.isSocket = false, required this.statusCode});
 
 }

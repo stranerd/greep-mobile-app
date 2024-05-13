@@ -6,21 +6,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as g;
+import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:greep/application/auth/AuthenticationCubit.dart';
 import 'package:greep/application/auth/AuthenticationState.dart';
 import 'package:greep/application/auth/SignupCubit.dart';
 import 'package:greep/application/auth/SignupState.dart';
+import 'package:greep/application/auth/email_verification/email_verification_cubit.dart';
 import 'package:greep/application/auth/request/LoginRequest.dart';
 import 'package:greep/application/location/location_cubit.dart';
 import 'package:greep/commons/Utils/input_validator.dart';
 import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/scaffold_messenger_service.dart';
 import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/ioc.dart';
 import 'package:greep/presentation/auth/forgot_password/forgot_password.dart';
 import 'package:greep/presentation/auth_finish_signup.dart';
 import 'package:greep/presentation/driver_section/home_page.dart';
 import 'package:greep/presentation/splash/authentication_splash.dart';
+import 'package:greep/presentation/widgets/code_verification_bottom_sheet.dart';
+import 'package:greep/presentation/widgets/in_app_notification_widget.dart';
 import 'package:greep/presentation/widgets/input_text_field.dart';
 import 'package:greep/presentation/widgets/social_signin_widget.dart';
 import 'package:greep/presentation/widgets/submit_button.dart';
@@ -40,9 +45,11 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
   String confirmPassword = "";
   final formKey = GlobalKey<FormState>();
   Map<String, dynamic> fieldErrors = {};
+  bool hasAcceptedTerms = false;
 
   bool isSignin = true;
 
+  late EmailVerificationCubit emailVerificationCubit;
   late TapGestureRecognizer _tapGestureRecognizer;
 
   @override
@@ -53,6 +60,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
           isSignin = !isSignin;
         });
       };
+    emailVerificationCubit = getIt();
 
     super.initState();
   }
@@ -77,25 +85,61 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
     setState(() {});
     if (formKey.currentState!.validate()) {
       BlocProvider.of<SignupCubit>(context)
-          .testSignup(LoginRequest(email: email.trim(), password: password));
+          .lightSignup(LoginRequest(email: email.trim(), password: password));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthenticationCubit, AuthenticationState>(
-      listener: (context, state) {
+      listenWhen: (_, __) {
+        return ModalRoute.of(context)?.isCurrent ?? false;
+      },
+      listener: (context, state) async {
+        print(state);
         if (state is AuthenticationStateAuthenticated) {
+          print("Is Early signup ${state.isEarlySignup}");
+          if (!state.isEarlySignup){
           g.Get.offAll(
             () => AuthenticationSplashScreen(
-              isNewUser: state.isSignup,
+              isNewUser: false,
+              email: email,
             ),
             transition: g.Transition.fadeIn,
           );
+          }
+          else {
+            emailVerificationCubit.sendVerificationCode(email);
+            var isVerified = await Get.bottomSheet<bool>(
+                CodeVerificationBottomSheet(
+                  verificationMode: VerificationMode.signup,
+                  onResendCode: (){
+                    emailVerificationCubit.sendVerificationCode(email);
+
+                  },
+                  onCompleted: (code) {
+                    return emailVerificationCubit.confirmVerificationCode(
+                        token: code,);
+                  },
+                  email: email,
+                ),
+                isScrollControlled: true,
+                ignoreSafeArea: false);
+            if (isVerified ?? false) {
+              Get.offAll(
+                AuthFinishSignup(),
+              );
+            } else {
+              // Get.offAll(const NavBarView());
+            }
+          }
         }
         if (state is AuthenticationStateError) {
-          Fluttertoast.showToast(
-            msg: state.errorMessage,
+          showInAppNotification(
+              context,
+              title: "Error",
+              body: state.errorMessage,
+              isSuccess: false
           );
         }
       },
@@ -184,6 +228,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
                           if (!isSignin)
                             InputTextField(
                               title: "Confirm password",
+                              hintText: "Confirm password",
                               validator: (String s) {
                                 if (!isSignin) {
                                   if (s.length < 8) {
@@ -231,7 +276,103 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
                             ),
                           ],
                         ),
-                      kVerticalSpaceRegular,
+                      if (!isSignin)Column(
+                        children: [
+                          SizedBox(height: 16.h,),
+                          Container(
+                            decoration:
+                            const BoxDecoration(),
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.start,
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 20.r,
+                                  height: 20.r,
+                                  margin: EdgeInsets.only(
+                                      top: 5.h),
+                                  alignment:
+                                  Alignment.topLeft,
+                                  decoration:
+                                  const BoxDecoration(),
+                                  child: Checkbox(
+                                      value:
+                                      hasAcceptedTerms,
+                                      splashRadius: 2,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius
+                                              .circular(
+                                              5.r)),
+                                      checkColor:
+                                      Colors.white,
+                                      fillColor:
+                                      const MaterialStatePropertyAll<
+                                          Color>(
+                                          AppColors
+                                              .green),
+                                      onChanged: (b) {
+                                        setState(() {
+                                          hasAcceptedTerms =
+                                              b ?? false;
+                                        });
+                                      }),
+                                ),
+                                kHorizontalSpaceSmall,
+                                Expanded(
+                                  child: Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        const TextSpan(
+                                          text:
+                                          "I agreed to the ",
+                                        ),
+                                        TextSpan(
+                                          text:
+                                          "Terms of Service",
+                                          style:
+                                          kDefaultTextStyle
+                                              .copyWith(
+                                            color: AppColors
+                                                .blue,
+                                            fontSize: 14.sp,
+                                          ),
+                                          recognizer:
+                                          TapGestureRecognizer()
+                                            ..onTap =
+                                                () {},
+                                        ),
+                                        const TextSpan(
+                                          text: " and ",
+                                        ),
+                                        TextSpan(
+                                          text:
+                                          "Privacy Policy",
+                                          style:
+                                          kDefaultTextStyle
+                                              .copyWith(
+                                            fontSize: 14.sp,
+                                            color: AppColors
+                                                .blue,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    softWrap: true,
+                                    style: kDefaultTextStyle
+                                        .copyWith(
+                                      fontSize: 14.sp,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 40.h,),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -254,12 +395,20 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
                                   listener: (context, state) {
                                     print(state);
                                     if (state is SignupStateReady) {
-                                      g.Get.to(
-                                          () => AuthFinishSignup(
-                                                email: email,
-                                                password: password,
-                                              ),
-                                          transition: g.Transition.fadeIn);
+                                      // g.Get.to(
+                                      //       () => AuthenticationSplashScreen(
+                                      //     isNewUser: true,
+                                      //     email: email,
+                                      //         password: password,
+                                      //   ),
+                                      //   transition: g.Transition.fadeIn,
+                                      // );
+                                      // g.Get.to(
+                                      //     () => AuthFinishSignup(
+                                      //           email: email,
+                                      //           password: password,
+                                      //         ),
+                                      //     transition: g.Transition.fadeIn);
                                     }
                                     if (state is SignupStateError) {
                                       setState(() {
@@ -276,7 +425,7 @@ class _AuthHomeScreenState extends State<AuthHomeScreen> with InputValidator {
 
                                     return SubmitButton(
                                         isLoading: state is SignupStateLoading,
-                                        enabled: state is! SignupStateLoading,
+                                        enabled: state is! SignupStateLoading && hasAcceptedTerms,
                                         text: "Create Account",
                                         textStyle: kDefaultTextStyle.copyWith(
                                             fontSize: 14.sp,

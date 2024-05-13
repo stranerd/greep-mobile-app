@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:greep/commons/Utils/thousands_formatter.dart';
 import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
@@ -14,6 +16,8 @@ class InputTextField extends StatefulWidget {
   final Function(String) onChanged;
   final bool withTitle;
   final int? minLines;
+  final AutovalidateMode? autovalidateMode;
+
   final TextInputType? inputType;
   final TextEditingController? customController;
   final bool withBorder;
@@ -22,11 +26,16 @@ class InputTextField extends StatefulWidget {
   final TextStyle? textStyle;
   final bool isSearch;
   final Widget? suffix;
+  final int? maxTextLength;
+
   final String? prefixIcon;
   final String? initialValue;
   final double? prefixSize;
   final double? suffixSize;
+  final FocusNode? focusNode;
+  final bool readOnly;
 
+final bool isMoney;
   final String? suffixIcon;
 
   const InputTextField({
@@ -36,6 +45,12 @@ class InputTextField extends StatefulWidget {
     this.isPassword = false,
     this.inputType,
     this.withTitle = true,
+    this.autovalidateMode,
+    this.maxTextLength,
+    this.focusNode,
+    this.readOnly = false,
+    this.isMoney = false,
+
     this.minLines,
     this.textStyle,
     this.suffixIcon,
@@ -94,7 +109,15 @@ class _InputTextFieldState extends State<InputTextField> {
             onChanged: widget.onChanged,
             minLines: widget.minLines ?? 1,
             maxLines: widget.minLines ?? 1,
-
+            autovalidateMode: widget.autovalidateMode,
+            focusNode: widget.focusNode,
+            inputFormatters: [
+              if (widget.maxTextLength != null)
+                LengthLimitingTextInputFormatter(
+                  widget.maxTextLength!,
+                ),
+              if (widget.isMoney) ThousandsFormatter()
+            ],
             keyboardType: widget.inputType,
             controller: widget.customController ??
                 (widget.initialValue == null ? editingController : null),

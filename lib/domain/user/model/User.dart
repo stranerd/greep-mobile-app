@@ -13,6 +13,7 @@ class User extends Equatable{
   final num? commission;
   final String? managerId;
   final UserRanking? rankings;
+  final bool isVerified;
 
    User(
       {required this.id,
@@ -20,6 +21,7 @@ class User extends Equatable{
       required this.fullName,
         this.managerId,
         required this.username,
+        required this.isVerified,
         this.commission,
          this.rankings,
         this.managerName,
@@ -29,13 +31,13 @@ class User extends Equatable{
       required this.photoUrl});
 
   factory User.fromServer(dynamic data) {
-    print("Ranking ${data["account"]?["rankings"]}");
     var user = User(
         id: data["id"],
         email: data["bio"]?["email"] ?? "",
         rankings: data["account"]?["rankings"] == null ? null :UserRanking.fromMap(data["account"]?["rankings"]),
         fullName: data["bio"]?["name"]?["full"] ?? "",
         username: data["bio"]?["username"] ?? "",
+        isVerified: false,
         firstName: data["bio"]?["name"]["first"] ?? "",
         lastName: data["bio"]?["name"]?["last"] ?? "",
         hasManager: data["manager"] != null,
@@ -50,6 +52,7 @@ class User extends Equatable{
     var user = User(
         id: data["id"],
         email: data["email"],
+        isVerified: false,
         rankings:data["account"]?["rankings"] == null ? null : UserRanking.fromMap(data["rankings"]),
         username: data["username"] ?? "",
         fullName: data["allNames"]["full"],

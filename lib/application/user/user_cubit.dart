@@ -25,8 +25,10 @@ class UserCubit extends Cubit<UserState> {
     });
   }
 
-  Future<User?> fetchUser() async {
+  Future<User?> fetchUser({bool softUpdate = false}) async {
+    if (!softUpdate){
     emit(UserStateLoading());
+    }
     var response = await userService.fetchUser(userId!);
     if (response.isError) {
       emit(UserStateError(response.errorMessage,

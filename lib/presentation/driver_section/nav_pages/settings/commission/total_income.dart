@@ -25,14 +25,14 @@ import '../../../../../utils/constants/app_colors.dart';
 import '../../../../../utils/constants/app_styles.dart';
 import 'package:greep/application/user/utils/get_current_user.dart';
 
-class TotalIncome extends StatefulWidget {
-  const TotalIncome({Key? key}) : super(key: key);
+class TotalIncomeScreen extends StatefulWidget {
+  const TotalIncomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<TotalIncome> createState() => _TotalIncomeState();
+  State<TotalIncomeScreen> createState() => _TotalIncomeScreenState();
 }
 
-class _TotalIncomeState extends State<TotalIncome> {
+class _TotalIncomeScreenState extends State<TotalIncomeScreen> {
 
   String userId = currentUser().id;
   num commission = 100;
@@ -94,7 +94,7 @@ class _TotalIncomeState extends State<TotalIncome> {
                 child: DriverSelectorRow(),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 0),
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(kDefaultSpacing),
@@ -106,6 +106,8 @@ class _TotalIncomeState extends State<TotalIncome> {
                       color: Colors.black,
                     ),
                     labelColor: Colors.white,
+                    indicatorSize: TabBarIndicatorSize.tab,
+
                     labelStyle: AppTextStyles.whiteSize12,
                     unselectedLabelColor: Colors.black,
                     unselectedLabelStyle: AppTextStyles.blackSize12,

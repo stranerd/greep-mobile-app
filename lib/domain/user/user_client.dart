@@ -3,15 +3,21 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:greep/application/auth/AuthStore.dart';
 import 'package:greep/application/dio_config.dart';
 import 'package:greep/application/response.dart';
 import 'package:greep/application/driver/request/accept_manager_request.dart';
 import 'package:greep/application/driver/request/add_driver_request.dart';
 import 'package:greep/application/user/request/EditUserRequest.dart';
+import 'package:greep/application/user/request/update_user_type_request.dart';
+import 'package:greep/domain/api.dart';
 import 'package:greep/domain/auth/AuthenticationService.dart';
 import 'package:greep/domain/user/model/User.dart';
+import 'package:greep/domain/user/model/auth_user.dart';
 import 'package:greep/domain/user/model/driver_commission.dart';
 import 'package:greep/domain/user/model/manager_request.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 class UserClient {
   final Dio dio = dioClient();
@@ -64,6 +70,57 @@ class UserClient {
           "An error occurred logging you in. Try again");
     }
   }
+
+  Future<ResponseEntity<AuthUser>> fetchAuthUser(String userId) async {
+    Response response;
+    try {
+      response = await dio.get("auth/user");
+      print("Auth user response ${response.data}");
+      return ResponseEntity.Data(AuthUser.fromMap(response.data));
+    } on DioError catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout) {
+        return ResponseEntity.Timeout();
+      }
+      if (e.error is SocketException) {
+        return ResponseEntity.Socket();
+      }
+      if (e.type == DioExceptionType.badResponse) {
+        print("error in user ${e.response?.data}");
+        try {
+          if (e.response!.data[0]["message"]
+              .toString()
+              .toLowerCase()
+              .contains("access token")) {
+            var response =
+            await GetIt.I<AuthenticationService>().refreshToken();
+            if (response.isError) {
+              return ResponseEntity.Error(
+                  "An error occurred, please log in again");
+            } else {
+              return fetchAuthUser(userId);
+            }
+          }
+        } catch (_) {}
+      }
+      dynamic error = e.response!.data;
+      String message = "";
+      if (error == null) {
+        message = "An error occurred logging you in. Try again";
+      } else {
+        try {
+          message = error["message"];
+        } catch (e) {
+          message = "an error occurred. Try again";
+        }
+      }
+      return ResponseEntity.Error(message);
+    } catch (e) {
+      print("User Exception error $e");
+      return ResponseEntity.Error(
+          "An error occurred logging you in. Try again");
+    }
+  }
+
 
   Future<ResponseEntity<List<DriverCommission>>> fetchUserDriverCommissions(
       String userId) async {
@@ -489,6 +546,126 @@ class UserClient {
       print("Exception $e");
       return ResponseEntity.Error(
           "An error occurred occurred deleting your account. Try again");
+    }
+  }
+  Future<ResponseEntity> updateUserType(UpdateUserTypeRequest request) async {
+    print("updating user type ${request.toMap().files} ${dio.options.headers}");
+    Response response;
+    FormData formData = FormData();
+    var extension = request.license.path.split(".").last;
+
+      formData.files.add(MapEntry(
+        "license",
+        MultipartFile.fromFileSync(request.license.path,
+            contentType: MediaType(
+                'image', extension == "jpg" ? "jpeg" : extension,
+            )
+
+      ),
+      ));
+
+    formData.fields.add(
+      const MapEntry("type", "driver"),
+    );
+    try {
+      response = await dio.post(
+        "users/users/type",
+        data: formData,
+        options: Options(
+          contentType: "multipart/form-data",
+        ),
+      );
+
+      print("Update Customer Type response ${response.data}");
+      return ResponseEntity.Data(null);
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout) {
+        return ResponseEntity.Timeout();
+      }
+      if (e.error is SocketException) {
+        return ResponseEntity.Socket();
+      }
+
+      if (e.type == DioExceptionType.badResponse) {
+        print("Update Customer Type response ${e.response?.data}");
+
+        try {
+          if (e.response!.data[0]["message"]
+              .toString()
+              .toLowerCase()
+              .contains("access token")) {
+            print("refreshing token");
+            var response =
+            await GetIt.I<AuthenticationService>().refreshToken();
+            if (response.isError) {
+              return ResponseEntity.Error("An error occurred updating info");
+            } else {
+              return updateUserType(request);
+            }
+          }
+        } catch (_) {}
+      }
+      dynamic error = e.response!.data;
+      String message = "";
+      if (error == null) {
+        message = "An error occurred editing fields. Try again";
+      } else {
+        try {
+          message = "${error[0]["field"] ?? ""} ${error[0]["message"]}";
+        } catch (e) {
+          message = "an error occurred. Try again";
+        }
+      }
+      return ResponseEntity.Error(message);
+    } catch (e) {
+      print("Exception $e");
+      return ResponseEntity.Error(
+          "An error occurred editing fields. Try again");
+    }
+  }
+
+  Future<ResponseEntity> updateUserType2(
+      UpdateUserTypeRequest userRequest) async {
+    try {
+      var uri = Uri.parse('${baseApi}users/users/type');
+
+      var request = http.MultipartRequest('POST', uri)
+        ..fields['type'] = 'driver'
+        ..files.add(
+          await http.MultipartFile.fromPath(
+            'license',
+            userRequest.license.path,
+
+          ),
+        )
+
+
+      ;
+
+      var pref = AuthStore();
+      var token = await pref.getAuthToken();
+      request.headers["Access-Token"] = "${token["token"] ?? ""}";
+      request.headers["Accept"] = "*/*";
+      var response = await http.Response.fromStream(await request.send());
+
+      print(
+          "Update Customer Type response ${response.body} ${"${token["token"] ?? ""}"}");
+
+      if (response.statusCode == 200) {
+        return ResponseEntity.Data(null);
+      } else {
+        return ResponseEntity.Error(
+            "An error occurred updating information. Try again");
+      }
+    } on SocketException {
+      return ResponseEntity.Socket();
+    } on http.ClientException catch (e) {
+      return ResponseEntity.Error(
+          "An error occurred updating information. Try again: $e");
+    } catch (e) {
+      print("Exception $e");
+      return ResponseEntity.Error(
+          "An error occurred updating information. Try again");
     }
   }
 }

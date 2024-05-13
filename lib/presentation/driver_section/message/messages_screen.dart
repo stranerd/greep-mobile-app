@@ -7,6 +7,7 @@ import 'package:greep/domain/message/message_list.dart';
 import 'package:greep/presentation/driver_section/message/chat_message_screen.dart';
 import 'package:greep/presentation/driver_section/message/widget/message_list_widget.dart';
 import 'package:greep/presentation/widgets/custom_appbar.dart';
+import 'package:greep/presentation/widgets/empty_result_widget2.dart';
 import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 
@@ -71,7 +72,16 @@ class _MessagesScreenState extends State<MessagesScreen> {
                 ),
               ),
               Expanded(
-                child: ListView.separated(
+                child: (true) ?
+
+                    EmptyResultWidget2(
+                      icon: SvgPicture.asset("assets/images/empty_messages_icon.svg",
+
+                      ),
+                      title: "No messages",
+                      subtitle: "You have no active chats",
+                    )
+                    : ListView.separated(
                   padding: EdgeInsets.symmetric(
                     vertical: 32.h,
                   ),

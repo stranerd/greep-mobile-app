@@ -19,6 +19,7 @@ import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/auth/AuthenticationClient.dart';
 import 'package:greep/domain/transaction/transaction.dart';
+import 'package:greep/presentation/auth_finish_signup.dart';
 import 'package:greep/presentation/driver_section/nav_pages/settings/account/view_profile.dart';
 import 'package:greep/presentation/driver_section/transaction/view_transactions.dart';
 import 'package:greep/presentation/driver_section/widgets/empty_result_widget.dart';
@@ -68,6 +69,10 @@ class _HomeScreenState extends State<HomeScreen> {
     //
     // GetIt.I<AuthenticationClient>().refreshToken().then((value) {
     //   debugPrint(value.toString());
+    // });
+
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   Get.to(() => AuthFinishSignup(email: "aaa@aaa.aa", password: "Alex1997",),);
     // });
     super.initState();
   }

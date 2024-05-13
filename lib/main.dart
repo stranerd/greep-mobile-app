@@ -27,7 +27,9 @@ import 'package:greep/application/transactions/customer_statistics_cubit.dart';
 import 'package:greep/application/transactions/transaction_summary_cubit.dart';
 import 'package:greep/application/transactions/trip_direction_builder_cubit.dart';
 import 'package:greep/application/transactions/user_transactions_cubit.dart';
+import 'package:greep/application/user/auth_user_cubit.dart';
 import 'package:greep/application/user/user_cubit.dart';
+import 'package:greep/application/wallet/conversion_rate_cubit.dart';
 import 'package:greep/application/wallet/user_wallet_cubit.dart';
 import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/scaffold_messenger_service.dart';
@@ -91,67 +93,82 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider.value(
-          value: GetIt.I<AuthenticationCubit>(),
-        ),
-        BlocProvider.value(
-          value: (getIt<LocationCubit>()),
-        ),
-        BlocProvider.value(
-          value: GetIt.I<UserCubit>(),
-        ),
-        BlocProvider.value(
-          value: GetIt.I<DriversCubit>(),
-        ),
-        BlocProvider.value(value: GetIt.instance<GeoCoderCubit>()),
-        BlocProvider.value(
-          value: GetIt.I<TripDirectionBuilderCubit>(),
-        ),
-        BlocProvider.value(
-          value: GetIt.I<SignupCubit>(),
-        ),
-        BlocProvider.value(
-          value: GetIt.I<UserNotificationCubit>(),
-        ),
-        BlocProvider.value(
-          value: GetIt.I<UserWalletCubit>(),
-        ),
-        BlocProvider.value(
-          value: GetIt.I<UserTransactionsCubit>(),
-        ),
-        BlocProvider.value(
-          value: GetIt.I<ManagerDriversCubit>(),
-        ),
-        BlocProvider.value(
-          value: GetIt.I<TransactionSummaryCubit>(),
-        ),
-        BlocProvider.value(
-          value: GetIt.I<CustomerStatisticsCubit>(),
-        ),
-        BlocProvider.value(
-          value: GetIt.I<NewManagerRequestsCubit>(),
-        ),
-        BlocProvider.value(
-          value: GetIt.I<NewManagerAcceptsCubit>(),
-        ),
-        BlocProvider.value(
-          value: GetIt.I<UserCustomersCubit>(),
-        ),
-        BlocProvider.value(
-          value: GetIt.I<ManagerRequestsCubit>(),
-        ),
-      ],
-      child: ScreenUtilInit(
-        designSize: const Size(414, 896),
-        minTextAdapt: true,
-        builder: (_, __) => GetMaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: theme,
-          color: kPrimaryColor,
-          home: const SplashScreen(),
-          scaffoldMessengerKey: ScaffoldMessengerService.scaffoldMessengerKey,
+    return GestureDetector(
+      onTap: (){
+      FocusScopeNode currentFocus = FocusScope.of(context);
+      if (!currentFocus.hasPrimaryFocus &&
+          currentFocus.focusedChild != null) {
+        FocusManager.instance.primaryFocus!.unfocus();
+      }
+      },
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider.value(
+            value: GetIt.I<AuthenticationCubit>(),
+          ),
+          BlocProvider.value(
+            value: (getIt<LocationCubit>()),
+          ),
+          BlocProvider.value(
+            value: GetIt.I<UserCubit>(),
+          ),
+          BlocProvider.value(
+            value: GetIt.I<AuthUserCubit>(),
+          ),
+          BlocProvider.value(
+            value: GetIt.I<DriversCubit>(),
+          ),
+          BlocProvider.value(value: GetIt.instance<GeoCoderCubit>()),
+          BlocProvider.value(
+            value: GetIt.I<TripDirectionBuilderCubit>(),
+          ),
+          BlocProvider.value(
+            value: GetIt.I<SignupCubit>(),
+          ),
+          BlocProvider.value(
+            value: GetIt.I<UserNotificationCubit>(),
+          ),
+          BlocProvider.value(
+            value: GetIt.I<ConversionRateCubit>(),
+          ),
+          BlocProvider.value(
+            value: GetIt.I<UserWalletCubit>(),
+          ),
+          BlocProvider.value(
+            value: GetIt.I<UserTransactionsCubit>(),
+          ),
+          BlocProvider.value(
+            value: GetIt.I<ManagerDriversCubit>(),
+          ),
+          BlocProvider.value(
+            value: GetIt.I<TransactionSummaryCubit>(),
+          ),
+          BlocProvider.value(
+            value: GetIt.I<CustomerStatisticsCubit>(),
+          ),
+          BlocProvider.value(
+            value: GetIt.I<NewManagerRequestsCubit>(),
+          ),
+          BlocProvider.value(
+            value: GetIt.I<NewManagerAcceptsCubit>(),
+          ),
+          BlocProvider.value(
+            value: GetIt.I<UserCustomersCubit>(),
+          ),
+          BlocProvider.value(
+            value: GetIt.I<ManagerRequestsCubit>(),
+          ),
+        ],
+        child: ScreenUtilInit(
+          designSize: const Size(414, 896),
+          minTextAdapt: true,
+          builder: (_, __) => GetMaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: theme,
+            color: kPrimaryColor,
+            home: const SplashScreen(),
+            scaffoldMessengerKey: ScaffoldMessengerService.scaffoldMessengerKey,
+          ),
         ),
       ),
     );

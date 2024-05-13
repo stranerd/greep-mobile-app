@@ -6,6 +6,7 @@ import 'package:greep/application/driver/request/accept_manager_request.dart';
 import 'package:greep/application/driver/request/add_driver_request.dart';
 import 'package:greep/application/driver/drivers_cubit.dart';
 import 'package:greep/application/user/request/EditUserRequest.dart';
+import 'package:greep/application/user/request/update_user_type_request.dart';
 import 'package:greep/application/user/user_cubit.dart';
 import 'package:greep/domain/firebase/Firebase_service.dart';
 import 'package:greep/domain/user/UserService.dart';
@@ -99,4 +100,19 @@ class UserCrudCubit extends Cubit<UserCrudState> {
       GetIt.I<UserCubit>().fetchUser();
     }
   }
+
+  void updateUserType(UpdateUserTypeRequest request) async {
+    print("Updating user type");
+    emit(UserCrudStateLoading());
+
+    var response = await userService.updateUserType(request);
+    if (response.isError) {
+      emit(UserCrudStateFailure(
+          errorMessage: response.errorMessage ?? "An error occurred"));
+    } else {
+      emit(UserCrudStateSuccess(isUpdateUserType: true));
+      GetIt.I<UserCubit>().fetchUser();
+    }
+  }
+
 }

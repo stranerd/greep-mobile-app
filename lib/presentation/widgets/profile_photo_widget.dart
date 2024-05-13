@@ -24,7 +24,11 @@ class ProfilePhotoWidget extends StatelessWidget {
       backgroundImage: CachedNetworkImageProvider(url),
       radius: radius.r,
       child: TextWidget(
-        initials.length == 2 ? initials : Utils.getInitials(initials.isEmpty ? "US":initials),
+        url.isNotEmpty
+            ? ""
+            : initials.length == 2
+                ? initials
+                : Utils.getInitials(initials.isEmpty ? "US" : initials),
         weight: FontWeight.bold,
         color: AppColors.black,
         fontSize: (radius * 0.7).sp,

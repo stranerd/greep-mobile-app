@@ -9,6 +9,7 @@ import 'package:greep/application/auth/AuthenticationCubit.dart';
 import 'package:greep/application/auth/AuthenticationState.dart';
 import 'package:greep/application/driver/drivers_cubit.dart';
 import 'package:greep/application/driver/manager_drivers_cubit.dart';
+import 'package:greep/application/user/auth_user_cubit.dart';
 import 'package:greep/application/user/user_cubit.dart';
 import 'package:greep/commons/Utils/utils.dart';
 import 'package:greep/commons/ui_helpers.dart';
@@ -35,8 +36,15 @@ import 'account/view_profile.dart';
 import 'commission/commission.dart';
 import 'contact_us.dart';
 
-class SettingsHome extends StatelessWidget {
+class SettingsHome extends StatefulWidget {
   const SettingsHome({Key? key}) : super(key: key);
+
+  @override
+  State<SettingsHome> createState() => _SettingsHomeState();
+}
+
+class _SettingsHomeState extends State<SettingsHome> {
+  bool isAvailable = true;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +52,7 @@ class SettingsHome extends StatelessWidget {
       listener: (context, state) {
         if (state is AuthenticationStateNotAuthenticated) {
           Get.offAll(
-            () => const SplashScreen(),
+                () => const SplashScreen(),
           );
         }
       },
@@ -70,159 +78,195 @@ class SettingsHome extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(16.r, 16.r, 16.r, 0),
               child: BlocBuilder<UserCubit, UserState>(
                 builder: (context, userState) {
-                  return BlocBuilder<DriversCubit, DriversState>(
-                    builder: (context, driverState) {
-                      return ListView(
-                        shrinkWrap: true,
-                        children: [
-                          if (userState is UserStateFetched)
-                            Container(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                  return BlocBuilder<AuthUserCubit, AuthUserState>(
+                    builder: (context, authState) {
+                      return BlocBuilder<DriversCubit, DriversState>(
+                        builder: (context, driverState) {
+                          return ListView(
+                            shrinkWrap: true,
+                            children: [
+                              if (authState is AuthUserStateFetched)
+                                Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ProfilePhotoWidget(
+                                        url: authState.user.photo,
+                                        radius: 40,
+                                        initials: Utils.getInitials(
+                                          authState.user.fullName,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 12.h,
+                                      ),
+                                      TextWidget(
+                                        authState.user.fullName,
+                                        weight: FontWeight.bold,
+                                        fontSize: 18.sp,
+                                      ),
+                                      TextWidget(
+                                        "@${authState.user.username}",
+                                        color: AppColors.veryLightGray,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              SizedBox(
+                                height: 34.h,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceBetween,
                                 children: [
-                                  ProfilePhotoWidget(
-                                    url: userState.user.photoUrl,
-                                    radius: 40,
-                                initials: Utils.getInitials(userState.user.fullName,),),
+                                  TextWidget(
+                                    "Availability",
+                                    fontSize: 16.sp,
+                                  ),
                                   SizedBox(
-                                    height: 12.h,
-                                  ),
-                                  TextWidget(
-                                    userState.user.fullName,
-                                    weight: FontWeight.bold,
-                                    fontSize: 18.sp,
-                                  ),
-                                  TextWidget(
-                                    userState.user.email,
-                                    color: AppColors.veryLightGray,
-                                  ),
+                                    height: 30.h,
+                                    child: Switch(
+                                        activeColor: AppColors.green,
+                                        inactiveThumbColor: AppColors.red,
+                                        inactiveTrackColor: AppColors.red,
+                                        thumbColor: MaterialStatePropertyAll<
+                                            Color>(Colors.white),
+                                        value: isAvailable,
+
+                                        onChanged: (s) {
+                                          setState(() {
+                                            isAvailable = s;
+                                          });
+                                        }),
+                                  )
                                 ],
                               ),
-                            ),
-                          SizedBox(
-                            height: 24.h,
-                          ),
-                          SplashTap(
-                            onTap: () {
-                              Get.to(() => const ProfileView());
-                            },
-                            child: const SettingsHomeItem(
-                                title: "Account",
-                                icon: "assets/icons/user.svg"),
-                          ),
-                          SizedBox(height: 12.h),
-                          SplashTap(
-                            onTap: () {
-                              Get.to(() => const WalletScreen());
-                            },
-                            child: const SettingsHomeItem(
-                                title: "Wallet",
-                                icon: "assets/icons/empty-wallet.svg"),
-                          ),
-                          SizedBox(height: 12.h,),
-                          SplashTap(
-                            onTap: () {
-                              Get.to(() => const SecurityScreen());
-                            },
-                            child: const SettingsHomeItem(
-                                title: "Security",
-                                icon: "assets/icons/shield.svg"),
-                          ),
-                          SizedBox(height: 12.h),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
+                              SizedBox(
+                                height: 10.h,
+                              ),
                               SplashTap(
                                 onTap: () {
-                                  Get.to(() => const DriversScreen());
+                                  Get.to(() => const ProfileView());
                                 },
                                 child: const SettingsHomeItem(
-                                    title: "Drivers",
-                                    icon: "assets/icons/local_taxi.svg"),
+                                    title: "Account",
+                                    icon: "assets/icons/user.svg"),
                               ),
                               SizedBox(height: 12.h),
+                              SplashTap(
+                                onTap: () {
+                                  Get.to(() => const WalletScreen());
+                                },
+                                child: const SettingsHomeItem(
+                                    title: "Wallet",
+                                    icon: "assets/icons/empty-wallet.svg"),
+                              ),
+                              SizedBox(
+                                height: 12.h,
+                              ),
+                              SplashTap(
+                                onTap: () {
+                                  Get.to(() => const SecurityScreen());
+                                },
+                                child: const SettingsHomeItem(
+                                    title: "Security",
+                                    icon: "assets/icons/shield.svg"),
+                              ),
+                              SizedBox(height: 12.h),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SplashTap(
+                                    onTap: () {
+                                      Get.to(() => const DriversScreen());
+                                    },
+                                    child: const SettingsHomeItem(
+                                        title: "Drivers",
+                                        icon: "assets/icons/local_taxi.svg"),
+                                  ),
+                                  SizedBox(height: 12.h),
+                                ],
+                              ),
+                              if (driverState is DriversStateManager)
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SplashTap(
+                                      onTap: () {
+                                        Get.to(() => const TotalIncomeScreen());
+                                      },
+                                      child: const SettingsHomeItem(
+                                          title: "Total Income",
+                                          icon: "assets/icons/monetization_on.svg"),
+                                    ),
+                                    SizedBox(height: 12.h),
+                                  ],
+                                ),
+                              if (userState is UserStateFetched &&
+                                  userState.user.hasManager)
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SplashTap(
+                                      onTap: () {
+                                        Get.to(() => const CommissionHome());
+                                      },
+                                      child: const SettingsHomeItem(
+                                          title: "Commission",
+                                          icon: "assets/icons/monetization_on.svg"),
+                                    ),
+                                    SizedBox(height: 12.h),
+                                  ],
+                                ),
+                              SplashTap(
+                                onTap: () {
+                                  Get.to(() => const AboutHome());
+                                },
+                                child: const SettingsHomeItem(
+                                    title: "About",
+                                    icon: "assets/icons/info2.svg"),
+                              ),
+                              SizedBox(height: 12.h),
+                              SplashTap(
+                                onTap: () {
+                                  Get.to(() => const ContactUs());
+                                },
+                                child: const SettingsHomeItem(
+                                    title: "Support",
+                                    icon: "assets/icons/headphone.svg"),
+                              ),
+                              if (driverState is DriversStateManager)
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 12.h),
+                                    SplashTap(
+                                      onTap: () {
+                                        Get.to(() => const UsefulLinks());
+                                      },
+                                      child: const SettingsHomeItem(
+                                          title: "Useful links",
+                                          color: AppColors.black,
+                                          icon: "assets/icons/copy.svg"),
+                                    ),
+                                  ],
+                                ),
+                              kVerticalSpaceLarge,
+                              kVerticalSpaceRegular,
+                              SplashTap(
+                                onTap: () {
+                                  signout(context);
+                                },
+                                child: const SettingsHomeItem(
+                                  title: "Log out",
+                                  icon: "assets/icons/logout.svg",
+                                  color: AppColors.red,
+                                  withTrail: false,
+                                ),
+                              ),
                             ],
-                          ),
-                          if (driverState is DriversStateManager)
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SplashTap(
-                                  onTap: () {
-                                    Get.to(() => const TotalIncome());
-                                  },
-                                  child: const SettingsHomeItem(
-                                      title: "Total Income",
-                                      icon: "assets/icons/monetization_on.svg"),
-                                ),
-                                SizedBox(height: 12.h),
-                              ],
-                            ),
-                          if (userState is UserStateFetched &&
-                              userState.user.hasManager)
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SplashTap(
-                                  onTap: () {
-                                    Get.to(() => const CommissionHome());
-                                  },
-                                  child: const SettingsHomeItem(
-                                      title: "Commission",
-                                      icon: "assets/icons/monetization_on.svg"),
-                                ),
-                                SizedBox(height: 12.h),
-                              ],
-                            ),
-
-                          SplashTap(
-                            onTap: () {
-                              Get.to(() => const AboutHome());
-                            },
-                            child: const SettingsHomeItem(
-                                title: "About", icon: "assets/icons/info2.svg"),
-                          ),
-                          SizedBox(height: 12.h),
-                          SplashTap(
-                            onTap: () {
-                              Get.to(() => const ContactUs());
-                            },
-                            child: const SettingsHomeItem(
-                                title: "Support",
-                                icon: "assets/icons/headphone.svg"),
-                          ),
-                          if (driverState is DriversStateManager)
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: 12.h),
-
-                                SplashTap(
-                                  onTap: () {
-                                    Get.to(() => const UsefulLinks());
-                                  },
-                                  child: const SettingsHomeItem(
-                                      title: "Useful links",
-                                      color: AppColors.black,
-                                      icon: "assets/icons/copy.svg"),
-                                ),
-                              ],
-                            ),
-                          kVerticalSpaceLarge,
-
-                          kVerticalSpaceRegular,
-                          SplashTap(
-                            onTap: () {
-                              signout(context);
-                            },
-                            child: const SettingsHomeItem(
-                              title: "Log out",
-                              icon: "assets/icons/logout.svg",
-                              color: AppColors.red,
-                              withTrail: false,
-                            ),
-                          ),
-                        ],
+                          );
+                        },
                       );
                     },
                   );
@@ -237,11 +281,11 @@ class SettingsHome extends StatelessWidget {
 
   void signout(context) async {
     bool shouldDelete = await showDialog<bool?>(
-            barrierDismissible: true,
-            context: context,
-            builder: (context) {
-              return Dialog(
-                  child: Container(
+        barrierDismissible: true,
+        context: context,
+        builder: (context) {
+          return Dialog(
+              child: Container(
                 padding: const EdgeInsets.all(kDefaultSpacing),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -295,7 +339,7 @@ class SettingsHome extends StatelessWidget {
                   ],
                 ),
               ));
-            }) ??
+        }) ??
         false;
 
     if (shouldDelete) {

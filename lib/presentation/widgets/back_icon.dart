@@ -25,7 +25,7 @@ class BackIcon extends StatelessWidget {
         }
       },
       child: Container(
-        alignment: Alignment.center,
+        alignment: Alignment.centerLeft,
         padding: padding,
         // decoration: BoxDecoration(color: Colors.w),
         child: SvgPicture.asset(

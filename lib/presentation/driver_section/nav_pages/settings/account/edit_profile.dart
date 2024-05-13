@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:greep/application/user/user_util.dart';
 import 'package:greep/application/user/utils/get_current_user.dart';
 
 import 'package:get_it/get_it.dart';
@@ -19,6 +20,7 @@ import 'package:greep/commons/scaffold_messenger_service.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/user/model/User.dart';
 import 'package:greep/presentation/widgets/back_icon.dart';
+import 'package:greep/presentation/widgets/custom_phone_field.dart';
 import 'package:greep/presentation/widgets/input_text_field.dart';
 import 'package:greep/presentation/widgets/submit_button.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
@@ -44,6 +46,7 @@ class _EditProfileState extends State<EditProfile>
   bool hasPicked = false;
 
   XFile? selectedImage;
+  AppPhoneNumber? phoneNumber;
 
   @override
   void initState() {
@@ -223,6 +226,8 @@ class _EditProfileState extends State<EditProfile>
       var extenstion =
           selectedImage == null ? null : selectedImage!.path.split(".").last;
       EditUserRequest request = EditUserRequest(
+        phoneNumber: phoneNumber!,
+          username: getUser().username,
           photo: selectedImage == null
               ? null
               : dio.MultipartFile.fromFileSync(selectedImage!.path,

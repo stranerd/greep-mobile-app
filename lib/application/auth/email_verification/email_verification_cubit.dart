@@ -21,15 +21,16 @@ class EmailVerificationCubit extends Cubit<EmailVerificationState> {
     }
   }
 
-  confirmVerificationCode({required String token}) async {
+  Future<String?> confirmVerificationCode({required String token}) async {
     emit(EmailVerificationStateLoading());
     var response = await authenticationService.confirmEmailVerificationCode(token: token);
     if (response.isError){
       emit(EmailVerificationStateError(errorMessage: response.errorMessage?? "An Error Occurred, try again"));
-
+      return response.errorMessage ?? "Invalid or expired code";
     }
     else {
       emit(EmailVerificationSuccess());
+      return null;
     }
   }
 }

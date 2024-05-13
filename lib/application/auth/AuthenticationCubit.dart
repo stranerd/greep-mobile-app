@@ -4,6 +4,7 @@ import 'package:greep/application/auth/AuthenticationState.dart';
 import 'package:greep/application/auth/request/LoginRequest.dart';
 import 'package:greep/application/auth/request/SignupRequest.dart';
 import 'package:greep/domain/auth/AuthenticationService.dart';
+import 'package:greep/domain/user/model/auth_user.dart';
 
 class AuthenticationCubit extends Cubit<AuthenticationState> {
   final AuthenticationService authenticationService;
@@ -23,10 +24,18 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
           isSocket: response.isSocket));
     } else {
       userId = response.data!["id"]!;
+      AuthUser? user;
+      try {
+        user = AuthUser.fromMap(response.data!["user"]);
+      }
+      catch (e) {
+
+    }
       emit(
         AuthenticationStateAuthenticated(
           token: response.data!["token"]!,
           userId: response.data!["id"]!,
+          user: user
         ),
       );
     }
@@ -67,11 +76,18 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   // Check if authentication is still valid on previous app usage
   Future<bool> checkAuth() async {
     Map<String, dynamic> token = await authStore.getAuthToken();
+    // print("Token ${token["token"]}");
     if (token.isNotEmpty) {
       userId = token["id"]!;
       emit(AuthenticationStateAuthenticated(
           token: token["token"]!,
-          userId: token["id"]!,));
+          userId: token["id"]!,
+        user: token["user"] == null
+            ? null
+            : AuthUser.fromMap(
+          token["user"],
+        ),
+      ));
       return true;
     } else {
       emit(AuthenticationStateNotAuthenticated());
@@ -95,11 +111,19 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
         return;
       } else {
         userId = response.data!["id"];
+        AuthUser? user;
+        try {
+          user = AuthUser.fromMap(response.data!["user"]);
+        }
+        catch (e) {
+
+        }
         emit(
           AuthenticationStateAuthenticated(
               token: response.data!["token"]!,
               userId: response.data!["id"]!,
-            isSignup: true
+            isSignup: true,
+            user:user
           ),
         );
       }
@@ -117,5 +141,19 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     Future.delayed(Duration(seconds: 1), () {
       emit(AuthenticationStateNotAuthenticated());
     });
+  }
+
+  void saveLightSignup(Map<String,dynamic> data) {
+    userId = data["id"];
+    emit(
+      AuthenticationStateAuthenticated(
+          token: data["token"]!,
+          userId: data["id"]!,
+          isEarlySignup: true,
+          isSignup: true
+      ),
+    );
+    emit(AuthenticationStateAuthenticated(token: data["token"]!, userId: userId!));
+
   }
 }

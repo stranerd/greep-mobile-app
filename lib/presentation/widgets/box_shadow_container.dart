@@ -10,6 +10,8 @@ class BoxShadowContainer extends StatelessWidget {
       this.backgroundColor,
       this.verticalPadding = 16,
       this.horizontalPadding = 16,
+        this.borderColor,
+        this.withShadow = false,
       required this.child,
       this.width,
       this.margin})
@@ -17,9 +19,13 @@ class BoxShadowContainer extends StatelessWidget {
   final double? height;
   final double? width;
   final EdgeInsets? margin;
+  final Color? borderColor;
+
   final Color? backgroundColor;
   final Widget child;
   final double verticalPadding;
+  final bool withShadow;
+
   final double horizontalPadding;
 
   @override
@@ -34,7 +40,24 @@ class BoxShadowContainer extends StatelessWidget {
       ),
       decoration: BoxDecoration(
           color: backgroundColor ?? Colors.white,
-          border: Border.all(width: 2,color: Color(0xFFF1F3F7)),
+          boxShadow: withShadow ? [
+            BoxShadow(
+              color: Color(
+                  0xff0017260D
+              ).withOpacity(0.05),
+              spreadRadius: 0,
+              blurRadius: 3.r,
+              offset: Offset(
+                0,
+                4,
+              ),
+
+            )
+          ] : null,
+          border: withShadow ? null :Border.all(
+            width: 2.w,
+            color: borderColor ?? Color(0xFFF1F3F7),
+          ),
           borderRadius: BorderRadius.circular(12.r)),
       child: child,
     );

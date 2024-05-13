@@ -52,6 +52,7 @@ class ChatMessage {
         email: "email",
         fullName: "fullName",
         firstName: "firstName",
+        isVerified: false,
         hasManager: false,
         lastName: "lastName",
         photoUrl: "photoUrl",

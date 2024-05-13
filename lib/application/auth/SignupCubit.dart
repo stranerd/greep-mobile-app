@@ -52,6 +52,29 @@ class SignupCubit extends Cubit<SignupState> {
     }
   }
 
+  void lightSignup(LoginRequest request)async{
+    emit(SignupStateLoading());
+    var response = await authenticationService.lightSignup(request);
+    if (response.isError){
+      if (response.fieldErrors.isNotEmpty){
+        emit(SignupStateError(response.errorMessage,fieldErrors: response.fieldErrors,isConnectionTimeout: response.isConnectionTimeout,
+            isSocket: response.isSocket));}
+      else {
+        authenticationCubit.saveLightSignup(response.data);
+
+        emit(SignupStateReady());
+      }
+    }
+
+    else {
+      authenticationCubit.saveLightSignup(response.data);
+
+      emit(SignupStateReady());
+
+    }
+  }
+
+
   @override
   Future<void> close() {
     _streamSubscription.cancel();

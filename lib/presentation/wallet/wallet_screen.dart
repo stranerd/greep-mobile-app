@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:greep/Commons/colors.dart';
+import 'package:greep/application/user/user_util.dart';
+import 'package:greep/application/wallet/conversion_rate_cubit.dart';
+import 'package:greep/application/wallet/user_wallet_cubit.dart';
 import 'package:greep/commons/ui_helpers.dart';
+import 'package:greep/presentation/wallet/sheets/wallet_withdraw_options_sheet.dart';
 import 'package:greep/presentation/widgets/back_icon.dart';
 import 'package:greep/presentation/widgets/box_shadow_container.dart';
+import 'package:greep/presentation/widgets/custom_appbar.dart';
 import 'package:greep/presentation/widgets/key_value_widget.dart';
+import 'package:greep/presentation/widgets/loading_widget.dart';
 import 'package:greep/presentation/widgets/money_widget.dart';
 import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
@@ -41,12 +48,118 @@ class _WalletScreenState extends State<WalletScreen> {
         ),
         child: Column(
           children: [
+           BlocConsumer<UserWalletCubit, UserWalletState>(
+        listener: (newContext, state) {
+          if (state is UserWalletStateError && state.statusCode == 461) {
+
+          }
+        },
+        builder: (context, walletState) {
+          return Stack(
+            children: [
+              Container(
+                height: 172.h,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16.w,
+                  vertical: 12.h,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.r),
+                  gradient: LinearGradient(colors: [
+                     Color(0xff10BB76),
+                    Color(0xff086D50),
+                    Color(0xff001726).withOpacity(1),
+                  ], stops: [
+                    -0.3,
+                    0.4,
+                    1.2
+                  ]),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child:
+                      TextWidget(
+                        getUser().fullName,
+                        fontSize: 16.sp,
+                        color: Colors.white,
+                        weight: FontWeight.bold,
+                      ),
+
+                    ),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextWidget(
+                          "Total Balance",
+                          fontSize: 16.sp,
+                          color: Colors.white,
+                        ),
+                        Row(
+                          children: [
+                            walletState is UserWalletStateFetched
+                                ? MoneyWidget(
+                              amount: walletState.wallet.amount,
+                              flipped: true,
+                              color: Colors.white,
+                              size: 22,
+                              weight: FontWeight.bold,
+                            )
+                                :walletState is UserWalletStateLoading ? SizedBox(
+                              width: 20.r,
+                              height: 20.r,
+                              child: LoadingWidget(
+                                color: Colors.white,
+                                size: 15,
+                              ),
+                            ): MoneyWidget(
+                              amount: 0,
+                              flipped: true,
+                              color: Colors.white,
+                              size: 22,
+                              weight: FontWeight.bold,
+                            ),
+
+                            // TextWidget("**********",fontSize: 22.sp,color: Colors.white,),
+                            SizedBox(
+                              width: 10.w,
+                            ),
+                          ],
+                        ),
+
+                      ],
+                    ),
+
+                  ],
+                ),
+              ),
+              // Positioned(
+              //   right: 10.w,
+              //   top: 21.h,
+              //   child: IgnorePointer(
+              //     child: Image.asset(
+              //       "assets/images/wallet_board.png",
+              //     ),
+              //   ),
+              // )
+            ],
+          );
+        },
+        ),
+            SizedBox(height: 20.h,),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: SplashTap(
                     onTap: () {
+                      showModalBottomSheet(context: context, builder: (context){
+                        return WalletWithdrawOptionsSheet();
+                      });
                       // Get.to(() => const SendMoneyScreen());
                     },
                     child: Container(
@@ -153,7 +266,7 @@ class _WalletScreenState extends State<WalletScreen> {
                   ),
                   KeyValueWidget(
                     title: "Total Trips",
-                    value: "59",
+                    value: "0",
                   ),
                   SizedBox(
                     height: 16.h,
@@ -162,7 +275,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     title: "Total Exchange",
                     value: "",
                     widgetValue: MoneyWidget(
-                      amount: 4800,
+                      amount: 0,
                     ),
                   ),
                   SizedBox(
@@ -172,7 +285,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     title: "Total Balance",
                     value: "",
                     widgetValue: MoneyWidget(
-                      amount: 6740,
+                      amount: 0,
                     ),
                   ),
                 ],
@@ -186,7 +299,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 title: "Available Balance",
                 value: "",
                 widgetValue: MoneyWidget(
-                  amount: 4300,
+                  amount: 0,
                   color: kGreenColor,
                 ),
               ),

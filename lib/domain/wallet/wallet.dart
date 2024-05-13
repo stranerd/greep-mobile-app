@@ -3,8 +3,9 @@ class Wallet {
   final String id;
   final num amount;
   final String currency;
+  final bool hasPin;
 
-  Wallet({required this.id, required this.amount, required this.currency});
+  Wallet({required this.id, required this.amount, required this.currency, required this.hasPin});
 
   Map<String, dynamic> toMap() {
     return {
@@ -19,6 +20,7 @@ class Wallet {
       id: map['id'] ?? "",
       amount: map['balance']['amount'] ?? 0,
       currency: map["balance"]['currency'] ?? "",
+      hasPin: map['hasPin'] == true
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:greep/application/transactions/request/add_expense_request.dart'
 import 'package:greep/application/transactions/request/add_trip_request.dart';
 import 'package:greep/domain/transaction/transaction.dart';
 import 'package:greep/domain/transaction/transaction_client.dart';
+import 'package:greep/domain/transaction/wallet_transaction.dart';
 
 class TransactionService {
   final TransactionClient transactionClient;
@@ -20,6 +21,14 @@ class TransactionService {
     }
     return responseEntity;
   }
+
+  Future<ResponseEntity<List<WalletTransaction>>> fetchPaymentTransactions({String? type}) async {
+    return await transactionClient.fetchPaymentTransactions(type: type);
+
+
+  }
+
+
 
   Future<ResponseEntity<Transaction>> addTrip(AddTripRequest request) async {
     return await transactionClient.addTrip(request);

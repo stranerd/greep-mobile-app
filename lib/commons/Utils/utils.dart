@@ -14,6 +14,31 @@ class Utils with ChangeNotifier {
   bool isExpanded1 = true;
   bool isLoading = false;
 
+  static String obscureContact(String contact) {
+    if (contact.isEmpty) {
+      return contact;
+    }
+
+    // Check if it's an email or phone number
+    if (contact.contains('@')) {
+      // It's an email
+      List<String> parts = contact.split('@');
+      if (parts.length == 2) {
+        String obscuredEmail = '${parts[0].substring(0, 3)}********@${parts[1]}';
+        return obscuredEmail;
+      }
+    } else if (contact.contains(RegExp(r'[0-9]'))) {
+      // It's a phone number
+      // Assuming the number starts with a '+' and has at least 3 digits
+      String countryCode = contact.substring(0, contact.length - 8); // Keep the country code
+      String lastDigits = contact.substring(contact.length - 3); // Keep the last 3 digits
+      String obscuredNumber = '$countryCode********$lastDigits';
+      return obscuredNumber;
+    }
+
+    // Return the original contact if it doesn't match email or phone number pattern
+    return contact;
+  }
 
 
   setLoading(value){
@@ -29,6 +54,15 @@ class Utils with ChangeNotifier {
   //         sink.add(users);
   //       },
   //     );
+
+  static T extractEnum<T>(String? type, List<T> enumValues) {
+    for (var enumValue in enumValues) {
+      if (enumValue.toString().split('.')[1].toLowerCase() == type?.toLowerCase()) {
+        return enumValue;
+      }
+    }
+    return enumValues.first;
+  }
 
 
   static dynamic fromDateTimeToJson(DateTime date) {

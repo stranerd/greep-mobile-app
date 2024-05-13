@@ -24,11 +24,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
   String email = "";
   String code = "";
   final formKey = GlobalKey<FormState>();
-  late ResetPasswordCubit _resetPasswordCubit;
+  late PasswordCrudCubit _resetPasswordCubit;
 
   @override
   void initState() {
-    _resetPasswordCubit = GetIt.I<ResetPasswordCubit>();
+    _resetPasswordCubit = GetIt.I<PasswordCrudCubit>();
     super.initState();
   }
 
@@ -38,11 +38,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
       value: _resetPasswordCubit,
       child: Builder(
         builder: (context) {
-          return BlocConsumer<ResetPasswordCubit, ResetPasswordState> (
+          return BlocConsumer<PasswordCrudCubit, PasswordCrudState> (
             listener: (context, state)async {
-              if (state is ResetPasswordCodeSent){
+              if (state is PasswordCrudStateCodeSent){
                 var isVerified = await Get.bottomSheet<bool>(
                     CodeVerificationBottomSheet(
+                      verificationMode: VerificationMode.password,
+                      onResendCode: (){
+                        _resetPasswordCubit.sendResetCode(email);
+
+                      },
                       onCompleted: confirmCode,
                       email: email,
                     ),
@@ -58,7 +63,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                   );
                 } else {}
               }
-              if (state is ResetPasswordStateError){
+              if (state is PasswordCrudStateError){
                 error = state.errorMessage;
               }
             },
@@ -103,8 +108,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                           kVerticalSpaceLarge,
                           SubmitButton(
                               text: "Reset",
-                              isLoading: state is ResetPasswordStateLoading,
-                              enabled: state is! ResetPasswordStateLoading,
+                              isLoading: state is PasswordCrudStateLoading,
+                              enabled: state is! PasswordCrudStateLoading,
                               onSubmit:_sendResetPasswordCode),
                         ],
                       ),
