@@ -28,7 +28,7 @@ dependencies:
   firebase_core: ^2.14.0
   flutter_datetime_picker_plus: ^2.0.1
   flutter_dotenv: ^5.0.2
-  flutter_local_notifications: ^16.3.2
+  flutter_local_notifications: ^17.1.2
   flutter_typeahead: ^4.0.0
   flutter_polyline_points: ^1.0.0
   firebase_messaging: ^14.6.4
