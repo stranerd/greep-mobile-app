@@ -74,204 +74,205 @@ class _SettingsHomeState extends State<SettingsHome> {
         body: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.dark,
           child: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(16.r, 16.r, 16.r, 0),
-              child: BlocBuilder<UserCubit, UserState>(
-                builder: (context, userState) {
-                  return BlocBuilder<AuthUserCubit, AuthUserState>(
-                    builder: (context, authState) {
-                      return BlocBuilder<DriversCubit, DriversState>(
-                        builder: (context, driverState) {
-                          return ListView(
-                            shrinkWrap: true,
-                            children: [
-                              if (authState is AuthUserStateFetched)
-                                Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      ProfilePhotoWidget(
-                                        url: authState.user.photo,
-                                        radius: 40,
-                                        initials: Utils.getInitials(
-                                          authState.user.fullName,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 12.h,
-                                      ),
-                                      TextWidget(
+            child: BlocBuilder<UserCubit, UserState>(
+              builder: (context, userState) {
+                return BlocBuilder<AuthUserCubit, AuthUserState>(
+                  builder: (context, authState) {
+                    return BlocBuilder<DriversCubit, DriversState>(
+                      builder: (context, driverState) {
+                        return ListView(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,vertical: 20.h
+                          ),
+                          shrinkWrap: true,
+                          children: [
+                            if (authState is AuthUserStateFetched)
+                              Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ProfilePhotoWidget(
+                                      url: authState.user.photo,
+                                      radius: 40,
+                                      initials: Utils.getInitials(
                                         authState.user.fullName,
-                                        weight: FontWeight.bold,
-                                        fontSize: 18.sp,
                                       ),
-                                      TextWidget(
-                                        "@${authState.user.username}",
-                                        color: AppColors.veryLightGray,
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                    SizedBox(
+                                      height: 12.h,
+                                    ),
+                                    TextWidget(
+                                      authState.user.fullName,
+                                      weight: FontWeight.bold,
+                                      fontSize: 18.sp,
+                                    ),
+                                    TextWidget(
+                                      "@${authState.user.username}",
+                                      color: AppColors.veryLightGray,
+                                    ),
+                                  ],
                                 ),
-                              SizedBox(
-                                height: 34.h,
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .spaceBetween,
-                                children: [
-                                  TextWidget(
-                                    "Availability",
-                                    fontSize: 16.sp,
-                                  ),
-                                  SizedBox(
-                                    height: 30.h,
-                                    child: Switch(
-                                        activeColor: AppColors.green,
-                                        inactiveThumbColor: AppColors.red,
-                                        inactiveTrackColor: AppColors.red,
-                                        thumbColor: MaterialStatePropertyAll<
-                                            Color>(Colors.white),
-                                        value: isAvailable,
+                            SizedBox(
+                              height: 34.h,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment
+                                  .spaceBetween,
+                              children: [
+                                TextWidget(
+                                  "Availability",
+                                  fontSize: 16.sp,
+                                ),
+                                SizedBox(
+                                  height: 30.h,
+                                  child: Switch(
+                                      activeColor: AppColors.green,
+                                      inactiveThumbColor: AppColors.red,
+                                      inactiveTrackColor: AppColors.red,
+                                      thumbColor: MaterialStatePropertyAll<
+                                          Color>(Colors.white),
+                                      value: isAvailable,
 
-                                        onChanged: (s) {
-                                          setState(() {
-                                            isAvailable = s;
-                                          });
-                                        }),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10.h,
-                              ),
-                              SplashTap(
-                                onTap: () {
-                                  Get.to(() => const ProfileView());
-                                },
-                                child: const SettingsHomeItem(
-                                    title: "Account",
-                                    icon: "assets/icons/user.svg"),
-                              ),
-                              SizedBox(height: 12.h),
-                              SplashTap(
-                                onTap: () {
-                                  Get.to(() => const WalletScreen());
-                                },
-                                child: const SettingsHomeItem(
-                                    title: "Wallet",
-                                    icon: "assets/icons/empty-wallet.svg"),
-                              ),
-                              SizedBox(
-                                height: 12.h,
-                              ),
-                              SplashTap(
-                                onTap: () {
-                                  Get.to(() => const SecurityScreen());
-                                },
-                                child: const SettingsHomeItem(
-                                    title: "Security",
-                                    icon: "assets/icons/shield.svg"),
-                              ),
-                              SizedBox(height: 12.h),
+                                      onChanged: (s) {
+                                        setState(() {
+                                          isAvailable = s;
+                                        });
+                                      }),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            SplashTap(
+                              onTap: () {
+                                Get.to(() => const ProfileView());
+                              },
+                              child: const SettingsHomeItem(
+                                  title: "Account",
+                                  icon: "assets/icons/user.svg"),
+                            ),
+                            SizedBox(height: 12.h),
+                            SplashTap(
+                              onTap: () {
+                                Get.to(() => const WalletScreen());
+                              },
+                              child: const SettingsHomeItem(
+                                  title: "Wallet",
+                                  icon: "assets/icons/empty-wallet.svg"),
+                            ),
+                            SizedBox(
+                              height: 12.h,
+                            ),
+                            SplashTap(
+                              onTap: () {
+                                Get.to(() => const SecurityScreen());
+                              },
+                              child: const SettingsHomeItem(
+                                  title: "Security",
+                                  icon: "assets/icons/shield.svg"),
+                            ),
+                            SizedBox(height: 12.h),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SplashTap(
+                                  onTap: () {
+                                    Get.to(() => const DriversScreen());
+                                  },
+                                  child: const SettingsHomeItem(
+                                      title: "Drivers",
+                                      icon: "assets/icons/local_taxi.svg"),
+                                ),
+                                SizedBox(height: 12.h),
+                              ],
+                            ),
+                            if (driverState is DriversStateManager)
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SplashTap(
                                     onTap: () {
-                                      Get.to(() => const DriversScreen());
+                                      Get.to(() => const TotalIncomeScreen());
                                     },
                                     child: const SettingsHomeItem(
-                                        title: "Drivers",
-                                        icon: "assets/icons/local_taxi.svg"),
+                                        title: "Total Income",
+                                        icon: "assets/icons/monetization_on.svg"),
                                   ),
                                   SizedBox(height: 12.h),
                                 ],
                               ),
-                              if (driverState is DriversStateManager)
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SplashTap(
-                                      onTap: () {
-                                        Get.to(() => const TotalIncomeScreen());
-                                      },
-                                      child: const SettingsHomeItem(
-                                          title: "Total Income",
-                                          icon: "assets/icons/monetization_on.svg"),
-                                    ),
-                                    SizedBox(height: 12.h),
-                                  ],
-                                ),
-                              if (userState is UserStateFetched &&
-                                  userState.user.hasManager)
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SplashTap(
-                                      onTap: () {
-                                        Get.to(() => const CommissionHome());
-                                      },
-                                      child: const SettingsHomeItem(
-                                          title: "Commission",
-                                          icon: "assets/icons/monetization_on.svg"),
-                                    ),
-                                    SizedBox(height: 12.h),
-                                  ],
-                                ),
-                              SplashTap(
-                                onTap: () {
-                                  Get.to(() => const AboutHome());
-                                },
-                                child: const SettingsHomeItem(
-                                    title: "About",
-                                    icon: "assets/icons/info2.svg"),
+                            if (userState is UserStateFetched &&
+                                userState.user.hasManager)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SplashTap(
+                                    onTap: () {
+                                      Get.to(() => const CommissionHome());
+                                    },
+                                    child: const SettingsHomeItem(
+                                        title: "Commission",
+                                        icon: "assets/icons/monetization_on.svg"),
+                                  ),
+                                  SizedBox(height: 12.h),
+                                ],
                               ),
-                              SizedBox(height: 12.h),
-                              SplashTap(
-                                onTap: () {
-                                  Get.to(() => const ContactUs());
-                                },
-                                child: const SettingsHomeItem(
-                                    title: "Support",
-                                    icon: "assets/icons/headphone.svg"),
+                            SplashTap(
+                              onTap: () {
+                                Get.to(() => const AboutHome());
+                              },
+                              child: const SettingsHomeItem(
+                                  title: "About",
+                                  icon: "assets/icons/info2.svg"),
+                            ),
+                            SizedBox(height: 12.h),
+                            SplashTap(
+                              onTap: () {
+                                Get.to(() => const ContactUs());
+                              },
+                              child: const SettingsHomeItem(
+                                  title: "Support",
+                                  icon: "assets/icons/headphone.svg"),
+                            ),
+                            if (driverState is DriversStateManager)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 12.h),
+                                  SplashTap(
+                                    onTap: () {
+                                      Get.to(() => const UsefulLinks());
+                                    },
+                                    child: const SettingsHomeItem(
+                                        title: "Useful links",
+                                        color: AppColors.black,
+                                        icon: "assets/icons/copy.svg"),
+                                  ),
+                                ],
                               ),
-                              if (driverState is DriversStateManager)
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(height: 12.h),
-                                    SplashTap(
-                                      onTap: () {
-                                        Get.to(() => const UsefulLinks());
-                                      },
-                                      child: const SettingsHomeItem(
-                                          title: "Useful links",
-                                          color: AppColors.black,
-                                          icon: "assets/icons/copy.svg"),
-                                    ),
-                                  ],
-                                ),
-                              kVerticalSpaceLarge,
-                              kVerticalSpaceRegular,
-                              SplashTap(
-                                onTap: () {
-                                  signout(context);
-                                },
-                                child: const SettingsHomeItem(
-                                  title: "Log out",
-                                  icon: "assets/icons/logout.svg",
-                                  color: AppColors.red,
-                                  withTrail: false,
-                                ),
+                            kVerticalSpaceLarge,
+                            kVerticalSpaceRegular,
+                            SplashTap(
+                              onTap: () {
+                                signout(context);
+                              },
+                              child: const SettingsHomeItem(
+                                title: "Log out",
+                                icon: "assets/icons/logout.svg",
+                                color: AppColors.red,
+                                withTrail: false,
                               ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  );
-                },
-              ),
+                            ),
+                            SizedBox(height: 30.h,)
+                          ],
+                        );
+                      },
+                    );
+                  },
+                );
+              },
             ),
           ),
         ),

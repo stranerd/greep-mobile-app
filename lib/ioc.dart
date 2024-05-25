@@ -11,6 +11,10 @@ import 'package:greep/application/geocoder/geocoder_cubit.dart';
 import 'package:greep/application/location/driver_location_status_cubit.dart';
 import 'package:greep/application/location/location_cubit.dart';
 import 'package:greep/application/notification/user_notification_cubit.dart';
+import 'package:greep/application/order/order_crud_cubit.dart';
+import 'package:greep/application/order/order_list_cubit.dart';
+import 'package:greep/application/order/single_order_cubit.dart';
+import 'package:greep/application/product/product_list_cubit.dart';
 import 'package:greep/application/transactions/customer_statistics_cubit.dart';
 import 'package:greep/application/transactions/transaction_crud_cubit.dart';
 import 'package:greep/application/transactions/transaction_summary_cubit.dart';
@@ -31,6 +35,10 @@ import 'package:greep/domain/customer/customer_client.dart';
 import 'package:greep/domain/customer/customer_service.dart';
 import 'package:greep/domain/notification/notification_client.dart';
 import 'package:greep/domain/notification/notification_service.dart';
+import 'package:greep/domain/order/order_client.dart';
+import 'package:greep/domain/order/order_service.dart';
+import 'package:greep/domain/product/product_client.dart';
+import 'package:greep/domain/product/product_service.dart';
 import 'package:greep/domain/transaction/transaction_client.dart';
 import 'package:greep/domain/transaction/transaction_service.dart';
 import 'package:greep/domain/user/UserService.dart';
@@ -69,6 +77,8 @@ class IoC {
         walletClient: WalletClient(),
       ),
     );
+    getIt.registerSingleton(OrderService(orderClient: OrderClient(),),);
+    getIt.registerSingleton(ProductService(productClient: ProductClient(),),);
   }
 
   IoC() {
@@ -175,6 +185,25 @@ class IoC {
     getIt.registerFactory(() => WalletCrudCubit(
       walletService: getIt(),
     ));
+    getIt.registerFactory(
+          () => ProductListCubit(productService: getIt()),
+    );
+
+    getIt.registerFactory(() =>
+        SingleOrderCubit(
+          orderService: getIt(),
+        ),
+    );
+    getIt.registerSingleton(
+      OrderListCubit(
+        orderService: getIt(),
+      ),
+    );
+    getIt.registerFactory(() =>
+      OrderCrudCubit(
+        orderService: getIt(),
+      ),
+    );
     getIt.registerSingleton(
       UserNotificationCubit(
         notificationService: getIt(),

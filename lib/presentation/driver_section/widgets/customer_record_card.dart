@@ -102,7 +102,7 @@ class CustomerRecordCard extends StatelessWidget {
     return SplashTap(
       onTap: () {
         Get.to(() {
-          return CustomerDetails(name: transaction.data.customerName!);
+          return CustomerDetailsScreen(name: transaction.data.customerName!);
         }, transition: Transition.fadeIn);
       },
       child: Container(

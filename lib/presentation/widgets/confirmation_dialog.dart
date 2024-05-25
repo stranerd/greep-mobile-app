@@ -20,6 +20,8 @@ class ConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
       insetPadding: const EdgeInsets.all(kDefaultSpacing
       ),
         child: Container(

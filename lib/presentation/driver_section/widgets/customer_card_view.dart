@@ -62,7 +62,7 @@ class CustomerCardView extends StatelessWidget {
     return SplashTap(
         onTap: () {
           g.Get.to(
-              () => CustomerDetails(
+              () => CustomerDetailsScreen(
                     name: transaction.data.customerName!,
                   ),
               transition: g.Transition.fadeIn);

@@ -24,6 +24,7 @@ import 'package:greep/domain/user/model/manager_request.dart';
 import 'package:greep/ioc.dart';
 import 'package:greep/presentation/driver_section/map/map_screen.dart';
 import 'package:greep/presentation/driver_section/message/messages_screen.dart';
+import 'package:greep/presentation/driver_section/orders/orders_screen.dart';
 import 'package:greep/presentation/driver_section/records/trip_directions_screen.dart';
 import 'package:greep/presentation/widgets/add_record_dialog.dart';
 import 'package:upgrader/upgrader.dart';
@@ -107,17 +108,37 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
         ),
         floatingActionButton: _currNavIndex != 0
             ? null
-            : SizedBox(
-                height: 64.r,
-                width: 64.r,
-                child: Stack(
-                  children: [
-                    Positioned.fill(
-                      child: FloatingActionButton(
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    height: 64.r,
+                    width: 64.r,
+                    child: FloatingActionButton(
                         backgroundColor: AppColors.black,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(99.r)
-                        ),
+                            borderRadius: BorderRadius.circular(99.r)),
+                        onPressed: () {
+                          Get.to(() => const OrdersScreen());
+
+                        },
+                        child: SvgPicture.asset(
+                          "assets/icons/truck.svg",
+                          color: AppColors.white,
+                          height: 32.r,
+                          width: 32.r,
+                        )),
+                  ),
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  SizedBox(
+                    height: 64.r,
+                    width: 64.r,
+                    child: FloatingActionButton(
+                        backgroundColor: AppColors.black,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(99.r)),
                         onPressed: () {
                           showModalBottomSheet(
                               context: context,
@@ -129,31 +150,13 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
                                 return const AddRecordDialog();
                               });
                         },
-                        child: Icon(Icons.add,color: AppColors.white,size: 32.r,)
-                      ),
-                    ),
-                    // Positioned(
-                    //     top: 0,
-                    //     right: 0,
-                    //     child: BlocBuilder<TripDirectionBuilderCubit,
-                    //         TripDirectionBuilderState>(
-                    //       builder: (context, state) {
-                    //         return Container(
-                    //           width: 20.w,
-                    //           height: 20.h,
-                    //           decoration: BoxDecoration(
-                    //             shape: BoxShape.circle,
-                    //             color: state is TripDirectionBuilderStateGotTrip
-                    //                 ? AppColors.blue
-                    //                 : state is TripDirectionBuilderStateStartTrip
-                    //                     ? AppColors.green
-                    //                     : AppColors.red,
-                    //           ),
-                    //         );
-                    //       },
-                    //     ))
-                  ],
-                ),
+                        child: Icon(
+                          Icons.add,
+                          color: AppColors.white,
+                          size: 32.r,
+                        )),
+                  ),
+                ],
               ),
       ),
     );
@@ -212,7 +215,6 @@ class _NavBarViewState extends State<NavBarView> with ScaffoldMessengerService {
         activeIcon: Column(
           children: [
             kVerticalSpaceSmall,
-
             SvgIcon(
               svgIcon: icons[i],
               color: AppColors.black,

@@ -125,7 +125,6 @@ class _SplashScreenState extends State<AuthenticationSplashScreen> {
                               if (isOn) {
                                 locationCubit.emitOn();
                               } else {}
-                              g.Get.back();
                               g.Get.offAll(
                                 () => const NavBarView(),
                                 transition: g.Transition.fadeIn,
@@ -149,7 +148,6 @@ class _SplashScreenState extends State<AuthenticationSplashScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              g.Get.back();
                               g.Get.offAll(
                                 () => const NavBarView(),
                                 transition: g.Transition.fadeIn,

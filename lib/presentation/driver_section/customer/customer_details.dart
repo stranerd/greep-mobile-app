@@ -23,16 +23,16 @@ import '../../../utils/constants/app_styles.dart';
 import '../widgets/record_card.dart';
 import '../widgets/transaction_list_card.dart';
 
-class CustomerDetails extends StatefulWidget {
+class CustomerDetailsScreen extends StatefulWidget {
   final String name;
 
-  const CustomerDetails({Key? key, required this.name}) : super(key: key);
+  const CustomerDetailsScreen({Key? key, required this.name}) : super(key: key);
 
   @override
-  State<CustomerDetails> createState() => _CustomerDetailsState();
+  State<CustomerDetailsScreen> createState() => _CustomerDetailsScreenState();
 }
 
-class _CustomerDetailsState extends State<CustomerDetails> {
+class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
   List<String> paymentTypes = [];
   final formKey = GlobalKey<FormState>();
   late CustomerSummary _customerSummary;

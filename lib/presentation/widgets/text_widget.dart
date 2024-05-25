@@ -12,7 +12,9 @@ class TextWidget extends StatelessWidget {
     this.overflow,
     this.style,
         this.fontStyle,
+        this.decoration,
     this.fontSize,
+        this.selectable = false,
         this.fontFamily,
     this.textAlign,
     this.letterSpacing,
@@ -23,6 +25,7 @@ class TextWidget extends StatelessWidget {
   final String text;
   final TextStyle? style;
   final TextOverflow? overflow;
+  final bool selectable;
   final double? fontSize;
   final TextAlign? textAlign;
   final String? fontFamily;
@@ -30,16 +33,16 @@ class TextWidget extends StatelessWidget {
   final double? letterSpacing;
   final FontStyle? fontStyle;
   final int? maxLines;
+  final TextDecoration? decoration;
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: style == null
+    var textStyle = style == null
           ? kDefaultTextStyle.copyWith(
               color: color ?? kBlackColor,
               fontFamily: fontFamily,
           fontStyle: fontStyle,
+              decoration: decoration,
 
               fontWeight: weight,
               fontSize: fontSize ?? 14.sp,
@@ -47,9 +50,21 @@ class TextWidget extends StatelessWidget {
           : style!.copyWith(
               fontSize: fontSize ?? 14.sp,
               fontFamily: fontFamily,
+          decoration: decoration,
               fontWeight: weight,
               fontStyle: fontStyle,
-              letterSpacing: letterSpacing),
+              letterSpacing: letterSpacing);
+      if (selectable) {
+        return SelectableText(
+          text,
+          style: textStyle,
+          textAlign: textAlign,
+          maxLines: maxLines,
+        );
+    }
+    return Text(
+      text,
+      style: textStyle,
       textAlign: textAlign,
       overflow: overflow,
       maxLines: maxLines,

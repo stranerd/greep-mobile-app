@@ -7,7 +7,14 @@ class KeyValueWidget extends StatelessWidget {
   final String title;
   final String value;
   final Widget? widgetValue;
-  const KeyValueWidget({Key? key, required this.title, required this.value, this.widgetValue}) : super(key: key);
+  final double? fontSize;
+  final Color? titleColor;
+  const KeyValueWidget({Key? key, required this.title, required this.value, this.widgetValue,
+
+    this.fontSize,
+    this.titleColor
+
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,14 +23,17 @@ class KeyValueWidget extends StatelessWidget {
       children: [
         TextWidget(
           title,
-          color: AppColors.veryLightGray,
-          fontSize: 14.sp,
+          color: titleColor,
+          fontSize: fontSize,
         ),
-        (widgetValue != null)
-            ? widgetValue!
-            : TextWidget(
+         widgetValue??
+            TextWidget(
           value,
-          fontSize: 14.sp,
+          fontSize: fontSize,
+              weight: FontWeight.w500,
+              selectable: true,
+
+
         )
       ],
     );

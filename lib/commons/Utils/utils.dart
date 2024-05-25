@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+import 'package:greep/application/location/location.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,6 +14,16 @@ class Utils with ChangeNotifier {
   String fcmToken = '';
   bool isExpanded1 = true;
   bool isLoading = false;
+
+  static Future<void> openMapsApp(Location location) async {
+    final Uri url = Uri.parse('google.navigation:q=${location.latitude},${location.longitude}&mode=d');
+    if (await canLaunchUrl(url)) {
+    await launchUrl(url,);
+    } else {
+    throw 'Could not launch $url';
+    }
+
+  }
 
   static String obscureContact(String contact) {
     if (contact.isEmpty) {
