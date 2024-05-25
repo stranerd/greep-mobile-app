@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:greep/application/auth/AuthenticationCubit.dart';
+import 'package:greep/application/user/user_util.dart';
 import 'package:greep/application/user/utils/get_current_user.dart';
 
 import 'package:greep/application/driver/drivers_cubit.dart';
@@ -106,7 +107,7 @@ class _ProfileViewState extends State<ProfileView>
                 kVerticalSpaceRegular,
                 AccountItemCard(title: "Last name", subtitle: user.lastName),
                 kVerticalSpaceRegular,
-                AccountItemCard(title: "Email", subtitle: user.email),
+                AccountItemCard(title: "Email", subtitle: getAuthUser().email),
                 kVerticalSpaceRegular,
                 BlocBuilder<DriversCubit, DriversState>(
                   builder: (context, state) {

@@ -45,6 +45,7 @@ class AuthUserCubit extends Cubit<AuthUserState> {
     } else {
       user = response.data!;
       emit(AuthUserStateFetched(user));
+      print("auth user ${user}");
       authenticationCubit.subscribeToPush();
       FirebaseApi.signInWithFirebase();
 

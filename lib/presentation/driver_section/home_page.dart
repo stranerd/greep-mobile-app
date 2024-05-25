@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart' as g;
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:greep/application/user/user_util.dart';
 import 'package:greep/application/user/utils/get_current_user.dart';
 
 import 'package:greep/application/transactions/response/transaction_summary.dart';
@@ -81,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<UserCubit, UserState>(
       builder: (context, userState) {
-        var userId = currentUser().id;
+        var userId = getAuthUser().id;
         return Scaffold(
           backgroundColor: AppColors.white,
           appBar: const CustomAppbar(

@@ -15,12 +15,14 @@ import 'package:greep/commons/scaffold_messenger_service.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/ioc.dart';
 import 'package:greep/presentation/auth/home/auth_home.dart';
+import 'package:greep/presentation/auth/views/sign_up_verifying_view.dart';
 import 'package:greep/presentation/auth_finish_signup.dart';
 import 'package:greep/presentation/driver_section/home_page.dart';
 import 'package:greep/presentation/driver_section/nav_pages/nav_bar/nav_bar_view.dart';
 import 'package:greep/presentation/splash/splash.dart';
 import 'package:greep/presentation/widgets/code_verification_bottom_sheet.dart';
 import 'package:greep/presentation/widgets/email_verification_bottom_sheet.dart';
+import 'package:greep/presentation/widgets/loading_widget.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 
@@ -82,6 +84,9 @@ class _SplashScreenState extends State<AuthenticationSplashScreen> {
               getIt<AuthenticationCubit>().signout();
               Get.off(() => AuthHomeScreen());
             }
+          }
+          else if (state.user.isDriver != true){
+            Get.off(() => SignUpVerifyingView());
           }
            else {
             if (locationCubit.state is LocationStateOff) {
@@ -194,13 +199,10 @@ class _SplashScreenState extends State<AuthenticationSplashScreen> {
           width: g.Get.width,
           decoration: const BoxDecoration(color: kWhiteColor),
           height: g.Get.height,
-          child: const Center(
-            child: SizedBox(
-              width: 50,
-              height: 50,
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(kPrimaryColor),
-              ),
+          child: Center(
+            child: LoadingWidget(
+              isGreep: true,
+              size: 50.r,
             ),
           )),
     );

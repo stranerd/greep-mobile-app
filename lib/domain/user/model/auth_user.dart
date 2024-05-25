@@ -1,6 +1,9 @@
+import 'package:equatable/equatable.dart';
 import 'package:greep/presentation/widgets/custom_phone_field.dart';
 
-class AuthUser {
+
+
+class AuthUser extends Equatable{
 
   final String id;
   final String username;
@@ -10,6 +13,7 @@ class AuthUser {
   final String photo;
   final AppPhoneNumber? phone;
   final bool isVerified;
+  final bool? isDriver;
 
 
   String get fullName => "$firstName $lastName";
@@ -21,47 +25,15 @@ class AuthUser {
     required this.firstName,
     required this.lastName,
     required this.photo,
+    this.isDriver,
     required this.phone,
     required this.isVerified,
   });
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is AuthUser &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          username == other.username &&
-          email == other.email &&
-          firstName == other.firstName &&
-          lastName == other.lastName &&
-          photo == other.photo &&
-          phone == other.phone &&
-          isVerified == other.isVerified);
-
-  @override
-  int get hashCode =>
-      id.hashCode ^
-      username.hashCode ^
-      email.hashCode ^
-      firstName.hashCode ^
-      lastName.hashCode ^
-      photo.hashCode ^
-      phone.hashCode ^
-      isVerified.hashCode;
 
   @override
   String toString() {
-    return 'AuthUser{' +
-        ' id: $id,' +
-        ' username: $username,' +
-        ' email: $email,' +
-        ' firstName: $firstName,' +
-        ' lastName: $lastName,' +
-        ' photo: $photo,' +
-        ' phone: $phone,' +
-        ' isVerified: $isVerified,' +
-        '}';
+    return 'AuthUser{id: $id, username: $username, email: $email, firstName: $firstName, lastName: $lastName, photo: $photo, phone: $phone, isVerified: $isVerified, isDriver: $isDriver}';
   }
 
   AuthUser copyWith({
@@ -108,10 +80,16 @@ class AuthUser {
       firstName: map["name"]?['first'] ?? "",
       lastName: map["name"]?['last'] ?? "",
       photo: map['photo']?["link"] ?? "",
+      isDriver: map["roles"]?["isDriver"] == null ? null: map["roles"]["isDriver"] ,
       phone: map["phone"] == null ?  null : AppPhoneNumber.fromMap(map["phone"]),
       isVerified: map['isVerified'] == true,
     );
   }
+
+  @override
+  List<Object?> get props => [id];
+
+
 
 //</editor-fold>
 }

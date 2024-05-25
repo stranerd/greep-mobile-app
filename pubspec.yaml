@@ -72,6 +72,8 @@ dependencies:
   sign_in_with_apple: ^5.0.0
   share_plus: ^7.0.2
   shared_preferences: ^2.1.2
+  sleek_circular_slider: ^2.0.1
+
   timeago: ^3.3.0
   timeline_tile: ^2.0.0
   timer_count_down: ^2.2.1

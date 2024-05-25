@@ -359,6 +359,21 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                               isLast: false,
                               isSuccess: true,
                             ),
+                            if (order.payment == "wallet")
+                              StepperChild(
+                                title: "Order Paid",
+                                subTitle: order.isPaid
+                                    ? DateFormat("dd MMM yyyy, hh:mm a").format(
+                                    order.status.paid ?? DateTime.now())
+                                    : "pending",
+                                icon: SvgPicture.asset(
+                                  "assets/icons/box.svg",
+                                  color: kPrimaryColor,
+                                ),
+                                isFirst: false,
+                                isLast: false,
+                                isSuccess: order.isPaid,
+                              ),
                             StepperChild(
                               title: "Order Accepted",
                               subTitle: order.isAccepted
@@ -403,7 +418,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                                 isLast: false,
                                 isSuccess: order.isShipped,
                               ),
-                            if (!order.isPaid)
+                            if (order.payment == "cash")
                               StepperChild(
                                 title: "Order Paid",
                                 subTitle: order.isPaid

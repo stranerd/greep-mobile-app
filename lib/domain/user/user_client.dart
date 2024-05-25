@@ -183,18 +183,22 @@ class UserClient {
   }
 
   Future<ResponseEntity<List<User>>> fetchUserDrivers(String userId) async {
+
+    String where = jsonEncode({
+      "field": "manager.managerId",
+      "value": userId,
+    },);
     Map<String, dynamic> queryParams = {
-      "where[]": {
-        "field": "manager.managerId",
-        "value": userId,
-      },
+      "where[]": where,
       "all": "true"
     };
     Response response;
     try {
       response = await dio.get("users/users", queryParameters: queryParams);
+      // print("Fetch user drivers respknse ${response.data}");
       List<User> users = [];
       response.data["results"].forEach((e) {
+        // print("driver ${e}");
         users.add(User.fromServer(e));
       });
       return ResponseEntity.Data(users);

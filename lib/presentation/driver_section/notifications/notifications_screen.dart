@@ -125,7 +125,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                   SizedBox(
                                     height: 12.h,
                                   ),
-                              itemCount: 5,
+                              itemCount: notificationState.notifications.length,
                               itemBuilder: (c, i) {
                                 var notification = notificationState.notifications[i];
                                 return SplashTap(
