@@ -519,4 +519,43 @@ class AuthenticationClient {
           "An error occurred verifying code. Try again");
     }
   }
+
+
+  Future<ResponseEntity> subscribeToPush({required String token}) async {
+    print("subscribing to push notification ${token}");
+    final Dio dio = dioClient();
+    Response response;
+    try {
+      response = await dio.post(
+          "notifications/tokens/devices/subscribe",
+          data: {
+            "token": token
+          }
+      );
+
+      print("subscribing to push response ${response.data}");
+
+
+      return ResponseEntity.Data(null);
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout) {
+        return ResponseEntity.Timeout();
+      }
+      if (e.error is SocketException) {
+        return ResponseEntity.Socket();
+      }
+      if (e.type == DioExceptionType.badResponse) {
+        print("subscriing to push erro ${e.response?.statusCode} ${e.response?.data}");
+        return ResponseEntity.Error(
+            e.response!.data[0]["message"] ?? "sending reset code failed");
+      }
+
+      return ResponseEntity.Error("sending reset code failed");
+    } catch (e) {
+      print("Exception $e");
+      return ResponseEntity.Error(
+          "An error occurred sending reset code. Try again");
+    }
+  }
+
 }

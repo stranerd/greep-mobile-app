@@ -156,4 +156,10 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     emit(AuthenticationStateAuthenticated(token: data["token"]!, userId: userId!));
 
   }
+
+  void subscribeToPush() async {
+    authenticationService.subscribeToPush();
+  }
+
+
 }

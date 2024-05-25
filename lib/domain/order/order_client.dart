@@ -122,7 +122,7 @@ class OrderClient {
       );
       List<UserOrder> orders = [];
 
-      print("response new orders ${response.data} ");
+      // print("response new orders ${response.data} ");
 
       response.data["results"].forEach((e) {
         orders.add(UserOrder.fromMap(e));

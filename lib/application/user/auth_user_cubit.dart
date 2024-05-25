@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:greep/application/auth/AuthenticationCubit.dart';
 import 'package:greep/application/auth/AuthenticationState.dart';
+import 'package:greep/domain/firebase/Firebase_service.dart';
 import 'package:greep/domain/user/UserService.dart';
 import 'package:greep/domain/user/model/User.dart';
 import 'package:greep/domain/user/model/auth_user.dart';
@@ -44,6 +45,9 @@ class AuthUserCubit extends Cubit<AuthUserState> {
     } else {
       user = response.data!;
       emit(AuthUserStateFetched(user));
+      authenticationCubit.subscribeToPush();
+      FirebaseApi.signInWithFirebase();
+
       return user;
     }
   }

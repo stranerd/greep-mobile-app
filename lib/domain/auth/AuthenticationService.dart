@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:greep/application/auth/AuthStore.dart';
 import 'package:greep/application/auth/password/request/confirm_reset_pin_request.dart';
@@ -264,5 +265,12 @@ class AuthenticationService {
     return await authenticationClient.confirmEmailVerificationCode(token: token);
   }
 
+
+  void subscribeToPush() async {
+    var deviceToken = await FirebaseMessaging.instance.getToken();
+    if (deviceToken != null) {
+      authenticationClient.subscribeToPush(token: deviceToken);
+    }
+  }
 
 }

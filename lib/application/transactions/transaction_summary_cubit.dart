@@ -615,11 +615,11 @@ class TransactionSummaryCubit extends Cubit<TransactionSummaryState> {
     DateTime? to,
     String query = "",
   }) {
-    print("Filter $filter, From $from, To $to");
+    // print("Filter $filter, From $from, To $to");
     String userId = getSelectedUserId();
     query = query.toLowerCase();
     List<Transaction> userTransactions = [..._transactions[userId] ?? []];
-    print("User transactions: ${userTransactions.length}");
+    // print("User transactions: ${userTransactions.length}");
 
     if (from != null && to != null) {
       userTransactions = userTransactions.where((element) {
