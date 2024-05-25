@@ -120,7 +120,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                 context,
                 title: "Accept Order",
                 body:
-                    "You have successfully accepted this order. Kindly wait for the vendor to approve shipping",
+                    "You have successfully accepted this order.${order.isCart? " Kindly wait for the vendor to approve shipping":""}",
               );
               setState(() {
                 order = state.response;
@@ -498,7 +498,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                             ),
                           ],
                         ),
-                      if (!order.isPaid)
+                      if (!order.isPaid && order.isDriverAssigned)
                         Column(
                           children: [
                             SubmitButton(

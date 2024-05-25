@@ -33,6 +33,7 @@ class UserOrder extends Equatable {
   bool get isCanceled => status.cancelled != null;
   bool get isCompleted => status.completed != null;
   bool get isShipped => status.shipped != null;
+  bool get isCart => data.type == OrderType.cart;
 
   const UserOrder(
       {required this.id,

@@ -7,6 +7,7 @@ import 'package:greep/presentation/driver_section/orders/track_order_screen.dart
 import 'package:greep/presentation/widgets/dot_circle.dart';
 import 'package:greep/presentation/widgets/splash_tap.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
+import 'package:greep/presentation/widgets/time_dot_widget.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 
 class ActiveOrderItemWidget extends StatelessWidget {
@@ -23,19 +24,27 @@ class ActiveOrderItemWidget extends StatelessWidget {
         "Order #${order.id.characters.take(6)}...",
         weight: FontWeight.w500,
       ),
-      subtitle:(order.data.type == OrderType.cart) ?Row(
+      subtitle:
+      Row(
         children: [
-           TextWidget(
-            "Qty: ${order.data.cartData!.products.length} pcs",
+          TextWidget(
+            (order.data.type == OrderType.cart) ? "cart":"dispatch",
+            fontStyle: FontStyle.italic,
             color: AppColors.veryLightGray,
+            fontSize: 11.sp,
+            weight: FontWeight.bold,
           ),
-          SizedBox(width: 5.w,),
-          // DotCircle(color: AppColors.veryLightGray,size: 3.r,),
-          // SizedBox(width: 5.w,),
-          //
-          // const TextWidget("Kg: 7kg",color: AppColors.veryLightGray,),
+          SizedBox(
+            width: 8.w,
+          ),
+
+          SizedBox(
+            width: 5.w,
+          ),
+          TimeDotWidget(date: order.date,fontSize: 11.sp,),
         ],
-      ): null,
+      )
+      ,
       trailing: SplashTap(
         onTap: (){
           Get.to(() => TrackOrderScreen(order: order,));

@@ -87,6 +87,7 @@ class OrderClient {
         return ResponseEntity.Socket();
       }
       if (e.type == DioExceptionType.badResponse) {
+        print("Get single order error ${e.response?.statusCode} ${e.response?.data}");
         dynamic error = e.response!.data;
         String message = "";
         if (error == null) {

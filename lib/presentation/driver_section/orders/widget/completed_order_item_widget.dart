@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:greep/domain/order/order.dart';
 import 'package:greep/presentation/widgets/dot_circle.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
+import 'package:greep/presentation/widgets/time_dot_widget.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 
 class CompletedOrderItemWidget extends StatelessWidget {
@@ -20,24 +21,32 @@ class CompletedOrderItemWidget extends StatelessWidget {
         "Order #${order.id.characters.take(6)}",
         weight: FontWeight.w500,
       ),
-      subtitle:(order.data.type == OrderType.cart) ?Row(
+      subtitle:
+      Row(
         children: [
           TextWidget(
-            "Qty: ${order.data.cartData!.products.length} pcs",
+            (order.data.type == OrderType.cart) ? "cart":"dispatch",
+            fontStyle: FontStyle.italic,
             color: AppColors.veryLightGray,
+            fontSize: 11.sp,
+            weight: FontWeight.bold,
           ),
-          SizedBox(width: 5.w,),
-          // DotCircle(color: AppColors.veryLightGray,size: 3.r,),
-          // SizedBox(width: 5.w,),
-          //
-          // const TextWidget("Kg: 7kg",color: AppColors.veryLightGray,),
+          SizedBox(
+            width: 8.w,
+          ),
+
+          SizedBox(
+            width: 5.w,
+          ),
+          TimeDotWidget(date: order.date,fontSize: 11.sp,),
         ],
-      ): null,
+      )
+      ,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           SvgPicture.asset("assets/icons/refresh.svg"),
-          SizedBox(width: 28.w,),
+          SizedBox(width: 20.w,),
           TextWidget(
             "View order",
             color: AppColors.blue,
