@@ -244,10 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                 );
                               }),
-                              kVerticalSpaceLarge,
-                              kVerticalSpaceLarge,
-                              kVerticalSpaceLarge,
-                              kVerticalSpaceSmall,
+                              SizedBox(height: 100.h,)
                             ],
                           ),
                         );

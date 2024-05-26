@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:greep/application/auth/AuthenticationCubit.dart';
 import 'package:greep/commons/colors.dart';
@@ -9,6 +10,7 @@ import 'package:greep/presentation/auth/onboarding/OnboardingSlides2.dart';
 import 'package:greep/presentation/driver_section/home_page.dart';
 import 'package:greep/presentation/driver_section/nav_pages/nav_bar/nav_bar_view.dart';
 import 'package:greep/presentation/splash/authentication_splash.dart';
+import 'package:greep/presentation/widgets/loading_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -48,14 +50,11 @@ class _SplashScreenState extends State<SplashScreen> {
           color: kWhiteColor
         ),
         height: Get.height,
-        child:const Center(
-          child: SizedBox(
-            width: 50,
-            height: 50,
-            child:  CircularProgressIndicator(
+        child: Center(
+          child: LoadingWidget(
+            size: 50.r,
+            isGreep: true,
 
-              valueColor: AlwaysStoppedAnimation<Color>(kPrimaryColor),
-            ),
           ),
         ));
     // return FullScreenSpinner(opacityColor: Colors.white);

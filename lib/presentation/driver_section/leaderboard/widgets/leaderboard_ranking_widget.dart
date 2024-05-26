@@ -8,7 +8,9 @@ import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 
 class LeaderboardRankingWidget extends StatelessWidget {
-  const LeaderboardRankingWidget({Key? key}) : super(key: key);
+  final User user;
+  final int index;
+  const LeaderboardRankingWidget({Key? key, required this.user, required this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class LeaderboardRankingWidget extends StatelessWidget {
             Row(
               children: [
                 TextWidget(
-                  "1",
+                  "$index",
                   fontSize: 16.sp,
                   weight: FontWeight.bold,
                 ),
@@ -28,7 +30,7 @@ class LeaderboardRankingWidget extends StatelessWidget {
                   width: 12.w,
                 ),
                 ProfilePhotoWidget(
-                  url: "",
+                  url: user.photoUrl,
                   radius: 20,
                   initials: "",
                 ),
@@ -40,7 +42,7 @@ class LeaderboardRankingWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextWidget(
-                      "Dammy",
+                      user.firstName,
                       fontSize: 16.sp,
                       weight: FontWeight.bold,
                     ),
@@ -56,7 +58,7 @@ class LeaderboardRankingWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 TextWidget(
-                  "100pts",
+                  "0",
                   fontSize: 16.sp,
                 ),
                 SvgPicture.asset(

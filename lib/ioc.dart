@@ -26,6 +26,7 @@ import 'package:greep/application/driver/manager_requests_cubit.dart';
 import 'package:greep/application/user/auth_user_cubit.dart';
 import 'package:greep/application/user/user_crud_cubit.dart';
 import 'package:greep/application/user/user_cubit.dart';
+import 'package:greep/application/user/user_list_cubit.dart';
 import 'package:greep/application/wallet/conversion_rate_cubit.dart';
 import 'package:greep/application/wallet/user_wallet_cubit.dart';
 import 'package:greep/application/wallet/wallet_crud_cubit.dart';
@@ -161,6 +162,9 @@ class IoC {
     getIt.registerFactory(() => TransactionCrudCubit(
           transactionService: _transactionService,
         ));
+    getIt.registerFactory(() => UserListCubit(
+      userService: getIt(),
+    ));
     getIt.registerSingleton(_userCustomersCubit);
 
     getIt.registerFactory(() => PasswordCrudCubit(

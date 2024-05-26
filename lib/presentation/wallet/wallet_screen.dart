@@ -58,7 +58,7 @@ class _WalletScreenState extends State<WalletScreen> {
           return Stack(
             children: [
               Container(
-                height: 172.h,
+                height: 152.h,
                 padding: EdgeInsets.symmetric(
                   horizontal: 16.w,
                   vertical: 12.h,
@@ -68,7 +68,7 @@ class _WalletScreenState extends State<WalletScreen> {
                   gradient: LinearGradient(colors: [
                      Color(0xff10BB76),
                     Color(0xff086D50),
-                    Color(0xff001726).withOpacity(1),
+                    Color(0xff37493a).withOpacity(1),
                   ], stops: [
                     -0.3,
                     0.4,

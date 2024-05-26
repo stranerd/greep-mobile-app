@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:greep/application/driver/drivers_cubit.dart';
 import 'package:greep/application/transactions/user_transactions_cubit.dart';
 import 'package:greep/application/user/utils/get_current_user.dart';
+import 'package:greep/commons/money.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/transaction/TransactionData.dart';
 import 'package:greep/domain/transaction/transaction.dart';
@@ -74,8 +75,13 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          leading: const BackIcon(
-            isArrow: true,
+          leading: Row(
+            children: [
+              SizedBox(width: 5.w,),
+              const BackIcon(
+                isArrow: true,
+              ),
+            ],
           ),
           title: TextWidget(
             "Details",
@@ -114,7 +120,7 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                                   : Row(
                                       children: [
                                         TextWidget(
-                                          "+${widget.transaction.amount}",
+                                          "${widget.transaction.amount.toMoney}",
                                           fontSize: 18.sp,
                                           weight: FontWeight.bold,
                                         ),

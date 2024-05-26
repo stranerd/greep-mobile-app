@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:greep/application/customers/user_customers_cubit.dart';
 import 'package:greep/application/transactions/customer_statistics_cubit.dart';
 import 'package:greep/commons/colors.dart';
+import 'package:greep/commons/money.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/domain/customer/customer.dart';
 import 'package:greep/domain/transaction/TransactionData.dart';
@@ -42,7 +43,7 @@ class CustomerRecordCard extends StatelessWidget {
     TransactionType type = transaction.data.transactionType;
     TransactionData data = transaction.data;
     isNegative = transaction.amount < 0;
-    text = transaction.amount.abs().toString();
+    text = transaction.amount.abs().toMoney;
 
     Customer? customer = GetIt.I<UserCustomersCubit>()
         .getCustomerByName(transaction.data.customerName!);

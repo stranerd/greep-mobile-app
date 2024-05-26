@@ -10,58 +10,62 @@ import 'package:greep/domain/user/model/manager_request.dart';
 import 'package:greep/domain/user/user_client.dart';
 
 class UserService {
-  final UserClient _client;
+  final UserClient userClient;
 
-  const UserService(this._client);
+  const UserService(this.userClient);
 
   Future<ResponseEntity<User>> fetchUser(String userId) async {
-    var response = await _client.fetchUser(userId);
+    var response = await userClient.fetchUser(userId);
     if (!response.isError) {}
     return response;
   }
   Future<ResponseEntity<AuthUser>> fetchAuthUser(String userId) async {
-    var response = await _client.fetchAuthUser(userId);
+    var response = await userClient.fetchAuthUser(userId);
     if (!response.isError) {}
     return response;
   }
 
   Future<ResponseEntity<List<DriverCommission>>> fetchUserDriverCommissions(
       String userId) async {
-    return await _client.fetchUserDriverCommissions(userId);
+    return await userClient.fetchUserDriverCommissions(userId);
   }
 
   Future<ResponseEntity> removeDriver(String driverId) async {
-    return await _client.removeDriver(driverId);
+    return await userClient.removeDriver(driverId);
   }
 
   Future<ResponseEntity<List<User>>> fetchUserDrivers(String userId) async {
-    return await _client.fetchUserDrivers(userId);
+    return await userClient.fetchUserDrivers(userId);
   }
 
   Future<ResponseEntity> addDriver(AddDriverRequest request) async {
-    var response = await _client.sendOrRemoveDriverRequest(request);
+    var response = await userClient.sendOrRemoveDriverRequest(request);
     return response;
   }
 
   Future<ResponseEntity> acceptManager(AcceptManagerRequest request) async {
-    var response = await _client.acceptOrRejectManager(request);
+    var response = await userClient.acceptOrRejectManager(request);
     return response;
   }
 
   Future<ResponseEntity<ManagerRequest>> getManagerRequests(
       String userId) async {
-    return await _client.fetchManagerRequests(userId);
+    return await userClient.fetchManagerRequests(userId);
+  }
+
+  Future<ResponseEntity<List<User>>> fetchUserRankings({required String rankingType}) async {
+    return await userClient.fetchUserRankings(rankingType: rankingType);
   }
 
   Future<ResponseEntity> editUser(EditUserRequest request) async {
-    return await _client.editUser(request);
+    return await userClient.editUser(request);
   }
 
   Future<ResponseEntity> updateUserType(UpdateUserTypeRequest request) async {
-    return await _client.updateUserType(request);
+    return await userClient.updateUserType(request);
   }
 
   Future<ResponseEntity> deleteUser() async {
-    return await _client.deleteUser();
+    return await userClient.deleteUser();
   }
 }

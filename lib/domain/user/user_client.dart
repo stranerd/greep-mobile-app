@@ -672,4 +672,67 @@ class UserClient {
           "An error occurred updating information. Try again");
     }
   }
+
+  Future<ResponseEntity<List<User>>> fetchUserRankings({required String rankingType}) async {
+
+    String where = jsonEncode({ "field": 'account.rankings.${rankingType}.value', "desc": true });
+    Map<String, dynamic> queryParams = {
+      "sort[]": where,
+      "all": "true"
+    };
+    Response response;
+    try {
+      response = await dio.get("users/users", queryParameters: queryParams);
+      // print("Fetch user drivers respknse ${response.data}");
+      List<User> users = [];
+      response.data["results"].forEach((e) {
+        // print("driver ${e}");
+        users.add(User.fromServer(e));
+      });
+      return ResponseEntity.Data(users);
+    } on DioError catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout) {
+        return ResponseEntity.Timeout();
+      }
+      if (e.error is SocketException) {
+        return ResponseEntity.Socket();
+      }
+      if (e.type == DioExceptionType.badResponse) {
+        try {
+          if (e.response!.data[0]["message"]
+              .toString()
+              .toLowerCase()
+              .contains("access token")) {
+            print("refreshing token");
+            var response =
+            await GetIt.I<AuthenticationService>().refreshToken();
+            if (response.isError) {
+              return ResponseEntity.Error(
+                  "An error occurred, please log in again");
+            } else {
+              return fetchUserRankings(rankingType: rankingType);
+            }
+          }
+        } catch (_) {}
+      }
+      dynamic error = e.response!.data;
+      String message = "";
+      if (error == null) {
+        message = "An error occurred fetching user drivers. Try again";
+      } else {
+        try {
+          message = error["message"];
+        } catch (e) {
+          message = "an error occurred. Try again";
+        }
+      }
+      return ResponseEntity.Error(message);
+    } catch (e) {
+      print("Exception $e");
+      return ResponseEntity.Error(
+          "An error occurred  fetching user drivers. Try again");
+    }
+  }
+
+
 }
