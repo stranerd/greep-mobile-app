@@ -5,6 +5,7 @@ import 'package:greep/application/driver/new_manager_requests_cubit.dart';
 import 'package:greep/application/driver/request/accept_manager_request.dart';
 import 'package:greep/application/driver/request/add_driver_request.dart';
 import 'package:greep/application/driver/drivers_cubit.dart';
+import 'package:greep/application/user/auth_user_cubit.dart';
 import 'package:greep/application/user/request/EditUserRequest.dart';
 import 'package:greep/application/user/request/update_user_type_request.dart';
 import 'package:greep/application/user/user_cubit.dart';
@@ -98,6 +99,8 @@ class UserCrudCubit extends Cubit<UserCrudState> {
     } else {
       emit(UserCrudStateSuccess(isEditUser: true));
       GetIt.I<UserCubit>().fetchUser();
+      GetIt.I<AuthUserCubit>().fetchUser();
+
     }
   }
 
@@ -112,6 +115,8 @@ class UserCrudCubit extends Cubit<UserCrudState> {
     } else {
       emit(UserCrudStateSuccess(isUpdateUserType: true));
       GetIt.I<UserCubit>().fetchUser();
+      GetIt.I<AuthUserCubit>().fetchUser();
+
     }
   }
 

@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart' as g;
+import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:greep/application/auth/SignupCubit.dart';
 import 'package:greep/application/auth/SignupState.dart';
@@ -15,12 +16,15 @@ import 'package:greep/application/auth/request/SignupRequest.dart';
 import 'package:greep/application/user/request/EditUserRequest.dart';
 import 'package:greep/application/user/request/update_user_type_request.dart';
 import 'package:greep/application/user/user_crud_cubit.dart';
+import 'package:greep/application/user/user_cubit.dart';
 import 'package:greep/application/user/user_util.dart';
 import 'package:greep/commons/Utils/input_validator.dart';
 import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/scaffold_messenger_service.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/ioc.dart';
+import 'package:greep/presentation/auth/home/auth_home.dart';
+import 'package:greep/presentation/auth/views/sign_up_verifying_view.dart';
 import 'package:greep/presentation/driver_section/nav_pages/nav_bar/nav_bar_view.dart';
 import 'package:greep/presentation/splash/authentication_splash.dart';
 import 'package:greep/presentation/widgets/custom_phone_field.dart';
@@ -103,7 +107,12 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: userCrudCubit,
-      child: BlocConsumer<UserCrudCubit, UserCrudState>(
+      child: BlocConsumer<UserCubit, UserState>(
+  listener: (context, state) {
+  },
+  builder: (context, userState) {
+    print(userState);
+    return BlocConsumer<UserCrudCubit, UserCrudState>(
         listenWhen: (_, __) {
           return ModalRoute.of(context)?.isCurrent ?? false;
         },
@@ -119,7 +128,7 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
           if (state is UserCrudStateSuccess) {
             if (state.isEditUser) {
               g.Get.offAll(
-                () => NavBarView(),
+                () => SignUpVerifyingView(),
               );
             }
             if (state.isUpdateUserType) {
@@ -172,7 +181,13 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
                   actions: [
                     CloseButton(
                       onPressed: (){
-                        // Get.to(() => A);
+                        if (Navigator.canPop(context)){
+                        Navigator.pop(context);
+
+                        }
+                        else {
+                          Get.offAll(AuthHomeScreen());
+                        }
 
                       },
                     ),
@@ -251,6 +266,7 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
                                 InputTextField(
                                   title: "First name",
                                   hintText: "Enter your first name",
+                                  initialValue: userState is UserStateFetched ? userState.user.firstName : "",
                                   validator: emptyFieldValidator,
                                   onChanged: (String value) {
                                     _firstName = value;
@@ -418,7 +434,9 @@ class _AuthFinishSignupState extends State<AuthFinishSignup>
             },
           );
         },
-      ),
+      );
+  },
+),
     );
   }
 }

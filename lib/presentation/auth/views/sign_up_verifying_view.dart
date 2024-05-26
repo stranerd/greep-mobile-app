@@ -3,17 +3,44 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:greep/application/auth/AuthenticationCubit.dart';
+import 'package:greep/application/user/user_cubit.dart';
 import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:greep/ioc.dart';
 import 'package:greep/presentation/auth/home/auth_home.dart';
+import 'package:greep/presentation/auth_finish_signup.dart';
 import 'package:greep/presentation/widgets/back_icon.dart';
 import 'package:greep/presentation/widgets/loading_widget.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:greep/utils/constants/app_colors.dart';
 
-class SignUpVerifyingView extends StatelessWidget {
+class SignUpVerifyingView extends StatefulWidget {
   const SignUpVerifyingView({Key? key}) : super(key: key);
+
+  @override
+  State<SignUpVerifyingView> createState() => _SignUpVerifyingViewState();
+}
+
+class _SignUpVerifyingViewState extends State<SignUpVerifyingView> {
+  @override
+  void initState() {
+
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      var user = getIt<UserCubit>().state;
+      if (user is UserStateFetched){
+        print(user.user);
+        if (user.user.type == null || user.user.type != "driver"){
+          Get.off(() => AuthFinishSignup());
+        }
+      }
+
+    });
+
+
+  }
+
 
   @override
   Widget build(BuildContext context) {

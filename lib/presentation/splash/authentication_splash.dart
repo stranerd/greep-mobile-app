@@ -87,6 +87,7 @@ class _SplashScreenState extends State<AuthenticationSplashScreen> {
           }
           else if (state.user.isDriver != true){
             Get.off(() => SignUpVerifyingView());
+            return;
           }
            else {
             if (locationCubit.state is LocationStateOff) {

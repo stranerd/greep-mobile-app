@@ -99,8 +99,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 ),
                 Expanded(
                   child: RefreshIndicator(
-                    onRefresh: ()async {
-
+                    onRefresh: () async {
                       notificationCubit.fetchNotifications();
                     },
                     child: SingleChildScrollView(
@@ -108,7 +107,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       child: BlocBuilder<UserNotificationCubit, UserNotificationState>(
                         builder: (context, notificationState) {
                           if (notificationState is UserNotificationStateLoading){
-                            return LoadingWidget();
+                            return LoadingWidget(
+                              isGreep: true,
+                              topPadding: 60.h,
+                            );
                           }
                           if (notificationState is UserNotificationStateFetched){
                             if (notificationState.notifications.isEmpty){

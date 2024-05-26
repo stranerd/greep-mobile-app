@@ -14,6 +14,7 @@ class User extends Equatable{
   final String? managerId;
   final UserRanking? rankings;
   final bool isVerified;
+  final String? type;
 
    User(
       {required this.id,
@@ -26,6 +27,7 @@ class User extends Equatable{
          this.rankings,
         this.managerName,
       required this.firstName,
+        this.type,
       required this.hasManager,
       required this.lastName,
       required this.photoUrl});
@@ -41,6 +43,7 @@ class User extends Equatable{
         firstName: data["bio"]?["name"]["first"] ?? "",
         lastName: data["bio"]?["name"]?["last"] ?? "",
         hasManager: data["manager"] != null,
+        type: data["type"]?["type"],
         managerId: data["manager"] != null ? data["manager"]["managerId"]: null,
         commission: data["manager"] != null ? data["manager"]["commission"]: null,
         photoUrl: data["bio"]?["photo"]?["link"]??"");
@@ -66,7 +69,7 @@ class User extends Equatable{
 
   @override
   String toString() {
-    return 'User{id: $id, email: $email, firstName: $firstName, lastName: $lastName, fullName: $fullName, photoUrl: $photoUrl, isManager: $hasManager, commission: $commission, managerId: $managerId}';
+    return 'User{id: $id, email: $email, firstName: $firstName, lastName: $lastName, username: $username, fullName: $fullName, photoUrl: $photoUrl, managerName: $managerName, hasManager: $hasManager, commission: $commission, managerId: $managerId, rankings: $rankings, isVerified: $isVerified, type: $type}';
   }
 
   @override
