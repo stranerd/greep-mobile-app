@@ -47,13 +47,13 @@ class SvgIcon extends StatelessWidget {
       svgIcon.data,
       color: noColor == true
           ? null
-          : color ?? Theme.of(context).textTheme.bodyText1!.color,
+          : color ?? Theme.of(context).textTheme.bodyMedium!.color,
       height: size,
     ) :  SvgPicture.asset(
       svgIcon.data,
       color: noColor == true
           ? null
-          : color ?? Theme.of(context).textTheme.bodyText1!.color,
+          : color ?? Theme.of(context).textTheme.bodyMedium!.color,
       height: size,
     );
   }

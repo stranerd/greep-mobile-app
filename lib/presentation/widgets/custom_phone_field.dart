@@ -93,7 +93,7 @@ class CustomPhoneField extends StatelessWidget {
 
         labelStyle: Theme.of(context)
             .textTheme
-            .bodyText2
+            .bodyMedium
             ?.copyWith(
           color: const Color(
             0xff868484,
