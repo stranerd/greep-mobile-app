@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:greep/Commons/colors.dart';
+import 'package:greep/commons/colors.dart';
 import 'package:greep/application/transactions/response/transaction_summary.dart';
 import 'package:greep/application/transactions/transaction_summary_cubit.dart';
 import 'package:greep/commons/money.dart';

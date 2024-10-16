@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:greep/Commons/colors.dart';
+import 'package:greep/commons/colors.dart';
 import 'package:greep/application/location/driver_location_status_cubit.dart';
 import 'package:greep/domain/user/model/ride_status.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';

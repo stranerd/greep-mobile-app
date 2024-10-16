@@ -9,7 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' as g;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:greep/Commons/colors.dart';
+import 'package:greep/commons/colors.dart';
 import 'package:greep/application/driver/drivers_cubit.dart';
 import 'package:greep/application/location/driver_location_status_cubit.dart';
 import 'package:greep/application/location/location.dart';

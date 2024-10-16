@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:greep/Commons/colors.dart';
+import 'package:greep/commons/colors.dart';
 import 'package:greep/application/user/user_util.dart';
 import 'package:greep/application/wallet/conversion_rate_cubit.dart';
 import 'package:greep/application/wallet/user_wallet_cubit.dart';

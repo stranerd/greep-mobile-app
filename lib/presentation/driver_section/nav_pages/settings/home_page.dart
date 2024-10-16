@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
-import 'package:greep/Commons/colors.dart';
+import 'package:greep/commons/colors.dart';
 import 'package:greep/application/auth/AuthenticationCubit.dart';
 import 'package:greep/application/auth/AuthenticationState.dart';
 import 'package:greep/application/driver/drivers_cubit.dart';

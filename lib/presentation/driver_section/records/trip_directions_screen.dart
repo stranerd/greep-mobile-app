@@ -3,7 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:greep/Commons/colors.dart';
+import 'package:greep/commons/colors.dart';
 import 'package:greep/application/geocoder/geocoder_cubit.dart';
 import 'package:greep/application/geocoder/geocoder_state.dart';
 import 'package:greep/application/transactions/trip_direction_builder_cubit.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greep/Commons/colors.dart';
+import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/ui_helpers.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:greep/Commons/colors.dart';
+import 'package:greep/commons/colors.dart';
 import 'package:greep/application/auth/email_verification/email_verification_cubit.dart';
 import 'package:greep/commons/Utils/utils.dart';
 import 'package:greep/commons/ui_helpers.dart';

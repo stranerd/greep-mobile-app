@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
-import 'package:greep/Commons/colors.dart';
+import 'package:greep/commons/colors.dart';
 import 'package:greep/application/transactions/customer_statistics_cubit.dart';
 import 'package:greep/application/transactions/transaction_crud_cubit.dart';
 import 'package:greep/application/transactions/trip_direction_builder_cubit.dart';

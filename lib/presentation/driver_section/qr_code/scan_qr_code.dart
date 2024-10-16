@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:greep/Commons/colors.dart';
+import 'package:greep/commons/colors.dart';
 import 'package:greep/presentation/widgets/back_icon.dart';
 import 'package:greep/presentation/widgets/text_widget.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
