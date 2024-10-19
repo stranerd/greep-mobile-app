@@ -276,7 +276,7 @@ class _YearlyTransactionsStatisticsCardState
                 }
               },
               touchTooltipData: BarTouchTooltipData(
-                tooltipBgColor: Colors.transparent,
+                // tooltipBgColor: Colors.transparent,
                 getTooltipItem: (group, groupIndex, rod, rodIndex) {
                   return BarTooltipItem(
                     ' ',

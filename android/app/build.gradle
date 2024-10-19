@@ -8,7 +8,7 @@ if (localPropertiesFile.exists()) {
 
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+    throw  GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
 
@@ -41,10 +41,10 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     compileSdkVersion 34
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled true
     }
 
     kotlinOptions {
@@ -55,14 +55,11 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-    }
 
     defaultConfig {
         applicationId "com.greepio.greep"
         multiDexEnabled true
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -84,6 +81,10 @@ android {
             signingConfig signingConfigs.release
         }
     }
+    namespace 'com.greepio.greep'
+    lint {
+        checkReleaseBuilds false
+    }
 }
 
 flutter {
@@ -96,5 +97,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging:23.0.5'
     implementation 'com.android.support:multidex:1.0.3'
-
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -35,6 +37,7 @@ import 'package:greep/commons/colors.dart';
 import 'package:greep/commons/scaffold_messenger_service.dart';
 import 'package:greep/commons/themes.dart';
 import 'package:greep/commons/timeago_custom.dart';
+import 'package:greep/firebase_options.dart';
 import 'package:timeago/timeago.dart';
 import 'package:greep/ioc.dart';
 import 'package:greep/presentation/splash/splash.dart';
@@ -70,7 +73,9 @@ void main() async {
       ),
     );
   } else {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.android,
+    );
   }
 
   try {
@@ -94,12 +99,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-      FocusScopeNode currentFocus = FocusScope.of(context);
-      if (!currentFocus.hasPrimaryFocus &&
-          currentFocus.focusedChild != null) {
-        FocusManager.instance.primaryFocus!.unfocus();
-      }
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus &&
+            currentFocus.focusedChild != null) {
+          FocusManager.instance.primaryFocus!.unfocus();
+        }
       },
       child: MultiBlocProvider(
         providers: [

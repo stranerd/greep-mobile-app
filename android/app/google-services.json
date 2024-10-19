@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:891214249172:android:79a9d9d9c002069bbe0f41",
+        "mobilesdk_app_id": "1:891214249172:android:34d80b656b94bbe3be0f41",
         "android_client_info": {
-          "package_name": "com.greepio.greep"
+          "package_name": "com.greepio.customer.app"
         }
       },
       "oauth_client": [
@@ -29,6 +29,109 @@
             {
               "client_id": "891214249172-et0onshqv9tq4aeigfqeoritc1vt24pu.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "891214249172-0619mi3m6p9rqa862mkufbqegqerengn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.greep.driver.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:891214249172:android:79a9d9d9c002069bbe0f41",
+        "android_client_info": {
+          "package_name": "com.greepio.greep"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "891214249172-37jgfpo0hkmi355mek4psko5ll17s6la.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.greepio.greep",
+            "certificate_hash": "d63e7c6c3994a6d62ec45330f6bb70b03b605872"
+          }
+        },
+        {
+          "client_id": "891214249172-kt7fvdv1r0t3qel3kp38v2qp5epavr6p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.greepio.greep",
+            "certificate_hash": "12dedcecc72924ad63e48ad7a79d1806fc6ddadb"
+          }
+        },
+        {
+          "client_id": "891214249172-lb3kpstc6kpmecb3m9nt65t011cjf1sd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.greepio.greep",
+            "certificate_hash": "88b3a32fcec2a7bb7dd65dc7a2fc2f5b38244bc0"
+          }
+        },
+        {
+          "client_id": "891214249172-et0onshqv9tq4aeigfqeoritc1vt24pu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlpjseX7Z7MVIsyUGpU-UhzXqkxKtbA4c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "891214249172-et0onshqv9tq4aeigfqeoritc1vt24pu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "891214249172-0619mi3m6p9rqa862mkufbqegqerengn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.greep.driver.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:891214249172:android:603839fd19714491be0f41",
+        "android_client_info": {
+          "package_name": "com.stranerd.greep_customer.greep_customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "891214249172-et0onshqv9tq4aeigfqeoritc1vt24pu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlpjseX7Z7MVIsyUGpU-UhzXqkxKtbA4c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "891214249172-et0onshqv9tq4aeigfqeoritc1vt24pu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "891214249172-0619mi3m6p9rqa862mkufbqegqerengn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.greep.driver.app"
+              }
             }
           ]
         }
